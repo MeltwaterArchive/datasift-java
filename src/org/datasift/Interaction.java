@@ -127,7 +127,7 @@ public class Interaction extends JSONObject {
 	 */
 	public String getStringVal(String key) throws EInvalidData {
 		try {
-			int pos = key.indexOf('.');
+			int pos = key.lastIndexOf('.');
 			if (pos != -1) {
 				JSONObject obj = resolveString(key);
 				return obj.getString(key.substring(pos + 1));
