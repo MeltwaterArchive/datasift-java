@@ -69,7 +69,7 @@ public class Definition {
 	 */
 	public Definition(User user, String csdl, String hash) {
 		_user = user;
-		_csdl = csdl;
+		_csdl = csdl.trim();
 		_hash = hash;
 	}
 
@@ -141,6 +141,35 @@ public class Definition {
 	 * @throws EAccessDenied
 	 */
 	public void compile() throws EInvalidData, ECompileFailed, EAccessDenied {
+		submitCDSL(true);
+	}
+
+	/**
+	 * Call the DataSift API to compile this definition. On success it will
+	 * store the returned hash.
+	 * 
+	 * @access public
+	 * @throws EInvalidData
+	 * @throws ECompileFailed
+	 * @throws JSONException
+	 * @throws EAccessDenied
+	 */
+	public void validate() throws EInvalidData, ECompileFailed, EAccessDenied {
+		submitCDSL(false);
+	}
+
+	/**
+	 * Call the DataSift API to validate/compile this definition. 
+	 * 
+	 * @param boolean
+	 *            save Whether to compile (and save) the CSDL or to only validate it.
+	 * @access protected
+	 * @throws EInvalidData
+	 * @throws ECompileFailed
+	 * @throws JSONException
+	 * @throws EAccessDenied
+	 */
+	protected void submitCDSL(boolean save) throws EInvalidData, ECompileFailed, EAccessDenied{
 		if (_csdl.length() == 0) {
 			throw new EInvalidData("Cannot compile an empty definition.");
 		}
@@ -151,7 +180,8 @@ public class Definition {
 			Hashtable<String, String> params = new Hashtable<String, String>();
 			params.put("csdl", _csdl);
 
-			res = _user.callAPI("compile", params);
+			String endpoint = (save ? "compile" : "validate");
+			res = _user.callAPI(endpoint, params);
 
 			try {
 				_hash = (String) res.get("hash");
