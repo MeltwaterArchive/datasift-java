@@ -148,7 +148,11 @@ abstract public class StreamConsumer {
 		_definition = definition;
 
 		// Compile the definition to ensure it's valid for use
-		_definition.compile();
+		if (_definition.getHash().isEmpty()) {
+			_definition.compile();
+		} else {
+			_definition.validate();
+		}
 	}
 
 	/**
