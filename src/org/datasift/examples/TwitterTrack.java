@@ -75,6 +75,8 @@ public class TwitterTrack implements IStreamConsumerEvents {
 	public void onInteraction(StreamConsumer c, Interaction i)
 			throws EInvalidData {
 		try {
+			System.out.print(i.getStringVal("interaction.author.username"));
+			System.out.print(": ");
 			System.out.println(i.getStringVal("interaction.content"));
 		} catch (EInvalidData e) {
 			// The interaction did not contain either a type or content.

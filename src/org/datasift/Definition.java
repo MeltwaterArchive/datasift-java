@@ -3,6 +3,10 @@
  */
 package org.datasift;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 
 import org.json.JSONException;
@@ -33,6 +37,16 @@ public class Definition {
 	 * @access protected
 	 */
 	protected String _hash = "";
+
+	/**
+	 * @access protected
+	 */
+	protected Date _created_at = null;
+
+	/**
+	 * @access protected
+	 */
+	protected int _total_cost = -1;
 
 	/**
 	 * Constructor. A User object is required.
@@ -69,7 +83,7 @@ public class Definition {
 	 */
 	public Definition(User user, String csdl, String hash) {
 		_user = user;
-		_csdl = csdl.trim();
+		set(csdl);
 		_hash = hash;
 	}
 
@@ -128,25 +142,50 @@ public class Definition {
 	 */
 	protected void clearHash() {
 		_hash = "";
+		_created_at = null;
+		_total_cost = -1;
 	}
 
 	/**
-	 * Call the DataSift API to compile this definition. On success it will
-	 * store the returned hash.
+	 * Returns the created_at date which indicates when the stream was first
+	 * created.
 	 * 
-	 * @access public
+	 * @return Date The date object.
 	 * @throws EInvalidData
-	 * @throws ECompileFailed
-	 * @throws JSONException
 	 * @throws EAccessDenied
 	 */
-	public void compile() throws EInvalidData, ECompileFailed, EAccessDenied {
-		submitCDSL(true);
+	public Date getCreatedAt() throws EInvalidData, EAccessDenied {
+		if (_created_at == null) {
+			// Catch any compilation errors so they don't pass up to the caller
+			try {
+				validate();
+			} catch (ECompileFailed e) {
+			}
+		}
+		return _created_at;
 	}
 
 	/**
-	 * Call the DataSift API to compile this definition. On success it will
-	 * store the returned hash.
+	 * Returns the created_at date which indicates when the stream was first
+	 * created.
+	 * 
+	 * @return Date The date object.
+	 * @throws EInvalidData
+	 * @throws EAccessDenied
+	 */
+	public int getTotalCost() throws EInvalidData, EAccessDenied {
+		if (_total_cost == -1) {
+			// Catch any compilation errors so they don't pass up to the caller
+			try {
+				validate();
+			} catch (ECompileFailed e) {
+			}
+		}
+		return _total_cost;
+	}
+
+	/**
+	 * Call the DataSift API to validate this definition.
 	 * 
 	 * @access public
 	 * @throws EInvalidData
@@ -155,23 +194,8 @@ public class Definition {
 	 * @throws EAccessDenied
 	 */
 	public void validate() throws EInvalidData, ECompileFailed, EAccessDenied {
-		submitCDSL(false);
-	}
-
-	/**
-	 * Call the DataSift API to validate/compile this definition. 
-	 * 
-	 * @param boolean
-	 *            save Whether to compile (and save) the CSDL or to only validate it.
-	 * @access protected
-	 * @throws EInvalidData
-	 * @throws ECompileFailed
-	 * @throws JSONException
-	 * @throws EAccessDenied
-	 */
-	protected void submitCDSL(boolean save) throws EInvalidData, ECompileFailed, EAccessDenied{
 		if (_csdl.length() == 0) {
-			throw new EInvalidData("Cannot compile an empty definition.");
+			throw new EInvalidData("Cannot validate an empty definition.");
 		}
 
 		JSONObject res = null;
@@ -180,14 +204,27 @@ public class Definition {
 			Hashtable<String, String> params = new Hashtable<String, String>();
 			params.put("csdl", _csdl);
 
-			String endpoint = (save ? "compile" : "validate");
-			res = _user.callAPI(endpoint, params);
+			res = _user.callAPI("validate", params);
 
 			try {
-				_hash = (String) res.get("hash");
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+				_created_at = df.parse((String) res.get("created_at"));
 			} catch (JSONException e) {
 				throw new ECompileFailed(
-						"Compiled successfully but no hash in the response");
+					"Compiled successfully but no hash in the response"
+				);
+			} catch (ParseException e) {
+				throw new EAPIError(
+					"Compiled successfully but failed to parse the created_at date"
+				);
+			}
+
+			try {
+				_total_cost = Integer.parseInt((String) res.get("cost"));
+			} catch (JSONException e) {
+				throw new ECompileFailed(
+					"Compiled successfully but no hash in the response"
+				);
 			}
 		} catch (EAPIError e) {
 			// Reset the hash
@@ -198,17 +235,123 @@ public class Definition {
 				// Compilation failed, we should have an error message
 				try {
 					throw new ECompileFailed(
-							res != null ? (String) res.get("error")
-									: "Compilation failed but no error was returned");
+						res != null ? (String) res.get("error")
+							: "Validation failed but no error was returned"
+					);
 				} catch (JSONException ejson) {
 					throw new ECompileFailed("No error message was provided");
 				}
 
 			default:
 				throw new ECompileFailed("Unexpected APIError code: "
-						+ e.getCode() + " [" + e.getMessage() + "]");
+					+ e.getCode() + " [" + e.getMessage() + "]");
 			}
 		}
+	}
+
+	/**
+	 * Call the DataSift API to compile this definition. On success it will
+	 * store the returned hash.
+	 * 
+	 * @throws EInvalidData
+	 * @throws ECompileFailed
+	 * @throws JSONException
+	 * @throws EAccessDenied
+	 */
+	public void compile() throws EInvalidData, ECompileFailed, EAccessDenied {
+		if (_csdl.length() == 0) {
+			throw new EInvalidData("Cannot compile an empty definition.");
+		}
+
+		JSONObject res = null;
+
+		try {
+			Hashtable<String, String> params = new Hashtable<String, String>();
+			params.put("csdl", _csdl);
+
+			res = _user.callAPI("compile", params);
+
+			try {
+				_hash = (String) res.get("hash");
+			} catch (JSONException e) {
+				throw new ECompileFailed(
+					"Compiled successfully but no hash in the response");
+			}
+
+			try {
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+				_created_at = df.parse((String) res.get("created_at"));
+			} catch (JSONException e) {
+				throw new ECompileFailed(
+					"Compiled successfully but no hash in the response"
+				);
+			} catch (ParseException e) {
+				throw new EAPIError(
+					"Compiled successfully but failed to parse the created_at date"
+				);
+			}
+
+			try {
+				_total_cost = Integer.parseInt((String) res.get("cost"));
+			} catch (JSONException e) {
+				throw new ECompileFailed(
+					"Compiled successfully but no hash in the response"
+				);
+			}
+		} catch (EAPIError e) {
+			// Reset the hash
+			clearHash();
+
+			switch (e.getCode()) {
+			case 400:
+				// Compilation failed, we should have an error message
+				try {
+					throw new ECompileFailed(
+						res != null ? (String) res.get("error")
+							: "Compilation failed but no error was returned"
+					);
+				} catch (JSONException ejson) {
+					throw new ECompileFailed("No error message was provided");
+				}
+
+			default:
+				throw new ECompileFailed("Unexpected APIError code: "
+					+ e.getCode() + " [" + e.getMessage() + "]"
+				);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @return Cost
+	 * @throws EInvalidData 
+	 * @throws EAccessDenied 
+	 * @throws ECompileFailed 
+	 * @throws EAPIError 
+	 */
+	public Cost getCostBreakdown() throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
+		if (_csdl.length() == 0) {
+			throw new EInvalidData("Cannot compile an empty definition.");
+		}
+
+		Cost retval = null;
+
+		JSONObject res = null;
+
+		Hashtable<String, String> params = new Hashtable<String, String>();
+
+		params.put("hash", getHash());
+
+		res = _user.callAPI("cost", params);
+
+		try {
+			retval = new Cost(res.toString());
+		} catch (JSONException ejson) {
+			throw new ECompileFailed(ejson.getMessage());
+		}
+
+		return retval;
 	}
 
 	/**
@@ -225,8 +368,9 @@ public class Definition {
 	 * @throws ECompileFailed
 	 */
 	public StreamConsumer getConsumer(String type,
-			IStreamConsumerEvents eventHandler) throws EInvalidData,
-			ECompileFailed, EAccessDenied {
+		IStreamConsumerEvents eventHandler) throws EInvalidData,
+		ECompileFailed, EAccessDenied 
+	{
 		return StreamConsumer.factory(this._user, type, this, eventHandler);
 	}
 }

@@ -3,12 +3,16 @@
  */
 package org.datasift.tests;
 
+import java.util.Date;
+
 import junit.framework.TestCase;
 
 import org.junit.Before;
 
 import org.datasift.Config;
+import org.datasift.Cost;
 import org.datasift.Definition;
+import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.ECompileFailed;
 import org.datasift.EInvalidData;
@@ -55,6 +59,79 @@ public class TestDefinition extends TestCase {
 				Config.definition);
 	}
 
+	public void testValidate_Success() {
+		Definition def = new Definition(user, Config.definition);
+		assertEquals("Definition string not set correctly", def.get(),
+				Config.definition);
+
+		try {
+			def.validate();
+
+			// We should now have a hash
+			assertEquals("Incorrect hash", def.getHash(),
+					Config.definition_hash);
+		} catch (EInvalidData e) {
+			fail("InvalidData: " + e.getMessage());
+		} catch (ECompileFailed e) {
+			fail("CompileFailed: " + e.getMessage());
+		} catch (EAccessDenied e) {
+			fail("AccessDenied: " + e.getMessage());
+		}
+	}
+
+	public void testValidate_Failure() {
+		Definition def = new Definition(user, Config.invalid_definition);
+		assertEquals("Definition string not set correctly", def.get(),
+				Config.invalid_definition);
+
+		try {
+			def.validate();
+			fail("Expected ECompileFailed exception was not thrown");
+		} catch (EInvalidData e) {
+			fail("InvalidData: " + e.getMessage());
+		} catch (ECompileFailed e) {
+			// This is what we should get
+		} catch (EAccessDenied e) {
+			fail("AccessDenied: " + e.getMessage());
+		}
+	}
+
+	public void testValidate_SuccessThenFailure() {
+		Definition def = new Definition(user, Config.definition);
+		assertEquals("Definition string not set correctly", def.get(),
+				Config.definition);
+
+		try {
+			def.validate();
+
+			// We should now have a hash
+			assertEquals("Hash is not correct", def.getHash(),
+					Config.definition_hash);
+		} catch (EInvalidData e) {
+			fail("InvalidData: " + e.getMessage());
+		} catch (ECompileFailed e) {
+			fail("CompileFailed: " + e.getMessage());
+		} catch (EAccessDenied e) {
+			fail("AccessDenied: " + e.getMessage());
+		}
+
+		// Now set the invalid definition in that same object
+		def.set(Config.invalid_definition);
+		assertEquals("Definition string not set correctly", def.get(),
+				Config.invalid_definition);
+
+		try {
+			def.compile();
+			fail("CompileFailed exception expected, but not thrown");
+		} catch (EInvalidData e) {
+			fail("InvalidData: " + e.getMessage());
+		} catch (ECompileFailed e) {
+			// This is what we should get
+		} catch (EAccessDenied e) {
+			fail("AccessDenied: " + e.getMessage());
+		}
+	}
+	
 	public void testCompile_Success() {
 		Definition def = new Definition(user, Config.definition);
 		assertEquals("Definition string not set correctly", def.get(),
@@ -125,6 +202,55 @@ public class TestDefinition extends TestCase {
 			// This is what we should get
 		} catch (EAccessDenied e) {
 			fail("AccessDenied: " + e.getMessage());
+		}
+	}
+	
+	public void testGetCreatedAt() {
+		Definition def = new Definition(user, Config.definition);
+		assertEquals("Definition string not set correctly", def.get(),
+				Config.definition);
+		
+		try {
+			Date d = def.getCreatedAt();
+			assertNotNull(d);
+		} catch (EInvalidData e) {
+			fail("InvalidData: " + e.getMessage());
+		} catch (EAccessDenied e) {
+			fail("AccessDenied: " + e.getMessage());
+		}
+	}
+	
+	public void testGetTotalCost() {
+		Definition def = new Definition(user, Config.definition);
+		assertEquals("Definition string not set correctly", def.get(),
+				Config.definition);
+		
+		try {
+			int cost = def.getTotalCost();
+			assertTrue(cost > 0);
+		} catch (EInvalidData e) {
+			fail("InvalidData: " + e.getMessage());
+		} catch (EAccessDenied e) {
+			fail("AccessDenied: " + e.getMessage());
+		}
+	}
+	
+	public void testGetCostBreakdown() {
+		Definition def = new Definition(user, Config.definition);
+		assertEquals("Definition string not set correctly", def.get(),
+				Config.definition);
+		
+		try {
+			Cost cost = def.getCostBreakdown();
+			assertEquals(cost.getTotalCost(), Config.definition_cost);
+		} catch (EInvalidData e) {
+			fail("InvalidData: " + e.getMessage());
+		} catch (EAccessDenied e) {
+			fail("AccessDenied: " + e.getMessage());
+		} catch (ECompileFailed e) {
+			fail("CompileFailed: " + e.getMessage());
+		} catch (EAPIError e) {
+			fail("APIError: " + e.getMessage());
 		}
 	}
 

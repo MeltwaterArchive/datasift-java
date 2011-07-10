@@ -38,7 +38,7 @@ public class User {
 	 * 
 	 * @access private
 	 */
-	private String _user_agent = "DataSiftJava/0.2";
+	private String _user_agent = "DataSiftJava/0.3";
 
 	/**
 	 * The base URL for API calls. No http://, and with the trailing slash.
