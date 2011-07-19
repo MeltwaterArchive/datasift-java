@@ -65,6 +65,13 @@ public class User {
 	 * @access protected
 	 */
 	protected int _rate_limit_remaining = -1;
+	
+	/**
+	 * The object to use for making API calls.
+	 * 
+	 * @access protected
+	 */
+	protected ApiClient _api_client = null;
 
 	/**
 	 * Constructor. A username and API key are required when constructing an
@@ -142,6 +149,15 @@ public class User {
 	 */
 	public String getStreamBaseURL() {
 		return _stream_base_url;
+	}
+	
+	/**
+	 * Set the ApiClient object to use when accessing the API.
+	 * 
+	 * @param api_client
+	 */
+	public void setApiClient(ApiClient api_client) {
+		_api_client = api_client;
 	}
 
 	/**

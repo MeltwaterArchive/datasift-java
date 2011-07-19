@@ -231,20 +231,13 @@ public class Definition {
 			clearHash();
 
 			switch (e.getCode()) {
-			case 400:
-				// Compilation failed, we should have an error message
-				try {
-					throw new ECompileFailed(
-						res != null ? (String) res.get("error")
-							: "Validation failed but no error was returned"
-					);
-				} catch (JSONException ejson) {
-					throw new ECompileFailed("No error message was provided");
-				}
+				case 400:
+					// Compilation failed, we should have an error message
+					throw new ECompileFailed(e.getMessage());
 
-			default:
-				throw new ECompileFailed("Unexpected APIError code: "
-					+ e.getCode() + " [" + e.getMessage() + "]");
+				default:
+					throw new ECompileFailed("Unexpected APIError code: "
+						+ e.getCode() + " [" + e.getMessage() + "]");
 			}
 		}
 	}
@@ -303,21 +296,14 @@ public class Definition {
 			clearHash();
 
 			switch (e.getCode()) {
-			case 400:
-				// Compilation failed, we should have an error message
-				try {
-					throw new ECompileFailed(
-						res != null ? (String) res.get("error")
-							: "Compilation failed but no error was returned"
-					);
-				} catch (JSONException ejson) {
-					throw new ECompileFailed("No error message was provided");
-				}
+				case 400:
+					// Compilation failed, we should have an error message
+					throw new ECompileFailed(e.getMessage());
 
-			default:
-				throw new ECompileFailed("Unexpected APIError code: "
-					+ e.getCode() + " [" + e.getMessage() + "]"
-				);
+				default:
+					throw new ECompileFailed("Unexpected APIError code: "
+						+ e.getCode() + " [" + e.getMessage() + "]"
+					);
 			}
 		}
 	}

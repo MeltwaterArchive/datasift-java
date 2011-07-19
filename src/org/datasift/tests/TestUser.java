@@ -12,6 +12,7 @@ import org.datasift.Definition;
 import org.datasift.EAccessDenied;
 import org.datasift.ECompileFailed;
 import org.datasift.EInvalidData;
+import org.datasift.MockApiClient;
 import org.datasift.User;
 
 /**
@@ -24,6 +25,7 @@ public class TestUser extends TestCase {
 	}
 
 	private User user = null;
+	private MockApiClient api_client = null;
 
 	/**
 	 * @throws java.lang.Exception
@@ -31,6 +33,8 @@ public class TestUser extends TestCase {
 	@Before
 	public void setUp() throws Exception {
 		user = new User(Config.username, Config.api_key);
+		api_client = new MockApiClient(user);
+		user.setApiClient(api_client);
 	}
 
 	public void testConstruction() {
@@ -52,19 +56,19 @@ public class TestUser extends TestCase {
 	public void testRateLimits() {
 		Definition def = user.createDefinition(Config.definition);
 
+		api_client.setResponse("{\"hash\":\"947b690ec9dca525fb8724645e088d79\",\"created_at\":\"2011-05-16 17:20:02\",\"cost\":\"10\"}", 200, 150, 100);
+
 		try {
-			def.compile();
+			def.validate();
+
+			assertEquals("Rate limit is incorrect after calling the API", 150, user.getRateLimit());
+			assertEquals("Rate limit remaining is incorrect after calling the API", 100, user.getRateLimitRemaining());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
-			// Ignore this, irrelevant to this test
+			fail("CompileFailed: " + e.getMessage());
 		} catch (EAccessDenied e) {
-			// Ignore this, irrelevant to this test
+			fail("AccessDenied: " + e.getMessage());
 		}
-
-		assertFalse("Rate limit is -1 after calling the API",
-				user.getRateLimit() == -1);
-		assertFalse("Rate limit remaining is -1 after calling the API",
-				user.getRateLimitRemaining() == -1);
 	}
 }
