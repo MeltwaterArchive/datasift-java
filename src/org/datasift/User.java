@@ -3,23 +3,7 @@
  */
 package org.datasift;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,23 +20,23 @@ public class User {
 	/**
 	 * The user agent to be used for all HTTP requests.
 	 * 
-	 * @access private
+	 * @access public
 	 */
-	private String _user_agent = "DataSiftJava/0.3";
+	public final static String _user_agent = "DataSiftJava/0.3.2";
 
 	/**
 	 * The base URL for API calls. No http://, and with the trailing slash.
 	 * 
-	 * @access private
+	 * @access public
 	 */
-	private String _api_base_url = "api.datasift.net/";
+	public final static String _api_base_url = "api.datasift.net/";
 
 	/**
 	 * The base URL for HTTP streaming. No http://, and with the trailing slash.
 	 * 
-	 * @access private
+	 * @access public
 	 */
-	private String _stream_base_url = "stream.datasift.net/";
+	public final static String _stream_base_url = "stream.datasift.net/";
 
 	/**
 	 * The username of this user.
@@ -96,12 +80,14 @@ public class User {
 	public User(String username, String api_key) throws EInvalidData {
 		if (username.length() == 0) {
 			throw new EInvalidData(
-					"Please supply valid credentials when creating a DataSift_User object.");
+				"Please supply valid credentials when creating a DataSift_User object."
+			);
 		}
 
 		if (api_key.length() == 0) {
 			throw new EInvalidData(
-					"Please supply valid credentials when creating a DataSift_User object.");
+				"Please supply valid credentials when creating a DataSift_User object."
+			);
 		}
 
 		_username = username;
@@ -204,106 +190,89 @@ public class User {
 	 * @throws EAccessDenied
 	 */
 	public JSONObject callAPI(String endpoint, Hashtable<String, String> params)
-			throws EAPIError, EInvalidData, EAccessDenied {
+		throws EAPIError, EAccessDenied 
+	{
 		JSONObject retval = null;
 
-		HttpClient httpClient = new DefaultHttpClient();
+		// Create the default ApiClient object if we don't already have one
+		if (_api_client == null) {
+			_api_client = new ApiClient(this);
+		}
 
-		try {
-			List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-			Enumeration<String> paramsEnum = params.keys();
-			while (paramsEnum.hasMoreElements()) {
-				String key = paramsEnum.nextElement();
-				qparams.add(new BasicNameValuePair(key, params.get(key)));
-			}
+		// Make the API call
+		ApiResponse res = _api_client.call(endpoint, params);
 
-			HttpGet get = new HttpGet("http://" + this._api_base_url + endpoint
-					+ ".json?" + URLEncodedUtils.format(qparams, "UTF-8"));
-			get.addHeader("Auth", getUsername() + ":" + getAPIKey());
+		if (res != null) {
+			_rate_limit = res.getRateLimit();
+			_rate_limit_remaining = res.getRateLimitRemaining();
 
-			HttpResponse response = httpClient.execute(get);
-
-			HttpEntity entity = response.getEntity();
-
-			// Update the rate limits from the headers
-			_rate_limit = -1;
-			_rate_limit_remaining = -1;
-			Header[] headers = response.getAllHeaders();
-			for (int i = 0; i < headers.length; i++) {
-				String name = headers[i].getName();
-				if (name.equalsIgnoreCase("x-ratelimit-limit")) {
-					_rate_limit = Integer.parseInt(headers[i].getValue());
-				} else if (name.equalsIgnoreCase("x-ratelimit-remaining")) {
-					_rate_limit_remaining = Integer.parseInt(headers[i]
-							.getValue());
-				}
-			}
-
-			String res = "";
-			if (entity != null) {
-				res = EntityUtils.toString(entity);
-			}
-
-			if (res.length() > 0) {
+			String str = res.getBody();
+			if (str.length() > 0) {
 				try {
-					retval = new JSONObject(res);
+					retval = new JSONObject(str);
 				} catch (JSONException e) {
 					throw new EAPIError(
-							"There was an issue parsing the response from DataSift. Status code: "
-									+ response.getStatusLine().getStatusCode()
-									+ " "
-									+ response.getStatusLine()
-											.getReasonPhrase());
+						"There was an issue parsing the response from DataSift. Status code: "
+						+ res.getStatusCode() + " "
+						+ res.getReasonPhrase()
+					);
 				}
 			}
 
-			switch (response.getStatusLine().getStatusCode()) {
-			case 200:
-				break;
+			try {
+				switch (res.getStatusCode()) {
+				case 200:
+					break;
 
-			case 401:
-				throw new EAccessDenied(
+				case 400:
+					throw new EAPIError(
+						(retval != null && retval.has("error")) ? retval.getString("error")
+							: "No error message present!",
+						res.getStatusCode()
+					);
+
+				case 401:
+					throw new EAccessDenied(
 						(String) ((retval != null && retval.has("error")) ? retval
-								.get("error") : "Authentication failed"));
+							.get("error") : "Authentication failed!")
+					);
 
-			case 403:
-				throw new EAPIError(
+				case 403:
+					throw new EAPIError(
 						(retval != null && retval.has("error")) ? retval
-								.getString("error")
-								: "The supplied credentials didn't exist or were incorrect.");
+							.getString("error")
+							: "The supplied credentials didn't exist or were incorrect.",
+						res.getStatusCode()
+					);
 
-			case 404:
-				throw new EAPIError(
-						(retval != null && retval.has("error")) ? retval
-								.getString("error")
-								: "Method or stream doesn't exist");
+				case 404:
+					throw new EAPIError(
+						(retval != null && retval.has("error")) ? retval.getString("error")
+							: "Method or stream doesn't exist!",
+						res.getStatusCode()
+					);
 
-			case 500:
-				throw new EAPIError(
+				case 500:
+					throw new EAPIError(
 						(retval != null && retval.has("error")) ? retval
-								.getString("error")
-								: "There was an internal server problem with DataSift - it may be down for maintenance");
+							.getString("error")
+							: "There was an internal server problem with DataSift - it may be down for maintenance!",
+						res.getStatusCode()
+					);
 
-			default:
-				throw new EAPIError(
-						(retval != null && retval.has("error")) ? retval
-								.getString("error")
-								: "An unrecognised error has occured. Status code: "
-										+ response.getStatusLine()
-												.getStatusCode()
-										+ " "
-										+ response.getStatusLine()
-												.getReasonPhrase());
+				default:
+					throw new EAPIError(
+						(retval != null && retval.has("error")) ? retval.getString("error")
+							: "An unrecognised error has occured. Status code: "
+							+ res.getStatusCode()
+							+ " "
+							+ res.getReasonPhrase(),
+						res.getStatusCode()
+					);
+				}
+			} catch (JSONException e) {
+				throw new EAPIError("Failed to parse JSON response: " + e.getMessage());
 			}
-		} catch (ParseException e) {
-			throw new EAPIError("Failed to parse response: " + e.getMessage());
-		} catch (IOException e) {
-			throw new EAPIError("Network error: " + e.getMessage());
-		} catch (JSONException e) {
-			throw new EAPIError("Failed to parse JSON response: "
-					+ e.getMessage());
-		} finally {
-			httpClient.getConnectionManager().shutdown();
 		}
 
 		return retval;
