@@ -43,6 +43,12 @@
     </plugins>
   </build>
 
+  <distributionManagement>
+    <id>local</id>
+    <name>Local Maven repo</name>
+    <url>http://localhost/maven</url>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>commons-codec</groupId>
