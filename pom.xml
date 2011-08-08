@@ -44,9 +44,11 @@
   </build>
 
   <distributionManagement>
-    <id>local</id>
-    <name>Local Maven repo</name>
-    <url>http://localhost/maven</url>
+    <repository>
+      <id>local</id>
+      <name>Local Maven repo</name>
+      <url>http://localhost/maven</url>
+    </repository>
   </distributionManagement>
 
   <dependencies>
