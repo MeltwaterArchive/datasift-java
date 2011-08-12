@@ -6,9 +6,14 @@ package org.datasift;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,344 +24,408 @@ import org.json.JSONObject;
  * @version 0.1
  */
 public class Definition {
-	/**
-	 * The user object that owns this definition.
-	 * 
-	 * @access protected
-	 */
-	protected User _user = null;
 
-	/**
-	 * The CSDL for this definition.
-	 * 
-	 * @access protected
-	 */
-	protected String _csdl = "";
+    /**
+     * The user object that owns this definition.
+     * 
+     * @access protected
+     */
+    protected User _user = null;
+    /**
+     * The CSDL for this definition.
+     * 
+     * @access protected
+     */
+    protected String _csdl = "";
+    /**
+     * @access protected
+     */
+    protected String _hash = "";
+    /**
+     * @access protected
+     */
+    protected Date _created_at = null;
+    /**
+     * @access protected
+     */
+    protected int _total_cost = -1;
 
-	/**
-	 * @access protected
-	 */
-	protected String _hash = "";
+    /**
+     * Constructor. A User object is required.
+     * 
+     * @access public
+     * @param User
+     *            user The user object.
+     */
+    public Definition(User user) {
+        this(user, "", "");
+    }
 
-	/**
-	 * @access protected
-	 */
-	protected Date _created_at = null;
+    /**
+     * Constructor with a default CSDL definition.
+     * 
+     * @access public
+     * @param User
+     *            user The user object.
+     * @param String
+     *            csdl The initial CSDL.
+     */
+    public Definition(User user, String csdl) {
+        this(user, csdl, "");
+    }
 
-	/**
-	 * @access protected
-	 */
-	protected int _total_cost = -1;
+    /**
+     * Constructor with a default CSDL definition and hash.
+     * 
+     * @access public
+     * @param User
+     *            user The user object.
+     * @param string
+     *            csdl An optional default CSDL definition string.
+     */
+    public Definition(User user, String csdl, String hash) {
+        _user = user;
+        set(csdl);
+        _hash = hash;
+    }
 
-	/**
-	 * Constructor. A User object is required.
-	 * 
-	 * @access public
-	 * @param User
-	 *            user The user object.
-	 */
-	public Definition(User user) {
-		this(user, "", "");
-	}
+    /**
+     * Returns the definition CSDL string.
+     * 
+     * @access public
+     * @return String The definition CSDL.
+     */
+    public String get() {
+        return _csdl;
+    }
 
-	/**
-	 * Constructor with a default CSDL definition.
-	 * 
-	 * @access public
-	 * @param User
-	 *            user The user object.
-	 * @param String
-	 *            csdl The initial CSDL.
-	 */
-	public Definition(User user, String csdl) {
-		this(user, csdl, "");
-	}
+    /**
+     * Sets the definition CSDL string.
+     * 
+     * @access public
+     * @param String
+     *            csdl The new definition CSDL string.
+     */
+    public void set(String csdl) {
+        // If the string has changed, reset the hash
+        if (_csdl != csdl) {
+            clearHash();
+        }
 
-	/**
-	 * Constructor with a default CSDL definition and hash.
-	 * 
-	 * @access public
-	 * @param User
-	 *            user The user object.
-	 * @param string
-	 *            csdl An optional default CSDL definition string.
-	 */
-	public Definition(User user, String csdl, String hash) {
-		_user = user;
-		set(csdl);
-		_hash = hash;
-	}
+        _csdl = csdl.trim();
+    }
 
-	/**
-	 * Returns the definition CSDL string.
-	 * 
-	 * @access public
-	 * @return String The definition CSDL.
-	 */
-	public String get() {
-		return _csdl;
-	}
+    /**
+     * Returns the hash for this definition. If the hash has not yet been
+     * obtained it compiles the definition first.
+     * 
+     * @access public
+     * @return String The hash.
+     * @throws EInvalidData
+     * @throws JSONException
+     * @throws EAccessDenied
+     */
+    public String getHash() throws EInvalidData, EAccessDenied {
+        if (_hash.length() == 0) {
+            // Catch any compilation errors so they don't pass up to the caller
+            try {
+                compile();
+            } catch (ECompileFailed e) {
+            }
+        }
+        return _hash;
+    }
 
-	/**
-	 * Sets the definition CSDL string.
-	 * 
-	 * @access public
-	 * @param String
-	 *            csdl The new definition CSDL string.
-	 */
-	public void set(String csdl) {
-		// If the string has changed, reset the hash
-		if (_csdl != csdl) {
-			clearHash();
-		}
+    /**
+     * Reset the hash to false. The effect of this is to make the definition as
+     * requiring compilation.
+     * 
+     * @access protected
+     */
+    protected void clearHash() {
+        _hash = "";
+        _created_at = null;
+        _total_cost = -1;
+    }
 
-		_csdl = csdl.trim();
-	}
+    /**
+     * Returns the created_at date which indicates when the stream was first
+     * created.
+     * 
+     * @return Date The date object.
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     */
+    public Date getCreatedAt() throws EInvalidData, EAccessDenied {
+        if (_created_at == null) {
+            // Catch any compilation errors so they don't pass up to the caller
+            try {
+                validate();
+            } catch (ECompileFailed e) {
+            }
+        }
+        return _created_at;
+    }
 
-	/**
-	 * Returns the hash for this definition. If the hash has not yet been
-	 * obtained it compiles the definition first.
-	 * 
-	 * @access public
-	 * @return String The hash.
-	 * @throws EInvalidData
-	 * @throws JSONException
-	 * @throws EAccessDenied
-	 */
-	public String getHash() throws EInvalidData, EAccessDenied {
-		if (_hash.length() == 0) {
-			// Catch any compilation errors so they don't pass up to the caller
-			try {
-				compile();
-			} catch (ECompileFailed e) {
-			}
-		}
-		return _hash;
-	}
+    /**
+     * Returns the created_at date which indicates when the stream was first
+     * created.
+     * 
+     * @return Date The date object.
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     */
+    public int getTotalCost() throws EInvalidData, EAccessDenied {
+        if (_total_cost == -1) {
+            // Catch any compilation errors so they don't pass up to the caller
+            try {
+                validate();
+            } catch (ECompileFailed e) {
+            }
+        }
+        return _total_cost;
+    }
 
-	/**
-	 * Reset the hash to false. The effect of this is to make the definition as
-	 * requiring compilation.
-	 * 
-	 * @access protected
-	 */
-	protected void clearHash() {
-		_hash = "";
-		_created_at = null;
-		_total_cost = -1;
-	}
+    /**
+     * Call the DataSift API to validate this definition.
+     * 
+     * @access public
+     * @throws EInvalidData
+     * @throws ECompileFailed
+     * @throws JSONException
+     * @throws EAccessDenied
+     */
+    public void validate() throws EInvalidData, ECompileFailed, EAccessDenied {
+        if (_csdl.length() == 0) {
+            throw new EInvalidData("Cannot validate an empty definition.");
+        }
 
-	/**
-	 * Returns the created_at date which indicates when the stream was first
-	 * created.
-	 * 
-	 * @return Date The date object.
-	 * @throws EInvalidData
-	 * @throws EAccessDenied
-	 */
-	public Date getCreatedAt() throws EInvalidData, EAccessDenied {
-		if (_created_at == null) {
-			// Catch any compilation errors so they don't pass up to the caller
-			try {
-				validate();
-			} catch (ECompileFailed e) {
-			}
-		}
-		return _created_at;
-	}
+        JSONObject res = null;
 
-	/**
-	 * Returns the created_at date which indicates when the stream was first
-	 * created.
-	 * 
-	 * @return Date The date object.
-	 * @throws EInvalidData
-	 * @throws EAccessDenied
-	 */
-	public int getTotalCost() throws EInvalidData, EAccessDenied {
-		if (_total_cost == -1) {
-			// Catch any compilation errors so they don't pass up to the caller
-			try {
-				validate();
-			} catch (ECompileFailed e) {
-			}
-		}
-		return _total_cost;
-	}
+        try {
+            Hashtable<String, String> params = new Hashtable<String, String>();
+            params.put("csdl", _csdl);
 
-	/**
-	 * Call the DataSift API to validate this definition.
-	 * 
-	 * @access public
-	 * @throws EInvalidData
-	 * @throws ECompileFailed
-	 * @throws JSONException
-	 * @throws EAccessDenied
-	 */
-	public void validate() throws EInvalidData, ECompileFailed, EAccessDenied {
-		if (_csdl.length() == 0) {
-			throw new EInvalidData("Cannot validate an empty definition.");
-		}
+            res = _user.callAPI("validate", params);
 
-		JSONObject res = null;
+            try {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+                _created_at = df.parse((String) res.get("created_at"));
+            } catch (JSONException e) {
+                throw new ECompileFailed(
+                        "Compiled successfully but no hash in the response");
+            } catch (ParseException e) {
+                throw new EAPIError(
+                        "Compiled successfully but failed to parse the created_at date");
+            }
 
-		try {
-			Hashtable<String, String> params = new Hashtable<String, String>();
-			params.put("csdl", _csdl);
+            try {
+                _total_cost = Integer.parseInt((String) res.get("cost"));
+            } catch (JSONException e) {
+                throw new ECompileFailed(
+                        "Compiled successfully but no hash in the response");
+            }
+        } catch (EAPIError e) {
+            // Reset the hash
+            clearHash();
 
-			res = _user.callAPI("validate", params);
+            switch (e.getCode()) {
+                case 400:
+                    // Compilation failed, we should have an error message
+                    throw new ECompileFailed(e.getMessage());
 
-			try {
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
-				_created_at = df.parse((String) res.get("created_at"));
-			} catch (JSONException e) {
-				throw new ECompileFailed(
-					"Compiled successfully but no hash in the response"
-				);
-			} catch (ParseException e) {
-				throw new EAPIError(
-					"Compiled successfully but failed to parse the created_at date"
-				);
-			}
+                default:
+                    throw new ECompileFailed("Unexpected APIError code: "
+                            + e.getCode() + " [" + e.getMessage() + "]");
+            }
+        }
+    }
 
-			try {
-				_total_cost = Integer.parseInt((String) res.get("cost"));
-			} catch (JSONException e) {
-				throw new ECompileFailed(
-					"Compiled successfully but no hash in the response"
-				);
-			}
-		} catch (EAPIError e) {
-			// Reset the hash
-			clearHash();
+    /**
+     * Call the DataSift API to compile this definition. On success it will
+     * store the returned hash.
+     * 
+     * @throws EInvalidData
+     * @throws ECompileFailed
+     * @throws JSONException
+     * @throws EAccessDenied
+     */
+    public void compile() throws EInvalidData, ECompileFailed, EAccessDenied {
+        if (_csdl.length() == 0) {
+            throw new EInvalidData("Cannot compile an empty definition.");
+        }
 
-			switch (e.getCode()) {
-				case 400:
-					// Compilation failed, we should have an error message
-					throw new ECompileFailed(e.getMessage());
+        JSONObject res = null;
 
-				default:
-					throw new ECompileFailed("Unexpected APIError code: "
-						+ e.getCode() + " [" + e.getMessage() + "]");
-			}
-		}
-	}
+        try {
+            Hashtable<String, String> params = new Hashtable<String, String>();
+            params.put("csdl", _csdl);
 
-	/**
-	 * Call the DataSift API to compile this definition. On success it will
-	 * store the returned hash.
-	 * 
-	 * @throws EInvalidData
-	 * @throws ECompileFailed
-	 * @throws JSONException
-	 * @throws EAccessDenied
-	 */
-	public void compile() throws EInvalidData, ECompileFailed, EAccessDenied {
-		if (_csdl.length() == 0) {
-			throw new EInvalidData("Cannot compile an empty definition.");
-		}
+            res = _user.callAPI("compile", params);
 
-		JSONObject res = null;
+            try {
+                _hash = (String) res.get("hash");
+            } catch (JSONException e) {
+                throw new ECompileFailed(
+                        "Compiled successfully but no hash in the response");
+            }
 
-		try {
-			Hashtable<String, String> params = new Hashtable<String, String>();
-			params.put("csdl", _csdl);
+            try {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+                _created_at = df.parse((String) res.get("created_at"));
+            } catch (JSONException e) {
+                throw new ECompileFailed(
+                        "Compiled successfully but no hash in the response");
+            } catch (ParseException e) {
+                throw new EAPIError(
+                        "Compiled successfully but failed to parse the created_at date");
+            }
 
-			res = _user.callAPI("compile", params);
+            try {
+                _total_cost = Integer.parseInt((String) res.get("cost"));
+            } catch (JSONException e) {
+                throw new ECompileFailed(
+                        "Compiled successfully but no hash in the response");
+            }
+        } catch (EAPIError e) {
+            // Reset the hash
+            clearHash();
 
-			try {
-				_hash = (String) res.get("hash");
-			} catch (JSONException e) {
-				throw new ECompileFailed(
-					"Compiled successfully but no hash in the response");
-			}
+            switch (e.getCode()) {
+                case 400:
+                    // Compilation failed, we should have an error message
+                    throw new ECompileFailed(e.getMessage());
 
-			try {
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
-				_created_at = df.parse((String) res.get("created_at"));
-			} catch (JSONException e) {
-				throw new ECompileFailed(
-					"Compiled successfully but no hash in the response"
-				);
-			} catch (ParseException e) {
-				throw new EAPIError(
-					"Compiled successfully but failed to parse the created_at date"
-				);
-			}
+                default:
+                    throw new ECompileFailed("Unexpected APIError code: "
+                            + e.getCode() + " [" + e.getMessage() + "]");
+            }
+        }
+    }
 
-			try {
-				_total_cost = Integer.parseInt((String) res.get("cost"));
-			} catch (JSONException e) {
-				throw new ECompileFailed(
-					"Compiled successfully but no hash in the response"
-				);
-			}
-		} catch (EAPIError e) {
-			// Reset the hash
-			clearHash();
+    /**
+     * 
+     * @return Cost
+     * @throws EInvalidData 
+     * @throws EAccessDenied 
+     * @throws ECompileFailed 
+     * @throws EAPIError 
+     */
+    public Cost getCostBreakdown() throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
+        if (_csdl.length() == 0) {
+            throw new EInvalidData("Cannot compile an empty definition.");
+        }
 
-			switch (e.getCode()) {
-				case 400:
-					// Compilation failed, we should have an error message
-					throw new ECompileFailed(e.getMessage());
+        Cost retval = null;
 
-				default:
-					throw new ECompileFailed("Unexpected APIError code: "
-						+ e.getCode() + " [" + e.getMessage() + "]"
-					);
-			}
-		}
-	}
+        JSONObject res = null;
 
-	/**
-	 * 
-	 * @return Cost
-	 * @throws EInvalidData 
-	 * @throws EAccessDenied 
-	 * @throws ECompileFailed 
-	 * @throws EAPIError 
-	 */
-	public Cost getCostBreakdown() throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
-		if (_csdl.length() == 0) {
-			throw new EInvalidData("Cannot compile an empty definition.");
-		}
+        Hashtable<String, String> params = new Hashtable<String, String>();
 
-		Cost retval = null;
+        params.put("hash", getHash());
 
-		JSONObject res = null;
+        res = _user.callAPI("cost", params);
 
-		Hashtable<String, String> params = new Hashtable<String, String>();
+        try {
+            retval = new Cost(res.toString());
+        } catch (JSONException ejson) {
+            throw new ECompileFailed(ejson.getMessage());
+        }
 
-		params.put("hash", getHash());
+        return retval;
+    }
 
-		res = _user.callAPI("cost", params);
+    /**
+     * Returns a DataSift_StreamConsumer-derived object for this definition, for
+     * the given type.
+     * 
+     * @access public
+     * @see StreamConsumer
+     * @param String
+     *            type The consumer type for which to construct a consumer.
+     * @throws EInvalidData
+     * @return StreamConsumer The consumer object.
+     * @throws EAccessDenied
+     * @throws ECompileFailed
+     */
+    public StreamConsumer getConsumer(String type,
+            IStreamConsumerEvents eventHandler) throws EInvalidData,
+            ECompileFailed, EAccessDenied {
+        return StreamConsumer.factory(this._user, type, this, eventHandler);
+    }
 
-		try {
-			retval = new Cost(res.toString());
-		} catch (JSONException ejson) {
-			throw new ECompileFailed(ejson.getMessage());
-		}
+    /**
+     * Get a list of interactions available for the currently set hash
+     * @param count Max interactions to return (if set to -1 then all available interactions in the buffer are retrieved)
+     * @param fromid The interaction id to start from, if set to null then all available interactions in the buffer are retrieved
+     * @return
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     * @throws ECompileFailed
+     * @throws EAPIError 
+     */
+    public List<Interaction> getBuffered(int count, String fromid) throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
+        ArrayList<Interaction> retval = new ArrayList<Interaction>();
 
-		return retval;
-	}
+        JSONObject res = null;
 
-	/**
-	 * Returns a DataSift_StreamConsumer-derived object for this definition, for
-	 * the given type.
-	 * 
-	 * @access public
-	 * @see StreamConsumer
-	 * @param String
-	 *            type The consumer type for which to construct a consumer.
-	 * @throws EInvalidData
-	 * @return StreamConsumer The consumer object.
-	 * @throws EAccessDenied
-	 * @throws ECompileFailed
-	 */
-	public StreamConsumer getConsumer(String type,
-		IStreamConsumerEvents eventHandler) throws EInvalidData,
-		ECompileFailed, EAccessDenied 
-	{
-		return StreamConsumer.factory(this._user, type, this, eventHandler);
-	}
+        Hashtable<String, String> params = new Hashtable<String, String>();
+        if (count != -1) {
+            params.put("count", "" + count);
+        }
+        if (fromid != null) {
+            params.put("interaction_id", fromid);
+        }
+        params.put("hash", getHash());
+
+        res = _user.callAPI("stream", params);
+        try {
+            JSONArray data = res.getJSONArray("stream");
+            for (int i = 0; i < data.length(); i++) {
+                retval.add(new Interaction(data.getString(i)));
+            }
+        } catch (JSONException ejson) {
+            throw new ECompileFailed(ejson.getMessage());
+        }
+
+        return retval;
+    }
+
+    /**
+     * Get any amount of buffered data available up to the buffer limit
+     * @return A list of interactions received from the buffer
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     * @throws ECompileFailed
+     * @throws EAPIError 
+     */
+    public List<Interaction> getBuffered() throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
+        return getBuffered(-1, null);
+    }
+
+    /**
+     * Get up to N amount of interactions and no more ( can be less)
+     * @param count The max amount of interactions to ask for
+     * @return A list of interactions up to count
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     * @throws ECompileFailed
+     * @throws EAPIError 
+     */
+    public List<Interaction> getBuffered(int count) throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
+        return getBuffered(count, null);
+    }
+
+    /**
+     * Get whatever amount of interactions available up to the buffer limit starting from the interaction ID specified
+     * @param fromid The interaction id to start getting results from
+     * @return A list of interactions from @param fromid 
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     * @throws ECompileFailed
+     * @throws EAPIError 
+     */
+    public List<Interaction> getBuffered(String fromid) throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
+        return getBuffered(-1, fromid);
+    }
 }
