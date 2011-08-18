@@ -8,7 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -203,7 +203,7 @@ public class Definition {
         JSONObject res = null;
 
         try {
-            Hashtable<String, String> params = new Hashtable<String, String>();
+            HashMap<String, String> params = new HashMap<String, String>();
             params.put("csdl", _csdl);
 
             res = _user.callAPI("validate", params);
@@ -258,7 +258,7 @@ public class Definition {
         JSONObject res = null;
 
         try {
-            Hashtable<String, String> params = new Hashtable<String, String>();
+            HashMap<String, String> params = new HashMap<String, String>();
             params.put("csdl", _csdl);
 
             res = _user.callAPI("compile", params);
@@ -320,7 +320,7 @@ public class Definition {
 
         JSONObject res = null;
 
-        Hashtable<String, String> params = new Hashtable<String, String>();
+        HashMap<String, String> params = new HashMap<String, String>();
 
         params.put("hash", getHash());
 
@@ -369,7 +369,7 @@ public class Definition {
 
         JSONObject res = null;
 
-        Hashtable<String, String> params = new Hashtable<String, String>();
+        HashMap<String, String> params = new HashMap<String, String>();
         if (count != -1) {
             params.put("count", "" + count);
         }
