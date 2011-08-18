@@ -5,8 +5,7 @@ package org.datasift;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -50,15 +49,13 @@ public class ApiClient {
 	 * @throws EAPIError
 	 */
 	public ApiResponse call(String endpoint,
-			Hashtable<String, String> params) throws EAPIError {
+			HashMap<String, String> params) throws EAPIError {
 
 		ApiResponse retval = null;
 
 		try {
 			List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-			Enumeration<String> paramsEnum = params.keys();
-			while (paramsEnum.hasMoreElements()) {
-				String key = paramsEnum.nextElement();
+			for (String key : params.keySet()) {
 				qparams.add(new BasicNameValuePair(key, params.get(key)));
 			}
 

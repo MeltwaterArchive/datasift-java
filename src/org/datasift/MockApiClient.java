@@ -3,7 +3,7 @@
  */
 package org.datasift;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * The MockApiClient class provides an ApiClient implementation for testing
@@ -80,7 +80,7 @@ public class MockApiClient extends ApiClient {
 	 * @throws EAPIError
 	 */
 	@Override
-	public ApiResponse call(String endpoint, Hashtable<String, String> params)
+	public ApiResponse call(String endpoint, HashMap<String, String> params)
 			throws EAPIError {
 		
 		if (_response == null) {
