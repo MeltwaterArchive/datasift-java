@@ -3,7 +3,7 @@
  */
 package org.datasift;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -198,14 +198,14 @@ public class User {
 	 * @access public
 	 * @param String
 	 *            endpoint The endpoint of the API call.
-	 * @param Hashtable
+	 * @param HashMap
 	 *            params The parameters to be passed along with the request.
 	 * @throws EAPIError
-	 * @return Hashtable The response from the server.
+	 * @return HashMap The response from the server.
 	 * @throws EInvalidData
 	 * @throws EAccessDenied
 	 */
-	public JSONObject callAPI(String endpoint, Hashtable<String, String> params)
+	public JSONObject callAPI(String endpoint, HashMap<String, String> params)
 		throws EAPIError, EAccessDenied 
 	{
 		JSONObject retval = null;
