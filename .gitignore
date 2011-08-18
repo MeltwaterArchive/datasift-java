@@ -1,0 +1,6 @@
+bin/*
+.DS_Store
+deploy
+.settings/org.eclipse.jdt.core.prefs
+.project
+.classpath
