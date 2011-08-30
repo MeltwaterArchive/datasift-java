@@ -181,6 +181,93 @@ public class User {
 	public Definition createDefinition(String csdl) {
 		return new Definition(this, csdl);
 	}
+	
+	/**
+	 * Get usage data for this user.
+	 * 
+	 * @access public
+	 * @return Usage
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 * @throws EInvalidData 
+	 */
+	public Usage getUsage() throws EAPIError, EAccessDenied, EInvalidData {
+		return getUsage(0, 0, "");
+	}
+	
+	/**
+	 * Get usage data since a given timestamp.
+	 * 
+	 * @access public
+	 * @param int start Specifies the start of the period in which we're interested.
+	 * @return Usage
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 * @throws EInvalidData 
+	 */
+	public Usage getUsageSince(int start) throws EAPIError, EAccessDenied, EInvalidData {
+		return getUsage(start, 0, "");
+	}
+	
+	/**
+	 * Get usage data for this user.
+	 * 
+	 * @access public
+	 * @param String hash Specifies the stream hash in which we're interested.
+	 * @return Usage
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 * @throws EInvalidData 
+	 */
+	public Usage getUsage(String hash) throws EAPIError, EAccessDenied, EInvalidData {
+		return getUsage(0, 0, hash);
+	}
+	
+	/**
+	 * Get usage data for this user.
+	 *
+	 * @access public
+	 * @param int start Specifies the start of the period in which we're interested, or 0 for no start timestamp.
+	 * @param int end Specifies the end of the period in which we're interested, or 0 for no end timestamp.
+	 * @param String hash Specifies the stream hash in which we're interested, or an empty string for a summary of all streams.
+	 * @return Usage
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 * @throws EInvalidData 
+	 */
+	public Usage getUsage(int start, int end, String hash) throws EAPIError, EAccessDenied, EInvalidData {
+		HashMap<String, String> params = new HashMap<String, String>();
+		
+		if (start != 0) {
+			if (start < 0) {
+				throw new EInvalidData("The start parameter must be a positive integer");
+			}
+			if (end > 0 && start > end) {
+				throw new EInvalidData("The start timestamp must not be later than the end timestamp");
+			}
+			params.put("start", Integer.toString(start));
+		}
+		
+		if (end != 0) {
+			if (end < 0) {
+				throw new EInvalidData("The end parameter must be a positive integer");
+			}
+			params.put("end", Integer.toString(end));
+		}
+		
+		if (hash.length() > 0) {
+			params.put("hash", hash);
+		}
+		
+		JSONObject res = callAPI("usage", params);
+		try {
+			return new Usage(res.toString());
+		} catch (JSONException e) {
+			throw new EAPIError("There was an issue parsing the response from DataSift: " + e.toString());
+		} catch (EInvalidData e) {
+			throw new EAPIError("There was an issue parsing the response from DataSift: " + e.toString());
+		}
+	}
 
 	/**
 	 * Returns the user agent this library should use for all API calls.

@@ -1,5 +1,5 @@
 /**
- * 
+ * This file contains the Cost class.
  */
 package org.datasift;
 

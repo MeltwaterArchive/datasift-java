@@ -428,4 +428,26 @@ public class Definition {
     public List<Interaction> getBuffered(String fromid) throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
         return getBuffered(-1, fromid);
     }
+    
+    /**
+     * Get the usage for this definition.
+     * @return
+     * @throws EInvalidData 
+     * @throws EAccessDenied 
+     * @throws EAPIError 
+     */
+    public Usage getUsage() throws EAPIError, EAccessDenied, EInvalidData {
+    	return _user.getUsage(0, 0, getHash());
+    }
+    
+    /**
+     * Get the usage for this definition.
+     * @return
+     * @throws EInvalidData 
+     * @throws EAccessDenied 
+     * @throws EAPIError 
+     */
+    public Usage getUsage(int start, int end) throws EAPIError, EAccessDenied, EInvalidData {
+    	return _user.getUsage(start, end, getHash());
+    }
 }
