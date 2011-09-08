@@ -37,16 +37,16 @@ public class TestLiveApi extends TestCase {
 	}
 
 	public void testValidate_Success() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 
 		try {
 			def.validate();
 
 			// We should now have a hash
 			assertEquals("Incorrect hash", def.getHash(),
-					Config.definition_hash);
+					DataForTests.definition_hash);
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -57,9 +57,9 @@ public class TestLiveApi extends TestCase {
 	}
 
 	public void testValidate_Failure() {
-		Definition def = new Definition(user, Config.invalid_definition);
+		Definition def = new Definition(user, DataForTests.invalid_definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+				DataForTests.invalid_definition);
 
 		try {
 			def.validate();
@@ -74,16 +74,16 @@ public class TestLiveApi extends TestCase {
 	}
 
 	public void testValidate_SuccessThenFailure() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 
 		try {
 			def.validate();
 
 			// We should now have a hash
 			assertEquals("Hash is not correct", def.getHash(),
-					Config.definition_hash);
+					DataForTests.definition_hash);
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -93,9 +93,9 @@ public class TestLiveApi extends TestCase {
 		}
 
 		// Now set the invalid definition in that same object
-		def.set(Config.invalid_definition);
+		def.set(DataForTests.invalid_definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+				DataForTests.invalid_definition);
 
 		try {
 			def.compile();
@@ -110,16 +110,16 @@ public class TestLiveApi extends TestCase {
 	}
 	
 	public void testCompile_Success() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 
 		try {
 			def.compile();
 
 			// We should now have a hash
 			assertEquals("Incorrect hash", def.getHash(),
-					Config.definition_hash);
+					DataForTests.definition_hash);
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -130,9 +130,9 @@ public class TestLiveApi extends TestCase {
 	}
 
 	public void testCompile_Failure() {
-		Definition def = new Definition(user, Config.invalid_definition);
+		Definition def = new Definition(user, DataForTests.invalid_definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+				DataForTests.invalid_definition);
 
 		try {
 			def.compile();
@@ -147,16 +147,16 @@ public class TestLiveApi extends TestCase {
 	}
 
 	public void testCompile_SuccessThenFailure() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 
 		try {
 			def.compile();
 
 			// We should now have a hash
 			assertEquals("Hash is not correct", def.getHash(),
-					Config.definition_hash);
+					DataForTests.definition_hash);
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -166,9 +166,9 @@ public class TestLiveApi extends TestCase {
 		}
 
 		// Now set the invalid definition in that same object
-		def.set(Config.invalid_definition);
+		def.set(DataForTests.invalid_definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+				DataForTests.invalid_definition);
 
 		try {
 			def.compile();
@@ -183,9 +183,9 @@ public class TestLiveApi extends TestCase {
 	}
 	
 	public void testGetCreatedAt() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 		
 		try {
 			Date d = def.getCreatedAt();
@@ -198,9 +198,9 @@ public class TestLiveApi extends TestCase {
 	}
 	
 	public void testGetTotalCost() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 		
 		try {
 			int cost = def.getTotalCost();
@@ -213,13 +213,13 @@ public class TestLiveApi extends TestCase {
 	}
 	
 	public void testGetCostBreakdown() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 		
 		try {
 			Cost cost = def.getCostBreakdown();
-			assertEquals(cost.getTotalCost(), Config.definition_cost);
+			assertEquals(cost.getTotalCost(), DataForTests.definition_cost);
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (EAccessDenied e) {

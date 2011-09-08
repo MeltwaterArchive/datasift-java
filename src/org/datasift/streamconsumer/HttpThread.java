@@ -78,6 +78,7 @@ public class HttpThread extends Thread {
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				// Attempt to connect and start processing incoming interactions
 				try {
+					System.out.println("Connecting");
 					DefaultHttpClient client = new DefaultHttpClient();
 					HttpGet get = new HttpGet("http://"
 							+ _user.getStreamBaseURL() + _definition.getHash()
@@ -85,6 +86,7 @@ public class HttpThread extends Thread {
 					HttpResponse response = client.execute(get);
 					int statusCode = response.getStatusLine().getStatusCode();
 					if (statusCode == 200) {
+						System.out.println("Connected");
 						// Reset the reconnect delay
 						reconnect_delay = 0;
 						// Get a stream reader
@@ -94,6 +96,7 @@ public class HttpThread extends Thread {
 						// While we're running, get a line
 						while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 							String line = reader.readLine();
+
 							// If the line length is bigger than a tick or an
 							// empty line, process it
 							if (line.length() > 100) {
@@ -108,10 +111,12 @@ public class HttpThread extends Thread {
 						// Connection failed, back off a bit and try again
 						// Timings from
 						// http://support.datasift.net/help/kb/rest-api/http-streaming-api
-						if (reconnect_delay == 0) {
+						if (_auto_reconnect && reconnect_delay == 0) {
 							reconnect_delay = 10;
-						} else if (reconnect_delay < 240) {
+							continue;
+						} else if (_auto_reconnect && reconnect_delay < 240) {
 							reconnect_delay *= 2;
+							continue;
 						} else {
 							reason = "Connection failed: "
 									+ statusCode

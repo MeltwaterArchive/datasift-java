@@ -41,6 +41,8 @@ public class TwitterTrack implements IStreamConsumerEvents {
 			System.out.println("Creating definition...");
 			System.out.println("  " + csdl);
 			Definition def = user.createDefinition(csdl);
+			
+			System.out.println(def.getHash());
 
 			// Create the consumer
 			System.out.println("Getting the consumer...");

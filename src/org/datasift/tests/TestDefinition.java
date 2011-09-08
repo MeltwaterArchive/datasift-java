@@ -51,24 +51,24 @@ public class TestDefinition extends TestCase {
 	}
 
 	public void testConstructionWithDefinition() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 	}
 
 	public void testSetAndGet() {
 		Definition def = new Definition(user);
 
-		def.set(Config.definition);
+		def.set(DataForTests.definition);
 
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 	}
 
 	public void testValidate_Success() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 
 		String created_at = "2011-05-16 17:20:02";
 		int total_cost = 10;
@@ -92,9 +92,9 @@ public class TestDefinition extends TestCase {
 	}
 
 	public void testValidate_Failure() {
-		Definition def = new Definition(user, Config.invalid_definition);
+		Definition def = new Definition(user, DataForTests.invalid_definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+				DataForTests.invalid_definition);
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -113,9 +113,9 @@ public class TestDefinition extends TestCase {
 	}
 
 	public void testValidate_SuccessThenFailure() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 
 		String created_at = "2011-05-16 17:20:02";
 		int total_cost = 10;
@@ -138,9 +138,9 @@ public class TestDefinition extends TestCase {
 		}
 
 		// Now set the invalid definition in that same object
-		def.set(Config.invalid_definition);
+		def.set(DataForTests.invalid_definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+				DataForTests.invalid_definition);
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -158,9 +158,9 @@ public class TestDefinition extends TestCase {
 	}
 	
 	public void testCompile_Success() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 
 		String hash = "947b690ec9dca525fb8724645e088d79";
 		String created_at = "2011-05-16 17:20:02";
@@ -186,9 +186,9 @@ public class TestDefinition extends TestCase {
 	}
 
 	public void testCompile_Failure() {
-		Definition def = new Definition(user, Config.invalid_definition);
+		Definition def = new Definition(user, DataForTests.invalid_definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+				DataForTests.invalid_definition);
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -207,9 +207,9 @@ public class TestDefinition extends TestCase {
 	}
 
 	public void testCompile_SuccessThenFailure() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 
 		String hash = "947b690ec9dca525fb8724645e088d79";
 		String created_at = "2011-05-16 17:20:02";
@@ -234,9 +234,9 @@ public class TestDefinition extends TestCase {
 		}
 
 		// Now set the invalid definition in that same object
-		def.set(Config.invalid_definition);
+		def.set(DataForTests.invalid_definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+				DataForTests.invalid_definition);
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -255,9 +255,9 @@ public class TestDefinition extends TestCase {
 	}
 	
 	public void testGetCostBreakdown() {
-		Definition def = new Definition(user, Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
 		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+				DataForTests.definition);
 		
 		api_client.setResponse("{\"costs\":{\"contains\":{\"count\":1,\"cost\":4,\"targets\":{\"interaction.content\":{\"count\":1,\"cost\":4}}}},\"total\":4}", 200);
 		
@@ -277,8 +277,8 @@ public class TestDefinition extends TestCase {
 
 	@SuppressWarnings("unused")
 	public void testGetConsumer() {
-		Definition def = new Definition(user, Config.definition);
-		assertEquals(def.get(), Config.definition);
+		Definition def = new Definition(user, DataForTests.definition);
+		assertEquals(def.get(), DataForTests.definition);
 
 		api_client.setResponse("{\"hash\":\"947b690ec9dca525fb8724645e088d79\",\"created_at\":\"2011-05-16 17:20:02\",\"cost\":\"10\"}", 200);
 
