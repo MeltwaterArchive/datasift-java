@@ -45,7 +45,8 @@ abstract public class StreamConsumer {
 			return new Http(user, definition, eventHandler);
 		}
 
-		throw new EInvalidData("Unknown or inappropriate consumer type: " + type);
+		throw new EInvalidData("Unknown or inappropriate consumer type: "
+				+ type);
 	}
 
 	/**
@@ -67,7 +68,8 @@ abstract public class StreamConsumer {
 			return new HttpMulti(user, hashes, eventHandler);
 		}
 
-		throw new EInvalidData("Unknown or inappropriate consumer type: " + type);
+		throw new EInvalidData("Unknown or inappropriate consumer type: "
+				+ type);
 	}
 
 	/**
@@ -245,7 +247,8 @@ abstract public class StreamConsumer {
 	 *            interaction The interaction data structure.
 	 * @throws EInvalidData
 	 */
-	public void onMultiInteraction(String hash, Interaction interaction) throws EInvalidData {
+	public void onMultiInteraction(String hash, Interaction interaction)
+			throws EInvalidData {
 		if (_multiEventHandler != null) {
 			_multiEventHandler.onInteraction(this, hash, interaction);
 		} else {
@@ -330,4 +333,53 @@ abstract public class StreamConsumer {
 		_state = StreamConsumer.STATE_STOPPED;
 		onStopped(reason);
 	}
+
+	/**
+	 * Subscribe to a stream.
+	 * 
+	 * @param def
+	 * @throws EAccessDenied
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 */
+	public void subscribe(Definition def) throws EInvalidData, EAccessDenied,
+			EAPIError {
+		subscribe(def.getHash());
+	}
+
+	/**
+	 * Subscribe to a stream.
+	 * 
+	 * @param hash
+	 * @throws EAPIError
+	 */
+	public void subscribe(String hash) throws EAPIError {
+		throw new EAPIError(
+				"This consumer does not support dynamic stream subscription.");
+	}
+
+	/**
+	 * Unsubscribe from a stream.
+	 * 
+	 * @param def
+	 * @throws EAccessDenied
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 */
+	public void unsubscribe(Definition def) throws EInvalidData, EAccessDenied,
+			EAPIError {
+		unsubscribe(def.getHash());
+	}
+
+	/**
+	 * Unsubscribe from a stream.
+	 * 
+	 * @param hash
+	 * @throws EAPIError
+	 */
+	public void unsubscribe(String hash) throws EAPIError {
+		throw new EAPIError(
+				"This consumer does not support dynamic stream subscription.");
+	}
+
 }

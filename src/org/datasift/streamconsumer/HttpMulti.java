@@ -15,7 +15,12 @@ public class HttpMulti extends StreamConsumer {
 	/**
 	 * This is the thread that consumes the HTTP stream.
 	 */
-	private HttpMultiThread thread = null;
+	private HttpMultiThread _thread = null;
+	
+	/**
+	 * This is the list of hashes to which we're currently subscribed.
+	 */
+	private ArrayList<String> _hashes = null; 
 	
 	/**
 	 * Constructor.
@@ -24,7 +29,7 @@ public class HttpMulti extends StreamConsumer {
 	 *            user
 	 * @param ArrayList<String>
 	 *            hashes
-	 * @param IStreamConsumerEvents
+	 * @param IMultiStreamConsumerEvents
 	 *            eventHandler
 	 * @throws EInvalidData
 	 * @throws ECompileFailed
@@ -34,25 +39,59 @@ public class HttpMulti extends StreamConsumer {
 			IMultiStreamConsumerEvents eventHandler) throws EInvalidData,
 			ECompileFailed, EAccessDenied {
 		super(user, eventHandler);
-		thread = new HttpMultiThread(this, user, hashes);
+		_hashes = hashes;
+		restartThread();
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
-		thread.setAutoReconnect(auto_reconnect);
+		_thread.setAutoReconnect(auto_reconnect);
 	}
-
+	
+	@Override
+	public void subscribe(String hash) {
+		if (!_hashes.contains(hash)) {
+			_hashes.add(hash);
+			restartThread();
+		}
+	}
+	
+	@Override
+	public void unsubscribe(String hash) {
+		if (_hashes.contains(hash)) {
+			_hashes.remove(hash);
+			restartThread();
+		}
+	}
+	
+	private void restartThread() {
+		// Put the current thread in a temporary var
+		HttpMultiThread tmp = _thread;
+		// Release the main var
+		_thread = null;
+		// Create a new Thread object
+		_thread = new HttpMultiThread(this, _user, _hashes);
+		// If we're supposed to be running, start the thread
+		if (_state == StreamConsumer.STATE_RUNNING) {
+			_thread.start();
+		}
+		// If we have an old thread, kill it
+		if (tmp != null) {
+			tmp.requestKill();
+		}
+	}
+	
 	public boolean isRunning() {
-		if (thread == null) {
+		if (_thread == null) {
 			return false;
 		}
-		return thread.isAlive();
+		return _thread.isAlive();
 	}
 
 	@Override
 	protected void onStart() {
 		if (!isRunning()) {
 			_state = StreamConsumer.STATE_RUNNING;
-			thread.start();
+			_thread.start();
 		}
 	}
 }

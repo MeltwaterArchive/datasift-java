@@ -22,7 +22,8 @@ public class HttpMultiThread extends Thread {
 	private User _user = null;
 	private ArrayList<String> _hashes = null;
 	private boolean _auto_reconnect = false;
-
+	private boolean _kill_requested = false;
+	
 	public HttpMultiThread(HttpMulti http, User user, ArrayList<String> hashes) {
 		_consumer = http;
 		_user = user;
@@ -48,6 +49,10 @@ public class HttpMultiThread extends Thread {
 			// Ignore
 		}
 	}
+	
+	public synchronized void requestKill() {
+		_kill_requested = true;
+	}
 
 	public synchronized void stopConsumer() {
 		try {
@@ -57,10 +62,12 @@ public class HttpMultiThread extends Thread {
 	}
 
 	public synchronized void onStopped(String reason) {
-		try {
-			_consumer.onStopped(reason);
-		} catch (EInvalidData e) {
-			// Ignore
+		if (!_kill_requested) {
+			try {
+				_consumer.onStopped(reason);
+			} catch (EInvalidData e) {
+				// Ignore
+			}
 		}
 	}
 
@@ -68,6 +75,8 @@ public class HttpMultiThread extends Thread {
 		int reconnect_delay = 0;
 		String reason = "";
 		do {
+			if (_kill_requested) return;
+
 			// Delay before attempting a reconnect
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING
 					&& reconnect_delay > 0) {
@@ -97,6 +106,7 @@ public class HttpMultiThread extends Thread {
 										.getContent()));
 						// While we're running, get a line
 						while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+							if (_kill_requested) return;
 							String line = reader.readLine();
 							// If the line length is bigger than a tick or an
 							// empty line, process it
@@ -155,6 +165,8 @@ public class HttpMultiThread extends Thread {
 				reason = "Connection dropped, reason unknown";
 			}
 		}
+
+		if (_kill_requested) return;
 
 		onStopped(reason);
 	}
