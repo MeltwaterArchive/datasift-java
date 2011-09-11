@@ -3,6 +3,8 @@
  */
 package org.datasift;
 
+import java.util.ArrayList;
+
 import org.datasift.streamconsumer.*;
 
 /**
@@ -14,6 +16,7 @@ abstract public class StreamConsumer {
 	 * Consumer types.
 	 */
 	public static final String TYPE_HTTP = "Http";
+	public static final String TYPE_HTTP_MULTI = "HttpMulti";
 
 	/**
 	 * Consumer states.
@@ -42,7 +45,29 @@ abstract public class StreamConsumer {
 			return new Http(user, definition, eventHandler);
 		}
 
-		throw new EInvalidData("Unknown consumer type: " + type);
+		throw new EInvalidData("Unknown or inappropriate consumer type: " + type);
+	}
+
+	/**
+	 * Factory method that takes a Definition object.
+	 * 
+	 * @param user
+	 * @param type
+	 * @param definition
+	 * @param eventHandler
+	 * @return
+	 * @throws EAccessDenied
+	 * @throws ECompileFailed
+	 * @throws EInvalidData
+	 */
+	public static StreamConsumer factory(User user, String type,
+			ArrayList<String> hashes, IMultiStreamConsumerEvents eventHandler)
+			throws EInvalidData, ECompileFailed, EAccessDenied {
+		if (type == StreamConsumer.TYPE_HTTP_MULTI) {
+			return new HttpMulti(user, hashes, eventHandler);
+		}
+
+		throw new EInvalidData("Unknown or inappropriate consumer type: " + type);
 	}
 
 	/**
@@ -90,6 +115,11 @@ abstract public class StreamConsumer {
 	protected IStreamConsumerEvents _eventHandler = null;
 
 	/**
+	 * The multi-stream event handler.
+	 */
+	protected IMultiStreamConsumerEvents _multiEventHandler = null;
+
+	/**
 	 * Constructor. Do not use this directly, use the factory method instead.
 	 * 
 	 * @param User
@@ -129,6 +159,28 @@ abstract public class StreamConsumer {
 	}
 
 	/**
+	 * Constructor. Do not use this directly, use the factory method instead.
+	 * 
+	 * @param User
+	 *            user The user this consumer will run as.
+	 * @param Definition
+	 *            definition The definition that this consumer will consume.
+	 * @param IStreamConsumerEvents
+	 *            eventHandler The class that will receive events.
+	 * @throws EAccessDenied
+	 * @throws ECompileFailed
+	 * @throws EInvalidData
+	 */
+	protected StreamConsumer(User user, IMultiStreamConsumerEvents eventHandler)
+			throws EInvalidData, ECompileFailed, EAccessDenied {
+		// Set the event handler
+		_multiEventHandler = eventHandler;
+
+		// Call the common init function
+		Init(user, null);
+	}
+
+	/**
 	 * Initialise the object.
 	 * 
 	 * @param user
@@ -147,11 +199,13 @@ abstract public class StreamConsumer {
 		// Set the definition
 		_definition = definition;
 
-		// Compile the definition to ensure it's valid for use
-		if (_definition.getHash().isEmpty()) {
-			_definition.compile();
-		} else if (!(_definition.get().isEmpty())) {
-			_definition.validate();
+		// If we have a definition, compile it to ensure it's valid for use
+		if (_definition != null) {
+			if (_definition.getHash().isEmpty()) {
+				_definition.compile();
+			} else if (!(_definition.get().isEmpty())) {
+				_definition.validate();
+			}
 		}
 	}
 
@@ -179,6 +233,24 @@ abstract public class StreamConsumer {
 		} else {
 			throw new EInvalidData(
 					"You must provide an onInteraction method or an eventHandler object");
+		}
+	}
+
+	/**
+	 * This is called for each interaction received from the stream and should
+	 * be implemented in extending classes if they don't use an
+	 * IStreamConsumerEvents object.
+	 * 
+	 * @param Interaction
+	 *            interaction The interaction data structure.
+	 * @throws EInvalidData
+	 */
+	public void onMultiInteraction(String hash, Interaction interaction) throws EInvalidData {
+		if (_multiEventHandler != null) {
+			_multiEventHandler.onInteraction(this, hash, interaction);
+		} else {
+			throw new EInvalidData(
+					"You must provide an onMultiInteraction method or a multiEventHandler object");
 		}
 	}
 
