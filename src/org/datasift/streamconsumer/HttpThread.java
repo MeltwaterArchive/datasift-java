@@ -80,8 +80,8 @@ public class HttpThread extends Thread {
 				try {
 					DefaultHttpClient client = new DefaultHttpClient();
 					HttpGet get = new HttpGet("http://"
-							+ _user.getStreamBaseURL() + _definition.getHash()
-							+ "?api_key=" + _user.getAPIKey());
+							+ _user.getStreamBaseURL() + _definition.getHash());
+					get.addHeader("authorization", _user.getUsername() + ":" + _user.getAPIKey());
 					HttpResponse response = client.execute(get);
 					int statusCode = response.getStatusLine().getStatusCode();
 					if (statusCode == 200) {
