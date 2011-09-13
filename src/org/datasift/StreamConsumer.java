@@ -17,6 +17,7 @@ abstract public class StreamConsumer {
 	 */
 	public static final String TYPE_HTTP = "Http";
 	public static final String TYPE_HTTP_MULTI = "HttpMulti";
+	public static final String TYPE_WS = "Ws";
 
 	/**
 	 * Consumer states.
@@ -25,6 +26,7 @@ abstract public class StreamConsumer {
 	public static final int STATE_STARTING = 1;
 	public static final int STATE_RUNNING = 2;
 	public static final int STATE_STOPPING = 3;
+	public static final int STATE_RESTARTING = 4;
 
 	/**
 	 * Factory method that takes a Definition object.
@@ -66,6 +68,29 @@ abstract public class StreamConsumer {
 			throws EInvalidData, ECompileFailed, EAccessDenied {
 		if (type == StreamConsumer.TYPE_HTTP_MULTI) {
 			return new HttpMulti(user, hashes, eventHandler);
+		}
+
+		throw new EInvalidData("Unknown or inappropriate consumer type: "
+				+ type);
+	}
+
+	/**
+	 * Factory method that takes no definition or CSDL.
+	 * 
+	 * @param user
+	 * @param type
+	 * @param eventHandler
+	 * @return
+	 * @throws EAccessDenied
+	 * @throws ECompileFailed
+	 * @throws EInvalidData
+	 * @throws EAPIError 
+	 */
+	public static StreamConsumer factory(User user, String type,
+			IMultiStreamConsumerEvents eventHandler)
+			throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
+		if (type == StreamConsumer.TYPE_WS) {
+			return new WS(user, eventHandler);
 		}
 
 		throw new EInvalidData("Unknown or inappropriate consumer type: "
