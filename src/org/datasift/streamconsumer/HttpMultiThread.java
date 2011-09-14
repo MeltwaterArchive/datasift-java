@@ -5,6 +5,7 @@ package org.datasift.streamconsumer;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -16,16 +17,17 @@ import org.json.JSONException;
  * @author MediaSift
  * @version 0.1
  */
-public class HttpThread extends Thread {
-	private Http _consumer = null;
+public class HttpMultiThread extends Thread {
+	private HttpMulti _consumer = null;
 	private User _user = null;
-	private Definition _definition = null;
+	private ArrayList<String> _hashes = null;
 	private boolean _auto_reconnect = false;
-
-	public HttpThread(Http http, User user, Definition definition) {
+	private boolean _kill_requested = false;
+	
+	public HttpMultiThread(HttpMulti http, User user, ArrayList<String> hashes) {
 		_consumer = http;
 		_user = user;
-		_definition = definition;
+		_hashes = hashes;
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
@@ -38,12 +40,18 @@ public class HttpThread extends Thread {
 
 	public synchronized void processLine(String line) {
 		try {
-			_consumer.onInteraction(new Interaction(line));
+			// Extract the hash
+			JSONdn data = new JSONdn(line);
+			_consumer.onMultiInteraction(data.getStringVal("hash"), new Interaction(data.getJSONObject("data").toString()));
 		} catch (JSONException e) {
 			// Ignore
 		} catch (EInvalidData e) {
 			// Ignore
 		}
+	}
+	
+	public synchronized void requestKill() {
+		_kill_requested = true;
 	}
 
 	public synchronized void stopConsumer() {
@@ -54,10 +62,12 @@ public class HttpThread extends Thread {
 	}
 
 	public synchronized void onStopped(String reason) {
-		try {
-			_consumer.onStopped(reason);
-		} catch (EInvalidData e) {
-			// Ignore
+		if (!_kill_requested) {
+			try {
+				_consumer.onStopped(reason);
+			} catch (EInvalidData e) {
+				// Ignore
+			}
 		}
 	}
 
@@ -65,6 +75,8 @@ public class HttpThread extends Thread {
 		int reconnect_delay = 0;
 		String reason = "";
 		do {
+			if (_kill_requested) return;
+
 			// Delay before attempting a reconnect
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING
 					&& reconnect_delay > 0) {
@@ -79,8 +91,9 @@ public class HttpThread extends Thread {
 				// Attempt to connect and start processing incoming interactions
 				try {
 					DefaultHttpClient client = new DefaultHttpClient();
-					HttpGet get = new HttpGet("http://"
-							+ _user.getStreamBaseURL() + _definition.getHash());
+					String url = "http://"
+							+ _user.getStreamBaseURL() + "multi?hashes=" + _hashes.toString().replace(", ", ",");
+					HttpGet get = new HttpGet(url);
 					get.addHeader("authorization", _user.getUsername() + ":" + _user.getAPIKey());
 					HttpResponse response = client.execute(get);
 					int statusCode = response.getStatusLine().getStatusCode();
@@ -93,6 +106,7 @@ public class HttpThread extends Thread {
 										.getContent()));
 						// While we're running, get a line
 						while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+							if (_kill_requested) return;
 							String line = reader.readLine();
 							// If the line length is bigger than a tick or an
 							// empty line, process it
@@ -151,6 +165,8 @@ public class HttpThread extends Thread {
 				reason = "Connection dropped, reason unknown";
 			}
 		}
+
+		if (_kill_requested) return;
 
 		onStopped(reason);
 	}
