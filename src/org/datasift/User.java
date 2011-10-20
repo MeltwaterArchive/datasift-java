@@ -36,7 +36,7 @@ public class User {
 	 * 
 	 * @access public
 	 */
-	public final static String _stream_base_url = "stream.datasift.net/";
+	public static String _stream_base_url = "stream.datasift.net/";
 
 	/**
 	 * The username of this user.
