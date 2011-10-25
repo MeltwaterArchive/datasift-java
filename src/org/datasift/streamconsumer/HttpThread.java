@@ -94,16 +94,21 @@ public class HttpThread extends Thread {
 						// While we're running, get a line
 						while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 							String line = reader.readLine();
-							// If the line length is bigger than a tick or an
-							// empty line, process it
-							if (line.length() > 100) {
+							if (line == null) {
+								// If the line is null then the connection has closed
+								// Break out the loop and auto reconnect if enabled
+								break;
+								
+							} else if (line.length() > 100) {
+								// If the line length is bigger than a tick or an
+								// empty line, process it
 								processLine(line);
 							}
 						}
 					} else if (statusCode == 404) {
 						// Hash not found!
 						reason = "Hash not found!";
-						stopConsumer();
+						_consumer.stop();
 					} else {
 						// Connection failed, back off a bit and try again
 						// Timings from

@@ -315,7 +315,7 @@ abstract public class StreamConsumer {
 
 		// Start consuming
 		_state = StreamConsumer.STATE_STARTING;
-		onStart();
+		onStart(_auto_reconnect);
 	}
 
 	/**
@@ -323,7 +323,7 @@ abstract public class StreamConsumer {
 	 * 
 	 * @abstract
 	 */
-	abstract protected void onStart();
+	abstract protected void onStart(boolean auto_reconnect);
 
 	/**
 	 * This method can be called at any time to *request* that the consumer stop
