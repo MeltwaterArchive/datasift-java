@@ -47,7 +47,8 @@ public class Http extends StreamConsumer {
 	}
 
 	@Override
-	protected void onStart() {
+	protected void onStart(boolean auto_reconnect) {
+		setAutoReconnect(auto_reconnect);
 		if (!isRunning()) {
 			_state = StreamConsumer.STATE_RUNNING;
 			thread.start();
