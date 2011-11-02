@@ -146,8 +146,6 @@ public class WSThread extends Thread {
 					
 					// Establish WebSocket Connection
 					_ws.connect();
-					// For some reason the DataSift server needs something to be sent before it will start recognising commands
-					_ws.send("\n");
 					
 					while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 						Thread.sleep(5000);

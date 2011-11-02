@@ -14,8 +14,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -32,8 +32,9 @@ public class ApiClient {
 	private User _user = null;
 
 	public ApiClient(User user) {
-		_http_client = new DefaultHttpClient();
 		_user = user;
+		_http_client = new DefaultHttpClient();
+		_http_client.getParams().setParameter("http.useragent", _user.getUserAgent());
 	}
 
 	/**
@@ -59,11 +60,11 @@ public class ApiClient {
 				qparams.add(new BasicNameValuePair(key, params.get(key)));
 			}
 
-			HttpGet get = new HttpGet("http://" + User._api_base_url + endpoint
-					+ ".json?" + URLEncodedUtils.format(qparams, "UTF-8"));
-			get.addHeader("Auth", _user.getUsername() + ":" + _user.getAPIKey());
+			HttpPost post = new HttpPost("http://" + User._api_base_url + endpoint + ".json");
+			post.addHeader("Auth", _user.getUsername() + ":" + _user.getAPIKey());
+			post.setEntity(new UrlEncodedFormEntity(qparams));
 
-			HttpResponse response = _http_client.execute(get);
+			HttpResponse response = _http_client.execute(post);
 
 			HttpEntity entity = response.getEntity();
 
