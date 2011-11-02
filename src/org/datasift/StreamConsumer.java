@@ -3,6 +3,8 @@
  */
 package org.datasift;
 
+import java.util.ArrayList;
+
 import org.datasift.streamconsumer.*;
 
 /**
@@ -14,6 +16,8 @@ abstract public class StreamConsumer {
 	 * Consumer types.
 	 */
 	public static final String TYPE_HTTP = "Http";
+	public static final String TYPE_HTTP_MULTI = "HttpMulti";
+	public static final String TYPE_WS = "Ws";
 
 	/**
 	 * Consumer states.
@@ -22,6 +26,7 @@ abstract public class StreamConsumer {
 	public static final int STATE_STARTING = 1;
 	public static final int STATE_RUNNING = 2;
 	public static final int STATE_STOPPING = 3;
+	public static final int STATE_RESTARTING = 4;
 
 	/**
 	 * Factory method that takes a Definition object.
@@ -42,7 +47,54 @@ abstract public class StreamConsumer {
 			return new Http(user, definition, eventHandler);
 		}
 
-		throw new EInvalidData("Unknown consumer type: " + type);
+		throw new EInvalidData("Unknown or inappropriate consumer type: "
+				+ type);
+	}
+
+	/**
+	 * Factory method that takes a Definition object.
+	 * 
+	 * @param user
+	 * @param type
+	 * @param definition
+	 * @param eventHandler
+	 * @return
+	 * @throws EAccessDenied
+	 * @throws ECompileFailed
+	 * @throws EInvalidData
+	 */
+	public static StreamConsumer factory(User user, String type,
+			ArrayList<String> hashes, IMultiStreamConsumerEvents eventHandler)
+			throws EInvalidData, ECompileFailed, EAccessDenied {
+		if (type == StreamConsumer.TYPE_HTTP_MULTI) {
+			return new HttpMulti(user, hashes, eventHandler);
+		}
+
+		throw new EInvalidData("Unknown or inappropriate consumer type: "
+				+ type);
+	}
+
+	/**
+	 * Factory method that takes no definition or CSDL.
+	 * 
+	 * @param user
+	 * @param type
+	 * @param eventHandler
+	 * @return
+	 * @throws EAccessDenied
+	 * @throws ECompileFailed
+	 * @throws EInvalidData
+	 * @throws EAPIError 
+	 */
+	public static StreamConsumer factory(User user, String type,
+			IMultiStreamConsumerEvents eventHandler)
+			throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
+		if (type == StreamConsumer.TYPE_WS) {
+			return new WS(user, eventHandler);
+		}
+
+		throw new EInvalidData("Unknown or inappropriate consumer type: "
+				+ type);
 	}
 
 	/**
@@ -90,6 +142,11 @@ abstract public class StreamConsumer {
 	protected IStreamConsumerEvents _eventHandler = null;
 
 	/**
+	 * The multi-stream event handler.
+	 */
+	protected IMultiStreamConsumerEvents _multiEventHandler = null;
+
+	/**
 	 * Constructor. Do not use this directly, use the factory method instead.
 	 * 
 	 * @param User
@@ -129,6 +186,28 @@ abstract public class StreamConsumer {
 	}
 
 	/**
+	 * Constructor. Do not use this directly, use the factory method instead.
+	 * 
+	 * @param User
+	 *            user The user this consumer will run as.
+	 * @param Definition
+	 *            definition The definition that this consumer will consume.
+	 * @param IStreamConsumerEvents
+	 *            eventHandler The class that will receive events.
+	 * @throws EAccessDenied
+	 * @throws ECompileFailed
+	 * @throws EInvalidData
+	 */
+	protected StreamConsumer(User user, IMultiStreamConsumerEvents eventHandler)
+			throws EInvalidData, ECompileFailed, EAccessDenied {
+		// Set the event handler
+		_multiEventHandler = eventHandler;
+
+		// Call the common init function
+		Init(user, null);
+	}
+
+	/**
 	 * Initialise the object.
 	 * 
 	 * @param user
@@ -147,11 +226,13 @@ abstract public class StreamConsumer {
 		// Set the definition
 		_definition = definition;
 
-		// Compile the definition to ensure it's valid for use
-		if (_definition.getHash().isEmpty()) {
-			_definition.compile();
-		} else if (!(_definition.get().isEmpty())) {
-			_definition.validate();
+		// If we have a definition, compile it to ensure it's valid for use
+		if (_definition != null) {
+			if (_definition.getHash().isEmpty()) {
+				_definition.compile();
+			} else if (!(_definition.get().isEmpty())) {
+				_definition.validate();
+			}
 		}
 	}
 
@@ -179,6 +260,25 @@ abstract public class StreamConsumer {
 		} else {
 			throw new EInvalidData(
 					"You must provide an onInteraction method or an eventHandler object");
+		}
+	}
+
+	/**
+	 * This is called for each interaction received from the stream and should
+	 * be implemented in extending classes if they don't use an
+	 * IStreamConsumerEvents object.
+	 * 
+	 * @param Interaction
+	 *            interaction The interaction data structure.
+	 * @throws EInvalidData
+	 */
+	public void onMultiInteraction(String hash, Interaction interaction)
+			throws EInvalidData {
+		if (_multiEventHandler != null) {
+			_multiEventHandler.onInteraction(this, hash, interaction);
+		} else {
+			throw new EInvalidData(
+					"You must provide an onMultiInteraction method or a multiEventHandler object");
 		}
 	}
 
@@ -215,7 +315,7 @@ abstract public class StreamConsumer {
 
 		// Start consuming
 		_state = StreamConsumer.STATE_STARTING;
-		onStart();
+		onStart(_auto_reconnect);
 	}
 
 	/**
@@ -223,7 +323,7 @@ abstract public class StreamConsumer {
 	 * 
 	 * @abstract
 	 */
-	abstract protected void onStart();
+	abstract protected void onStart(boolean auto_reconnect);
 
 	/**
 	 * This method can be called at any time to *request* that the consumer stop
@@ -258,4 +358,53 @@ abstract public class StreamConsumer {
 		_state = StreamConsumer.STATE_STOPPED;
 		onStopped(reason);
 	}
+
+	/**
+	 * Subscribe to a stream.
+	 * 
+	 * @param def
+	 * @throws EAccessDenied
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 */
+	public void subscribe(Definition def) throws EInvalidData, EAccessDenied,
+			EAPIError {
+		subscribe(def.getHash());
+	}
+
+	/**
+	 * Subscribe to a stream.
+	 * 
+	 * @param hash
+	 * @throws EAPIError
+	 */
+	public void subscribe(String hash) throws EAPIError {
+		throw new EAPIError(
+				"This consumer does not support dynamic stream subscription.");
+	}
+
+	/**
+	 * Unsubscribe from a stream.
+	 * 
+	 * @param def
+	 * @throws EAccessDenied
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 */
+	public void unsubscribe(Definition def) throws EInvalidData, EAccessDenied,
+			EAPIError {
+		unsubscribe(def.getHash());
+	}
+
+	/**
+	 * Unsubscribe from a stream.
+	 * 
+	 * @param hash
+	 * @throws EAPIError
+	 */
+	public void unsubscribe(String hash) throws EAPIError {
+		throw new EAPIError(
+				"This consumer does not support dynamic stream subscription.");
+	}
+
 }

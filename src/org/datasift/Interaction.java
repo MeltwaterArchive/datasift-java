@@ -14,8 +14,19 @@ import org.json.JSONException;
  */
 public class Interaction extends JSONdn {
 
-	public Interaction(String source) throws JSONException {
-		super(source);
-	}
+	// Update: Jairam Chandar
+	// Modified code to make the raw JSON available from the Interaction Object
 
+        private String source = null;
+
+        public Interaction(String source) throws JSONException{
+                super(source);
+                this.source = source;
+        }
+
+	@Override
+        public String toString()
+        {
+                return this.source;
+        }
 }
