@@ -9,7 +9,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 
 import org.datasift.*;
@@ -26,14 +25,19 @@ public class StreamUsage implements IStreamConsumerEvents {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if (args.length != 1) {
-			System.out.println("Please specify the filename of a CSDL definition.");
+		if (args.length < 1) {
+			System.out.println("Please specify the filename of a CSDL definition and an optional run time in seconds.");
 			return;
 		}
 		
 		try {
 			
 			String csdl = StreamUsage.readFileAsString(args[0]).trim();
+			
+			int run_secs = 3600;
+			if (args.length == 2) {
+				run_secs = Integer.parseInt(args[1]);
+			}
 			
 			// Authenticate
 			System.out.println("Creating user...");
@@ -47,7 +51,7 @@ public class StreamUsage implements IStreamConsumerEvents {
 			// Create the consumer
 			System.out.println("Getting the consumer...");
 			StreamConsumer consumer = def.getConsumer(StreamConsumer.TYPE_HTTP,
-					new StreamUsage(60));
+					new StreamUsage(run_secs));
 
 			// And start consuming
 			System.out.println("Consuming...");
@@ -139,17 +143,14 @@ public class StreamUsage implements IStreamConsumerEvents {
 		// Get the usage and display it
 		try {
 			Usage u = _user.getUsage(User.USAGE_HOUR);
-			System.out.println(u);
-			
-			DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
-			System.out.println("Usage information from " + df.format(u.getStartDate()) + " to " + df.format(u.getEndDate()) + "...");
+			System.out.println("Usage information from " + u.getStartDate() + " to " + u.getEndDate() + "...");
 			for (String hash : u.getStreamHashes()) {
 				System.out.println("  Stream " + hash + ":");
 				System.out.println("    Consumed for " + u.getSeconds(hash) + " seconds");
 				System.out.println("    Received...");
 				for (String type : u.getLicenseTypes(hash)) {
 					int num = u.getLicenseUsage(hash, type);
-					System.out.println("      " + num + " " + type.replaceAll(".", " ") + (num == 1 ? "" : "s"));
+					System.out.println("      " + num + " " + type + " interaction" + (num == 1 ? "" : "s"));
 				}
 			}
 		} catch (EAPIError e) {
