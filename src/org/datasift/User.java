@@ -23,20 +23,34 @@ public class User {
 	 * @access public
 	 */
 	public final static String _user_agent = "DataSiftJava/0.3.2";
-
+	
 	/**
 	 * The base URL for API calls. No http://, and with the trailing slash.
 	 * 
 	 * @access public
 	 */
-	public static String _api_base_url = "api.datasift.com/";
+	public static String _api_base_url = "api.qadatasift.com/";
 
 	/**
 	 * The base URL for HTTP streaming. No http://, and with the trailing slash.
 	 * 
 	 * @access public
 	 */
-	public static String _stream_base_url = "stream.datasift.com/";
+	public static String _stream_base_url = "stream.qadatasift.com/";
+
+	/**
+	 * Usage period constant: hour
+	 * 
+	 * @access public
+	 */
+	public final static String USAGE_HOUR = "hour";
+
+	/**
+	 * Usage period constant: day
+	 * 
+	 * @access public
+	 */
+	public final static String USAGE_DAY = "day";
 
 	/**
 	 * The username of this user.
@@ -186,35 +200,6 @@ public class User {
 	 * Get usage data for this user.
 	 * 
 	 * @access public
-	 * @return Usage
-	 * @throws EAccessDenied
-	 * @throws EAPIError
-	 * @throws EInvalidData
-	 */
-	public Usage getUsage() throws EAPIError, EAccessDenied, EInvalidData {
-		return getUsage(0, 0, "");
-	}
-
-	/**
-	 * Get usage data since a given timestamp.
-	 * 
-	 * @access public
-	 * @param int start Specifies the start of the period in which we're
-	 *        interested.
-	 * @return Usage
-	 * @throws EAccessDenied
-	 * @throws EAPIError
-	 * @throws EInvalidData
-	 */
-	public Usage getUsageSince(int start) throws EAPIError, EAccessDenied,
-			EInvalidData {
-		return getUsage(start, 0, "");
-	}
-
-	/**
-	 * Get usage data for this user.
-	 * 
-	 * @access public
 	 * @param String
 	 *            hash Specifies the stream hash in which we're interested.
 	 * @return Usage
@@ -222,54 +207,31 @@ public class User {
 	 * @throws EAPIError
 	 * @throws EInvalidData
 	 */
-	public Usage getUsage(String hash) throws EAPIError, EAccessDenied,
+	public Usage getUsage() throws EAPIError, EAccessDenied,
 			EInvalidData {
-		return getUsage(0, 0, hash);
+		return getUsage(User.USAGE_HOUR);
 	}
 
 	/**
 	 * Get usage data for this user.
 	 * 
 	 * @access public
-	 * @param int start Specifies the start of the period in which we're
-	 *        interested, or 0 for no start timestamp.
-	 * @param int end Specifies the end of the period in which we're interested,
-	 *        or 0 for no end timestamp.
-	 * @param String
-	 *            hash Specifies the stream hash in which we're interested, or
-	 *            an empty string for a summary of all streams.
+	 * @param String period Use the final static vars in this class to specify
+	 *            either "day" or "hour".
 	 * @return Usage
 	 * @throws EAccessDenied
 	 * @throws EAPIError
 	 * @throws EInvalidData
 	 */
-	public Usage getUsage(int start, int end, String hash) throws EAPIError,
+	public Usage getUsage(String period) throws EAPIError,
 			EAccessDenied, EInvalidData {
 		HashMap<String, String> params = new HashMap<String, String>();
 
-		if (start != 0) {
-			if (start < 0) {
-				throw new EInvalidData(
-						"The start parameter must be a positive integer");
-			}
-			if (end > 0 && start > end) {
-				throw new EInvalidData(
-						"The start timestamp must not be later than the end timestamp");
-			}
-			params.put("start", Integer.toString(start));
+		if (period != User.USAGE_HOUR && period != User.USAGE_DAY) {
+			throw new EInvalidData("The specified period is not supported");
 		}
 
-		if (end != 0) {
-			if (end < 0) {
-				throw new EInvalidData(
-						"The end parameter must be a positive integer");
-			}
-			params.put("end", Integer.toString(end));
-		}
-
-		if (hash.length() > 0) {
-			params.put("hash", hash);
-		}
+		params.put("period", period);
 
 		JSONObject res = callAPI("usage", params);
 		try {

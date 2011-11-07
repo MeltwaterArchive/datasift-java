@@ -3,7 +3,11 @@
  */
 package org.datasift;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.json.JSONException;
@@ -17,8 +21,7 @@ import org.json.JSONException;
  */
 public class Usage extends JSONdn {
 
-	protected String _items_key = "streams";
-
+	private DateFormat _df = null;
 	/**
 	 * @param source
 	 * @throws EInvalidData
@@ -26,54 +29,29 @@ public class Usage extends JSONdn {
 	 */
 	public Usage(String source) throws EInvalidData, JSONException {
 		super(source);
-
-		try {
-			getJSONObject("streams");
-		} catch (JSONException e) {
-			_items_key = "types";
-		}
+		_df = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z");
 	}
 
 	/**
-	 * Returns the total number of items processed.
+	 * Returns a Date object representing the start date.
 	 * 
 	 * @return
 	 * @throws EInvalidData
+	 * @throws ParseException 
 	 */
-	public int getProcessed() throws EInvalidData {
-		return getIntVal("processed");
+	public Date getStartDate() throws EInvalidData, ParseException {
+		return _df.parse(getStringVal("start"));
 	}
 
 	/**
-	 * Returns the number of items processed for this stream or type.
-	 * 
-	 * @param hash
-	 * @return
-	 * @throws EInvalidData
-	 */
-	public int getProcessed(String item) throws EInvalidData {
-		return getIntVal(_items_key + "." + item + ".processed");
-	}
-
-	/**
-	 * Returns the total number of items delivered.
+	 * Returns a Date object representing the start date.
 	 * 
 	 * @return
 	 * @throws EInvalidData
+	 * @throws ParseException 
 	 */
-	public int getDelivered() throws EInvalidData {
-		return getIntVal("delivered");
-	}
-
-	/**
-	 * Returns the number of items delivered for this stream or type.
-	 * 
-	 * @param hash
-	 * @return
-	 * @throws EInvalidData
-	 */
-	public int getDelivered(String item) throws EInvalidData {
-		return getIntVal(_items_key + "." + item + ".delivered");
+	public Date getEndDate() throws EInvalidData, ParseException {
+		return _df.parse(getStringVal("end"));
 	}
 
 	/**
@@ -82,17 +60,59 @@ public class Usage extends JSONdn {
 	 * @return
 	 * @throws EInvalidData
 	 */
-	public String[] getItems() {
+	public String[] getStreamHashes() {
 		ArrayList<String> retval = new ArrayList<String>();
 		try {
 			@SuppressWarnings("unchecked")
-			Iterator<String> i = getJSONObject(_items_key).keys();
+			Iterator<String> i = getJSONObject("streams").keys();
 			while (i.hasNext()) {
 				retval.add(i.next());
 			}
 		} catch (JSONException e) {
-			// Items key not found, ignore this and return an empty array
+			// Streams key not found, ignore this and return an empty array
 		}
 		return retval.toArray(new String[0]);
+	}
+
+	/**
+	 * Returns the number of seconds for which a stream has been consumed.
+	 * 
+	 * @param hash
+	 * @return
+	 * @throws EInvalidData
+	 */
+	public int getSeconds(String stream_hash) throws EInvalidData {
+		return getIntVal("streams." + stream_hash + ".seconds");
+	}
+
+	/**
+	 * Return the streams or types for which we have detailed data.
+	 * 
+	 * @return
+	 * @throws EInvalidData
+	 */
+	public String[] getLicenseTypes(String stream_hash) {
+		ArrayList<String> retval = new ArrayList<String>();
+		try {
+			@SuppressWarnings("unchecked")
+			Iterator<String> i = getJSONObjectVal("streams." + stream_hash + ".licenses").keys();
+			while (i.hasNext()) {
+				retval.add(i.next());
+			}
+		} catch (EInvalidData e) {
+			// Licenses key not found, ignore this and return an empty array
+		}
+		return retval.toArray(new String[0]);
+	}
+
+	/**
+	 * Returns the number of seconds for which a stream has been consumed.
+	 * 
+	 * @param hash
+	 * @return
+	 * @throws EInvalidData
+	 */
+	public int getLicenseUsage(String stream_hash, String type) throws EInvalidData {
+		return getIntVal("streams." + stream_hash + ".licenses." + type);
 	}
 }

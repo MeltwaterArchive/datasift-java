@@ -3,6 +3,8 @@
  */
 package org.datasift.tests;
 
+import java.text.ParseException;
+
 import junit.framework.TestCase;
 
 import org.junit.Before;
@@ -74,69 +76,25 @@ public class TestUser extends TestCase {
 		}
 	}
 	
-	public void testGetUsageSummary() {
-		api_client.setResponse("{\"processed\":9999,\"delivered\":10800,\"streams\":{\"a123ab20f37f333824159b8868ad3827\":{\"processed\":7505,\"delivered\":8100},\"c369ab20f37f333824159b8868ad3827\":{\"processed\":2494,\"delivered\":2700}}}", 200, 150, 100);
+	public void testGetUsage() {
+		api_client.setResponse("{\"start\":\"Mon, 07 Nov 2011 14:20:00 +0000\",\"streams\":{\"5e82aa9ac3dcf4dec1cce08a0cec914a\":{\"seconds\":313,\"licenses\":{\"twitter\":17,\"facebook\":5}}},\"end\":\"Mon, 07 Nov 2011 15:20:00 +0000\"}", 200, 150, 100);
 
-		Usage u;
 		try {
-			u = user.getUsage();
+			Usage u = user.getUsage();
 
-			assertEquals("Processed count is incorrect", 9999, u.getProcessed());
-			assertEquals("Delivered count is incorrect", 10800, u.getDelivered());
-
-			assertEquals("Processed count for hash a123ab20f37f333824159b8868ad3827 is incorrect", 7505, u.getProcessed("a123ab20f37f333824159b8868ad3827"));
-			assertEquals("Delivered count for hash a123ab20f37f333824159b8868ad3827 is incorrect", 8100, u.getDelivered("a123ab20f37f333824159b8868ad3827"));
-
-			assertEquals("Processed count for hash c369ab20f37f333824159b8868ad3827 is incorrect", 2494, u.getProcessed("c369ab20f37f333824159b8868ad3827"));
-			assertEquals("Delivered count for hash c369ab20f37f333824159b8868ad3827 is incorrect", 2700, u.getDelivered("c369ab20f37f333824159b8868ad3827"));
-
-			int totalProcessed = 0;
-			int totalDelivered = 0;
-			for (String hash : u.getItems()) {
-				totalProcessed += u.getProcessed(hash);
-				totalDelivered += u.getDelivered(hash);
-			}
-			assertEquals("Sum of processed for hashes does not equal total processed", u.getProcessed(), totalProcessed);
-			assertEquals("Sum of delivered for hashes does not equal total delivered", u.getDelivered(), totalDelivered);
+			assertEquals("Start date is incorrect", "Mon Nov 07 14:20:00 GMT 2011", u.getStartDate().toString());
+			assertEquals("End date is incorrect", "Mon Nov 07 15:20:00 GMT 2011", u.getEndDate().toString());
+			assertEquals("Seconds consumed is incorrect", 313, u.getSeconds("5e82aa9ac3dcf4dec1cce08a0cec914a"));
+			assertEquals("Twitter licenses used is incorrect", 17, u.getLicenseUsage("5e82aa9ac3dcf4dec1cce08a0cec914a", "twitter"));
+			assertEquals("Facebook licenses used is incorrect", 5, u.getLicenseUsage("5e82aa9ac3dcf4dec1cce08a0cec914a", "facebook"));
 		} catch (EAPIError e) {
 			fail("Caught EAPIError: " + e.toString());
 		} catch (EAccessDenied e) {
 			fail("Caught EAccessDenied: " + e.toString());
 		} catch (EInvalidData e) {
 			fail("Caught EInvalidData: " + e.toString());
-		}
-	}
-
-	public void testGetUsageForStream() {
-		api_client.setResponse("{\"processed\":2494,\"delivered\":2700,\"types\":{\"buzz\":{\"processed\":247,\"delivered\":350},\"twitter\":{\"processed\":2247,\"delivered\":2350}}}", 200, 150, 100);
-
-		Usage u;
-		try {
-			u = user.getUsage("a123ab20f37f333824159b8868ad3827");
-
-			assertEquals("Processed count is incorrect", 2494, u.getProcessed());
-			assertEquals("Delivered count is incorrect", 2700, u.getDelivered());
-
-			assertEquals("Processed count for type buzz is incorrect", 247, u.getProcessed("buzz"));
-			assertEquals("Delivered count for type buzz is incorrect", 350, u.getDelivered("buzz"));
-
-			assertEquals("Processed count for type twitter is incorrect", 2247, u.getProcessed("twitter"));
-			assertEquals("Delivered count for type twitter is incorrect", 2350, u.getDelivered("twitter"));
-
-			int totalProcessed = 0;
-			int totalDelivered = 0;
-			for (String hash : u.getItems()) {
-				totalProcessed += u.getProcessed(hash);
-				totalDelivered += u.getDelivered(hash);
-			}
-			assertEquals("Sum of processed for types does not equal total processed", u.getProcessed(), totalProcessed);
-			assertEquals("Sum of delivered for types does not equal total delivered", u.getDelivered(), totalDelivered);
-		} catch (EAPIError e) {
-			fail("Caught EAPIError: " + e.toString());
-		} catch (EAccessDenied e) {
-			fail("Caught EAccessDenied: " + e.toString());
-		} catch (EInvalidData e) {
-			fail("Caught EInvalidData: " + e.toString());
+		} catch (ParseException e) {
+			fail("Caught ParseException: " + e.toString());
 		}
 	}
 }

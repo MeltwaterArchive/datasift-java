@@ -1,0 +1,169 @@
+/**
+ * This example reads a CSDL definition from a file given on the filename,
+ * consumes it for an hour and then fetches usage information for that
+ * stream and displays it in a nice GUI.
+ */
+package org.datasift.examples;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+
+import org.datasift.*;
+
+/**
+ * @author MediaSift
+ * @version 0.1
+ */
+public class StreamUsage implements IStreamConsumerEvents {
+	
+	public static User _user = null;
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		if (args.length != 1) {
+			System.out.println("Please specify the filename of a CSDL definition.");
+			return;
+		}
+		
+		try {
+			
+			String csdl = StreamUsage.readFileAsString(args[0]).trim();
+			
+			// Authenticate
+			System.out.println("Creating user...");
+			_user = new User(Config.username, Config.api_key);
+
+			// Create the definition
+			System.out.println("Creating definition...");
+			System.out.println("  " + csdl);
+			Definition def = _user.createDefinition(csdl);
+
+			// Create the consumer
+			System.out.println("Getting the consumer...");
+			StreamConsumer consumer = def.getConsumer(StreamConsumer.TYPE_HTTP,
+					new StreamUsage(60));
+
+			// And start consuming
+			System.out.println("Consuming...");
+			System.out.println("--");
+			consumer.consume();
+		} catch (EInvalidData e) {
+			System.out.print("InvalidData: ");
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.print("IOException: ");
+			System.out.println(e.getMessage());
+		} catch (ECompileFailed e) {
+			System.out.print("CompileFailed: ");
+			System.out.println(e.getMessage());
+		} catch (EAccessDenied e) {
+			System.out.print("AccessDenied: ");
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	/**
+	 * 
+	 * @param filePath
+	 * @return
+	 * @throws java.io.IOException
+	 */
+	private static String readFileAsString(String filePath) throws java.io.IOException{
+	    byte[] buffer = new byte[(int) new File(filePath).length()];
+	    BufferedInputStream f = null;
+	    try {
+	        f = new BufferedInputStream(new FileInputStream(filePath));
+	        f.read(buffer);
+	    } finally {
+	        if (f != null) try { f.close(); } catch (IOException ignored) { }
+	    }
+	    return new String(buffer);
+	}
+
+	private long _end_time = -1;
+	
+	/**
+	 * Constructor. Initialises the time we should stop consuming.
+	 */
+	public StreamUsage(int run_for_secs)
+	{
+		_end_time = System.currentTimeMillis() + (run_for_secs * 1000);
+	}
+
+	/**
+	 * Handle incoming data.
+	 * 
+	 * @param StreamConsumer
+	 *            consumer The consumer object.
+	 * @param JSONObject
+	 *            interaction The interaction data.
+	 * @throws EInvalidData
+	 */
+	public void onInteraction(StreamConsumer c, Interaction i)
+			throws EInvalidData {
+		try {
+			System.out.print(i.getStringVal("interaction.author.name"));
+			System.out.print(": ");
+			System.out.println(i.getStringVal("interaction.content"));
+		} catch (EInvalidData e) {
+			// The interaction did not contain either a type or content.
+			System.out.println("Exception: " + e.getMessage());
+			System.out.print("Interaction: ");
+			System.out.println(i);
+		}
+		System.out.println("--");
+		
+		if (System.currentTimeMillis() > _end_time) {
+			c.stop();
+		}
+	}
+
+	/**
+	 * Called when the consumer has stopped.
+	 * 
+	 * @param DataSift_StreamConsumer
+	 *            $consumer The consumer object.
+	 * @param string
+	 *            $reason The reason the consumer stopped.
+	 */
+	public void onStopped(StreamConsumer consumer, String reason) {
+		System.out.print("Stopped: ");
+		System.out.println(reason);
+		
+		// Get the usage and display it
+		try {
+			Usage u = _user.getUsage(User.USAGE_HOUR);
+			System.out.println(u);
+			
+			DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
+			System.out.println("Usage information from " + df.format(u.getStartDate()) + " to " + df.format(u.getEndDate()) + "...");
+			for (String hash : u.getStreamHashes()) {
+				System.out.println("  Stream " + hash + ":");
+				System.out.println("    Consumed for " + u.getSeconds(hash) + " seconds");
+				System.out.println("    Received...");
+				for (String type : u.getLicenseTypes(hash)) {
+					int num = u.getLicenseUsage(hash, type);
+					System.out.println("      " + num + " " + type.replaceAll(".", " ") + (num == 1 ? "" : "s"));
+				}
+			}
+		} catch (EAPIError e) {
+			System.out.print("APIError: ");
+			System.out.println(e.getMessage());
+		} catch (EAccessDenied e) {
+			System.out.print("AccessDenied: ");
+			System.out.println(e.getMessage());
+		} catch (EInvalidData e) {
+			System.out.print("InvalidData: ");
+			System.out.println(e.getMessage());
+		} catch (ParseException e) {
+			System.out.print("ParseException: ");
+			System.out.println(e.getMessage());
+		}
+	}
+}
