@@ -1,16 +1,6 @@
 /**
- * This example gets the cost associated with the stream given on the command
- * line or piped/typed into STDIN. It  presents it in a nice ASCII table.]
- * Note that the CSDL must be enclosed in quotes if given on the command line.
- *
- * php cost.php 'interaction.content contains "football"'
- *  or
- * cat football.csdl | php cost.php
- *
- * NB: Most of the error handling (exception catching) has been removed for
- * the sake of simplicity. Nearly everything in this library may throw
- * exceptions, and production code should catch them. See the documentation
- * for full details.
+ * This example gets the DPU associated with the stream given on the command
+ * line. It  presents it in a nice ASCII table.
  */
 package org.datasift.examples;
 
@@ -29,7 +19,7 @@ import org.datasift.*;
  * @author MediaSift
  * @version 0.1
  */
-public class CostBreakdown {
+public class DPUBreakdown {
 	/**
 	 * @param args
 	 */
@@ -41,7 +31,7 @@ public class CostBreakdown {
 		
 		try {
 			
-			String csdl = CostBreakdown.readFileAsString(args[0]);
+			String csdl = DPUBreakdown.readFileAsString(args[0]);
 			
 			// Authenticate
 			System.out.println("Creating user...");
@@ -53,11 +43,11 @@ public class CostBreakdown {
 			Definition def = user.createDefinition(csdl);
 
 			// Get the cost
-			Cost c = def.getCostBreakdown();
-			HashMap<String,CostItem> costs = c.getCosts();
+			DPU c = def.getDPUBreakdown();
+			HashMap<String,DPUItem> dpus = c.getDPU();
 
 			// Build an array of TableRows
-			ArrayList<TableRow> costtable = new ArrayList<TableRow>();
+			ArrayList<TableRow> dputable = new ArrayList<TableRow>();
 			
 			// Keep track of the maxlen of each column
 			int maxlen_Target = "Target".length();
@@ -65,8 +55,8 @@ public class CostBreakdown {
 			int maxlen_Complexity = "Complexity".length();
 
 			// Create a row for the total at the end
-			int totalCost = c.getTotalCost();
-			TableRow totalRow = new TableRow("Total", 0, totalCost);
+			double totalDPU = c.getTotal();
+			TableRow totalRow = new TableRow("Total", 0, totalDPU);
 			if (totalRow.getTargetLength() > maxlen_Target) {
 				maxlen_Target = totalRow.getTargetLength();
 			}
@@ -74,10 +64,10 @@ public class CostBreakdown {
 				maxlen_Complexity = totalRow.getComplexityLength();
 			}
 
-			// Create a row for each cost item and its targets and add it to the row array
-			for (String key : costs.keySet()) {
-				CostItem ci = costs.get(key);
-				TableRow r = new TableRow(key, ci.getCount(), ci.getCost());
+			// Create a row for each DPU item and its targets and add it to the row array
+			for (String key : dpus.keySet()) {
+				DPUItem ci = dpus.get(key);
+				TableRow r = new TableRow(key, ci.getCount(), ci.getDPU());
 				
 				if (r.getTargetLength() > maxlen_Target) {
 					maxlen_Target = r.getTargetLength();
@@ -91,13 +81,13 @@ public class CostBreakdown {
 					maxlen_Complexity = r.getComplexityLength();
 				}
 
-				costtable.add(r);
+				dputable.add(r);
 				
 				if (ci.hasTargets()) {
-					HashMap<String,CostItem> targets = ci.getTargets();
+					HashMap<String,DPUItem> targets = ci.getTargets();
 					for (String target : targets.keySet()) {
-						CostItem ci1 = targets.get(target);
-						TableRow r1 = new TableRow("  " + target, ci1.getCount(), ci1.getCost());
+						DPUItem ci1 = targets.get(target);
+						TableRow r1 = new TableRow("  " + target, ci1.getCount(), ci1.getDPU());
 						
 						if (r1.getTargetLength() > maxlen_Target) {
 							maxlen_Target = r1.getTargetLength();
@@ -111,7 +101,7 @@ public class CostBreakdown {
 							maxlen_Complexity = r1.getComplexityLength();
 						}
 
-						costtable.add(r1);
+						dputable.add(r1);
 					}
 				}
 			}
@@ -146,7 +136,7 @@ public class CostBreakdown {
 			System.out.println("-|");
 
 			// Now the rows
-			for (Object row : costtable.toArray()) {
+			for (Object row : dputable.toArray()) {
 				System.out.print("| ");
 				System.out.print(((TableRow)row).getTarget(maxlen_Target));
 				System.out.print(" | ");
@@ -181,28 +171,6 @@ public class CostBreakdown {
 			System.out.print(repeatString("-", maxlen_Complexity));
 			System.out.println("-/");
 			System.out.println();
-			
-			int tierNum = 0;
-			String tierDesc = "";
-
-			if (totalCost > 1000)
-			{
-				tierNum = 3;
-				tierDesc = "high complexity";
-			}
-			else if (totalCost > 100)
-			{
-				tierNum = 2;
-				tierDesc = "medium complexity";
-			}
-			else
-			{
-				tierNum = 1;
-				tierDesc = "simple complexity";
-			}
-
-			System.out.println("A total cost of " + totalRow.getComplexity(totalRow.getComplexityLength()) + " puts this stream in tier " + tierNum + ", " + tierDesc);
-			
 		} catch (EInvalidData e) {
 			System.out.print("InvalidData: ");
 			System.out.println(e.getMessage());
@@ -261,14 +229,16 @@ public class CostBreakdown {
 	public static class TableRow {
 		private String _target = "";
 		private int _timesused = 0;
-		private int _complexity = 0;
+		private double _complexity = 0;
 		private NumberFormat _f = null;
+		private NumberFormat _fc = null;
 		
-		public TableRow(String target, int timesused, int complexity) {
+		public TableRow(String target, int timesused, double complexity) {
 			_target = target;
 			_timesused = timesused;
 			_complexity = complexity;
 			_f = new DecimalFormat("#,###,###");
+			_fc = new DecimalFormat("#,###,###.##");
 		}
 		
 		public int getTargetLength() {
@@ -288,11 +258,11 @@ public class CostBreakdown {
 		}
 		
 		public int getComplexityLength() {
-			return _f.format(_complexity).length();
+			return _fc.format(_complexity).length();
 		}
 		
 		public String getComplexity(int width) {
-			return String.format("%1$#" + width + "s", _f.format(_complexity));
+			return String.format("%1$#" + width + "s", _fc.format(_complexity));
 		}
 	}
 }

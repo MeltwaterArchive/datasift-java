@@ -23,20 +23,34 @@ public class User {
 	 * @access public
 	 */
 	public final static String _user_agent = "DataSiftJava/0.3.2";
-
+	
 	/**
 	 * The base URL for API calls. No http://, and with the trailing slash.
 	 * 
 	 * @access public
 	 */
-	public static String _api_base_url = "api.datasift.com/";
+	public static String _api_base_url = "api.qadatasift.com/";
 
 	/**
 	 * The base URL for HTTP streaming. No http://, and with the trailing slash.
 	 * 
 	 * @access public
 	 */
-	public static String _stream_base_url = "stream.datasift.com/";
+	public static String _stream_base_url = "stream.qadatasift.com/";
+
+	/**
+	 * Usage period constant: hour
+	 * 
+	 * @access public
+	 */
+	public final static String USAGE_HOUR = "hour";
+
+	/**
+	 * Usage period constant: day
+	 * 
+	 * @access public
+	 */
+	public final static String USAGE_DAY = "day";
 
 	/**
 	 * The username of this user.
@@ -180,6 +194,57 @@ public class User {
 	 */
 	public Definition createDefinition(String csdl) {
 		return new Definition(this, csdl);
+	}
+
+	/**
+	 * Get usage data for this user.
+	 * 
+	 * @access public
+	 * @param String
+	 *            hash Specifies the stream hash in which we're interested.
+	 * @return Usage
+	 * @throws EAccessDenied
+	 * @throws EAPIError
+	 * @throws EInvalidData
+	 */
+	public Usage getUsage() throws EAPIError, EAccessDenied,
+			EInvalidData {
+		return getUsage(User.USAGE_HOUR);
+	}
+
+	/**
+	 * Get usage data for this user.
+	 * 
+	 * @access public
+	 * @param String period Use the final static vars in this class to specify
+	 *            either "day" or "hour".
+	 * @return Usage
+	 * @throws EAccessDenied
+	 * @throws EAPIError
+	 * @throws EInvalidData
+	 */
+	public Usage getUsage(String period) throws EAPIError,
+			EAccessDenied, EInvalidData {
+		HashMap<String, String> params = new HashMap<String, String>();
+
+		if (period != User.USAGE_HOUR && period != User.USAGE_DAY) {
+			throw new EInvalidData("The specified period is not supported");
+		}
+
+		params.put("period", period);
+
+		JSONObject res = callAPI("usage", params);
+		try {
+			return new Usage(res.toString());
+		} catch (JSONException e) {
+			throw new EAPIError(
+					"There was an issue parsing the response from DataSift: "
+							+ e.toString());
+		} catch (EInvalidData e) {
+			throw new EAPIError(
+					"There was an issue parsing the response from DataSift: "
+							+ e.toString());
+		}
 	}
 
 	/**

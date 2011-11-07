@@ -22,9 +22,9 @@ public class Stream {
             Definition def = user.createDefinition("interaction.type == \"twitter\" and (interaction.content contains \"music\")");
             //step 3a - Method 1 - make a request to have our csdl compiled to get a hash
             def.compile();
-            System.out.println("Hash:" + def.getHash());
-            System.out.println("Created at:" + def.getCreatedAt());
-            System.out.println("Total cost:" + def.getTotalCost());
+            System.out.println("Hash: " + def.getHash());
+            System.out.println("Created at: " + def.getCreatedAt());
+            System.out.println("Total DPU: " + def.getTotalDPU());
 
             List<Interaction> data = null;
             while ((data = def.getBuffered()).size() == 0) {

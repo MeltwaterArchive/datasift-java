@@ -19,9 +19,9 @@ public class Compile {
             Definition def = user.createDefinition("interaction.type == \"twitter\" and (interaction.content contains \"music\")");
             //step 3 - make the request to have our csdl compiled
             def.compile();
-            System.out.println("Hash:" + def.getHash());
-            System.out.println("Created at:" + def.getCreatedAt());
-            System.out.println("Total cost:" + def.getTotalCost());
+            System.out.println("Hash: " + def.getHash());
+            System.out.println("Created at: " + def.getCreatedAt());
+            System.out.println("Total cost: " + def.getTotalDPU());
 
         } catch (Exception ex) {
             System.err.println();

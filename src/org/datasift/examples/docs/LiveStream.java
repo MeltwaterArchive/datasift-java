@@ -42,7 +42,6 @@ public class LiveStream implements IStreamConsumerEvents {//Step 1 - must implem
      *            interaction The interaction data.
      * @throws EInvalidData
      */
-    @Override
     public void onInteraction(StreamConsumer c, Interaction i)
             throws EInvalidData {
         try {

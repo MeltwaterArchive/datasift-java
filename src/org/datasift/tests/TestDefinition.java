@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 
 import org.datasift.Config;
-import org.datasift.Cost;
+import org.datasift.DPU;
 import org.datasift.Definition;
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
@@ -71,15 +71,15 @@ public class TestDefinition extends TestCase {
 				Config.definition);
 
 		String created_at = "2011-05-16 17:20:02";
-		int total_cost = 10;
-		api_client.setResponse("{\"created_at\":\"" + created_at + "\",\"cost\":\"" + total_cost + "\"}", 200);
+		double total_dpu = 10;
+		api_client.setResponse("{\"created_at\":\"" + created_at + "\",\"dpu\":\"" + total_dpu + "\"}", 200);
 		
 		try {
 			def.validate();
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
 			assertEquals("Created at date is incorrect", df.parse(created_at).getTime(), def.getCreatedAt().getTime());
-			assertEquals("Total cost is incorrect", total_cost, def.getTotalCost());
+			assertEquals("Total DPU is incorrect", total_dpu, def.getTotalDPU());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -118,15 +118,15 @@ public class TestDefinition extends TestCase {
 				Config.definition);
 
 		String created_at = "2011-05-16 17:20:02";
-		int total_cost = 10;
-		api_client.setResponse("{\"created_at\":\"" + created_at + "\",\"cost\":\"" + total_cost + "\"}", 200);
+		double total_dpu = 10;
+		api_client.setResponse("{\"created_at\":\"" + created_at + "\",\"dpu\":\"" + total_dpu + "\"}", 200);
 
 		try {
 			def.validate();
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
 			assertEquals("Created at date is incorrect", df.parse(created_at).getTime(), def.getCreatedAt().getTime());
-			assertEquals("Total cost is incorrect", total_cost, def.getTotalCost());
+			assertEquals("Total DPU is incorrect", total_dpu, def.getTotalDPU());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -164,8 +164,8 @@ public class TestDefinition extends TestCase {
 
 		String hash = "947b690ec9dca525fb8724645e088d79";
 		String created_at = "2011-05-16 17:20:02";
-		int total_cost = 10;
-		api_client.setResponse("{\"hash\":\"" + hash + "\",\"created_at\":\"" + created_at + "\",\"cost\":\"" + total_cost + "\"}", 200);
+		double total_dpu = 10;
+		api_client.setResponse("{\"hash\":\"" + hash + "\",\"created_at\":\"" + created_at + "\",\"dpu\":\"" + total_dpu + "\"}", 200);
 
 		try {
 			def.compile();
@@ -173,7 +173,7 @@ public class TestDefinition extends TestCase {
 			assertEquals("Incorrect hash", hash, def.getHash());
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
 			assertEquals("Created at date is incorrect", df.parse(created_at).getTime(), def.getCreatedAt().getTime());
-			assertEquals("Total cost is incorrect", total_cost, def.getTotalCost());
+			assertEquals("Total DPU is incorrect", total_dpu, def.getTotalDPU());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -213,8 +213,8 @@ public class TestDefinition extends TestCase {
 
 		String hash = "947b690ec9dca525fb8724645e088d79";
 		String created_at = "2011-05-16 17:20:02";
-		int total_cost = 10;
-		api_client.setResponse("{\"hash\":\"" + hash + "\",\"created_at\":\"" + created_at + "\",\"cost\":\"" + total_cost + "\"}", 200);
+		double total_dpu = 10;
+		api_client.setResponse("{\"hash\":\"" + hash + "\",\"created_at\":\"" + created_at + "\",\"dpu\":\"" + total_dpu + "\"}", 200);
 
 		try {
 			def.compile();
@@ -222,7 +222,7 @@ public class TestDefinition extends TestCase {
 			assertEquals("Incorrect hash", hash, def.getHash());
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
 			assertEquals("Created at date is incorrect", df.parse(created_at).getTime(), def.getCreatedAt().getTime());
-			assertEquals("Total cost is incorrect", total_cost, def.getTotalCost());
+			assertEquals("Total DPU is incorrect", total_dpu, def.getTotalDPU());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -254,16 +254,16 @@ public class TestDefinition extends TestCase {
 		}
 	}
 	
-	public void testGetCostBreakdown() {
+	public void testGetDPUBreakdown() {
 		Definition def = new Definition(user, Config.definition);
 		assertEquals("Definition string not set correctly", def.get(),
 				Config.definition);
 		
-		api_client.setResponse("{\"costs\":{\"contains\":{\"count\":1,\"cost\":4,\"targets\":{\"interaction.content\":{\"count\":1,\"cost\":4}}}},\"total\":4}", 200);
+		api_client.setResponse("{\"detail\":{\"contains\":{\"count\":1,\"dpu\":4,\"targets\":{\"interaction.content\":{\"count\":1,\"dpu\":4}}}},\"dpu\":4}", 200);
 		
 		try {
-			Cost cost = def.getCostBreakdown();
-			assertEquals("Total cost is incorrect", cost.getTotalCost(), 4);
+			DPU dpu = def.getDPUBreakdown();
+			assertEquals("Total DPU is incorrect", 4.0, dpu.getTotal());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (EAccessDenied e) {
@@ -280,7 +280,7 @@ public class TestDefinition extends TestCase {
 		Definition def = new Definition(user, Config.definition);
 		assertEquals(def.get(), Config.definition);
 
-		api_client.setResponse("{\"hash\":\"947b690ec9dca525fb8724645e088d79\",\"created_at\":\"2011-05-16 17:20:02\",\"cost\":\"10\"}", 200);
+		api_client.setResponse("{\"hash\":\"947b690ec9dca525fb8724645e088d79\",\"created_at\":\"2011-05-16 17:20:02\",\"dpu\":\"10\"}", 200);
 
 		try {
 			StreamConsumer consumer = def.getConsumer(StreamConsumer.TYPE_HTTP,
