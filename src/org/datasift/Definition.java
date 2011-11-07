@@ -46,7 +46,7 @@ public class Definition {
     /**
      * @access protected
      */
-    protected int _total_cost = -1;
+    protected double _dpu = -1;
 
     /**
      * Constructor. A User object is required.
@@ -143,7 +143,7 @@ public class Definition {
     protected void clearHash() {
         _hash = "";
         _created_at = null;
-        _total_cost = -1;
+        _dpu = -1;
     }
 
     /**
@@ -173,15 +173,15 @@ public class Definition {
      * @throws EInvalidData
      * @throws EAccessDenied
      */
-    public int getTotalCost() throws EInvalidData, EAccessDenied {
-        if (_total_cost == -1) {
+    public double getTotalDPU() throws EInvalidData, EAccessDenied {
+        if (_dpu == -1) {
             // Catch any compilation errors so they don't pass up to the caller
             try {
                 validate();
             } catch (ECompileFailed e) {
             }
         }
-        return _total_cost;
+        return _dpu;
     }
 
     /**
@@ -211,17 +211,17 @@ public class Definition {
                 _created_at = df.parse((String) res.get("created_at"));
             } catch (JSONException e) {
                 throw new ECompileFailed(
-                        "Compiled successfully but no hash in the response");
+                        "Compiled successfully but no created_at date in the response");
             } catch (ParseException e) {
                 throw new EAPIError(
                         "Compiled successfully but failed to parse the created_at date");
             }
 
             try {
-                _total_cost = Integer.parseInt((String) res.get("cost"));
+                _dpu = Double.parseDouble((String) res.get("dpu"));
             } catch (JSONException e) {
                 throw new ECompileFailed(
-                        "Compiled successfully but no hash in the response");
+                        "Compiled successfully but no DPU in the response");
             }
         } catch (EAPIError e) {
             // Reset the hash
@@ -273,14 +273,14 @@ public class Definition {
                 _created_at = df.parse((String) res.get("created_at"));
             } catch (JSONException e) {
                 throw new ECompileFailed(
-                        "Compiled successfully but no hash in the response");
+                        "Compiled successfully but no created_at date in the response");
             } catch (ParseException e) {
                 throw new EAPIError(
                         "Compiled successfully but failed to parse the created_at date");
             }
 
             try {
-                _total_cost = Integer.parseInt((String) res.get("cost"));
+                _dpu = Double.parseDouble((String) res.get("dpu"));
             } catch (JSONException e) {
                 throw new ECompileFailed(
                         "Compiled successfully but no hash in the response");
@@ -303,18 +303,18 @@ public class Definition {
 
     /**
      * 
-     * @return Cost
+     * @return DPU
      * @throws EInvalidData 
      * @throws EAccessDenied 
      * @throws ECompileFailed 
      * @throws EAPIError 
      */
-    public Cost getCostBreakdown() throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
+    public DPU getDPUBreakdown() throws EInvalidData, EAccessDenied, ECompileFailed, EAPIError {
         if (_csdl.length() == 0) {
             throw new EInvalidData("Cannot compile an empty definition.");
         }
 
-        Cost retval = null;
+        DPU retval = null;
 
         JSONObject res = null;
 
@@ -322,10 +322,10 @@ public class Definition {
 
         params.put("hash", getHash());
 
-        res = _user.callAPI("cost", params);
+        res = _user.callAPI("dpu", params);
 
         try {
-            retval = new Cost(res.toString());
+            retval = new DPU(res.toString());
         } catch (JSONException ejson) {
             throw new ECompileFailed(ejson.getMessage());
         }
