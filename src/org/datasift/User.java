@@ -29,14 +29,14 @@ public class User {
 	 * 
 	 * @access public
 	 */
-	public static String _api_base_url = "api.qadatasift.com/";
+	public static String _api_base_url = "api.datasift.com/";
 
 	/**
 	 * The base URL for HTTP streaming. No http://, and with the trailing slash.
 	 * 
 	 * @access public
 	 */
-	public static String _stream_base_url = "stream.qadatasift.com/";
+	public static String _stream_base_url = "stream.datasift.com/";
 
 	/**
 	 * Usage period constant: hour
