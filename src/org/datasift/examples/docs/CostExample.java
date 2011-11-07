@@ -27,32 +27,19 @@ public class CostExample {
             Definition def = user.createDefinition(csdl);
 
             // Get the cost breakdown from which we can then see individual costs
-            Cost c = def.getCostBreakdown();
-            HashMap<String, CostItem> costs = c.getCosts();
+            DPU d = def.getDPUBreakdown();
+            HashMap<String, DPUItem> dpus = d.getDPU();
 
             //iterate over each item
-            for (String key : costs.keySet()) {
+            for (String key : dpus.keySet()) {
                 System.out.println("Target : " + key);
-                System.out.println("    Cost (Complexity): " + costs.get(key).getCost());
-                System.out.println("    Count(Time used) : " + costs.get(key).getCount());
+                System.out.println("    DPU (Complexity): " + dpus.get(key).getDPU());
+                System.out.println("    Count(Time used): " + dpus.get(key).getCount());
             }
 
-            int totalCost = c.getTotalCost();
+            double totalDPU = d.getTotal();
 
-            int tierNum = 0;
-            String tierDesc = "";
-
-            if (totalCost > 1000) {
-                tierNum = 3;
-                tierDesc = "high complexity";
-            } else if (totalCost > 100) {
-                tierNum = 2;
-                tierDesc = "medium complexity";
-            } else {
-                tierNum = 1;
-                tierDesc = "simple complexity";
-            }
-            System.out.println("A total cost of " + totalCost + " puts this stream in tier " + tierNum + ", " + tierDesc);
+            System.out.println("This gives a total DPU of " + totalDPU);
         } catch (Exception e) {
             System.out.print("InvalidData: ");
             System.out.println(e.getMessage());

@@ -20,16 +20,16 @@ public class Validate {
 			Definition def = user.createDefinition("interaction.type == \"twitter\" and (interaction.content contains \"music\")");
 			//step 3 - make the request to have our csdl compiled
 			def.validate();
-			System.out.println("Hash:" + def.getHash());
-			System.out.println("Created at:" + def.getCreatedAt());
-			System.out.println("Total cost:" + def.getTotalCost());
+			System.out.println("Hash: " + def.getHash());
+			System.out.println("Created at: " + def.getCreatedAt());
+			System.out.println("Total DPU: " + def.getTotalDPU());
 		} catch (Exception ex) {
 			System.err.println();
 			Logger.getLogger("net.datasift.example").log(Level.WARNING, "An error occured: " + ex.getMessage());
 			/**
 			 * In the event of an error you would see something similar to the following:
 			 * 26-Sep-2011 16:01:07 org.datasift.examples.docs.Validate main
-			 *WARNING: An error occured: The target indteraction.type does not exist
+			 *WARNING: An error occurred: The target indteraction.type does not exist
 			 */
 		}
 	}

@@ -1,7 +1,7 @@
 /**
  * This file contains the CostItem class which represents an individual item
  * within a cost structure.
- * @see Cost
+ * @see DPU
  */
 package org.datasift; 
 
@@ -12,16 +12,16 @@ import java.util.HashMap;
  * @author MediaSift
  * @version 0.1
  */
-public class CostItem {
+public class DPUItem {
 
 	private int _count = 0;
-	private int _cost = 0;
-	private HashMap<String, CostItem> _targets = null;
+	private double _dpu = 0;
+	private HashMap<String, DPUItem> _targets = null;
 
-	public CostItem(int count, int cost) {
+	public DPUItem(int count, double d) {
 		_count = count;
-		_cost = cost;
-		_targets = new HashMap<String,CostItem>();
+		_dpu = d;
+		_targets = new HashMap<String,DPUItem>();
 	}
 
 	/**
@@ -34,14 +34,14 @@ public class CostItem {
 	/**
 	 * @return the _cost
 	 */
-	public int getCost() {
-		return _cost;
+	public double getDPU() {
+		return _dpu;
 	}
 
 	/**
 	 * @return the _targets
 	 */
-	public HashMap<String, CostItem> getTargets() {
+	public HashMap<String, DPUItem> getTargets() {
 		return _targets;
 	}
 	
@@ -55,9 +55,9 @@ public class CostItem {
 	/**
 	 * Add a CostItem to the targets hash.
 	 * @param target
-	 * @param costItem
+	 * @param dpuItem
 	 */
-	public void addTarget(String target, CostItem costItem) {
-		_targets.put(target, costItem);
+	public void addTarget(String target, DPUItem dpuItem) {
+		_targets.put(target, dpuItem);
 	}
 }

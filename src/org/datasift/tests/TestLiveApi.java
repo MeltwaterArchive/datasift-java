@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 
 import org.datasift.Config;
-import org.datasift.Cost;
+import org.datasift.DPU;
 import org.datasift.Definition;
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
@@ -197,14 +197,14 @@ public class TestLiveApi extends TestCase {
 		}
 	}
 	
-	public void testGetTotalCost() {
+	public void testGetTotalDPU() {
 		Definition def = new Definition(user, Config.definition);
 		assertEquals("Definition string not set correctly", def.get(),
 				Config.definition);
 		
 		try {
-			int cost = def.getTotalCost();
-			assertTrue(cost > 0);
+			double dpu = def.getTotalDPU();
+			assertTrue(dpu > 0);
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (EAccessDenied e) {
@@ -212,14 +212,14 @@ public class TestLiveApi extends TestCase {
 		}
 	}
 	
-	public void testGetCostBreakdown() {
+	public void testGetDPUBreakdown() {
 		Definition def = new Definition(user, Config.definition);
 		assertEquals("Definition string not set correctly", def.get(),
 				Config.definition);
 		
 		try {
-			Cost cost = def.getCostBreakdown();
-			assertEquals(cost.getTotalCost(), Config.definition_cost);
+			DPU dpu = def.getDPUBreakdown();
+			assertEquals(Config.definition_dpu, dpu.getTotal());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (EAccessDenied e) {
