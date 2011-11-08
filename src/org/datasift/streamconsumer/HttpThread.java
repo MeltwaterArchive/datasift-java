@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.datasift.streamconsumer;
 
@@ -98,7 +98,7 @@ public class HttpThread extends Thread {
 								// If the line is null then the connection has closed
 								// Break out the loop and auto reconnect if enabled
 								break;
-								
+
 							} else if (line.length() > 100) {
 								// If the line length is bigger than a tick or an
 								// empty line, process it
@@ -111,8 +111,7 @@ public class HttpThread extends Thread {
 						_consumer.stop();
 					} else {
 						// Connection failed, back off a bit and try again
-						// Timings from
-						// http://support.datasift.net/help/kb/rest-api/http-streaming-api
+						// Timings from http://dev.datasift.com/docs/streaming-api
 						if (reconnect_delay == 0) {
 							reconnect_delay = 10;
 						} else if (reconnect_delay < 240) {
@@ -135,8 +134,7 @@ public class HttpThread extends Thread {
 					&& getConsumerState() == StreamConsumer.STATE_RUNNING
 					&& _auto_reconnect) {
 				// Connection failed or timed out
-				// Timings from
-				// http://support.datasift.net/help/kb/rest-api/http-streaming-api
+				// Timings from http://dev.datasift.com/docs/streaming-api
 				if (reconnect_delay == 0) {
 					reconnect_delay = 1;
 				} else if (reconnect_delay < 16) {
