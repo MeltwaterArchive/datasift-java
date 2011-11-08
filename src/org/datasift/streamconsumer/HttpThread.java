@@ -94,7 +94,6 @@ public class HttpThread extends Thread {
 						// While we're running, get a line
 						while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 							String line = reader.readLine();
-							System.out.println(line);
 							if (line == null) {
 								// If the line is null then the connection has closed
 								// Break out the loop and auto reconnect if enabled
