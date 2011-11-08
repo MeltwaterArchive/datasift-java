@@ -126,6 +126,7 @@ public class WSThread extends Thread {
 						{
 							// Message received
 							String line = message.getText();
+							System.out.println(line);
 							if (line.length() > 100) {
 								processLine(line);
 							}

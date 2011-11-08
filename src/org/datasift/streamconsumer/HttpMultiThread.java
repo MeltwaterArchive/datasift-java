@@ -108,6 +108,7 @@ public class HttpMultiThread extends Thread {
 						while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 							if (_kill_requested) return;
 							String line = reader.readLine();
+							System.out.println(line);
 							// If the line length is bigger than a tick or an
 							// empty line, process it
 							if (line.length() > 100) {
