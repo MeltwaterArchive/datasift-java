@@ -13,7 +13,15 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.datasift.*;
+import org.datasift.Config;
+import org.datasift.DPU;
+import org.datasift.DPUItem;
+import org.datasift.Definition;
+import org.datasift.EAPIError;
+import org.datasift.EAccessDenied;
+import org.datasift.ECompileFailed;
+import org.datasift.EInvalidData;
+import org.datasift.User;
 
 /**
  * @author MediaSift
@@ -24,15 +32,16 @@ public class DPUBreakdown {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if (args.length != 1) {
-			System.out.println("Please specify the filename of a CSDL definition.");
-			return;
-		}
-		
+		// if (args.length != 1) {
+		// System.out.println("Please specify the filename of a CSDL definition.");
+		// return;
+		// }
+
 		try {
-			
-			String csdl = DPUBreakdown.readFileAsString(args[0]);
-			
+
+			// String csdl = DPUBreakdown.readFileAsString(args[0]);
+			String csdl = DPUBreakdown.readFileAsString("csdl.txt");
+
 			// Authenticate
 			System.out.println("Creating user...");
 			User user = new User(Config.username, Config.api_key);
@@ -44,11 +53,11 @@ public class DPUBreakdown {
 
 			// Get the cost
 			DPU c = def.getDPUBreakdown();
-			HashMap<String,DPUItem> dpus = c.getDPU();
+			HashMap<String, DPUItem> dpus = c.getDPU();
 
 			// Build an array of TableRows
 			ArrayList<TableRow> dputable = new ArrayList<TableRow>();
-			
+
 			// Keep track of the maxlen of each column
 			int maxlen_Target = "Target".length();
 			int maxlen_TimesUsed = "Times used".length();
@@ -64,39 +73,41 @@ public class DPUBreakdown {
 				maxlen_Complexity = totalRow.getComplexityLength();
 			}
 
-			// Create a row for each DPU item and its targets and add it to the row array
+			// Create a row for each DPU item and its targets and add it to the
+			// row array
 			for (String key : dpus.keySet()) {
 				DPUItem ci = dpus.get(key);
 				TableRow r = new TableRow(key, ci.getCount(), ci.getDPU());
-				
+
 				if (r.getTargetLength() > maxlen_Target) {
 					maxlen_Target = r.getTargetLength();
 				}
-				
+
 				if (r.getTimesUsedLength() > maxlen_TimesUsed) {
 					maxlen_TimesUsed = r.getTimesUsedLength();
 				}
-				
+
 				if (r.getComplexityLength() > maxlen_Complexity) {
 					maxlen_Complexity = r.getComplexityLength();
 				}
 
 				dputable.add(r);
-				
+
 				if (ci.hasTargets()) {
-					HashMap<String,DPUItem> targets = ci.getTargets();
+					HashMap<String, DPUItem> targets = ci.getTargets();
 					for (String target : targets.keySet()) {
 						DPUItem ci1 = targets.get(target);
-						TableRow r1 = new TableRow("  " + target, ci1.getCount(), ci1.getDPU());
-						
+						TableRow r1 = new TableRow("  " + target,
+								ci1.getCount(), ci1.getDPU());
+
 						if (r1.getTargetLength() > maxlen_Target) {
 							maxlen_Target = r1.getTargetLength();
 						}
-						
+
 						if (r1.getTimesUsedLength() > maxlen_TimesUsed) {
 							maxlen_TimesUsed = r1.getTimesUsedLength();
 						}
-						
+
 						if (r1.getComplexityLength() > maxlen_Complexity) {
 							maxlen_Complexity = r1.getComplexityLength();
 						}
@@ -105,7 +116,7 @@ public class DPUBreakdown {
 					}
 				}
 			}
-			
+
 			System.out.println();
 
 			// Top border
@@ -116,14 +127,17 @@ public class DPUBreakdown {
 			System.out.print("---");
 			System.out.print(repeatString("-", maxlen_Complexity));
 			System.out.println("-\\");
-			
+
 			// Header row
 			System.out.print("| ");
-			System.out.print(String.format("%1$-" + maxlen_Target + "s", "Target"));
+			System.out.print(String.format("%1$-" + maxlen_Target + "s",
+					"Target"));
 			System.out.print(" | ");
-			System.out.print(String.format("%1$-" + maxlen_TimesUsed + "s", "Times used"));
+			System.out.print(String.format("%1$-" + maxlen_TimesUsed + "s",
+					"Times used"));
 			System.out.print(" | ");
-			System.out.print(String.format("%1$-" + maxlen_Complexity + "s", "Complexity"));
+			System.out.print(String.format("%1$-" + maxlen_Complexity + "s",
+					"Complexity"));
 			System.out.println(" |");
 
 			// Header bottom border
@@ -138,11 +152,13 @@ public class DPUBreakdown {
 			// Now the rows
 			for (Object row : dputable.toArray()) {
 				System.out.print("| ");
-				System.out.print(((TableRow)row).getTarget(maxlen_Target));
+				System.out.print(((TableRow) row).getTarget(maxlen_Target));
 				System.out.print(" | ");
-				System.out.print(((TableRow)row).getTimesUsed(maxlen_TimesUsed));
+				System.out.print(((TableRow) row)
+						.getTimesUsed(maxlen_TimesUsed));
 				System.out.print(" | ");
-				System.out.print(((TableRow)row).getComplexity(maxlen_Complexity));
+				System.out.print(((TableRow) row)
+						.getComplexity(maxlen_Complexity));
 				System.out.println(" |");
 			}
 
@@ -157,11 +173,13 @@ public class DPUBreakdown {
 
 			// Total
 			System.out.print("| ");
-			System.out.print(String.format("%1$#" + (maxlen_Target + 3 + maxlen_TimesUsed) + "s", totalRow.getTarget(totalRow.getTargetLength())));
+			System.out.print(String.format("%1$"
+					+ (maxlen_Target + 3 + maxlen_TimesUsed) + "s",
+					totalRow.getTarget(totalRow.getTargetLength())));
 			System.out.print(" = ");
 			System.out.print(totalRow.getComplexity(maxlen_Complexity));
 			System.out.println(" |");
-			
+
 			// Bottom border
 			System.out.print("\\-");
 			System.out.print(repeatString("-", maxlen_Target));
@@ -183,46 +201,51 @@ public class DPUBreakdown {
 		} catch (EAPIError e) {
 			System.out.print("APIError: ");
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		} catch (IOException e) {
 			System.out.print("IOException: ");
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param filePath
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	private static String readFileAsString(String filePath) throws java.io.IOException{
-	    byte[] buffer = new byte[(int) new File(filePath).length()];
-	    BufferedInputStream f = null;
-	    try {
-	        f = new BufferedInputStream(new FileInputStream(filePath));
-	        f.read(buffer);
-	    } finally {
-	        if (f != null) try { f.close(); } catch (IOException ignored) { }
-	    }
-	    return new String(buffer);
+	private static String readFileAsString(String filePath)
+			throws java.io.IOException {
+		byte[] buffer = new byte[(int) new File(filePath).length()];
+		BufferedInputStream f = null;
+		try {
+			f = new BufferedInputStream(new FileInputStream(filePath));
+			f.read(buffer);
+		} finally {
+			if (f != null)
+				try {
+					f.close();
+				} catch (IOException ignored) {
+				}
+		}
+		return new String(buffer);
 	}
-	
-	private static String repeatString(String s, int reps)
-	{
+
+	private static String repeatString(String s, int reps) {
 		if (reps < 0) {
 			return "";
 		}
-		
+
 		if (s == null) {
 			return null;
 		}
-		
+
 		StringBuilder stringBuilder = new StringBuilder(s.length() * reps);
-		
+
 		for (int i = 0; i < reps; i++) {
 			stringBuilder.append(s);
 		}
-		
+
 		return stringBuilder.toString();
 	}
 
@@ -232,7 +255,7 @@ public class DPUBreakdown {
 		private double _complexity = 0;
 		private NumberFormat _f = null;
 		private NumberFormat _fc = null;
-		
+
 		public TableRow(String target, int timesused, double complexity) {
 			_target = target;
 			_timesused = timesused;
@@ -240,29 +263,29 @@ public class DPUBreakdown {
 			_f = new DecimalFormat("#,###,###");
 			_fc = new DecimalFormat("#,###,###.##");
 		}
-		
+
 		public int getTargetLength() {
 			return _target.length();
 		}
-		
+
 		public String getTarget(int width) {
 			return String.format("%1$-" + width + "s", _target);
 		}
-		
+
 		public int getTimesUsedLength() {
-			return  _f.format(_timesused).length();
+			return _f.format(_timesused).length();
 		}
-		
+
 		public String getTimesUsed(int width) {
-			return String.format("%1$#" + width + "s", _f.format(_timesused));
+			return String.format("%1$" + width + "s", _f.format(_timesused));
 		}
-		
+
 		public int getComplexityLength() {
 			return _fc.format(_complexity).length();
 		}
-		
+
 		public String getComplexity(int width) {
-			return String.format("%1$#" + width + "s", _fc.format(_complexity));
+			return String.format("%1$" + width + "s", _fc.format(_complexity));
 		}
 	}
 }

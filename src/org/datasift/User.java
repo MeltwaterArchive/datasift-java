@@ -12,77 +12,77 @@ import org.json.JSONObject;
  * The User class represents a user of the API. Applications should start their
  * API interactions by creating an instance of this class. Once initialised it
  * provides factory methods for all of the functionality in the API.
- * 
+ *
  * @author MediaSift
  * @version 0.2
  */
 public class User {
 	/**
 	 * The user agent to be used for all HTTP requests.
-	 * 
+	 *
 	 * @access public
 	 */
-	public final static String _user_agent = "DataSiftJava/1.1.0";
-	
+	public final static String _user_agent = "DataSiftJava/1.0.0";
+
 	/**
 	 * The base URL for API calls. No http://, and with the trailing slash.
-	 * 
+	 *
 	 * @access public
 	 */
 	public static String _api_base_url = "api.datasift.com/";
 
 	/**
 	 * The base URL for HTTP streaming. No http://, and with the trailing slash.
-	 * 
+	 *
 	 * @access public
 	 */
 	public static String _stream_base_url = "stream.datasift.com/";
 
 	/**
 	 * Usage period constant: hour
-	 * 
+	 *
 	 * @access public
 	 */
 	public final static String USAGE_HOUR = "hour";
 
 	/**
 	 * Usage period constant: day
-	 * 
+	 *
 	 * @access public
 	 */
 	public final static String USAGE_DAY = "day";
 
 	/**
 	 * The username of this user.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected String _username = "";
 
 	/**
 	 * The API key for this user.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected String _api_key = "";
 
 	/**
 	 * The rate limit returned by the last API call.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected int _rate_limit = -1;
 
 	/**
 	 * The rate limit remaining returned by the last API call.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected int _rate_limit_remaining = -1;
-	
+
 	/**
 	 * The object to use for making API calls.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected ApiClient _api_client = null;
@@ -90,7 +90,7 @@ public class User {
 	/**
 	 * Constructor. A username and API key are required when constructing an
 	 * instance of this class.
-	 * 
+	 *
 	 * @access public
 	 * @param String
 	 *            username The user's username.
@@ -117,7 +117,7 @@ public class User {
 
 	/**
 	 * Returns the username.
-	 * 
+	 *
 	 * @access public
 	 * @return String The username.
 	 */
@@ -127,7 +127,7 @@ public class User {
 
 	/**
 	 * Returns the API key.
-	 * 
+	 *
 	 * @access public
 	 * @return String The API key.
 	 */
@@ -137,7 +137,7 @@ public class User {
 
 	/**
 	 * Returns the rate limit returned by the last API call.
-	 * 
+	 *
 	 * @access public
 	 * @return int The rate limit.
 	 */
@@ -147,7 +147,7 @@ public class User {
 
 	/**
 	 * Returns the rate limit remaining returned by the last API call.
-	 * 
+	 *
 	 * @access public
 	 * @return int The rate limit remaining.
 	 */
@@ -157,17 +157,17 @@ public class User {
 
 	/**
 	 * Returns the base URL for HTTP stream request.
-	 * 
+	 *
 	 * @access public
 	 * @return String The stream base URL.
 	 */
 	public String getStreamBaseURL() {
 		return _stream_base_url;
 	}
-	
+
 	/**
 	 * Set the ApiClient object to use when accessing the API.
-	 * 
+	 *
 	 * @param api_client
 	 */
 	public void setApiClient(ApiClient api_client) {
@@ -176,7 +176,7 @@ public class User {
 
 	/**
 	 * Creates and returns an empty Definition object.
-	 * 
+	 *
 	 * @access public
 	 * @return Definition A definition object tied to this user.
 	 */
@@ -186,7 +186,7 @@ public class User {
 
 	/**
 	 * Creates and returns a Definition object based on the given CSDL.
-	 * 
+	 *
 	 * @access public
 	 * @param String
 	 *            csdl CSDL with which to prime the object.
@@ -198,7 +198,7 @@ public class User {
 
 	/**
 	 * Get usage data for this user.
-	 * 
+	 *
 	 * @access public
 	 * @param String
 	 *            hash Specifies the stream hash in which we're interested.
@@ -214,7 +214,7 @@ public class User {
 
 	/**
 	 * Get usage data for this user.
-	 * 
+	 *
 	 * @access public
 	 * @param String period Use the final static vars in this class to specify
 	 *            either "day" or "hour".
@@ -249,7 +249,7 @@ public class User {
 
 	/**
 	 * Returns the user agent this library should use for all API calls.
-	 * 
+	 *
 	 * @access public
 	 * @returns String The user agent.
 	 */
@@ -259,7 +259,7 @@ public class User {
 
 	/**
 	 * Make a call to a DataSift API endpoint.
-	 * 
+	 *
 	 * @access public
 	 * @param String
 	 *            endpoint The endpoint of the API call.
@@ -271,7 +271,7 @@ public class User {
 	 * @throws EAccessDenied
 	 */
 	public JSONObject callAPI(String endpoint, HashMap<String, String> params)
-		throws EAPIError, EAccessDenied 
+		throws EAPIError, EAccessDenied
 	{
 		JSONObject retval = null;
 
