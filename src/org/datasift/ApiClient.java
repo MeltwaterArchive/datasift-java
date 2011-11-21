@@ -62,7 +62,7 @@ public class ApiClient {
 
 			HttpPost post = new HttpPost("http://" + User._api_base_url + endpoint + ".json");
 			post.addHeader("Auth", _user.getUsername() + ":" + _user.getAPIKey());
-			post.setEntity(new UrlEncodedFormEntity(qparams));
+			post.setEntity(new UrlEncodedFormEntity(qparams, "UTF-8"));
 
 			HttpResponse response = _http_client.execute(post);
 
