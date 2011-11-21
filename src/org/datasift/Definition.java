@@ -166,7 +166,7 @@ public class Definition {
     public Date getCreatedAt() throws EInvalidData, EAccessDenied {
     	// If we don't have a CSDL then this is a hash-only definition object
     	if (_csdl == null) {
-    		throw new EInvalidData("CSDL not available");
+    		throw new EInvalidData("Created at date not available");
     	}
         if (_created_at == null) {
             // Catch any compilation errors so they don't pass up to the caller

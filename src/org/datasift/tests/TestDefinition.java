@@ -47,13 +47,21 @@ public class TestDefinition extends TestCase {
 
 	public void testConstruction() {
 		Definition def = new Definition(user);
-		assertEquals("Default definition string is not empty", def.get(), "");
+		try {
+			assertEquals("Default definition string is not empty", def.get(), "");
+		} catch (EInvalidData e) {
+			fail("EInvalidData: " + e.getMessage());
+		}
 	}
 
 	public void testConstructionWithDefinition() {
 		Definition def = new Definition(user, Config.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.definition);
+		} catch (EInvalidData e) {
+			fail("EInvalidData: " + e.getMessage());
+		}
 	}
 
 	public void testSetAndGet() {
@@ -61,14 +69,22 @@ public class TestDefinition extends TestCase {
 
 		def.set(Config.definition);
 
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.definition);
+		} catch (EInvalidData e) {
+			fail("EInvalidData: " + e.getMessage());
+		}
 	}
 
 	public void testValidate_Success() {
 		Definition def = new Definition(user, Config.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String created_at = "2011-05-16 17:20:02";
 		double total_dpu = 10;
@@ -93,8 +109,12 @@ public class TestDefinition extends TestCase {
 
 	public void testValidate_Failure() {
 		Definition def = new Definition(user, Config.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -114,8 +134,12 @@ public class TestDefinition extends TestCase {
 
 	public void testValidate_SuccessThenFailure() {
 		Definition def = new Definition(user, Config.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String created_at = "2011-05-16 17:20:02";
 		double total_dpu = 10;
@@ -139,8 +163,12 @@ public class TestDefinition extends TestCase {
 
 		// Now set the invalid definition in that same object
 		def.set(Config.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -159,8 +187,12 @@ public class TestDefinition extends TestCase {
 	
 	public void testCompile_Success() {
 		Definition def = new Definition(user, Config.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String hash = "947b690ec9dca525fb8724645e088d79";
 		String created_at = "2011-05-16 17:20:02";
@@ -187,8 +219,12 @@ public class TestDefinition extends TestCase {
 
 	public void testCompile_Failure() {
 		Definition def = new Definition(user, Config.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -208,8 +244,12 @@ public class TestDefinition extends TestCase {
 
 	public void testCompile_SuccessThenFailure() {
 		Definition def = new Definition(user, Config.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String hash = "947b690ec9dca525fb8724645e088d79";
 		String created_at = "2011-05-16 17:20:02";
@@ -235,8 +275,12 @@ public class TestDefinition extends TestCase {
 
 		// Now set the invalid definition in that same object
 		def.set(Config.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -256,8 +300,12 @@ public class TestDefinition extends TestCase {
 	
 	public void testGetDPUBreakdown() {
 		Definition def = new Definition(user, Config.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				Config.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					Config.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 		
 		api_client.setResponse("{\"detail\":{\"contains\":{\"count\":1,\"dpu\":4,\"targets\":{\"interaction.content\":{\"count\":1,\"dpu\":4}}}},\"dpu\":4}", 200);
 		
@@ -278,7 +326,11 @@ public class TestDefinition extends TestCase {
 	@SuppressWarnings("unused")
 	public void testGetConsumer() {
 		Definition def = new Definition(user, Config.definition);
-		assertEquals(def.get(), Config.definition);
+		try {
+			assertEquals(def.get(), Config.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		api_client.setResponse("{\"hash\":\"947b690ec9dca525fb8724645e088d79\",\"created_at\":\"2011-05-16 17:20:02\",\"dpu\":\"10\"}", 200);
 

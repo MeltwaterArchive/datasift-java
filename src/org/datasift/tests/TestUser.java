@@ -51,12 +51,20 @@ public class TestUser extends TestCase {
 
 	public void testCreateDefinition_Empty() {
 		Definition def = user.createDefinition();
-		assertEquals("Definition is not empty", def.get(), "");
+		try {
+			assertEquals("Definition is not empty", def.get(), "");
+		} catch (EInvalidData e) {
+			fail("EInvalidData: " + e.getMessage());
+		}
 	}
 
 	public void testCreateDefinition_NonEmpty() {
 		Definition def = user.createDefinition(Config.definition);
-		assertEquals("Definition is incorrect", def.get(), Config.definition);
+		try {
+			assertEquals("Definition is incorrect", def.get(), Config.definition);
+		} catch (EInvalidData e) {
+			fail("EInvalidData: " + e.getMessage());
+		}
 	}
 
 	public void testRateLimits() {
