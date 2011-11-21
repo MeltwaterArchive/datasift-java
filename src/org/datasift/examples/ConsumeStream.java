@@ -1,8 +1,5 @@
 /**
- * This example mimics the Twitter track functionality. Run the script with
- * any number of words or phrases as arguments and the script will create
- * the equivalent CSDL and consume it as a stream, displaying matching
- * interactions as they come in.
+ * This simple example demonstrates consuming a stream using the stream hash.
  */
 package org.datasift.examples;
 
@@ -20,7 +17,7 @@ public class ConsumeStream implements IStreamConsumerEvents {
 		try {
 			if (args.length != 1) {
 				System.out
-						.println("ERR: Please specify the hash to consume and nothing else");
+						.println("ERR: Please specify the hash to consume");
 				System.exit(1);
 			}
 
