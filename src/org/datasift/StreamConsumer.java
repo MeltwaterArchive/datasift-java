@@ -230,8 +230,6 @@ abstract public class StreamConsumer {
 		if (_definition != null) {
 			if (_definition.getHash().isEmpty()) {
 				_definition.compile();
-			} else if (!(_definition.get().isEmpty())) {
-				_definition.validate();
 			}
 		}
 	}

@@ -92,8 +92,13 @@ public class Definition {
      * 
      * @access public
      * @return String The definition CSDL.
+     * @throws EInvalidData 
      */
-    public String get() {
+    public String get() throws EInvalidData {
+    	// If we don't have a CSDL then this is a hash-only definition object
+    	if (_csdl == null) {
+    		throw new EInvalidData("CSDL not available");
+    	}
         return _csdl;
     }
 
@@ -105,12 +110,16 @@ public class Definition {
      *            csdl The new definition CSDL string.
      */
     public void set(String csdl) {
-        // If the string has changed, reset the hash
-        if (_csdl != csdl) {
-            clearHash();
-        }
-
-        _csdl = csdl.trim();
+    	if (csdl == null) {
+    		_csdl = null;
+    	} else {
+	        // If the string has changed, reset the hash
+	        if (_csdl != csdl) {
+	            clearHash();
+	        }
+	
+	        _csdl = csdl.trim();
+    	}
     }
 
     /**
@@ -151,10 +160,14 @@ public class Definition {
      * created.
      * 
      * @return Date The date object.
-     * @throws EInvalidData
-     * @throws EAccessDenied
+     * @throws EInvalidData 
+     * @throws EAccessDenied 
      */
     public Date getCreatedAt() throws EInvalidData, EAccessDenied {
+    	// If we don't have a CSDL then this is a hash-only definition object
+    	if (_csdl == null) {
+    		throw new EInvalidData("Created at date not available");
+    	}
         if (_created_at == null) {
             // Catch any compilation errors so they don't pass up to the caller
             try {
@@ -170,10 +183,15 @@ public class Definition {
      * created.
      * 
      * @return Date The date object.
-     * @throws EInvalidData
-     * @throws EAccessDenied
+     * @throws EInvalidData 
+     * @throws EAccessDenied 
      */
     public double getTotalDPU() throws EInvalidData, EAccessDenied {
+    	// If we don't have a CSDL then this is a hash-only definition object
+    	if (_csdl == null) {
+    		throw new EInvalidData("CSDL not available");
+    	}
+
         if (_dpu == -1) {
             // Catch any compilation errors so they don't pass up to the caller
             try {
@@ -194,7 +212,12 @@ public class Definition {
      * @throws EAccessDenied
      */
     public void validate() throws EInvalidData, ECompileFailed, EAccessDenied {
-        if (_csdl.length() == 0) {
+    	// If we don't have a CSDL then this is a hash-only definition object
+    	if (_csdl == null) {
+    		throw new EInvalidData("CSDL not available");
+    	}
+
+    	if (_csdl.length() == 0) {
             throw new EInvalidData("Cannot validate an empty definition.");
         }
 
