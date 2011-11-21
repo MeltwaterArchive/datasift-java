@@ -1,9 +1,11 @@
 /**
- * 
+ *
  */
 package org.datasift.tests;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -75,15 +77,43 @@ public class TestUser extends TestCase {
 			fail("AccessDenied: " + e.getMessage());
 		}
 	}
-	
+
 	public void testGetUsage() {
 		api_client.setResponse("{\"start\":\"Mon, 07 Nov 2011 14:20:00 +0000\",\"streams\":{\"5e82aa9ac3dcf4dec1cce08a0cec914a\":{\"seconds\":313,\"licenses\":{\"twitter\":17,\"facebook\":5}}},\"end\":\"Mon, 07 Nov 2011 15:20:00 +0000\"}", 200, 150, 100);
 
 		try {
 			Usage u = user.getUsage();
 
-			assertEquals("Start date is incorrect", "Mon Nov 07 14:20:00 GMT 2011", u.getStartDate().toString());
-			assertEquals("End date is incorrect", "Mon Nov 07 15:20:00 GMT 2011", u.getEndDate().toString());
+			SimpleDateFormat df = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+			df.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+			assertEquals("Start date is incorrect", "Mon Nov 07 14:20:00 GMT 2011", df.format(u.getStartDate()));
+			assertEquals("End date is incorrect", "Mon Nov 07 15:20:00 GMT 2011", df.format(u.getEndDate()));
+			assertEquals("Seconds consumed is incorrect", 313, u.getSeconds("5e82aa9ac3dcf4dec1cce08a0cec914a"));
+			assertEquals("Twitter licenses used is incorrect", 17, u.getLicenseUsage("5e82aa9ac3dcf4dec1cce08a0cec914a", "twitter"));
+			assertEquals("Facebook licenses used is incorrect", 5, u.getLicenseUsage("5e82aa9ac3dcf4dec1cce08a0cec914a", "facebook"));
+		} catch (EAPIError e) {
+			fail("Caught EAPIError: " + e.toString());
+		} catch (EAccessDenied e) {
+			fail("Caught EAccessDenied: " + e.toString());
+		} catch (EInvalidData e) {
+			fail("Caught EInvalidData: " + e.toString());
+		} catch (ParseException e) {
+			fail("Caught ParseException: " + e.toString());
+		}
+	}
+
+	public void testGetUsageTZ() {
+		api_client.setResponse("{\"start\":\"Mon, 07 Nov 2011 14:20:00 +0000\",\"streams\":{\"5e82aa9ac3dcf4dec1cce08a0cec914a\":{\"seconds\":313,\"licenses\":{\"twitter\":17,\"facebook\":5}}},\"end\":\"Mon, 07 Nov 2011 15:20:00 +0000\"}", 200, 150, 100);
+
+		try {
+			Usage u = user.getUsage();
+
+			SimpleDateFormat df = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+			df.setTimeZone(TimeZone.getTimeZone("EST"));
+
+			assertEquals("Start date is incorrect", "Mon Nov 07 09:20:00 EST 2011", df.format(u.getStartDate()));
+			assertEquals("End date is incorrect", "Mon Nov 07 10:20:00 EST 2011", df.format(u.getEndDate()));
 			assertEquals("Seconds consumed is incorrect", 313, u.getSeconds("5e82aa9ac3dcf4dec1cce08a0cec914a"));
 			assertEquals("Twitter licenses used is incorrect", 17, u.getLicenseUsage("5e82aa9ac3dcf4dec1cce08a0cec914a", "twitter"));
 			assertEquals("Facebook licenses used is incorrect", 5, u.getLicenseUsage("5e82aa9ac3dcf4dec1cce08a0cec914a", "facebook"));
