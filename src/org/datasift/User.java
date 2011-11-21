@@ -195,6 +195,26 @@ public class User {
 	public Definition createDefinition(String csdl) {
 		return new Definition(this, csdl);
 	}
+	
+    /**
+     * Returns a DataSift_StreamConsumer-derived object for the given hash,
+     * for the given type.
+     * 
+     * @access public
+     * @see StreamConsumer
+     * @param String hash The hash of the stream to be consumed.
+     * @param String
+     *            type The consumer type for which to construct a consumer.
+     * @throws EInvalidData
+     * @return StreamConsumer The consumer object.
+     * @throws EAccessDenied
+     * @throws ECompileFailed
+     */
+    public StreamConsumer getConsumer(String type, String hash,
+            IStreamConsumerEvents eventHandler) throws EInvalidData,
+            ECompileFailed, EAccessDenied {
+        return StreamConsumer.factory(this, type, new Definition(this, null, hash), eventHandler);
+    }
 
 	/**
 	 * Get usage data for this user.
