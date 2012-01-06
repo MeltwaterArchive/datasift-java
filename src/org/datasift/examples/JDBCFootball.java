@@ -41,7 +41,7 @@ public class JDBCFootball implements IStreamConsumerEvents {
 			User user = new User(Config.username, Config.api_key);
 
 			// Create the definition
-			String csdl = "interaction.content contains \"JDBCFootball\"";
+			String csdl = "interaction.content contains \"football\"";
 			System.out.println("Creating definition...");
 			System.out.println("  " + csdl);
 			Definition def = user.createDefinition(csdl);
