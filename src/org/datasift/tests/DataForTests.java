@@ -9,7 +9,7 @@ package org.datasift.tests;
 final public class DataForTests {
 	public static String definition = "interaction.content contains \"datasift\"";
 	public static String definition_hash = "947b690ec9dca525fb8724645e088d79";
-	public static int definition_cost = 4;
+	public static int definition_dpu = 4;
 
 	public static String invalid_definition = "interactin.content contains \"datasift\"";
 	

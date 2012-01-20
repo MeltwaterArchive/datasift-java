@@ -14,63 +14,77 @@ import org.json.JSONObject;
  * The User class represents a user of the API. Applications should start their
  * API interactions by creating an instance of this class. Once initialised it
  * provides factory methods for all of the functionality in the API.
- * 
+ *
  * @author MediaSift
  * @version 0.2
  */
 public class User {
 	/**
 	 * The user agent to be used for all HTTP requests.
-	 * 
+	 *
 	 * @access public
 	 */
-	public final static String _user_agent = "DataSiftJava/0.3.2";
+	public final static String _user_agent = "DataSiftJava/1.1.0";
 
 	/**
 	 * The base URL for API calls. No http://, and with the trailing slash.
-	 * 
+	 *
 	 * @access public
 	 */
 	public static String _api_base_url = "api.datasift.com/";
 
 	/**
 	 * The base URL for HTTP streaming. No http://, and with the trailing slash.
-	 * 
+	 *
 	 * @access public
 	 */
 	public static String _stream_base_url = "stream.datasift.com/";
 
 	/**
+	 * Usage period constant: hour
+	 *
+	 * @access public
+	 */
+	public final static String USAGE_HOUR = "hour";
+
+	/**
+	 * Usage period constant: day
+	 *
+	 * @access public
+	 */
+	public final static String USAGE_DAY = "day";
+
+	/**
 	 * The username of this user.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected String _username = "";
 
 	/**
 	 * The API key for this user.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected String _api_key = "";
 
 	/**
 	 * The rate limit returned by the last API call.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected int _rate_limit = -1;
 
 	/**
 	 * The rate limit remaining returned by the last API call.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected int _rate_limit_remaining = -1;
 
 	/**
 	 * The object to use for making API calls.
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected ApiClient _api_client = null;
@@ -78,7 +92,7 @@ public class User {
 	/**
 	 * Constructor. A username and API key are required when constructing an
 	 * instance of this class.
-	 * 
+	 *
 	 * @access public
 	 * @param String
 	 *            username The user's username.
@@ -103,7 +117,7 @@ public class User {
 
 	/**
 	 * Returns the username.
-	 * 
+	 *
 	 * @access public
 	 * @return String The username.
 	 */
@@ -113,7 +127,7 @@ public class User {
 
 	/**
 	 * Returns the API key.
-	 * 
+	 *
 	 * @access public
 	 * @return String The API key.
 	 */
@@ -123,7 +137,7 @@ public class User {
 
 	/**
 	 * Returns the rate limit returned by the last API call.
-	 * 
+	 *
 	 * @access public
 	 * @return int The rate limit.
 	 */
@@ -133,7 +147,7 @@ public class User {
 
 	/**
 	 * Returns the rate limit remaining returned by the last API call.
-	 * 
+	 *
 	 * @access public
 	 * @return int The rate limit remaining.
 	 */
@@ -143,7 +157,7 @@ public class User {
 
 	/**
 	 * Returns the base URL for HTTP stream request.
-	 * 
+	 *
 	 * @access public
 	 * @return String The stream base URL.
 	 */
@@ -153,7 +167,7 @@ public class User {
 
 	/**
 	 * Set the ApiClient object to use when accessing the API.
-	 * 
+	 *
 	 * @param api_client
 	 */
 	public void setApiClient(ApiClient api_client) {
@@ -162,7 +176,7 @@ public class User {
 
 	/**
 	 * Creates and returns an empty Definition object.
-	 * 
+	 *
 	 * @access public
 	 * @return Definition A definition object tied to this user.
 	 */
@@ -172,7 +186,7 @@ public class User {
 
 	/**
 	 * Creates and returns a Definition object based on the given CSDL.
-	 * 
+	 *
 	 * @access public
 	 * @param String
 	 *            csdl CSDL with which to prime the object.
@@ -181,18 +195,76 @@ public class User {
 	public Definition createDefinition(String csdl) {
 		return new Definition(this, csdl);
 	}
+	
+    /**
+     * Returns a DataSift_StreamConsumer-derived object for the given hash,
+     * for the given type.
+     * 
+     * @access public
+     * @see StreamConsumer
+     * @param String hash The hash of the stream to be consumed.
+     * @param String
+     *            type The consumer type for which to construct a consumer.
+     * @throws EInvalidData
+     * @return StreamConsumer The consumer object.
+     * @throws EAccessDenied
+     * @throws ECompileFailed
+     */
+    public StreamConsumer getConsumer(String type, String hash,
+            IStreamConsumerEvents eventHandler) throws EInvalidData,
+            ECompileFailed, EAccessDenied {
+        return StreamConsumer.factory(this, type, new Definition(this, null, hash), eventHandler);
+    }
 
 	/**
 	 * Get usage data for this user.
-	 * 
+	 *
 	 * @access public
+	 * @param String
+	 *            hash Specifies the stream hash in which we're interested.
 	 * @return Usage
 	 * @throws EAccessDenied
 	 * @throws EAPIError
 	 * @throws EInvalidData
 	 */
-	public Usage getUsage() throws EAPIError, EAccessDenied, EInvalidData {
-		return getUsage(0, 0, "");
+	public Usage getUsage() throws EAPIError, EAccessDenied,
+			EInvalidData {
+		return getUsage(User.USAGE_HOUR);
+	}
+
+	/**
+	 * Get usage data for this user.
+	 *
+	 * @access public
+	 * @param String period Use the final static vars in this class to specify
+	 *            either "day" or "hour".
+	 * @return Usage
+	 * @throws EAccessDenied
+	 * @throws EAPIError
+	 * @throws EInvalidData
+	 */
+	public Usage getUsage(String period) throws EAPIError,
+			EAccessDenied, EInvalidData {
+		HashMap<String, String> params = new HashMap<String, String>();
+
+		if (period != User.USAGE_HOUR && period != User.USAGE_DAY) {
+			throw new EInvalidData("The specified period is not supported");
+		}
+
+		params.put("period", period);
+
+		JSONObject res = callAPI("usage", params);
+		try {
+			return new Usage(res.toString());
+		} catch (JSONException e) {
+			throw new EAPIError(
+					"There was an issue parsing the response from DataSift: "
+							+ e.toString());
+		} catch (EInvalidData e) {
+			throw new EAPIError(
+					"There was an issue parsing the response from DataSift: "
+							+ e.toString());
+		}
 	}
 
 	/**
@@ -209,22 +281,6 @@ public class User {
 	public Usage getUsageSince(int start) throws EAPIError, EAccessDenied,
 			EInvalidData {
 		return getUsage(start, 0, "");
-	}
-
-	/**
-	 * Get usage data for this user.
-	 * 
-	 * @access public
-	 * @param String
-	 *            hash Specifies the stream hash in which we're interested.
-	 * @return Usage
-	 * @throws EAccessDenied
-	 * @throws EAPIError
-	 * @throws EInvalidData
-	 */
-	public Usage getUsage(String hash) throws EAPIError, EAccessDenied,
-			EInvalidData {
-		return getUsage(0, 0, hash);
 	}
 
 	/**
@@ -569,7 +625,7 @@ public class User {
 
 	/**
 	 * Returns the user agent this library should use for all API calls.
-	 * 
+	 *
 	 * @access public
 	 * @returns String The user agent.
 	 */
@@ -579,7 +635,7 @@ public class User {
 
 	/**
 	 * Make a call to a DataSift API endpoint.
-	 * 
+	 *
 	 * @access public
 	 * @param String
 	 *            endpoint The endpoint of the API call.
@@ -591,7 +647,8 @@ public class User {
 	 * @throws EAccessDenied
 	 */
 	public JSONObject callAPI(String endpoint, HashMap<String, String> params)
-			throws EAPIError, EAccessDenied {
+		throws EAPIError, EAccessDenied
+	{
 		JSONObject retval = null;
 
 		// Create the default ApiClient object if we don't already have one

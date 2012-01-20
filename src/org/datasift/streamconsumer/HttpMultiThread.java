@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.datasift.streamconsumer;
 
@@ -23,7 +23,7 @@ public class HttpMultiThread extends Thread {
 	private ArrayList<String> _hashes = null;
 	private boolean _auto_reconnect = false;
 	private boolean _kill_requested = false;
-	
+
 	public HttpMultiThread(HttpMulti http, User user, ArrayList<String> hashes) {
 		_consumer = http;
 		_user = user;
@@ -49,7 +49,7 @@ public class HttpMultiThread extends Thread {
 			// Ignore
 		}
 	}
-	
+
 	public synchronized void requestKill() {
 		_kill_requested = true;
 	}
@@ -92,7 +92,7 @@ public class HttpMultiThread extends Thread {
 				try {
 					DefaultHttpClient client = new DefaultHttpClient();
 					String url = "http://"
-							+ _user.getStreamBaseURL() + "multi?hashes=" + _hashes.toString().replace(", ", ",");
+							+ _user.getStreamBaseURL() + "multi?hashes=" + _hashes.toString().replace(", ", ",").replace("[", "").replace("]", "");
 					HttpGet get = new HttpGet(url);
 					get.addHeader("authorization", _user.getUsername() + ":" + _user.getAPIKey());
 					HttpResponse response = client.execute(get);
@@ -120,8 +120,7 @@ public class HttpMultiThread extends Thread {
 						stopConsumer();
 					} else {
 						// Connection failed, back off a bit and try again
-						// Timings from
-						// http://support.datasift.net/help/kb/rest-api/http-streaming-api
+						// Timings from http://dev.datasift.com/docs/streaming-api
 						if (reconnect_delay == 0) {
 							reconnect_delay = 10;
 						} else if (reconnect_delay < 240) {
@@ -144,8 +143,7 @@ public class HttpMultiThread extends Thread {
 					&& getConsumerState() == StreamConsumer.STATE_RUNNING
 					&& _auto_reconnect) {
 				// Connection failed or timed out
-				// Timings from
-				// http://support.datasift.net/help/kb/rest-api/http-streaming-api
+				// Timings from http://dev.datasift.com/docs/streaming-api
 				if (reconnect_delay == 0) {
 					reconnect_delay = 1;
 				} else if (reconnect_delay < 16) {

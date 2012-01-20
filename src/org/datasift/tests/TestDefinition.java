@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 
 import org.datasift.Config;
-import org.datasift.Cost;
+import org.datasift.DPU;
 import org.datasift.Definition;
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
@@ -47,13 +47,21 @@ public class TestDefinition extends TestCase {
 
 	public void testConstruction() {
 		Definition def = new Definition(user);
-		assertEquals("Default definition string is not empty", def.get(), "");
+		try {
+			assertEquals("Default definition string is not empty", def.get(), "");
+		} catch (EInvalidData e) {
+			fail("EInvalidData: " + e.getMessage());
+		}
 	}
 
 	public void testConstructionWithDefinition() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e) {
+			fail("EInvalidData: " + e.getMessage());
+		}
 	}
 
 	public void testSetAndGet() {
@@ -61,25 +69,33 @@ public class TestDefinition extends TestCase {
 
 		def.set(DataForTests.definition);
 
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e) {
+			fail("EInvalidData: " + e.getMessage());
+		}
 	}
 
 	public void testValidate_Success() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String created_at = "2011-05-16 17:20:02";
-		int total_cost = 10;
-		api_client.setResponse("{\"created_at\":\"" + created_at + "\",\"cost\":\"" + total_cost + "\"}", 200);
+		double total_dpu = 10;
+		api_client.setResponse("{\"created_at\":\"" + created_at + "\",\"dpu\":\"" + total_dpu + "\"}", 200);
 		
 		try {
 			def.validate();
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
 			assertEquals("Created at date is incorrect", df.parse(created_at).getTime(), def.getCreatedAt().getTime());
-			assertEquals("Total cost is incorrect", total_cost, def.getTotalCost());
+			assertEquals("Total DPU is incorrect", total_dpu, def.getTotalDPU());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -93,8 +109,12 @@ public class TestDefinition extends TestCase {
 
 	public void testValidate_Failure() {
 		Definition def = new Definition(user, DataForTests.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -114,19 +134,23 @@ public class TestDefinition extends TestCase {
 
 	public void testValidate_SuccessThenFailure() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String created_at = "2011-05-16 17:20:02";
-		int total_cost = 10;
-		api_client.setResponse("{\"created_at\":\"" + created_at + "\",\"cost\":\"" + total_cost + "\"}", 200);
+		double total_dpu = 10;
+		api_client.setResponse("{\"created_at\":\"" + created_at + "\",\"dpu\":\"" + total_dpu + "\"}", 200);
 
 		try {
 			def.validate();
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
 			assertEquals("Created at date is incorrect", df.parse(created_at).getTime(), def.getCreatedAt().getTime());
-			assertEquals("Total cost is incorrect", total_cost, def.getTotalCost());
+			assertEquals("Total DPU is incorrect", total_dpu, def.getTotalDPU());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -139,8 +163,12 @@ public class TestDefinition extends TestCase {
 
 		// Now set the invalid definition in that same object
 		def.set(DataForTests.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -159,13 +187,17 @@ public class TestDefinition extends TestCase {
 	
 	public void testCompile_Success() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String hash = "947b690ec9dca525fb8724645e088d79";
 		String created_at = "2011-05-16 17:20:02";
-		int total_cost = 10;
-		api_client.setResponse("{\"hash\":\"" + hash + "\",\"created_at\":\"" + created_at + "\",\"cost\":\"" + total_cost + "\"}", 200);
+		double total_dpu = 10;
+		api_client.setResponse("{\"hash\":\"" + hash + "\",\"created_at\":\"" + created_at + "\",\"dpu\":\"" + total_dpu + "\"}", 200);
 
 		try {
 			def.compile();
@@ -173,7 +205,7 @@ public class TestDefinition extends TestCase {
 			assertEquals("Incorrect hash", hash, def.getHash());
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
 			assertEquals("Created at date is incorrect", df.parse(created_at).getTime(), def.getCreatedAt().getTime());
-			assertEquals("Total cost is incorrect", total_cost, def.getTotalCost());
+			assertEquals("Total DPU is incorrect", total_dpu, def.getTotalDPU());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -187,8 +219,12 @@ public class TestDefinition extends TestCase {
 
 	public void testCompile_Failure() {
 		Definition def = new Definition(user, DataForTests.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -208,13 +244,17 @@ public class TestDefinition extends TestCase {
 
 	public void testCompile_SuccessThenFailure() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String hash = "947b690ec9dca525fb8724645e088d79";
 		String created_at = "2011-05-16 17:20:02";
-		int total_cost = 10;
-		api_client.setResponse("{\"hash\":\"" + hash + "\",\"created_at\":\"" + created_at + "\",\"cost\":\"" + total_cost + "\"}", 200);
+		double total_dpu = 10;
+		api_client.setResponse("{\"hash\":\"" + hash + "\",\"created_at\":\"" + created_at + "\",\"dpu\":\"" + total_dpu + "\"}", 200);
 
 		try {
 			def.compile();
@@ -222,7 +262,7 @@ public class TestDefinition extends TestCase {
 			assertEquals("Incorrect hash", hash, def.getHash());
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd H:m:s");
 			assertEquals("Created at date is incorrect", df.parse(created_at).getTime(), def.getCreatedAt().getTime());
-			assertEquals("Total cost is incorrect", total_cost, def.getTotalCost());
+			assertEquals("Total DPU is incorrect", total_dpu, def.getTotalDPU());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -235,8 +275,12 @@ public class TestDefinition extends TestCase {
 
 		// Now set the invalid definition in that same object
 		def.set(DataForTests.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		String error = "The target interactin.content does not exist";
 		api_client.setResponse("{\"error\":\"" + error + "\"}", 400);
@@ -254,16 +298,20 @@ public class TestDefinition extends TestCase {
 		}
 	}
 	
-	public void testGetCostBreakdown() {
+	public void testGetDPUBreakdown() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 		
-		api_client.setResponse("{\"costs\":{\"contains\":{\"count\":1,\"cost\":4,\"targets\":{\"interaction.content\":{\"count\":1,\"cost\":4}}}},\"total\":4}", 200);
+		api_client.setResponse("{\"detail\":{\"contains\":{\"count\":1,\"dpu\":4,\"targets\":{\"interaction.content\":{\"count\":1,\"dpu\":4}}}},\"dpu\":4}", 200);
 		
 		try {
-			Cost cost = def.getCostBreakdown();
-			assertEquals("Total cost is incorrect", cost.getTotalCost(), 4);
+			DPU dpu = def.getDPUBreakdown();
+			assertEquals("Total DPU is incorrect", 4.0, dpu.getTotal());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (EAccessDenied e) {
@@ -278,9 +326,13 @@ public class TestDefinition extends TestCase {
 	@SuppressWarnings("unused")
 	public void testGetConsumer() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals(def.get(), DataForTests.definition);
+		try {
+			assertEquals(def.get(), DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
-		api_client.setResponse("{\"hash\":\"947b690ec9dca525fb8724645e088d79\",\"created_at\":\"2011-05-16 17:20:02\",\"cost\":\"10\"}", 200);
+		api_client.setResponse("{\"hash\":\"947b690ec9dca525fb8724645e088d79\",\"created_at\":\"2011-05-16 17:20:02\",\"dpu\":\"10\"}", 200);
 
 		try {
 			StreamConsumer consumer = def.getConsumer(StreamConsumer.TYPE_HTTP,

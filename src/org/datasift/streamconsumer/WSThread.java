@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.datasift.streamconsumer;
 
@@ -26,11 +26,11 @@ public class WSThread extends Thread {
 	private User _user = null;
 	private boolean _auto_reconnect = false;
 	private WebSocket _ws = null;
-	
+
 	public WSThread(WS http, User user) throws WebSocketException, URISyntaxException {
 		_consumer = http;
 		_user = user;
-		
+
 		_ws = new WebSocketConnection(new URI("ws://" + _user.getStreamBaseURL()));
 		_ws.addHeader("Authorization: " + _user.getUsername() + ":" + _user.getAPIKey());
 	}
@@ -54,7 +54,7 @@ public class WSThread extends Thread {
 			// Ignore
 		}
 	}
-	
+
 	public synchronized void restartConsumer() {
 		_consumer.restart();
 	}
@@ -65,7 +65,7 @@ public class WSThread extends Thread {
 		} catch (EInvalidData e) {
 		}
 	}
-	
+
 	public synchronized void onRestarted() {
 		_consumer.onRestarted();
 	}
@@ -85,7 +85,7 @@ public class WSThread extends Thread {
 			throw new EAPIError(e.getMessage());
 		}
 	}
-	
+
 	public synchronized void unsubscribe(String hash) throws EAPIError {
 		try {
 			_ws.send("{\"action\":\"unsubscribe\",\"hash\":\"" + hash + "\"}");
@@ -121,7 +121,7 @@ public class WSThread extends Thread {
 						{
 							// Socket connected
 						}
-						                
+
 						public void onMessage(WebSocketMessage message)
 						{
 							// Message received
@@ -130,7 +130,7 @@ public class WSThread extends Thread {
 								processLine(line);
 							}
 						}
-						                
+
 						public void onClose()
 						{
 							// Socket closed
@@ -143,10 +143,10 @@ public class WSThread extends Thread {
 							}
 						}
 					});
-					
+
 					// Establish WebSocket Connection
 					_ws.connect();
-					
+
 					while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 						Thread.sleep(5000);
 					}
@@ -164,8 +164,7 @@ public class WSThread extends Thread {
 					&& (getConsumerState() == StreamConsumer.STATE_RUNNING || getConsumerState() == StreamConsumer.STATE_RESTARTING)
 					&& _auto_reconnect) {
 				// Connection failed or timed out
-				// Timings from
-				// http://support.datasift.net/help/kb/rest-api/http-streaming-api
+				// Timings from http://dev.datasift.com/docs/streaming-api
 				if (reconnect_delay == 0) {
 					reconnect_delay = 1;
 				} else if (reconnect_delay < 16) {

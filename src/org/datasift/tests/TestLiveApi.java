@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 
 import org.datasift.Config;
-import org.datasift.Cost;
+import org.datasift.DPU;
 import org.datasift.Definition;
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
@@ -38,8 +38,12 @@ public class TestLiveApi extends TestCase {
 
 	public void testValidate_Success() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		try {
 			def.validate();
@@ -58,8 +62,12 @@ public class TestLiveApi extends TestCase {
 
 	public void testValidate_Failure() {
 		Definition def = new Definition(user, DataForTests.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		try {
 			def.validate();
@@ -75,8 +83,12 @@ public class TestLiveApi extends TestCase {
 
 	public void testValidate_SuccessThenFailure() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		try {
 			def.validate();
@@ -94,8 +106,12 @@ public class TestLiveApi extends TestCase {
 
 		// Now set the invalid definition in that same object
 		def.set(DataForTests.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		try {
 			def.compile();
@@ -111,8 +127,12 @@ public class TestLiveApi extends TestCase {
 	
 	public void testCompile_Success() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		try {
 			def.compile();
@@ -131,8 +151,12 @@ public class TestLiveApi extends TestCase {
 
 	public void testCompile_Failure() {
 		Definition def = new Definition(user, DataForTests.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		try {
 			def.compile();
@@ -148,8 +172,12 @@ public class TestLiveApi extends TestCase {
 
 	public void testCompile_SuccessThenFailure() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		try {
 			def.compile();
@@ -167,8 +195,12 @@ public class TestLiveApi extends TestCase {
 
 		// Now set the invalid definition in that same object
 		def.set(DataForTests.invalid_definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.invalid_definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.invalid_definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 
 		try {
 			def.compile();
@@ -184,8 +216,12 @@ public class TestLiveApi extends TestCase {
 	
 	public void testGetCreatedAt() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 		
 		try {
 			Date d = def.getCreatedAt();
@@ -197,14 +233,18 @@ public class TestLiveApi extends TestCase {
 		}
 	}
 	
-	public void testGetTotalCost() {
+	public void testGetTotalDPU() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 		
 		try {
-			int cost = def.getTotalCost();
-			assertTrue(cost > 0);
+			double dpu = def.getTotalDPU();
+			assertTrue(dpu > 0);
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (EAccessDenied e) {
@@ -212,14 +252,18 @@ public class TestLiveApi extends TestCase {
 		}
 	}
 	
-	public void testGetCostBreakdown() {
+	public void testGetDPUBreakdown() {
 		Definition def = new Definition(user, DataForTests.definition);
-		assertEquals("Definition string not set correctly", def.get(),
-				DataForTests.definition);
+		try {
+			assertEquals("Definition string not set correctly", def.get(),
+					DataForTests.definition);
+		} catch (EInvalidData e1) {
+			fail("EInvalidData: " + e1.getMessage());
+		}
 		
 		try {
-			Cost cost = def.getCostBreakdown();
-			assertEquals(cost.getTotalCost(), DataForTests.definition_cost);
+			DPU dpu = def.getDPUBreakdown();
+			assertEquals(DataForTests.definition_dpu, dpu.getTotal());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (EAccessDenied e) {
