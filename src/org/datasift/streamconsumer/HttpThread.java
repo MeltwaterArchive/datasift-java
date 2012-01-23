@@ -4,6 +4,7 @@
 package org.datasift.streamconsumer;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;
@@ -75,6 +76,7 @@ public class HttpThread extends Thread {
 			}
 
 			// If we're still running...
+			BufferedReader reader = null;
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				// Attempt to connect and start processing incoming interactions
 				try {
@@ -88,7 +90,7 @@ public class HttpThread extends Thread {
 						// Reset the reconnect delay
 						reconnect_delay = 0;
 						// Get a stream reader
-						BufferedReader reader = new BufferedReader(
+						reader = new BufferedReader(
 								new InputStreamReader(response.getEntity()
 										.getContent()));
 						// While we're running, get a line
@@ -142,6 +144,16 @@ public class HttpThread extends Thread {
 				} else {
 					reason = "Connection failed due to a network error";
 					stopConsumer();
+				}
+			}
+			
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					// Deliberately ignored - this exception means it's not
+					// open so can't be closed which is not something we care
+					// about!
 				}
 			}
 		} while (getConsumerState() == StreamConsumer.STATE_RUNNING
