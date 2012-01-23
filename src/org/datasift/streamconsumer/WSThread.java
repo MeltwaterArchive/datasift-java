@@ -157,6 +157,14 @@ public class WSThread extends Thread {
 					reason = e.getMessage();
 				} catch (InterruptedException e) {
 					reason = "Socket disconnected";
+				} finally {
+					try {
+						_ws.close();
+					} catch (WebSocketException e) {
+						// Deliberately ignored - usually thrown due to the
+						// connection not being open, which we really don't
+						// care about knowing!
+					}
 				}
 			}
 
