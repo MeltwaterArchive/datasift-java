@@ -91,11 +91,11 @@ public class HttpMultiThread extends Thread {
 			BufferedReader reader = null;
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				// Attempt to connect and start processing incoming interactions
+				DefaultHttpClient client = new DefaultHttpClient();
+				String url = "http://"
+						+ _user.getStreamBaseURL() + "multi?hashes=" + _hashes.toString().replace(", ", ",").replace("[", "").replace("]", "");
+				HttpGet get = new HttpGet(url);
 				try {
-					DefaultHttpClient client = new DefaultHttpClient();
-					String url = "http://"
-							+ _user.getStreamBaseURL() + "multi?hashes=" + _hashes.toString().replace(", ", ",").replace("[", "").replace("]", "");
-					HttpGet get = new HttpGet(url);
 					get.addHeader("authorization", _user.getUsername() + ":" + _user.getAPIKey());
 					HttpResponse response = client.execute(get);
 					int statusCode = response.getStatusLine().getStatusCode();
@@ -138,6 +138,16 @@ public class HttpMultiThread extends Thread {
 					}
 				} catch (Exception e) {
 					reason = "";
+				} finally {
+					// Clean up the connection
+					try {
+						get.abort();
+						client.getConnectionManager().shutdown();
+					} catch (Exception e) {
+						// Ignore any issues with this - we can't really do
+						// anything sensible with problems shutting down the
+						// connection.
+					}
 				}
 			}
 

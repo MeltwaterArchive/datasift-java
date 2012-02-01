@@ -79,59 +79,82 @@ public class HttpThread extends Thread {
 			BufferedReader reader = null;
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				// Attempt to connect and start processing incoming interactions
+				DefaultHttpClient client = new DefaultHttpClient();
 				try {
-					System.out.println("Connecting");
-					DefaultHttpClient client = new DefaultHttpClient();
 					HttpGet get = new HttpGet("http://"
 							+ _user.getStreamBaseURL() + _definition.getHash());
-					get.addHeader("authorization", _user.getUsername() + ":" + _user.getAPIKey());
-					HttpResponse response = client.execute(get);
-					int statusCode = response.getStatusLine().getStatusCode();
-					if (statusCode == 200) {
-						System.out.println("Connected");
-						// Reset the reconnect delay
-						reconnect_delay = 0;
-						// Get a stream reader
-						reader = new BufferedReader(
-								new InputStreamReader(response.getEntity()
-										.getContent()));
-						// While we're running, get a line
-						while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
-							String line = reader.readLine();
-							if (line == null) {
-								// If the line is null then the connection has closed
-								// Break out the loop and auto reconnect if enabled
-								break;
-							} else if (line.length() > 100) {
-								// If the line length is bigger than a tick or an
-								// empty line, process it
-								processLine(line);
+					try {
+						get.addHeader("authorization", _user.getUsername() + ":" + _user.getAPIKey());
+						HttpResponse response = client.execute(get);
+						int statusCode = response.getStatusLine().getStatusCode();
+						if (statusCode == 200) {
+							// Reset the reconnect delay
+							reconnect_delay = 0;
+							// Get a stream reader
+							reader = new BufferedReader(
+									new InputStreamReader(response.getEntity()
+											.getContent()));
+							// While we're running, get a line
+							while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+								String line = reader.readLine();
+								if (line == null) {
+									// If the line is null then the connection has closed
+									// Break out the loop and auto reconnect if enabled
+									break;
+	
+								} else if (line.length() > 100) {
+									// If the line length is bigger than a tick or an
+									// empty line, process it
+									processLine(line);
+								}
+							}
+						} else if (statusCode == 404) {
+							// Hash not found!
+							reason = "Hash not found!";
+							_consumer.stop();
+						} else {
+							// Connection failed, back off a bit and try again
+							// Timings from http://dev.datasift.com/docs/streaming-api
+							if (reconnect_delay == 0) {
+								reconnect_delay = 10;
+							} else if (reconnect_delay < 240) {
+								reconnect_delay *= 2;
+							} else {
+								reason = "Connection failed: "
+										+ statusCode
+										+ " "
+										+ response.getStatusLine()
+												.getReasonPhrase();
+								_consumer.stop();
 							}
 						}
-					} else if (statusCode == 404) {
-						// Hash not found!
-						reason = "Hash not found!";
-						_consumer.stop();
-					} else {
-						// Connection failed, back off a bit and try again
-						// Timings from http://dev.datasift.com/docs/streaming-api
-						if (reconnect_delay == 0) {
-							reconnect_delay = 10;
-							continue;
-						} else if (_auto_reconnect && reconnect_delay < 240) {
-							reconnect_delay *= 2;
-							continue;
-						} else {
-							reason = "Connection failed: "
-									+ statusCode
-									+ " "
-									+ response.getStatusLine()
-											.getReasonPhrase();
-							_consumer.stop();
+					} catch (Exception e) {
+						reason = "";
+					} finally {
+						// Clean up the connection
+						try {
+							get.abort();
+							client.getConnectionManager().shutdown();
+						} catch (Exception e) {
+							// Ignore any issues with this - we can't really do
+							// anything sensible with problems shutting down the
+							// connection.
 						}
 					}
-				} catch (Exception e) {
-					reason = "";
+				} catch (EInvalidData e) {
+					reason = e.getMessage();
+					try {
+						_consumer.stop();
+					} catch (EInvalidData eid) {
+						// Ignored
+					}
+				} catch (EAccessDenied e) {
+					reason = e.getMessage();
+					try {
+						_consumer.stop();
+					} catch (EInvalidData eid) {
+						// Ignored
+					}
 				}
 			}
 
