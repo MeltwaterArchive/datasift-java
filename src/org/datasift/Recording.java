@@ -59,12 +59,12 @@ public class Recording {
 	public void init(JSONdn data) throws EInvalidData {
 		String id = data.getStringVal("id");
 		Integer start_time = data.getIntVal("start_time");
-		Integer end_time = null;
+		Integer end_time = 0;
 		try {
 			end_time = data.getIntVal("finish_time");
 		} catch (EInvalidData e) {
 			// This means the finish time is either missing or null, which is acceptable.
-			end_time = null;
+			end_time = 0;
 		}
 		String name = data.getStringVal("name");
 		String hash = data.getStringVal("hash");
@@ -99,7 +99,7 @@ public class Recording {
 			throw new EInvalidData("Invalid start time in the recording data.");
 		}
 		
-		if (end_time != null && end_time < 1) {
+		if (end_time != null && end_time < 0) {
 			throw new EInvalidData("Invalid end time in the recording data.");
 		}
 

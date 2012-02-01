@@ -13,10 +13,10 @@ final public class DataForTests {
 
 	public static String invalid_definition = "interactin.content contains \"datasift\"";
 	
-	public static String recording = "{\"id\":\"47ce46821c942ff42f8e\",\"start_time\":1313055762,\"finish_time\":null,\"name\":\"Inherit everything 123\",\"hash\":\"9e2e0ba334ee76aa06ef42d5565dbb70\"}";
+	public static String recording = "{\"id\":\"47ce46821c942ff42f8e\",\"start_time\":1313055762,\"finish_time\":0,\"name\":\"Inherit everything 123\",\"hash\":\"9e2e0ba334ee76aa06ef42d5565dbb70\"}";
 	public static String recording_id = "47ce46821c942ff42f8e";
 	public static Integer recording_start_time = 1313055762;
-	public static Integer recording_end_time = null;
+	public static Integer recording_end_time = 0;
 	public static String recording_name = "Inherit everything 123";
 	public static String recording_hash = "9e2e0ba334ee76aa06ef42d5565dbb70";
 	
