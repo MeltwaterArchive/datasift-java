@@ -19,6 +19,15 @@ public interface IStreamConsumerEvents {
 			throws EInvalidData;
 
 	/**
+	 * Called for each deletion notification consumed.
+	 * @param consumer
+	 * @param interaction
+	 * @throws EInvalidData
+	 */
+	public void onDeleted(StreamConsumer consumer, Interaction interaction)
+			throws EInvalidData;
+
+	/**
 	 * Called when the consumer stops for some reason.
 	 * @param consumer
 	 * @param reason

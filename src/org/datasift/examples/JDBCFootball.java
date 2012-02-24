@@ -100,6 +100,20 @@ public class JDBCFootball implements IStreamConsumerEvents {
 	}
 
 	/**
+	 * Handle delete notifications.
+	 * 
+	 * @param StreamConsumer
+	 *            consumer The consumer object.
+	 * @param JSONObject
+	 *            interaction The interaction data.
+	 * @throws EInvalidData
+	 */
+	public void onDeleted(StreamConsumer c, Interaction i)
+			throws EInvalidData {
+		// Ignored for this example
+	}
+
+	/**
 	 * Called when the consumer has stopped.
 	 * 
 	 * @param DataSift_StreamConsumer
