@@ -1,8 +1,5 @@
 /**
- * This example constructs a Definition object with CSDL that looks for
- * anything containing the word "football". It then gets an HTTP consumer for
- * that definition and displays matching interactions to the screen as they
- * come in. It will display 10 interactions and then stop.
+ * This simple example demonstrates consuming a stream using the stream hash.
  */
 package org.datasift.examples;
 
@@ -12,31 +9,48 @@ import org.datasift.*;
  * @author MediaSift
  * @version 0.1
  */
-public class Football implements IStreamConsumerEvents {
+public class DeletesWS implements IMultiStreamConsumerEvents {
+	
+	private int _line_len = 0;
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		new DeletesWS().run();
+	}
+	
+	public void run() {
 		try {
 			// Authenticate
 			System.out.println("Creating user...");
 			User user = new User(Config.username, Config.api_key);
 
 			// Create the definition
-			String csdl = "interaction.content contains \"football\"";
-			System.out.println("Creating definition...");
-			System.out.println("  " + csdl);
-			Definition def = user.createDefinition(csdl);
-
+			Definition d = user.createDefinition("interaction.sample < 1.0");
+			
 			// Create the consumer
 			System.out.println("Getting the consumer...");
-			StreamConsumer consumer = def.getConsumer(StreamConsumer.TYPE_HTTP,
-					new Football());
+			StreamConsumer consumer = StreamConsumer.factory(user, StreamConsumer.TYPE_WS, this);
 
 			// And start consuming
 			System.out.println("Consuming...");
 			System.out.println("--");
 			consumer.consume();
+			
+			boolean tryagain = true;
+			while (tryagain) {
+				try {
+					consumer.subscribe(d.getHash());
+					System.out.println("Subscribing to \"" + d.getHash() + "\"...");
+					tryagain = false;
+				} catch (EAPIError e) {
+					if (!e.getMessage().contains("not connected")) {
+						throw e;
+					}
+					Thread.sleep(100);
+				}
+			}
 		} catch (EInvalidData e) {
 			System.out.print("InvalidData: ");
 			System.out.println(e.getMessage());
@@ -46,13 +60,14 @@ public class Football implements IStreamConsumerEvents {
 		} catch (EAccessDenied e) {
 			System.out.print("AccessDenied: ");
 			System.out.println(e.getMessage());
+		} catch (EAPIError e) {
+			System.out.print("APIError: ");
+			System.out.println(e.getMessage());
+		} catch (InterruptedException e) {
+			System.out.print("InterruptedException: ");
+			System.out.println(e.getMessage());
 		}
 	}
-
-	/**
-	 * This determines the number of interactions to consume before stopping.
-	 */
-	private int _num = 10;
 
 	/**
 	 * Handle incoming data.
@@ -63,26 +78,10 @@ public class Football implements IStreamConsumerEvents {
 	 *            interaction The interaction data.
 	 * @throws EInvalidData
 	 */
-	public void onInteraction(StreamConsumer c, Interaction i)
+	public void onInteraction(StreamConsumer c, String hash, Interaction i)
 			throws EInvalidData {
-		try {
-			System.out.print("Type: ");
-			System.out.println(i.getStringVal("interaction.type"));
-			System.out.print("Content: ");
-			System.out.println(i.getStringVal("interaction.content"));
-		} catch (EInvalidData e) {
-			System.out.println("Exception: " + e.getMessage());
-			System.out.print("Interaction: ");
-			System.out.println(i);
-		}
-
-		System.out.println("--");
-
-		// Stop after 10
-		if (_num-- == 1) {
-			System.out.println("Stopping consumer...");
-			c.stop();
-		}
+		System.out.print(".");
+		incLineLen();
 	}
 
 	/**
@@ -94,18 +93,10 @@ public class Football implements IStreamConsumerEvents {
 	 *            interaction The interaction data.
 	 * @throws EInvalidData
 	 */
-	public void onDeleted(StreamConsumer c, Interaction i)
+	public void onDeleted(StreamConsumer c, String hash, Interaction i)
 			throws EInvalidData {
-		try {
-			System.out.print("Deleted: ");
-			System.out.print(i.getStringVal("interaction.id"));
-		} catch (EInvalidData e) {
-			// The interaction did not contain either a type or content.
-			System.out.println("Exception: " + e.getMessage());
-			System.out.print("Deletion: ");
-			System.out.println(i);
-		}
-		System.out.println("--");
+		System.out.print("X");
+		incLineLen();
 	}
 
 	/**
@@ -119,5 +110,13 @@ public class Football implements IStreamConsumerEvents {
 	public void onStopped(StreamConsumer consumer, String reason) {
 		System.out.print("Stopped: ");
 		System.out.println(reason);
+	}
+	
+	private void incLineLen() {
+		_line_len++;
+		if (_line_len > 80) {
+			System.out.println();
+			_line_len = 0;
+		}
 	}
 }
