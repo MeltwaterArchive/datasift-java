@@ -71,6 +71,29 @@ public class ConsumeStream implements IStreamConsumerEvents {
 	}
 
 	/**
+	 * Handle delete notifications.
+	 * 
+	 * @param StreamConsumer
+	 *            consumer The consumer object.
+	 * @param JSONObject
+	 *            interaction The interaction data.
+	 * @throws EInvalidData
+	 */
+	public void onDeleted(StreamConsumer c, Interaction i)
+			throws EInvalidData {
+		try {
+			System.out.print("Deleted: ");
+			System.out.print(i.getStringVal("interaction.id"));
+		} catch (EInvalidData e) {
+			// The interaction did not contain either a type or content.
+			System.out.println("Exception: " + e.getMessage());
+			System.out.print("Deletion: ");
+			System.out.println(i);
+		}
+		System.out.println("--");
+	}
+
+	/**
 	 * Called when the consumer has stopped.
 	 * 
 	 * @param DataSift_StreamConsumer

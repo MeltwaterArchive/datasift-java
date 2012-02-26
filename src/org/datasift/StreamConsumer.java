@@ -270,6 +270,24 @@ abstract public class StreamConsumer {
 	 *            interaction The interaction data structure.
 	 * @throws EInvalidData
 	 */
+	public void onDeleted(Interaction interaction) throws EInvalidData {
+		if (_eventHandler != null) {
+			_eventHandler.onDeleted(this, interaction);
+		} else {
+			throw new EInvalidData(
+					"You must provide an onDeleted method or an eventHandler object");
+		}
+	}
+
+	/**
+	 * This is called for each interaction received from the stream and should
+	 * be implemented in extending classes if they don't use an
+	 * IStreamConsumerEvents object.
+	 * 
+	 * @param Interaction
+	 *            interaction The interaction data structure.
+	 * @throws EInvalidData
+	 */
 	public void onMultiInteraction(String hash, Interaction interaction)
 			throws EInvalidData {
 		if (_multiEventHandler != null) {
@@ -277,6 +295,25 @@ abstract public class StreamConsumer {
 		} else {
 			throw new EInvalidData(
 					"You must provide an onMultiInteraction method or a multiEventHandler object");
+		}
+	}
+
+	/**
+	 * This is called for each deletion notification received from the stream
+	 * and should be implemented in extending classes if they don't use an
+	 * IStreamConsumerEvents object.
+	 * 
+	 * @param Interaction
+	 *            interaction The interaction data structure.
+	 * @throws EInvalidData
+	 */
+	public void onMultiDeleted(String hash, Interaction interaction)
+			throws EInvalidData {
+		if (_multiEventHandler != null) {
+			_multiEventHandler.onDeleted(this, hash, interaction);
+		} else {
+			throw new EInvalidData(
+					"You must provide an onMultiDeleted method or a multiEventHandler object");
 		}
 	}
 
