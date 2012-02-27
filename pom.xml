@@ -7,7 +7,7 @@
   <groupId>com.mediasift</groupId>
   <artifactId>datasift-java</artifactId>
   <packaging>jar</packaging>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
 
   <name>DataSift Java Client library</name>
   <description>A client library for interacting with the DataSift API on the JVM.</description>
