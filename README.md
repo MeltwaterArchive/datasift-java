@@ -28,3 +28,18 @@ All code contained in this repository is Copyright 2011 MediaSift Ltd.
 
 This code is released under the BSD license. Please see the LICENSE file for more details.
 
+Changelog
+---------
+
+* v.1.2.1 Compile-time checks (TBD)
+
+  The callback methods in the abstract StreamConsumer class are now abstract,
+  to avoid errors at runtime.
+
+* v.1.2.0 Twitter Compliance (2012-02-26)
+
+  The StreamConsumer now defines an onDeleted(Interaction interaction) method to handle
+  DELETE requests from Twitter (@see http://dev.datasift.com/docs/twitter-deletes).
+
+  NB: You must implement this method in your code if you extend StreamConsumer.
+
