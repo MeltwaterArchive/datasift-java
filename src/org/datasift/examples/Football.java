@@ -67,7 +67,9 @@ public class Football implements IStreamConsumerEvents {
 			throws EInvalidData {
 		try {
 			System.out.print("Type: ");
-			System.out.println(i.getStringVal("interaction.type"));
+			System.out.print(i.getStringVal("interaction.type"));
+			System.out.print(", ID: ");
+			System.out.println(i.getStringVal("interaction.id"));
 			System.out.print("Content: ");
 			System.out.println(i.getStringVal("interaction.content"));
 		} catch (EInvalidData e) {
@@ -98,7 +100,7 @@ public class Football implements IStreamConsumerEvents {
 			throws EInvalidData {
 		try {
 			System.out.print("Deleted: ");
-			System.out.print(i.getStringVal("interaction.id"));
+			System.out.println(i.getStringVal("interaction.id"));
 		} catch (EInvalidData e) {
 			// The interaction did not contain either a type or content.
 			System.out.println("Exception: " + e.getMessage());

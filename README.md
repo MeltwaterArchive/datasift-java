@@ -20,26 +20,33 @@ The following libraries are included in the lib folder.
 * Junit (4.9b2 included)
   http://www.junit.org/
 
-
 License
 -------
 
 All code contained in this repository is Copyright 2011 MediaSift Ltd.
 
-This code is released under the BSD license. Please see the LICENSE file for more details.
+This code is released under the BSD license. Please see the LICENSE file for
+more details.
 
 Changelog
 ---------
 
-* v.1.2.1 Compile-time checks (TBD)
+* v.1.2.1 Clarification (2012-02-27)
 
-  The callback methods in the abstract StreamConsumer class are now abstract,
-  to avoid errors at runtime.
+  Modified the football example to display the IDs of interactions so you can
+  visually match deletion notifications with the original tweet.
+  
+  NB: If you are using an implementation of IStreamConsumerEvents to handle
+  events, you must implement the new onDeleted method or the code will throw
+  an exception when a delete notification is received. The multi-stream
+  equivalent, IMultiStreamConsumerEvents, also contains a new onDeleted
+  method which must be implemented.
 
 * v.1.2.0 Twitter Compliance (2012-02-26)
 
-  The StreamConsumer now defines an onDeleted(Interaction interaction) method to handle
-  DELETE requests from Twitter (@see http://dev.datasift.com/docs/twitter-deletes).
+  The StreamConsumer now defines an onDeleted(Interaction interaction) method
+  to handle DELETE requests from Twitter.
+  (@see http://dev.datasift.com/docs/twitter-deletes)
 
   NB: You must implement this method in your code if you extend StreamConsumer.
 
