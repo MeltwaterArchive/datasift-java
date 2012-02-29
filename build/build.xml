@@ -22,7 +22,7 @@
 	</target>
 
 	<target name="compile" depends="directories" description="Compile the java sources.">
-		<javac srcdir="../src" destdir="${classes.dir}" classpathref="class.path" debug="true" includeantruntime="false" />
+		<javac srcdir="../src" destdir="${classes.dir}" classpathref="class.path" debug="false" includeantruntime="false" />
 	</target>
 
 	<target name="jar" depends="compile" description="Create the library jar file.">
