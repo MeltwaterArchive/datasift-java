@@ -353,6 +353,10 @@ class eventCatcher implements IStreamConsumerEvents {
 			throws EInvalidData {
 	}
 
+	public void onDeleted(StreamConsumer c, Interaction i)
+			throws EInvalidData {
+	}
+
 	public void onStopped(StreamConsumer consumer, String reason) {
 	}
 

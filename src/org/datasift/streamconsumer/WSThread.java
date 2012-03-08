@@ -47,7 +47,12 @@ public class WSThread extends Thread {
 		try {
 			// Extract the hash
 			JSONdn data = new JSONdn(line);
-			_consumer.onMultiInteraction(data.getStringVal("hash"), new Interaction(data.getJSONObject("data").toString()));
+			Interaction i = new Interaction(data.getJSONObject("data").toString());
+			if (i.has("deleted")) {
+				_consumer.onMultiDeleted(data.getStringVal("hash"), i);
+			} else {
+				_consumer.onMultiInteraction(data.getStringVal("hash"), i);
+			}
 		} catch (JSONException e) {
 			// Ignore
 		} catch (EInvalidData e) {

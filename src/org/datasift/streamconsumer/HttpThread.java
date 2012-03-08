@@ -39,7 +39,12 @@ public class HttpThread extends Thread {
 
 	public synchronized void processLine(String line) {
 		try {
-			_consumer.onInteraction(new Interaction(line));
+			Interaction i = new Interaction(line);
+			if (i.has("deleted")) {
+				_consumer.onDeleted(i);
+			} else {
+				_consumer.onInteraction(i);
+			}
 		} catch (JSONException e) {
 			// Ignore
 		} catch (EInvalidData e) {

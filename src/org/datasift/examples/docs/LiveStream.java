@@ -57,6 +57,20 @@ public class LiveStream implements IStreamConsumerEvents {//Step 1 - must implem
         System.out.println("--");
     }
 
+	/**
+	 * Handle delete notifications.
+	 * 
+	 * @param StreamConsumer
+	 *            consumer The consumer object.
+	 * @param JSONObject
+	 *            interaction The interaction data.
+	 * @throws EInvalidData
+	 */
+	public void onDeleted(StreamConsumer c, Interaction i)
+			throws EInvalidData {
+		// Ignored for this example
+	}
+
     /**
      * Called when the consumer has stopped.
      * 
