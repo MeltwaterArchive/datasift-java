@@ -74,7 +74,7 @@ public class MultiStreamWS implements IMultiStreamConsumerEvents {
 				while (tryagain) {
 					try {
 						consumer.subscribe(hash);
-						System.out.println("Subscribing to \"" + _hashes.get(hash) + "\"...");
+						System.out.println("Subscribing to \"" + _hashes.get(hash) + "\", " + hash + "...");
 						tryagain = false;
 						Thread.sleep(100);
 					} catch (EAPIError e) {
@@ -187,4 +187,25 @@ public class MultiStreamWS implements IMultiStreamConsumerEvents {
 		System.out.println(reason);
 	}
 
+	/**
+	 * Called when a warning is received in the data stream.
+	 * 
+	 * @param DataSift_StreamConsumer consumer The consumer object.
+	 * @param string message The warning message.
+	 */
+	public void onWarning(StreamConsumer consumer, String message)
+			throws EInvalidData {
+		System.out.println("Warning: " + message);
+	}
+
+	/**
+	 * Called when an error is received in the data stream.
+	 * 
+	 * @param DataSift_StreamConsumer consumer The consumer object.
+	 * @param string message The error message.
+	 */
+	public void onError(StreamConsumer consumer, String message)
+			throws EInvalidData {
+		System.out.println("Error: " + message);
+	}
 }

@@ -244,6 +244,18 @@ abstract public class StreamConsumer {
 	}
 
 	/**
+	 * Set the current state to stopped.
+	 * @throws EInvalidData 
+	 */
+	public void setStopped() throws EInvalidData {
+		if (_state == STATE_STOPPING) {
+			_state = STATE_STOPPED;
+		} else {
+			throw new EInvalidData("The state must be STOPPING before it can be set to STOPPED.");
+		}
+	}
+
+	/**
 	 * This is called for each interaction received from the stream and should
 	 * be implemented in extending classes if they don't use an
 	 * IStreamConsumerEvents object.
@@ -327,10 +339,42 @@ abstract public class StreamConsumer {
 	public void onStopped(String reason) throws EInvalidData {
 		if (_eventHandler != null) {
 			_eventHandler.onStopped(this, reason);
+		} else if (_multiEventHandler != null) {
+			_multiEventHandler.onStopped(this, reason);
 		} else {
 			throw new EInvalidData(
 					"You must provide an onStopped method or an eventHandler object");
 		}
+	}
+	
+	/**
+	 * This is called when a warning is received in the data stream.
+	 * 
+	 * @param message The warning message.
+	 * @throws EInvalidData
+	 */
+	public void onWarning(String message) throws EInvalidData {
+		if (_eventHandler != null) {
+			_eventHandler.onWarning(this, message);
+		} else if (_multiEventHandler != null) {
+			_multiEventHandler.onWarning(this, message);
+		}
+		// If we don't have a handler for this event, swallow it!
+	}
+	
+	/**
+	 * This is called when an error is received in the data stream.
+	 * 
+	 * @param message The error message.
+	 * @throws EInvalidData
+	 */
+	public void onError(String message) throws EInvalidData {
+		if (_eventHandler != null) {
+			_eventHandler.onError(this, message);
+		} else if (_multiEventHandler != null) {
+			_multiEventHandler.onError(this, message);
+		}
+		// If we don't have a handler for this event, swallow it!
 	}
 
 	/**

@@ -43,15 +43,33 @@ public class WSThread extends Thread {
 		return _consumer.getState();
 	}
 
+	public synchronized void setStopped() throws EInvalidData {
+		_consumer.setStopped();
+	}
+
 	public synchronized void processLine(String line) {
 		try {
 			// Extract the hash
 			JSONdn data = new JSONdn(line);
-			Interaction i = new Interaction(data.getJSONObject("data").toString());
-			if (i.has("deleted")) {
-				_consumer.onMultiDeleted(data.getStringVal("hash"), i);
+			if (data.has("status")) {
+				String status = data.getStringVal("status");
+				if (status.equals("error") || status.equals("failure")) {
+					_consumer.onError(data.getStringVal("message"));
+				} else if (status.equals("warning")) {
+					_consumer.onWarning(data.getStringVal("message"));
+				} else {
+					// Dunno what that is, make it an error
+					_consumer.onError("Unhandled content received: " + line);
+				}
+			} else if (data.has("data")) {
+				Interaction i = new Interaction(data.getJSONObject("data").toString());
+				if (i.has("deleted")) {
+					_consumer.onMultiDeleted(data.getStringVal("hash"), i);
+				} else {
+					_consumer.onMultiInteraction(data.getStringVal("hash"), i);
+				}
 			} else {
-				_consumer.onMultiInteraction(data.getStringVal("hash"), i);
+				_consumer.onError("Unhandled content received: " + line);
 			}
 		} catch (JSONException e) {
 			// Ignore
@@ -71,6 +89,13 @@ public class WSThread extends Thread {
 		}
 	}
 
+	public synchronized void stopped() {
+		try {
+			_consumer.setStopped();
+		} catch (EInvalidData e) {
+		}
+	}
+
 	public synchronized void onRestarted() {
 		_consumer.onRestarted();
 	}
@@ -85,7 +110,9 @@ public class WSThread extends Thread {
 
 	public synchronized void subscribe(String hash) throws EAPIError {
 		try {
-			_ws.send("{\"action\":\"subscribe\",\"hash\":\"" + hash + "\"}");
+			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+				_ws.send("{\"action\":\"subscribe\",\"hash\":\"" + hash + "\"}");
+			}
 		} catch (WebSocketException e) {
 			throw new EAPIError(e.getMessage());
 		}
@@ -93,9 +120,22 @@ public class WSThread extends Thread {
 
 	public synchronized void unsubscribe(String hash) throws EAPIError {
 		try {
-			_ws.send("{\"action\":\"unsubscribe\",\"hash\":\"" + hash + "\"}");
+			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+				_ws.send("{\"action\":\"unsubscribe\",\"hash\":\"" + hash + "\"}");
+			}
 		} catch (WebSocketException e) {
 			throw new EAPIError(e.getMessage());
+		}
+	}
+	
+	public synchronized void sendStop() throws EInvalidData {
+		try {
+			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+				_ws.send("{\"action\":\"stop\"}");
+			}
+		} catch (WebSocketException e) {
+			// Swallow this and just mark us as stopped
+			stopped();
 		}
 	}
 
@@ -131,7 +171,7 @@ public class WSThread extends Thread {
 						{
 							// Message received
 							String line = message.getText();
-							if (line.length() > 100) {
+							if (line.length() > 10) {
 								processLine(line);
 							}
 						}
@@ -139,12 +179,17 @@ public class WSThread extends Thread {
 						public void onClose()
 						{
 							// Socket closed
-							if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+							switch (getConsumerState()) {
+							case StreamConsumer.STATE_RUNNING:
 								if (_auto_reconnect) {
 									restartConsumer();
 								} else {
-									stopConsumer();
+									stopped();
 								}
+								break;
+							case StreamConsumer.STATE_STOPPING:
+								stopped();
+								break;
 							}
 						}
 					});
@@ -152,11 +197,37 @@ public class WSThread extends Thread {
 					// Establish WebSocket Connection
 					_ws.connect();
 
+					// Wait for the state to change
 					while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
-						Thread.sleep(5000);
+						Thread.sleep(500);
 					}
 
-					reason = "Socket disconnected";
+					// If the state is not stopping or stopped, we got disconnected!
+					if (getConsumerState() != StreamConsumer.STATE_STOPPING && getConsumerState() != StreamConsumer.STATE_STOPPED) {
+						// Send the stop message
+						stopConsumer();
+						reason = "Socket disconnected";
+					} else {
+						// The stop was requested
+						reason = "Stop requested";
+					}
+
+					// Wait a maximum of 30 seconds while the stop process happens
+					int stopCounter = 60;
+					while (stopCounter > 0 && getConsumerState() == StreamConsumer.STATE_STOPPING) {
+						Thread.sleep(500);
+						stopCounter--;
+					}
+					if (stopCounter == 0) {
+						// Timed out waiting for the stop ack, tell the user
+						synchronized (this) {
+							try {
+								_consumer.onWarning("Timed out waiting for the server to respond to the stop request, disconnecting!");
+							} catch (EInvalidData e) {
+								// Ignored
+							}
+						}
+					}
 				} catch (WebSocketException e) {
 					_auto_reconnect = false;
 					reason = e.getMessage();
@@ -165,10 +236,10 @@ public class WSThread extends Thread {
 				} finally {
 					try {
 						_ws.close();
-					} catch (WebSocketException e) {
+					} catch (Exception e) {
 						// Deliberately ignored - usually thrown due to the
 						// connection not being open, which we really don't
-						// care about knowing!
+						// care about knowing at this point!
 					}
 				}
 			}
