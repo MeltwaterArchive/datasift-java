@@ -31,6 +31,8 @@ more details.
 Changelog
 ---------
 
+* v.1.3.1 Do not reconnect when a 4xx response is received (2012-03-08)
+
 * v.1.3.0 Stream warning/error handling + WS disconnection changes (2012-03-08)
 
   The IStreamConsumerEvents and IMultiStreamConsumerEvents interfaces now
