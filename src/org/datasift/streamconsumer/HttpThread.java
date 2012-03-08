@@ -124,10 +124,26 @@ public class HttpThread extends Thread {
 									processLine(line);
 								}
 							}
-						} else if (statusCode == 404) {
-							// Hash not found!
-							reason = "Hash not found!";
-							_consumer.stop();
+						} else if (statusCode >= 400 && statusCode < 500
+								&& statusCode != 420) {
+							// Connection was refused
+							reader = new BufferedReader(new InputStreamReader(
+									response.getEntity().getContent()));
+							// Read the status line
+							String line = reader.readLine();
+							// Parse the line and get the error message if
+							// present
+							JSONdn data = new JSONdn(line);
+							if (data.has("message")) {
+								reason = data.getStringVal("message");
+							} else {
+								reason = "Connection refused: "
+										+ statusCode
+										+ " "
+										+ response.getStatusLine()
+												.getReasonPhrase();
+							}
+							stopConsumer();
 						} else {
 							// Connection failed, back off a bit and try again
 							// Timings from http://dev.datasift.com/docs/streaming-api
@@ -141,7 +157,7 @@ public class HttpThread extends Thread {
 										+ " "
 										+ response.getStatusLine()
 												.getReasonPhrase();
-								_consumer.stop();
+								stopConsumer();
 							}
 						}
 					} catch (Exception e) {
@@ -159,18 +175,10 @@ public class HttpThread extends Thread {
 					}
 				} catch (EInvalidData e) {
 					reason = e.getMessage();
-					try {
-						_consumer.stop();
-					} catch (EInvalidData eid) {
-						// Ignored
-					}
+					stopConsumer();
 				} catch (EAccessDenied e) {
 					reason = e.getMessage();
-					try {
-						_consumer.stop();
-					} catch (EInvalidData eid) {
-						// Ignored
-					}
+					stopConsumer();
 				}
 			}
 
