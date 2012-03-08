@@ -30,6 +30,24 @@ public interface IMultiStreamConsumerEvents {
 			throws EInvalidData;
 
 	/**
+	 * Called for each deletion notification consumed.
+	 * @param consumer
+	 * @param interaction
+	 * @throws EInvalidData
+	 */
+	public void onWarning(StreamConsumer consumer, String message)
+			throws EInvalidData;
+
+	/**
+	 * Called for each deletion notification consumed.
+	 * @param consumer
+	 * @param interaction
+	 * @throws EInvalidData
+	 */
+	public void onError(StreamConsumer consumer, String message)
+			throws EInvalidData;
+
+	/**
 	 * Called when the consumer stops for some reason.
 	 * @param consumer
 	 * @param reason

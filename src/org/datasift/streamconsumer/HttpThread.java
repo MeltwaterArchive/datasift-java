@@ -40,10 +40,21 @@ public class HttpThread extends Thread {
 	public synchronized void processLine(String line) {
 		try {
 			Interaction i = new Interaction(line);
-			if (i.has("deleted")) {
-				_consumer.onDeleted(i);
+			if (i.has("status")) {
+				String status = i.getStringVal("status");
+				if (status == "error") {
+					_consumer.onError(i.getStringVal("message"));
+				} else if (status == "warning") {
+					_consumer.onWarning(i.getStringVal("message"));
+				} else {
+					// Should be a tick, ignore it
+				}
 			} else {
-				_consumer.onInteraction(i);
+				if (i.has("deleted")) {
+					_consumer.onDeleted(i);
+				} else {
+					_consumer.onInteraction(i);
+				}
 			}
 		} catch (JSONException e) {
 			// Ignore
@@ -107,9 +118,9 @@ public class HttpThread extends Thread {
 									// Break out the loop and auto reconnect if enabled
 									break;
 	
-								} else if (line.length() > 100) {
-									// If the line length is bigger than a tick or an
-									// empty line, process it
+								} else if (line.length() > 10) {
+									// If the line is longer than a length
+									// indicator, process it
 									processLine(line);
 								}
 							}

@@ -360,4 +360,12 @@ class eventCatcher implements IStreamConsumerEvents {
 	public void onStopped(StreamConsumer consumer, String reason) {
 	}
 
+	public void onWarning(StreamConsumer consumer, String message)
+			throws EInvalidData {
+	}
+
+	public void onError(StreamConsumer consumer, String message)
+			throws EInvalidData {
+	}
+
 }
