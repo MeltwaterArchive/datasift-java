@@ -44,10 +44,22 @@ public class HttpMultiThread extends Thread {
 			JSONdn data = new JSONdn(line);
 			
 			Interaction i = new Interaction(data.getJSONObject("data").toString());
-			if (i.has("deleted")) {
-				_consumer.onMultiDeleted(data.getStringVal("hash"), i);
+
+			if (i.has("status")) {
+				String status = i.getStringVal("status");
+				if (status == "error") {
+					_consumer.onError(i.getStringVal("message"));
+				} else if (status == "warning") {
+					_consumer.onWarning(i.getStringVal("message"));
+				} else {
+					// Should be a tick, ignore it
+				}
 			} else {
-				_consumer.onMultiInteraction(data.getStringVal("hash"), i);
+				if (i.has("deleted")) {
+					_consumer.onMultiDeleted(data.getStringVal("hash"), i);
+				} else {
+					_consumer.onMultiInteraction(data.getStringVal("hash"), i);
+				}
 			}
 		} catch (JSONException e) {
 			// Ignore
@@ -115,9 +127,9 @@ public class HttpMultiThread extends Thread {
 						while (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 							if (_kill_requested) return;
 							String line = reader.readLine();
-							// If the line length is bigger than a tick or an
-							// empty line, process it
-							if (line.length() > 100) {
+							// If the line is longer than a length indicator,
+							// process it
+							if (line.length() > 10) {
 								processLine(line);
 							}
 						}
