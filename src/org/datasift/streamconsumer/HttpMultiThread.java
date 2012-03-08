@@ -133,9 +133,26 @@ public class HttpMultiThread extends Thread {
 								processLine(line);
 							}
 						}
-					} else if (statusCode == 404) {
-						// Hash not found!
-						reason = "Hash not found!";
+					} else if (statusCode >= 400 && statusCode < 500
+							&& statusCode != 420) {
+						// Connection was refused, but not because we were
+						// rate-limited
+						reader = new BufferedReader(new InputStreamReader(
+								response.getEntity().getContent()));
+						// Read the status line
+						String line = reader.readLine();
+						// Parse the line and get the error message if
+						// present
+						JSONdn data = new JSONdn(line);
+						if (data.has("message")) {
+							reason = data.getStringVal("message");
+						} else {
+							reason = "Connection refused: "
+									+ statusCode
+									+ " "
+									+ response.getStatusLine()
+											.getReasonPhrase();
+						}
 						stopConsumer();
 					} else {
 						// Connection failed, back off a bit and try again
@@ -150,7 +167,7 @@ public class HttpMultiThread extends Thread {
 									+ " "
 									+ response.getStatusLine()
 											.getReasonPhrase();
-							_consumer.stop();
+							stopConsumer();
 						}
 					}
 				} catch (Exception e) {
