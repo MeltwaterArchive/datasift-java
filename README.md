@@ -9,6 +9,8 @@ The unit tests should be run with junit.
 
 All examples and tests use the username and API key in Config.java.
 
+Download the JAR file at https://github.com/datasift/datasift-java/downloads
+
 Requirements
 ------------
 
@@ -30,6 +32,8 @@ more details.
 
 Changelog
 ---------
+
+* v.1.3.2 Added User-Agent header to the StreamConsumers (2012-03-13)
 
 * v.1.3.1 Do not reconnect when a 4xx response is received (2012-03-08)
 
