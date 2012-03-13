@@ -113,7 +113,8 @@ public class HttpMultiThread extends Thread {
 						+ _user.getStreamBaseURL() + "multi?hashes=" + _hashes.toString().replace(", ", ",").replace("[", "").replace("]", "");
 				HttpGet get = new HttpGet(url);
 				try {
-					get.addHeader("authorization", _user.getUsername() + ":" + _user.getAPIKey());
+					get.addHeader("Authorization", _user.getUsername() + ":" + _user.getAPIKey());
+					get.addHeader("User-Agent", _user.getUserAgent());
 					HttpResponse response = client.execute(get);
 					int statusCode = response.getStatusLine().getStatusCode();
 					if (statusCode == 200) {

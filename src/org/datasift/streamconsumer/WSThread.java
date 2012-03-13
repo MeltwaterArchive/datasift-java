@@ -33,6 +33,7 @@ public class WSThread extends Thread {
 
 		_ws = new WebSocketConnection(new URI("ws://" + _user.getStreamBaseURL()));
 		_ws.addHeader("Authorization: " + _user.getUsername() + ":" + _user.getAPIKey());
+		_ws.addHeader("User-Agent: " + _user.getUserAgent());
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
