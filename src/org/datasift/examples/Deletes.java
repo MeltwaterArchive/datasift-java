@@ -76,6 +76,28 @@ public class Deletes implements IStreamConsumerEvents {
 	}
 
 	/**
+	 * Called when a warning is received in the data stream.
+	 * 
+	 * @param DataSift_StreamConsumer consumer The consumer object.
+	 * @param string message The warning message.
+	 */
+	public void onWarning(StreamConsumer consumer, String message)
+			throws EInvalidData {
+		System.out.println("Warning: " + message);
+	}
+
+	/**
+	 * Called when an error is received in the data stream.
+	 * 
+	 * @param DataSift_StreamConsumer consumer The consumer object.
+	 * @param string message The error message.
+	 */
+	public void onError(StreamConsumer consumer, String message)
+			throws EInvalidData {
+		System.out.println("Error: " + message);
+	}
+
+	/**
 	 * Called when the consumer has stopped.
 	 * 
 	 * @param DataSift_StreamConsumer

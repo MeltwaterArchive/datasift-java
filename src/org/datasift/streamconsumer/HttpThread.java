@@ -40,10 +40,21 @@ public class HttpThread extends Thread {
 	public synchronized void processLine(String line) {
 		try {
 			Interaction i = new Interaction(line);
-			if (i.has("deleted")) {
-				_consumer.onDeleted(i);
+			if (i.has("status")) {
+				String status = i.getStringVal("status");
+				if (status == "error") {
+					_consumer.onError(i.getStringVal("message"));
+				} else if (status == "warning") {
+					_consumer.onWarning(i.getStringVal("message"));
+				} else {
+					// Should be a tick, ignore it
+				}
 			} else {
-				_consumer.onInteraction(i);
+				if (i.has("deleted")) {
+					_consumer.onDeleted(i);
+				} else {
+					_consumer.onInteraction(i);
+				}
 			}
 		} catch (JSONException e) {
 			// Ignore
@@ -89,7 +100,8 @@ public class HttpThread extends Thread {
 					HttpGet get = new HttpGet("http://"
 							+ _user.getStreamBaseURL() + _definition.getHash());
 					try {
-						get.addHeader("authorization", _user.getUsername() + ":" + _user.getAPIKey());
+						get.addHeader("Authorization", _user.getUsername() + ":" + _user.getAPIKey());
+						get.addHeader("User-Agent", _user.getUserAgent());
 						HttpResponse response = client.execute(get);
 						int statusCode = response.getStatusLine().getStatusCode();
 						if (statusCode == 200) {
@@ -107,16 +119,32 @@ public class HttpThread extends Thread {
 									// Break out the loop and auto reconnect if enabled
 									break;
 	
-								} else if (line.length() > 100) {
-									// If the line length is bigger than a tick or an
-									// empty line, process it
+								} else if (line.length() > 10) {
+									// If the line is longer than a length
+									// indicator, process it
 									processLine(line);
 								}
 							}
-						} else if (statusCode == 404) {
-							// Hash not found!
-							reason = "Hash not found!";
-							_consumer.stop();
+						} else if (statusCode >= 400 && statusCode < 500
+								&& statusCode != 420) {
+							// Connection was refused
+							reader = new BufferedReader(new InputStreamReader(
+									response.getEntity().getContent()));
+							// Read the status line
+							String line = reader.readLine();
+							// Parse the line and get the error message if
+							// present
+							JSONdn data = new JSONdn(line);
+							if (data.has("message")) {
+								reason = data.getStringVal("message");
+							} else {
+								reason = "Connection refused: "
+										+ statusCode
+										+ " "
+										+ response.getStatusLine()
+												.getReasonPhrase();
+							}
+							stopConsumer();
 						} else {
 							// Connection failed, back off a bit and try again
 							// Timings from http://dev.datasift.com/docs/streaming-api
@@ -130,7 +158,7 @@ public class HttpThread extends Thread {
 										+ " "
 										+ response.getStatusLine()
 												.getReasonPhrase();
-								_consumer.stop();
+								stopConsumer();
 							}
 						}
 					} catch (Exception e) {
@@ -148,18 +176,10 @@ public class HttpThread extends Thread {
 					}
 				} catch (EInvalidData e) {
 					reason = e.getMessage();
-					try {
-						_consumer.stop();
-					} catch (EInvalidData eid) {
-						// Ignored
-					}
+					stopConsumer();
 				} catch (EAccessDenied e) {
 					reason = e.getMessage();
-					try {
-						_consumer.stop();
-					} catch (EInvalidData eid) {
-						// Ignored
-					}
+					stopConsumer();
 				}
 			}
 

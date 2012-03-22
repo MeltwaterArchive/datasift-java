@@ -62,6 +62,12 @@ public class WS extends StreamConsumer {
 		_thread.unsubscribe(hash);
 	}
 	
+	@Override
+	public void stop() throws EInvalidData {
+		_thread.sendStop();
+		_state = StreamConsumer.STATE_STOPPING;
+	}
+	
 	public boolean isRunning() {
 		if (_thread == null) {
 			return false;
