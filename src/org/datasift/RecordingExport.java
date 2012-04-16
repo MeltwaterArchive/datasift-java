@@ -58,18 +58,33 @@ public class RecordingExport {
 	 * @throws EInvalidData 
 	 */
 	public void init(JSONdn data) throws EInvalidData {
+		// The export ID
 		String id = data.getStringVal("id");
+		// The recording ID
 		String recording_id = data.getStringVal("recording_id");
-		long start = data.getLongVal("start");
+		// The start time (optional)
+		long start = 0;
+		try {
+			start = data.getLongVal("start");
+		} catch (EInvalidData e) {
+			// This means the start time is either missing or null, which is acceptable.
+		}
+		// The end time (optional)
 		long end = 0;
 		try {
 			end = data.getLongVal("end");
 		} catch (EInvalidData e) {
 			// This means the finish time is either missing or null, which is acceptable.
-			end = 0;
 		}
+		// The recording name
 		String name = data.getStringVal("name");
-		String status = data.getStringVal("status");
+		// The recording status
+		String status = "unknown";
+		try {
+			status = data.getStringVal("status");
+		} catch (EInvalidData e) {
+			// This means the status is either missing or null, which is acceptable.
+		}
 
 		// Validate the data
 		validateData(id, recording_id, start, end, name, status);
