@@ -16,8 +16,8 @@ public class Recording {
 
 	protected User _user = null;
 	protected String _id = "";
-	protected Integer _start_time = null;
-	protected Integer _end_time = null;
+	protected long _start_time = 0;
+	protected long _end_time = 0;
 	protected String _name = null;
 	protected String _hash = null;
 	protected boolean _deleted = false;
@@ -58,10 +58,10 @@ public class Recording {
 	 */
 	public void init(JSONdn data) throws EInvalidData {
 		String id = data.getStringVal("id");
-		Integer start_time = data.getIntVal("start_time");
-		Integer end_time = 0;
+		long start_time = data.getLongVal("start_time");
+		long end_time = 0;
 		try {
-			end_time = data.getIntVal("finish_time");
+			end_time = data.getLongVal("finish_time");
 		} catch (EInvalidData e) {
 			// This means the finish time is either missing or null, which is acceptable.
 			end_time = 0;
@@ -90,16 +90,16 @@ public class Recording {
 	 * @param hash
 	 * @throws EInvalidData 
 	 */
-	public void validateData(String id, Integer start_time, Integer end_time, String name, String hash) throws EInvalidData {
+	public void validateData(String id, long start_time, long end_time, String name, String hash) throws EInvalidData {
 		if (id != null && id.length() == 0) {
 			throw new EInvalidData("Invalid ID in the recording data.");
 		}
 		
-		if (start_time != null && start_time < 1) {
+		if (start_time < 0) {
 			throw new EInvalidData("Invalid start time in the recording data.");
 		}
 		
-		if (end_time != null && end_time < 0) {
+		if (end_time < 0) {
 			throw new EInvalidData("Invalid end time in the recording data.");
 		}
 
@@ -158,7 +158,7 @@ public class Recording {
 	 * @return
 	 * @throws EInvalidData 
 	 */
-	public Integer getStartTime() throws EInvalidData {
+	public long getStartTime() throws EInvalidData {
 		checkDeleted();
 		return _start_time;
 	}
@@ -169,7 +169,7 @@ public class Recording {
 	 * @return
 	 * @throws EInvalidData 
 	 */
-	public Integer getEndTime() throws EInvalidData {
+	public long getEndTime() throws EInvalidData {
 		checkDeleted();
 		return _end_time;
 	}
@@ -207,18 +207,18 @@ public class Recording {
 	 * @throws EAccessDenied 
 	 * @throws EAPIError 
 	 */
-	public void update(Integer start_time, Integer end_time, String name) throws EInvalidData, EAPIError, EAccessDenied {
+	public void update(long start_time, long end_time, String name) throws EInvalidData, EAPIError, EAccessDenied {
 		checkDeleted();
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		
 		validateData(null, start_time, end_time, name, null);
 		
-		if (start_time != null) {
+		if (start_time != 0) {
 			params.put("start", String.valueOf(start_time));
 		}
 		
-		if (end_time != null) {
+		if (end_time != 0) {
 			params.put("end", String.valueOf(end_time));
 		}
 		
@@ -273,7 +273,7 @@ public class Recording {
 	 * @throws EAPIError 
 	 */
 	public RecordingExport startExport(String format) throws EInvalidData, EAPIError, EAccessDenied {
-		return startExport(format, null, null, null);
+		return startExport(format, null, 0, 0);
 	}
 	
 	/**
@@ -287,7 +287,7 @@ public class Recording {
 	 * @throws EAPIError 
 	 */
 	public RecordingExport startExport(String format, int start) throws EInvalidData, EAPIError, EAccessDenied {
-		return startExport(format, null, start, null);
+		return startExport(format, null, start, 0);
 	}
 
 	/**
@@ -302,12 +302,12 @@ public class Recording {
 	 * @throws EAccessDenied 
 	 * @throws EAPIError 
 	 */
-	public RecordingExport startExport(String format, String name, Integer start, Integer end) throws EInvalidData, EAPIError, EAccessDenied {
+	public RecordingExport startExport(String format, String name, int start, int end) throws EInvalidData, EAPIError, EAccessDenied {
 		checkDeleted();
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		
-		if (format != "json" && format != "xls" && format != "xlsx") {
+		if (format != "json" && format != "csv") {
 			throw new EInvalidData("Invalid export format specified");
 		}
 		
@@ -319,18 +319,22 @@ public class Recording {
 			}
 		}
 		
-		if (start != null) {
+		if (start != 0) {
 			if (start < _start_time || start > _end_time) {
 				throw new EInvalidData("The start timestamp must be within the recorded time period");
 			}
 			params.put("start", String.valueOf(start));
 		}
 		
-		if (end != null) {
-			if (end < _start_time || end > _end_time) {
+		if (end == 0) {
+			end = 0;
+		}
+		
+		if (end != 0) {
+			if (end != 0 && (end < _start_time || end > _end_time)) {
 				throw new EInvalidData("The end time must be within the recorded time period");
 			}
-			if (start != null && end < start) {
+			if (start != 0 && end < start) {
 				throw new EInvalidData("The start timestamp must be earlier than the end timestamp");
 			}
 			params.put("end", String.valueOf(end));

@@ -90,7 +90,7 @@ public class TestUser extends TestCase {
 	}
 	
 	public void testGetRecordings() {
-		String json = "{\"count\":\"1\",\"recordings\":[{\"id\":\"47ce46821c942ff42f8e\",\"start_time\":1313055762,\"finish_time\":null,\"name\":\"Inherit everything 123\",\"hash\":\"9e2e0ba334ee76aa06ef42d5565dbb70\"}]}";
+		String json = "{\"count\":\"1\",\"recordings\":[{\"id\":\"47ce46821c942ff42f8e\",\"start_time\":1313055762,\"finish_time\":0,\"name\":\"Inherit everything 123\",\"hash\":\"9e2e0ba334ee76aa06ef42d5565dbb70\"}]}";
 		api_client.setResponse(json, 200, 150, 100);
 		
 		try {
@@ -99,7 +99,7 @@ public class TestUser extends TestCase {
 			
 			assertEquals("The recording ID is incorrect", "47ce46821c942ff42f8e", recording.getID());
 			assertEquals("The recording start time is incorrect", 1313055762, (int)recording.getStartTime());
-			assertEquals("The recording finish time is incorrect", null, recording.getEndTime());
+			assertEquals("The recording finish time is incorrect", 0, (int)recording.getEndTime());
 			assertEquals("The recording name is incorrect", "Inherit everything 123", recording.getName());
 			assertEquals("The recording hash is incorrect", "9e2e0ba334ee76aa06ef42d5565dbb70", recording.getHash());
 		} catch (EInvalidData e) {
@@ -203,7 +203,7 @@ public class TestUser extends TestCase {
 			
 			assertEquals("The recording ID is incorrect", "47ce46821c942ff42f8e", recording.getID());
 			assertEquals("The recording start time is incorrect", 1313055762, (int)recording.getStartTime());
-			assertEquals("The recording finish time is incorrect", null, recording.getEndTime());
+			assertEquals("The recording finish time is incorrect", 0, (int)recording.getEndTime());
 			assertEquals("The recording name is incorrect", "Inherit everything 123", recording.getName());
 			assertEquals("The recording hash is incorrect", "9e2e0ba334ee76aa06ef42d5565dbb70", recording.getHash());
 		} catch (EInvalidData e) {
@@ -273,7 +273,7 @@ public class TestUser extends TestCase {
 			
 			assertEquals("The recording ID is incorrect", recording.getID(), "47ce46821c942ff42f8e");
 			assertEquals("The recording start time is incorrect", (int)recording.getStartTime(), 1313055762);
-			assertEquals("The recording finish time is incorrect", recording.getEndTime(), null);
+			assertEquals("The recording finish time is incorrect", (int)recording.getEndTime(), 0);
 			assertEquals("The recording name is incorrect", recording.getName(), "Inherit everything 123");
 			assertEquals("The recording hash is incorrect", recording.getHash(), "9e2e0ba334ee76aa06ef42d5565dbb70");
 		} catch (EInvalidData e) {

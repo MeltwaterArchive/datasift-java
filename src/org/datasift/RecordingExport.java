@@ -18,8 +18,8 @@ public class RecordingExport {
 	protected String _id = "";
 	protected String _recording_id = "";
 	protected String _name = null;
-	protected Integer _start = null;
-	protected Integer _end = null;
+	protected long _start = 0;
+	protected long _end = 0;
 	protected String _status = "unknown";
 	protected boolean _deleted = false;
 
@@ -60,13 +60,13 @@ public class RecordingExport {
 	public void init(JSONdn data) throws EInvalidData {
 		String id = data.getStringVal("id");
 		String recording_id = data.getStringVal("recording_id");
-		Integer start = data.getIntVal("start");
-		Integer end = null;
+		long start = data.getLongVal("start");
+		long end = 0;
 		try {
-			end = data.getIntVal("end");
+			end = data.getLongVal("end");
 		} catch (EInvalidData e) {
 			// This means the finish time is either missing or null, which is acceptable.
-			end = null;
+			end = 0;
 		}
 		String name = data.getStringVal("name");
 		String status = data.getStringVal("status");
@@ -93,7 +93,7 @@ public class RecordingExport {
 	 * @param hash
 	 * @throws EInvalidData 
 	 */
-	public void validateData(String id, String recording_id, Integer start, Integer end, String name, String status) throws EInvalidData {
+	public void validateData(String id, String recording_id, long start, long end, String name, String status) throws EInvalidData {
 		if (id != null && id.length() == 0) {
 			throw new EInvalidData("Invalid ID in the export data.");
 		}
@@ -102,11 +102,11 @@ public class RecordingExport {
 			throw new EInvalidData("Invalid recording ID in the export data.");
 		}
 		
-		if (start != null && start < 1) {
+		if (start < 1) {
 			throw new EInvalidData("Invalid start time in the export data.");
 		}
 		
-		if (end != null && end < 1) {
+		if (end < 1) {
 			throw new EInvalidData("Invalid end time in the export data.");
 		}
 
@@ -176,7 +176,7 @@ public class RecordingExport {
 	 * @return
 	 * @throws EInvalidData 
 	 */
-	public Integer getStart() throws EInvalidData {
+	public long getStart() throws EInvalidData {
 		checkDeleted();
 		return _start;
 	}
@@ -187,7 +187,7 @@ public class RecordingExport {
 	 * @return
 	 * @throws EInvalidData 
 	 */
-	public Integer getEnd() throws EInvalidData {
+	public long getEnd() throws EInvalidData {
 		checkDeleted();
 		return _end;
 	}

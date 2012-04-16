@@ -436,36 +436,7 @@ public class User {
 	 * @throws EAPIError 
 	 */
 	public Recording scheduleRecording(String hash) throws EInvalidData, EAPIError, EAccessDenied {
-		return scheduleRecording(hash, null, null, null);
-	}
-
-	/**
-	 * Schedule a new recording.
-	 * 
-	 * @param hash
-	 * @param start
-	 * @return
-	 * @throws EInvalidData 
-	 * @throws EAccessDenied 
-	 * @throws EAPIError 
-	 */
-	public Recording scheduleRecording(String hash, Integer start) throws EInvalidData, EAPIError, EAccessDenied {
-		return scheduleRecording(hash, null, start, null);
-	}
-
-	/**
-	 * Schedule a new recording.
-	 * 
-	 * @param hash
-	 * @param start
-	 * @param end
-	 * @return
-	 * @throws EInvalidData 
-	 * @throws EAccessDenied 
-	 * @throws EAPIError 
-	 */
-	public Recording scheduleRecording(String hash, Integer start, Integer end) throws EInvalidData, EAPIError, EAccessDenied {
-		return scheduleRecording(hash, null, start, end);
+		return scheduleRecording(hash, null, 0, 0);
 	}
 
 	/**
@@ -479,7 +450,36 @@ public class User {
 	 * @throws EAPIError 
 	 */
 	public Recording scheduleRecording(String hash, String name) throws EInvalidData, EAPIError, EAccessDenied {
-		return scheduleRecording(hash, name, null, null);
+		return scheduleRecording(hash, name, 0, 0);
+	}
+
+	/**
+	 * Schedule a new recording.
+	 * 
+	 * @param hash
+	 * @param start
+	 * @return
+	 * @throws EInvalidData 
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 */
+	public Recording scheduleRecording(String hash, long start) throws EInvalidData, EAPIError, EAccessDenied {
+		return scheduleRecording(hash, null, start, 0);
+	}
+
+	/**
+	 * Schedule a new recording.
+	 * 
+	 * @param hash
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws EInvalidData 
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 */
+	public Recording scheduleRecording(String hash, long start, int end) throws EInvalidData, EAPIError, EAccessDenied {
+		return scheduleRecording(hash, null, start, end);
 	}
 
 	/**
@@ -493,8 +493,8 @@ public class User {
 	 * @throws EAccessDenied 
 	 * @throws EAPIError 
 	 */
-	public Recording scheduleRecording(String hash, String name, Integer start) throws EInvalidData, EAPIError, EAccessDenied {
-		return scheduleRecording(hash, name, start, null);
+	public Recording scheduleRecording(String hash, String name, int start) throws EInvalidData, EAPIError, EAccessDenied {
+		return scheduleRecording(hash, name, start, 0);
 	}
 
 	/**
@@ -509,7 +509,7 @@ public class User {
 	 * @throws EAccessDenied 
 	 * @throws EAPIError 
 	 */
-	public Recording scheduleRecording(String hash, String name, Integer start, Integer end) throws EInvalidData, EAPIError, EAccessDenied {
+	public Recording scheduleRecording(String hash, String name, long start, long end) throws EInvalidData, EAPIError, EAccessDenied {
 		if (hash == null || hash.length() == 0) {
 			throw new EInvalidData("The hash parameter must be supplied to start a recording");
 		}
@@ -521,16 +521,16 @@ public class User {
 			params.put("name", name);
 		}
 		
-		if (start != null && start > 0) {
+		if (start != 0) {
 			params.put("start", String.valueOf(start));
 		}
 		
-		if (end != null) {
-			if (start != null && end < start) {
+		if (end != 0) {
+			if (start != 0 && end < start) {
 				throw new EInvalidData("The end timestamp must be later than the start timestamp");
 			}
 			if (end > 0) {
-				params.put("start", String.valueOf(start));
+				params.put("end", String.valueOf(end));
 			}
 		}
 		
