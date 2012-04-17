@@ -312,6 +312,7 @@ public class Recording {
 		}
 		
 		params.put("format", format);
+		params.put("recording_id", _id);
 		
 		if (name != null) {
 			if (name.length() > 0) {
