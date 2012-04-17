@@ -253,7 +253,7 @@ public class Recording {
 		JSONObject res = _user.callAPI("recording/delete", params);
 		
 		try {
-			if (res.getString("success") != "true") {
+			if (!res.getString("success").equals("true")) {
 				throw new EAPIError("Delete operation failed");
 			}
 		} catch (JSONException e) {
@@ -307,7 +307,7 @@ public class Recording {
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		
-		if (format != "json" && format != "csv") {
+		if (!format.equals("json") && !format.equals("csv")) {
 			throw new EInvalidData("Invalid export format specified");
 		}
 		

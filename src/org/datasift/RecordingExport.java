@@ -246,7 +246,7 @@ public class RecordingExport {
 		JSONObject res = _user.callAPI("recording/export/delete", params);
 		
 		try {
-			if (res.getString("success") != "true") {
+			if (!res.getString("success").equals("true")) {
 				throw new EAPIError("Delete operation failed");
 			}
 		} catch (JSONException e) {
