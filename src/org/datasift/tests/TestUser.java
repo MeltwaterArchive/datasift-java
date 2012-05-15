@@ -59,16 +59,16 @@ public class TestUser extends TestCase {
 	}
 
 	public void testCreateDefinition_NonEmpty() {
-		Definition def = user.createDefinition(Config.definition);
+		Definition def = user.createDefinition(DataForTests.definition);
 		try {
-			assertEquals("Definition is incorrect", def.get(), Config.definition);
+			assertEquals("Definition is incorrect", def.get(), DataForTests.definition);
 		} catch (EInvalidData e) {
 			fail("EInvalidData: " + e.getMessage());
 		}
 	}
 
 	public void testRateLimits() {
-		Definition def = user.createDefinition(Config.definition);
+		Definition def = user.createDefinition(DataForTests.definition);
 
 		api_client.setResponse("{\"hash\":\"947b690ec9dca525fb8724645e088d79\",\"created_at\":\"2011-05-16 17:20:02\",\"dpu\":\"10\"}", 200, 150, 100);
 

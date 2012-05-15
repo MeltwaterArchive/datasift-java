@@ -38,12 +38,7 @@ public class ConsumeStreamWS implements IMultiStreamConsumerEvents {
 			System.out.println("Getting the consumer...");
 			StreamConsumer consumer = StreamConsumer.factory(_user, StreamConsumer.TYPE_WS, this);
 
-			// And start consuming
-			System.out.println("Consuming...");
-			System.out.println("--");
-			consumer.consume();
-
-			// Send subscriptions
+			// Subscribe
 			for (String hash : hashes) {
 				boolean tryagain = true;
 				while (tryagain) {
@@ -59,6 +54,11 @@ public class ConsumeStreamWS implements IMultiStreamConsumerEvents {
 					}
 				}
 			}
+
+			// And start consuming
+			System.out.println("Consuming...");
+			System.out.println("--");
+			consumer.consume();
 		} catch (EInvalidData e) {
 			System.out.print("InvalidData: ");
 			System.out.println(e.getMessage());

@@ -22,6 +22,7 @@ import org.json.JSONException;
 public class Usage extends JSONdn {
 
 	private DateFormat _df = null;
+
 	/**
 	 * @param source
 	 * @throws EInvalidData

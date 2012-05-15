@@ -33,6 +33,8 @@ more details.
 Changelog
 ---------
 
+* v.1.3.3 Subscriptions are no longer lost on reconnection (2012-05-15)
+
 * v.1.3.2 Added User-Agent header to the StreamConsumers (2012-03-13)
 
 * v.1.3.1 Do not reconnect when a 4xx response is received (2012-03-08)
