@@ -97,7 +97,7 @@ public class HttpThread extends Thread {
 				// Attempt to connect and start processing incoming interactions
 				DefaultHttpClient client = new DefaultHttpClient();
 				try {
-					HttpGet get = new HttpGet("http://"
+					HttpGet get = new HttpGet("http" + (_user.useSSL() ? "s" : "") + "://"
 							+ _user.getStreamBaseURL() + _definition.getHash());
 					try {
 						get.addHeader("Authorization", _user.getUsername() + ":" + _user.getAPIKey());

@@ -22,6 +22,10 @@ The following libraries are included in the lib folder.
 * Junit (4.9b2 included)
   http://www.junit.org/
 
+The library will use SSL connections by default. While we recommend using SSL
+you may disable it if required by passing false as the third parameter when
+creating a user, or by calling user.enableSSL(false) on the user object.
+
 License
 -------
 
@@ -32,6 +36,12 @@ more details.
 
 Changelog
 ---------
+
+* v.1.3.4 Added SSL support for HTTP streams (2012-05-15)
+
+  This is enabled by default and can be disabled by passing false as the third
+  parameter to the User constructor, or calling enableSSL(false) on the User
+  object.
 
 * v.1.3.3 Subscriptions are no longer lost on reconnection (2012-05-15)
 

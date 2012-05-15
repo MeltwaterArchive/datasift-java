@@ -65,6 +65,13 @@ public class User {
 	 * @access protected
 	 */
 	protected String _api_key = "";
+	
+	/**
+	 * Whether we should use SSL where supported.
+	 * 
+	 * @access protected
+	 */
+	protected boolean _use_ssl = true;
 
 	/**
 	 * The rate limit returned by the last API call.
@@ -164,7 +171,27 @@ public class User {
 	public String getStreamBaseURL() {
 		return _stream_base_url;
 	}
+	
+	/**
+	 * Enable or disable the use of SSL where supported.
+	 * 
+	 * @access public
+	 * @param use_ssl
+	 */
+	public void enableSSL(boolean use_ssl) {
+		_use_ssl = use_ssl;
+	}
 
+	/**
+	 * Returns whether SSL should be used where supported.
+	 * 
+	 * @access public
+	 * @return boolean True if SSL should be used.
+	 */
+	public boolean useSSL() {
+		return _use_ssl;
+	}
+	
 	/**
 	 * Set the ApiClient object to use when accessing the API.
 	 *
