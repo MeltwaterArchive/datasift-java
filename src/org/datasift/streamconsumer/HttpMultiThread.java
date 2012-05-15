@@ -110,7 +110,7 @@ public class HttpMultiThread extends Thread {
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				// Attempt to connect and start processing incoming interactions
 				DefaultHttpClient client = new DefaultHttpClient();
-				String url = "http://"
+				String url = "http" + (_user.useSSL() ? "s" : "") + "://"
 						+ _user.getStreamBaseURL() + "multi?hashes=" + _hashes.toString().replace(", ", ",").replace("[", "").replace("]", "");
 				HttpGet get = new HttpGet(url);
 				try {
