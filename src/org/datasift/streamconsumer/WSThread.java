@@ -5,6 +5,7 @@ package org.datasift.streamconsumer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import org.datasift.*;
 import org.json.JSONException;
@@ -26,14 +27,18 @@ public class WSThread extends Thread {
 	private User _user = null;
 	private boolean _auto_reconnect = false;
 	private WebSocket _ws = null;
+	private URI _uri = null;
+	private ArrayList<String> _subscriptions = null;
 
 	public WSThread(WS http, User user) throws WebSocketException, URISyntaxException {
+		this(http, user, new ArrayList<String>());
+	}
+	
+	public WSThread(WS http, User user, ArrayList<String> subscriptions) throws WebSocketException, URISyntaxException {
 		_consumer = http;
 		_user = user;
-
-		_ws = new WebSocketConnection(new URI("ws://" + _user.getStreamBaseURL()));
-		_ws.addHeader("Authorization: " + _user.getUsername() + ":" + _user.getAPIKey());
-		_ws.addHeader("User-Agent: " + _user.getUserAgent());
+		_subscriptions = subscriptions;
+		_uri = new URI("ws://" + _user.getStreamBaseURL());
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
@@ -110,8 +115,15 @@ public class WSThread extends Thread {
 	}
 
 	public synchronized void subscribe(String hash) throws EAPIError {
+		do_subscribe(hash);
+		if (!_subscriptions.contains(hash)) {
+			_subscriptions.add(hash);
+		}
+	}
+	
+	private void do_subscribe(String hash) throws EAPIError {
 		try {
-			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+			if (_ws != null && getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				_ws.send("{\"action\":\"subscribe\",\"hash\":\"" + hash + "\"}");
 			}
 		} catch (WebSocketException e) {
@@ -120,8 +132,13 @@ public class WSThread extends Thread {
 	}
 
 	public synchronized void unsubscribe(String hash) throws EAPIError {
+		do_unsubscribe(hash);
+		_subscriptions.remove(hash);
+	}
+	
+	private void do_unsubscribe(String hash) throws EAPIError {
 		try {
-			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+			if (_ws != null && getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				_ws.send("{\"action\":\"unsubscribe\",\"hash\":\"" + hash + "\"}");
 			}
 		} catch (WebSocketException e) {
@@ -131,7 +148,7 @@ public class WSThread extends Thread {
 	
 	public synchronized void sendStop() throws EInvalidData {
 		try {
-			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
+			if (_ws != null && getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				_ws.send("{\"action\":\"stop\"}");
 			}
 		} catch (WebSocketException e) {
@@ -161,11 +178,30 @@ public class WSThread extends Thread {
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				// Attempt to connect and start processing incoming interactions
 				try {
+					if (_ws != null) {
+						_ws.close();
+					}
+					_ws = null;
+					_ws = new WebSocketConnection(_uri);
+					_ws.addHeader("Authorization: " + _user.getUsername() + ":" + _user.getAPIKey());
+					_ws.addHeader("User-Agent: " + _user.getUserAgent());
+					
 					// Register Event Handlers
 					_ws.setEventHandler(new WebSocketEventHandler() {
 						public void onOpen()
 						{
-							// Socket connected
+							// Socket connected - send subscribes
+							for (String hash : _subscriptions) {
+								try {
+									do_subscribe(hash);
+								} catch (EAPIError e) {
+									try {
+										_consumer.onWarning("Failed to subscribe to " + hash);
+									} catch (EInvalidData e1) {
+										// Ignored
+									}
+								}
+							}
 						}
 
 						public void onMessage(WebSocketMessage message)
@@ -257,6 +293,15 @@ public class WSThread extends Thread {
 				} else {
 					reason = "Connection failed due to a network error";
 					stopConsumer();
+					reconnect_delay = 0;
+				}
+				
+				if (reconnect_delay > 0) {
+					try {
+						_consumer.onWarning("Connection failed, retrying in " + reconnect_delay + " seconds");
+					} catch (EInvalidData e) {
+						// Ignored
+					}
 				}
 			}
 		} while ((getConsumerState() == StreamConsumer.STATE_RUNNING || getConsumerState() == StreamConsumer.STATE_RESTARTING)
