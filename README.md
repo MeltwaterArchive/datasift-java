@@ -29,13 +29,19 @@ creating a user, or by calling user.enableSSL(false) on the user object.
 License
 -------
 
-All code contained in this repository is Copyright 2011 MediaSift Ltd.
+All code contained in this repository is Copyright 2011-2012 MediaSift Ltd.
 
 This code is released under the BSD license. Please see the LICENSE file for
 more details.
 
 Changelog
 ---------
+
+* v.2.0.0 Added onConnect and onDisconnect events (2012-05-28)
+
+  The IStreamConsumerEvents and IMultiStreamConsumerEvents interfaces now
+  contain callbacks for onConnect and onDisconnect events. These MUST be
+  implemented in your event handler.
 
 * v.1.3.4 Added SSL support for HTTP streams (2012-05-15)
 

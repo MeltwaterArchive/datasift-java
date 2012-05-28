@@ -33,6 +33,24 @@ public class LiveStream implements IStreamConsumerEvents {//Step 1 - must implem
 
     }
 
+	/**
+	 * Called when the connection has been established.
+	 * 
+	 * @param StreamConsumer consumer The consumer object.
+	 */
+	public void onConnect(StreamConsumer c) {
+		System.out.println("Connected");
+	}
+	
+	/**
+	 * Called when the connection has disconnected.
+	 * 
+	 * @param StreamConsumer consumer The consumer object.
+	 */
+	public void onDisconnect(StreamConsumer c) {
+		System.out.println("Disconnected");
+	}
+
     /**
      * Handle incoming data. This method will be invoked every time an interaction is received
      * It is one of the two methods available in our IStreamConsumerEvents interface

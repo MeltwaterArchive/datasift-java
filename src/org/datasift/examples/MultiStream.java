@@ -83,6 +83,26 @@ public class MultiStream implements IMultiStreamConsumerEvents {
 	}
 
 	/**
+	 * Called when the connection has been established.
+	 * 
+	 * @param StreamConsumer consumer The consumer object.
+	 */
+	public void onConnect(StreamConsumer c) {
+		System.out.println("Connected");
+		System.out.println("--");
+	}
+	
+	/**
+	 * Called when the connection has disconnected.
+	 * 
+	 * @param StreamConsumer consumer The consumer object.
+	 */
+	public void onDisconnect(StreamConsumer c) {
+		System.out.println("Disconnected");
+		System.out.println("--");
+	}
+
+	/**
 	 * Handle incoming data.
 	 * 
 	 * @param StreamConsumer

@@ -256,6 +256,30 @@ abstract public class StreamConsumer {
 	}
 
 	/**
+	 * This is called when the consumer has successfully connected.
+	 */
+	public void onConnect() {
+		if (_eventHandler != null) {
+			_eventHandler.onConnect(this);
+		} else if (_multiEventHandler != null) {
+			_multiEventHandler.onConnect(this);
+		}
+		// If we don't have a handler for this event, swallow it!
+	}
+
+	/**
+	 * This is called when the consumer has successfully connected.
+	 */
+	public void onDisconnect() {
+		if (_eventHandler != null) {
+			_eventHandler.onDisconnect(this);
+		} else if (_multiEventHandler != null) {
+			_multiEventHandler.onDisconnect(this);
+		}
+		// If we don't have a handler for this event, swallow it!
+	}
+
+	/**
 	 * This is called for each interaction received from the stream and should
 	 * be implemented in extending classes if they don't use an
 	 * IStreamConsumerEvents object.

@@ -349,6 +349,12 @@ public class TestDefinition extends TestCase {
 
 class eventCatcher implements IStreamConsumerEvents {
 
+	public void onConnect(StreamConsumer c) {
+	}
+	
+	public void onDisconnect(StreamConsumer c) {
+	}
+
 	public void onInteraction(StreamConsumer c, Interaction i)
 			throws EInvalidData {
 	}

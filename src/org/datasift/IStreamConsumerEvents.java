@@ -10,6 +10,13 @@ package org.datasift;
  */
 public interface IStreamConsumerEvents {
 	/**
+	 * Called when the socket is connected.
+	 * @param consumer
+	 * @throws EInvalidData
+	 */
+	public void onConnect(StreamConsumer consumer);
+
+	/**
 	 * Called for each interaction consumed.
 	 * @param consumer
 	 * @param interaction
@@ -51,4 +58,11 @@ public interface IStreamConsumerEvents {
 	 * @param reason
 	 */
 	public void onStopped(StreamConsumer consumer, String reason);
+	
+	/**
+	 * Called when the socket is disconnected.
+	 * @param consumer
+	 * @throws EInvalidData
+	 */
+	public void onDisconnect(StreamConsumer consumer);
 }

@@ -61,6 +61,7 @@ public class WSThread extends Thread {
 				String status = data.getStringVal("status");
 				if (status.equals("error") || status.equals("failure")) {
 					_consumer.onError(data.getStringVal("message"));
+					_consumer.stop();
 				} else if (status.equals("warning")) {
 					_consumer.onWarning(data.getStringVal("message"));
 				} else {
@@ -190,7 +191,9 @@ public class WSThread extends Thread {
 					_ws.setEventHandler(new WebSocketEventHandler() {
 						public void onOpen()
 						{
-							// Socket connected - send subscribes
+							// Socket connected, tell the event handler
+							_consumer.onConnect();
+							// Send subscribes
 							for (String hash : _subscriptions) {
 								try {
 									do_subscribe(hash);
@@ -215,7 +218,9 @@ public class WSThread extends Thread {
 
 						public void onClose()
 						{
-							// Socket closed
+							// Socket closed - tell the event handler
+							_consumer.onDisconnect();
+							// Decide what to do next
 							switch (getConsumerState()) {
 							case StreamConsumer.STATE_RUNNING:
 								if (_auto_reconnect) {
