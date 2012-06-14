@@ -19,6 +19,9 @@ The following libraries are included in the lib folder.
 * HttpClient from the Apache Software Foundation (4.1.1 included)
   http://hc.apache.org/httpcomponents-client-ga/
 
+* Trove (3.0.3 included)
+  http://trove.starlight-systems.com/
+
 * Junit (4.9b2 included)
   http://www.junit.org/
 
@@ -37,7 +40,8 @@ more details.
 Changelog
 ---------
 
-* v.2.0.0 Added onConnect and onDisconnect events (2012-05-28)
+* v.2.0.0 Added onConnect and onDisconnect events and improved efficiency
+          within the WebSocket library (2012-06-14)
 
   The IStreamConsumerEvents and IMultiStreamConsumerEvents interfaces now
   contain callbacks for onConnect and onDisconnect events. These MUST be
