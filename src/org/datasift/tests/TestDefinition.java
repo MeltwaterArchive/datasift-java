@@ -20,6 +20,7 @@ import org.datasift.ECompileFailed;
 import org.datasift.EInvalidData;
 import org.datasift.IStreamConsumerEvents;
 import org.datasift.Interaction;
+import org.datasift.JSONdn;
 import org.datasift.MockApiClient;
 import org.datasift.StreamConsumer;
 import org.datasift.User;
@@ -40,6 +41,7 @@ public class TestDefinition extends TestCase {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		DataForTests.init();
 		user = new User(Config.username, Config.api_key);
 		api_client = new MockApiClient(user);
 		user.setApiClient(api_client);
@@ -336,7 +338,7 @@ public class TestDefinition extends TestCase {
 
 		try {
 			StreamConsumer consumer = def.getConsumer(StreamConsumer.TYPE_HTTP,
-					new eventCatcher());
+					new TestDefinitionEventCatcher());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (ECompileFailed e) {
@@ -347,7 +349,7 @@ public class TestDefinition extends TestCase {
 	}
 }
 
-class eventCatcher implements IStreamConsumerEvents {
+class TestDefinitionEventCatcher implements IStreamConsumerEvents {
 
 	public void onConnect(StreamConsumer c) {
 	}
@@ -363,7 +365,7 @@ class eventCatcher implements IStreamConsumerEvents {
 			throws EInvalidData {
 	}
 
-	public void onStopped(StreamConsumer consumer, String reason) {
+	public void onStatus(StreamConsumer consumer, String type, JSONdn info) {
 	}
 
 	public void onWarning(StreamConsumer consumer, String message)
@@ -372,6 +374,9 @@ class eventCatcher implements IStreamConsumerEvents {
 
 	public void onError(StreamConsumer consumer, String message)
 			throws EInvalidData {
+	}
+
+	public void onStopped(StreamConsumer consumer, String reason) {
 	}
 
 }

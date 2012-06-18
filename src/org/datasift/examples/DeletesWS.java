@@ -120,6 +120,21 @@ public class DeletesWS implements IMultiStreamConsumerEvents {
 	}
 
 	/**
+	 * Handle status notifications
+	 * 
+	 * @param StreamConsumer
+	 *            consumer The consumer object.
+	 * @param String
+	 *            type The status notification type.
+	 * @param JSONdn
+	 *            info The notification data.
+	 */
+	public void onStatus(StreamConsumer consumer, String type, JSONdn info) {
+		System.out.print("STATUS: ");
+		System.out.println(type);
+	}
+
+	/**
 	 * Called when the consumer has stopped.
 	 * 
 	 * @param DataSift_StreamConsumer

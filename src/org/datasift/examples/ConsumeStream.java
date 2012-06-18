@@ -70,9 +70,9 @@ public class ConsumeStream implements IStreamConsumerEvents {
 	 * Handle incoming data.
 	 * 
 	 * @param StreamConsumer
-	 *            consumer The consumer object.
-	 * @param JSONObject
-	 *            interaction The interaction data.
+	 *            c The consumer object.
+	 * @param Interaction
+	 *            i The interaction data.
 	 * @throws EInvalidData
 	 */
 	public void onInteraction(StreamConsumer c, Interaction i)
@@ -94,9 +94,9 @@ public class ConsumeStream implements IStreamConsumerEvents {
 	 * Handle delete notifications.
 	 * 
 	 * @param StreamConsumer
-	 *            consumer The consumer object.
-	 * @param JSONObject
-	 *            interaction The interaction data.
+	 *            c The consumer object.
+	 * @param Interaction
+	 *            i The interaction data.
 	 * @throws EInvalidData
 	 */
 	public void onDeleted(StreamConsumer c, Interaction i)
@@ -111,6 +111,21 @@ public class ConsumeStream implements IStreamConsumerEvents {
 			System.out.println(i);
 		}
 		System.out.println("--");
+	}
+
+	/**
+	 * Handle status notifications
+	 * 
+	 * @param StreamConsumer
+	 *            consumer The consumer object.
+	 * @param String
+	 *            type The status notification type.
+	 * @param JSONdn
+	 *            info The notification data.
+	 */
+	public void onStatus(StreamConsumer consumer, String type, JSONdn info) {
+		System.out.print("STATUS: ");
+		System.out.println(type);
 	}
 
 	/**

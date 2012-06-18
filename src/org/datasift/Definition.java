@@ -214,7 +214,7 @@ public class Definition {
     public void validate() throws EInvalidData, ECompileFailed, EAccessDenied {
     	// If we don't have a CSDL then this is a hash-only definition object
     	if (_csdl == null) {
-    		throw new EInvalidData("CSDL not available");
+    		throw new EInvalidData("CSDL not available.");
     	}
 
     	if (_csdl.length() == 0) {
@@ -354,6 +354,39 @@ public class Definition {
         }
 
         return retval;
+    }
+    
+    /**
+     * Create a historic query using this definition.
+     * 
+     * @param start
+     * @param end
+     * @param feeds
+     * @param sample
+     * @return Historic
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     */
+    public Historic createHistoric(Date start, Date end, String feeds, int sample) throws EInvalidData, EAccessDenied
+    {
+    	return createHistoric(start, end, feeds, sample, "");
+    }
+    
+    /**
+     * Create a named historic query from this definiton.
+     *  
+     * @param start
+     * @param end
+     * @param feeds
+     * @param sample
+     * @param name
+     * @return Historic
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     */
+    public Historic createHistoric(Date start, Date end, String feeds, int sample, String name) throws EInvalidData, EAccessDenied
+    {
+    	return new Historic(this._user, this, start, end, feeds, sample, name);
     }
 
     /**

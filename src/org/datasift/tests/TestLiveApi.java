@@ -33,6 +33,7 @@ public class TestLiveApi extends TestCase {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		DataForTests.init();
 		user = new User(Config.username, Config.api_key);
 	}
 

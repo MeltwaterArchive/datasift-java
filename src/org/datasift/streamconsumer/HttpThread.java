@@ -44,6 +44,22 @@ public class HttpThread extends Thread {
 	public synchronized void onDisconnect() {
 		_consumer.onDisconnect();
 	}
+	
+	public synchronized void onError(String message) {
+		try {
+			_consumer.onError(message);
+		} catch (EInvalidData e) {
+			// Ignored
+		}
+	}
+
+	public synchronized void onWarning(String message) {
+		try {
+			_consumer.onWarning(message);
+		} catch (EInvalidData e) {
+			// Ignored
+		}
+	}
 
 	public synchronized void processLine(String line) {
 		try {
@@ -56,7 +72,7 @@ public class HttpThread extends Thread {
 				} else if (status == "warning") {
 					_consumer.onWarning(i.getStringVal("message"));
 				} else {
-					// Should be a tick, ignore it
+					_consumer.onStatus(i.getStringVal("status"), i);
 				}
 			} else {
 				if (i.has("deleted")) {
@@ -94,6 +110,7 @@ public class HttpThread extends Thread {
 			// Delay before attempting a reconnect
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING
 					&& reconnect_delay > 0) {
+				onWarning("Attempting to reconnect after " + String.valueOf(reconnect_delay) + " second" + (reconnect_delay == 1 ? "" : "s"));
 				try {
 					Thread.sleep(reconnect_delay * 1000);
 				} catch (Exception e) {
@@ -107,7 +124,8 @@ public class HttpThread extends Thread {
 				DefaultHttpClient client = new DefaultHttpClient();
 				try {
 					HttpGet get = new HttpGet("http" + (_user.useSSL() ? "s" : "") + "://"
-							+ _user.getStreamBaseURL() + _definition.getHash());
+							+ _user.getStreamBaseURL() + (_consumer.isHistoric() ? "historics/" : "")
+							+ _definition.getHash());
 					try {
 						get.addHeader("Authorization", _user.getUsername() + ":" + _user.getAPIKey());
 						get.addHeader("User-Agent", _user.getUserAgent());
@@ -176,6 +194,7 @@ public class HttpThread extends Thread {
 						}
 					} catch (Exception e) {
 						reason = "";
+						onWarning(e.getMessage());
 					} finally {
 						// Clean up the connection
 						try {

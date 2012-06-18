@@ -37,6 +37,14 @@ public interface IMultiStreamConsumerEvents {
 			throws EInvalidData;
 
 	/**
+	 * Called for each status message consumed.
+	 * @param consumer
+	 * @param type
+	 * @param info
+	 */
+	public void onStatus(StreamConsumer consumer, String type, JSONdn info);
+
+	/**
 	 * Called for each deletion notification consumed.
 	 * @param consumer
 	 * @param interaction

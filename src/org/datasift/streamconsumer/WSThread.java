@@ -38,7 +38,7 @@ public class WSThread extends Thread {
 		_consumer = http;
 		_user = user;
 		_subscriptions = subscriptions;
-		_uri = new URI("ws://" + _user.getStreamBaseURL());
+		_uri = new URI("ws://" + _user.getWebsocketBaseURL());
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {

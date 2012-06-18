@@ -11,6 +11,7 @@ import org.datasift.ECompileFailed;
 import org.datasift.EInvalidData;
 import org.datasift.IMultiStreamConsumerEvents;
 import org.datasift.Interaction;
+import org.datasift.JSONdn;
 import org.datasift.StreamConsumer;
 import org.datasift.User;
 
@@ -172,6 +173,21 @@ public class MultiStream implements IMultiStreamConsumerEvents {
 	public void onDeleted(StreamConsumer c, String hash, Interaction i)
 			throws EInvalidData {
 		// Ignored for this example
+	}
+
+	/**
+	 * Handle status notifications
+	 * 
+	 * @param StreamConsumer
+	 *            consumer The consumer object.
+	 * @param String
+	 *            type The status notification type.
+	 * @param JSONdn
+	 *            info The notification data.
+	 */
+	public void onStatus(StreamConsumer consumer, String type, JSONdn info) {
+		System.out.print("STATUS: ");
+		System.out.println(type);
 	}
 
 	/**

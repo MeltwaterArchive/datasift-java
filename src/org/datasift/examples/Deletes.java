@@ -96,6 +96,21 @@ public class Deletes implements IStreamConsumerEvents {
 	}
 
 	/**
+	 * Handle status notifications
+	 * 
+	 * @param StreamConsumer
+	 *            consumer The consumer object.
+	 * @param String
+	 *            type The status notification type.
+	 * @param JSONdn
+	 *            info The notification data.
+	 */
+	public void onStatus(StreamConsumer consumer, String type, JSONdn info) {
+		System.out.print("STATUS: ");
+		System.out.println(type);
+	}
+
+	/**
 	 * Called when a warning is received in the data stream.
 	 * 
 	 * @param DataSift_StreamConsumer consumer The consumer object.
