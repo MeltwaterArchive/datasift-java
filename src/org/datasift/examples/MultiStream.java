@@ -166,7 +166,7 @@ public class MultiStream implements IMultiStreamConsumerEvents {
 	 * 
 	 * @param StreamConsumer
 	 *            consumer The consumer object.
-	 * @param JSONObject
+	 * @param Interaction
 	 *            interaction The interaction data.
 	 * @throws EInvalidData
 	 */

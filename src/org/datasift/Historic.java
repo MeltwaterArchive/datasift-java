@@ -4,9 +4,12 @@
 package org.datasift;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,12 +54,17 @@ public class Historic {
     /**
      * @access protected
      */
+    protected Date _created_at = null;
+    
+    /**
+     * @access protected
+     */
     protected int _sample = 100;
     
     /**
      * @access protected
      */
-    protected String _feeds = "";
+    protected ArrayList<String> _feeds = new ArrayList<String>();
     
     /**
      * @access protected
@@ -72,6 +80,11 @@ public class Historic {
      * @access protected
      */
     protected int _progress = 0;
+    
+    /**
+     * @access protected
+     */
+    protected HashMap<String,Integer> _volume_info = new HashMap<String,Integer>();
 
     /**
      * Generate a name based on the current date/time.
@@ -149,9 +162,13 @@ public class Historic {
         _hash = hash;
         _start = start;
         _end = end;
-        _feeds = feeds;
+        _feeds.clear();
+        for (String k : feeds.split("/,/")) {
+        	_feeds.add(k.trim());
+        }
         _sample = sample;
         _name = (name.length() == 0 ? generateName() : name);
+        _created_at = new Date();
     }
     
     /**
@@ -191,6 +208,16 @@ public class Historic {
     }
     
     /**
+     * Get the date this historic was created.
+     * 
+     * @return Date
+     */
+    public Date getCreatedAtDate()
+    {
+    	return _created_at;
+    }
+    
+    /**
      * Get the historic name.
      * 
      * @return String
@@ -198,6 +225,16 @@ public class Historic {
     public String getName()
     {
     	return _name;
+    }
+    
+    /**
+     * Get the list of feeds.
+     * 
+     * @return ArrayList<String>
+     */
+    public ArrayList<String> getFeeds()
+    {
+    	return _feeds;
     }
     
     /**
@@ -211,6 +248,16 @@ public class Historic {
     }
     
     /**
+     * Get the sample. To refresh this from the server call reloadData().
+     * 
+     * @return int
+     */
+    public int getSample()
+    {
+    	return _sample;
+    }
+    
+    /**
      * Get the current status. To refresh this from the server call reloadData().
      * 
      * @return String
@@ -218,6 +265,16 @@ public class Historic {
     public String getStatus()
     {
     	return _status;
+    }
+    
+    /**
+     * Get the volume info.
+     * 
+     * @return HashMap<String,Integer>
+     */
+    public HashMap<String,Integer> getVolumeInfo()
+    {
+    	return _volume_info;
     }
     
     /**
@@ -273,6 +330,16 @@ public class Historic {
     }
     
     /**
+     * Returns the hash for the stream this historic query is using.
+     * 
+     * @return String The stream hash.
+     */
+    public String getStreamHash()
+    {
+    	return _hash;
+    }
+    
+    /**
      * Returns the DPU cost of running this historic. If the historic has not
      * yet been prepared that will be done automagically to obtain the cost.
      * 
@@ -311,6 +378,20 @@ public class Historic {
             res = _user.callAPI("historics/get", params);
             
             try {
+            	_playback_id = res.getString("id");
+			} catch (JSONException e) {
+                throw new EAPIError(
+                        "Historic retrieved successfully but no playback ID in the response.");
+            }
+
+            try {
+            	_hash = res.getString("definition_id");
+			} catch (JSONException e) {
+                throw new EAPIError(
+                        "Historic retrieved successfully but no stream hash in the response.");
+            }
+
+            try {
             	_name = res.getString("name");
 			} catch (JSONException e) {
                 throw new EAPIError(
@@ -346,16 +427,47 @@ public class Historic {
             }
 
             try {
-            	_end = new Date(res.getLong("created_at") * 1000);
+            	_created_at = new Date(res.getLong("created_at") * 1000);
 			} catch (JSONException e) {
                 throw new EAPIError(
                         "Historic retrieved successfully but no created at timestmp in the response.");
             }
             
-//"feed": [ "digg" ], 
-//"sample": 100, 
-//"volume_info": { "digg" }
-//            
+            try {
+            	_feeds.clear();
+            	JSONArray data = res.getJSONArray("feed");
+                for (int i = 0; i < data.length(); i++) {
+                    _feeds.add(data.getString(i));
+                }
+            } catch (JSONException e) {
+            	throw new EAPIError(
+            			"Historic retrieved successfully but no feeds in the response.");
+            }
+            
+            try {
+            	_sample = res.getInt("sample");
+			} catch (JSONException e) {
+                throw new EAPIError(
+                        "Historic retrieved successfully but no sample in the response.");
+            }
+            
+			try {
+	            _volume_info.clear();
+	            JSONObject volume_info = res.getJSONObject("volume_info");
+	    		Iterator<?> volume_info_iterator = volume_info.keys();
+	    		while (volume_info_iterator.hasNext()) {
+	    			String key = (String) volume_info_iterator.next();
+	    			try {
+	    				_volume_info.put(key, volume_info.getInt(key));
+	    			} catch (JSONException e) {
+	                    throw new EAPIError(
+	                            "Historic retrieved successfully but invalid volume info in the response.");
+	    			}
+	    		}
+			} catch (JSONException e) {
+                throw new EAPIError(
+                        "Historic retrieved successfully but no volume info in the response.");
+			}
         } catch (EAPIError e) {
             switch (e.getCode()) {
                 case 400:
@@ -390,7 +502,7 @@ public class Historic {
             params.put("start", String.valueOf(_start.getTime() / 1000));
             params.put("end", String.valueOf(_end.getTime() / 1000));
             params.put("name", _name);
-            params.put("feed", _feeds);
+            params.put("feed", Utils.join(_feeds, ","));
 
             res = _user.callAPI("historics/prepare", params);
 

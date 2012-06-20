@@ -125,7 +125,7 @@ public class StreamUsage implements IStreamConsumerEvents {
 	 * 
 	 * @param StreamConsumer
 	 *            consumer The consumer object.
-	 * @param JSONObject
+	 * @param Interaction
 	 *            interaction The interaction data.
 	 * @throws EInvalidData
 	 */
@@ -153,7 +153,7 @@ public class StreamUsage implements IStreamConsumerEvents {
 	 * 
 	 * @param StreamConsumer
 	 *            consumer The consumer object.
-	 * @param JSONObject
+	 * @param Interaction
 	 *            interaction The interaction data.
 	 * @throws EInvalidData
 	 */

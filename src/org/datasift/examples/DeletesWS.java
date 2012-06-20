@@ -94,7 +94,7 @@ public class DeletesWS implements IMultiStreamConsumerEvents {
 	 * 
 	 * @param StreamConsumer
 	 *            consumer The consumer object.
-	 * @param JSONObject
+	 * @param Interaction
 	 *            interaction The interaction data.
 	 * @throws EInvalidData
 	 */
@@ -109,7 +109,7 @@ public class DeletesWS implements IMultiStreamConsumerEvents {
 	 * 
 	 * @param StreamConsumer
 	 *            consumer The consumer object.
-	 * @param JSONObject
+	 * @param Interaction
 	 *            interaction The interaction data.
 	 * @throws EInvalidData
 	 */
