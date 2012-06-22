@@ -39,6 +39,14 @@ public class HttpMultiThread extends Thread {
 		return _consumer.getState();
 	}
 
+	public synchronized void onConnect() {
+		_consumer.onConnect();
+	}
+
+	public synchronized void onDisconnect() {
+		_consumer.onDisconnect();
+	}
+
 	public synchronized void processLine(String line) {
 		try {
 			// Extract the hash
@@ -50,6 +58,7 @@ public class HttpMultiThread extends Thread {
 				String status = i.getStringVal("status");
 				if (status == "error") {
 					_consumer.onError(i.getStringVal("message"));
+					_consumer.stop();
 				} else if (status == "warning") {
 					_consumer.onWarning(i.getStringVal("message"));
 				} else {
@@ -119,6 +128,8 @@ public class HttpMultiThread extends Thread {
 					HttpResponse response = client.execute(get);
 					int statusCode = response.getStatusLine().getStatusCode();
 					if (statusCode == 200) {
+						// Connected successfully, tell the event handler
+						onConnect();
 						// Reset the reconnect delay
 						reconnect_delay = 0;
 						// Get a stream reader
@@ -135,6 +146,8 @@ public class HttpMultiThread extends Thread {
 								processLine(line);
 							}
 						}
+						// Tell the event handler we've disconnected
+						onDisconnect();
 					} else if (statusCode >= 400 && statusCode < 500
 							&& statusCode != 420) {
 						// Connection was refused, but not because we were

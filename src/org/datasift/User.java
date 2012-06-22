@@ -3,6 +3,7 @@
  */
 package org.datasift;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.json.JSONException;
@@ -22,7 +23,7 @@ public class User {
 	 *
 	 * @access public
 	 */
-	public final static String _user_agent = "DataSiftJava/1.3.3";
+	public final static String _user_agent = "DataSiftJava/2.0.0";
 
 	/**
 	 * The base URL for API calls. No http://, and with the trailing slash.
@@ -37,6 +38,13 @@ public class User {
 	 * @access public
 	 */
 	public static String _stream_base_url = "stream.datasift.com/";
+
+	/**
+	 * The base URL for Websocket streaming. No http://, and with the trailing slash.
+	 *
+	 * @access public
+	 */
+	public static String _websocket_base_url = "websocket.datasift.com/";
 
 	/**
 	 * Usage period constant: hour
@@ -106,6 +114,23 @@ public class User {
 	 * @throws EInvalidData
 	 */
 	public User(String username, String api_key) throws EInvalidData {
+		this(username, api_key, true);
+	}
+	
+	/**
+	 * Constructor. A username and API key are required when constructing an
+	 * instance of this class.
+	 *
+	 * @access public
+	 * @param String
+	 *            username The user's username.
+	 * @param String
+	 *            api_key The user's API key.
+	 * @param boolean
+	 *            use_ssl Set to false to disable SSL.
+	 * @throws EInvalidData
+	 */
+	public User(String username, String api_key, boolean use_ssl) throws EInvalidData {
 		if (username.length() == 0) {
 			throw new EInvalidData(
 				"Please supply valid credentials when creating a DataSift_User object."
@@ -120,6 +145,7 @@ public class User {
 
 		_username = username;
 		_api_key = api_key;
+		_use_ssl = use_ssl;
 	}
 
 	/**
@@ -173,6 +199,16 @@ public class User {
 	}
 	
 	/**
+	 * Returns the base URL for HTTP stream request.
+	 *
+	 * @access public
+	 * @return String The stream base URL.
+	 */
+	public String getWebsocketBaseURL() {
+		return _websocket_base_url;
+	}
+	
+	/**
 	 * Enable or disable the use of SSL where supported.
 	 * 
 	 * @access public
@@ -221,6 +257,50 @@ public class User {
 	 */
 	public Definition createDefinition(String csdl) {
 		return new Definition(this, csdl);
+	}
+	
+    /**
+     * Create a historic query using the given stream hash.
+     * 
+     * @param start
+     * @param end
+     * @param feeds
+     * @return Historic
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     */
+    public Historic createHistoric(String hash, Date start, Date end, String feeds, int sample) throws EInvalidData, EAccessDenied
+    {
+    	return createHistoric(hash, start, end, feeds, sample, "");
+    }
+    
+    /**
+     * Create a named historic query from this definiton.
+     *  
+     * @param start
+     * @param end
+     * @param feeds
+     * @param name
+     * @return Historic
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     */
+    public Historic createHistoric(String hash, Date start, Date end, String feeds, int sample, String name) throws EInvalidData, EAccessDenied
+    {
+    	return new Historic(this, new Definition(this, "", hash), start, end, feeds, sample, name);
+    }
+
+    /**
+     * Get an existing historic.
+     * 
+     * @param playback_id
+     * @return Historic
+     * @throws EAPIError 
+     * @throws EAccessDenied 
+     * @throws EInvalidData 
+     */
+	public Historic getHistoric(String playback_id) throws EInvalidData, EAccessDenied, EAPIError {
+		return new Historic(this, playback_id);
 	}
 	
     /**
@@ -350,6 +430,8 @@ public class User {
 			try {
 				switch (res.getStatusCode()) {
 				case 200:
+				case 202:
+				case 204:
 					break;
 
 				case 400:

@@ -9,6 +9,7 @@ import org.datasift.ECompileFailed;
 import org.datasift.EInvalidData;
 import org.datasift.IMultiStreamConsumerEvents;
 import org.datasift.Interaction;
+import org.datasift.JSONdn;
 import org.datasift.StreamConsumer;
 import org.datasift.User;
 
@@ -78,6 +79,26 @@ public class ConsumeStreamWS implements IMultiStreamConsumerEvents {
 	}
 
 	/**
+	 * Called when the connection has been established.
+	 * 
+	 * @param StreamConsumer consumer The consumer object.
+	 */
+	public void onConnect(StreamConsumer c) {
+		System.out.println("Connected");
+		System.out.println("--");
+	}
+	
+	/**
+	 * Called when the connection has disconnected.
+	 * 
+	 * @param StreamConsumer consumer The consumer object.
+	 */
+	public void onDisconnect(StreamConsumer c) {
+		System.out.println("Disconnected");
+		System.out.println("--");
+	}
+
+	/**
 	 * Handle incoming data.
 	 * 
 	 * @param StreamConsumer
@@ -108,13 +129,28 @@ public class ConsumeStreamWS implements IMultiStreamConsumerEvents {
 	 * 
 	 * @param StreamConsumer
 	 *            consumer The consumer object.
-	 * @param JSONObject
+	 * @param Interaction
 	 *            interaction The interaction data.
 	 * @throws EInvalidData
 	 */
 	public void onDeleted(StreamConsumer c, String hash, Interaction i)
 			throws EInvalidData {
 		// Ignored for this example
+	}
+
+	/**
+	 * Handle status notifications
+	 * 
+	 * @param StreamConsumer
+	 *            consumer The consumer object.
+	 * @param String
+	 *            type The status notification type.
+	 * @param JSONdn
+	 *            info The notification data.
+	 */
+	public void onStatus(StreamConsumer consumer, String type, JSONdn info) {
+		System.out.print("STATUS: ");
+		System.out.println(type);
 	}
 
 	/**
