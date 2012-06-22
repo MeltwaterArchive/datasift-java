@@ -40,12 +40,13 @@ more details.
 Changelog
 ---------
 
-* v.2.0.0 Added onConnect and onDisconnect events and improved efficiency
-          within the WebSocket library (2012-06-14)
+* v.2.0.0 Added onConnect, onDisconnect and onStatus events, improved
+          efficiency within the WebSocket library, and support for the
+          historics API (2012-06-22)
 
   The IStreamConsumerEvents and IMultiStreamConsumerEvents interfaces now
-  contain callbacks for onConnect and onDisconnect events. These MUST be
-  implemented in your event handler.
+  contain callbacks for onConnect, onDisconnect and onStatus events. These
+  MUST be implemented in your event handler.
 
 * v.1.3.4 Added SSL support for HTTP streams (2012-05-15)
 

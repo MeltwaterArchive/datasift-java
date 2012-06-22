@@ -21,11 +21,19 @@ public class HistoricDataAvailability {
 		_end = new Date(json.getLong("end") * 1000);
 		
 		_sources = new HashMap<String,HistoricDataAvailabilitySource>();
-		JSONObject sources = json.getJSONObject("sources");
-		Iterator<?> sourcekeys = sources.keys();
-		while (sourcekeys.hasNext()) {
-			String key = (String) sourcekeys.next();
-			_sources.put(key, new HistoricDataAvailabilitySource(sources.getJSONObject(key)));
+		JSONObject sources = null;
+		try {
+			sources = json.getJSONObject("sources");
+		} catch (JSONException e) {
+			sources = null;
+		}
+
+		if (sources != null) {
+			Iterator<?> sourcekeys = sources.keys();
+			while (sourcekeys.hasNext()) {
+				String key = (String) sourcekeys.next();
+				_sources.put(key, new HistoricDataAvailabilitySource(sources.getJSONObject(key)));
+			}
 		}
 	}
 	
