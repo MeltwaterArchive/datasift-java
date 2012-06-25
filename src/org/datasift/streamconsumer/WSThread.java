@@ -122,7 +122,7 @@ public class WSThread extends Thread {
 		}
 	}
 	
-	private void do_subscribe(String hash) throws EAPIError {
+	private synchronized void do_subscribe(String hash) throws EAPIError {
 		try {
 			if (_ws != null && getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				_ws.send("{\"action\":\"subscribe\",\"hash\":\"" + hash + "\"}");
@@ -137,7 +137,7 @@ public class WSThread extends Thread {
 		_subscriptions.remove(hash);
 	}
 	
-	private void do_unsubscribe(String hash) throws EAPIError {
+	private synchronized void do_unsubscribe(String hash) throws EAPIError {
 		try {
 			if (_ws != null && getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				_ws.send("{\"action\":\"unsubscribe\",\"hash\":\"" + hash + "\"}");
