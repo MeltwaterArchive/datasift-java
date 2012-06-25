@@ -117,7 +117,7 @@ abstract public class StreamConsumer {
 	}
 	
 	/**
-	 * Factory method that takes a Definition object.
+	 * Factory method that takes a Historic object.
 	 * 
 	 * @param user
 	 * @param type
