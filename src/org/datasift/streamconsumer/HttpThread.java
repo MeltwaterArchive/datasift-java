@@ -36,6 +36,30 @@ public class HttpThread extends Thread {
 	public synchronized int getConsumerState() {
 		return _consumer.getState();
 	}
+	
+	public synchronized void onConnect() {
+		_consumer.onConnect();
+	}
+
+	public synchronized void onDisconnect() {
+		_consumer.onDisconnect();
+	}
+	
+	public synchronized void onError(String message) {
+		try {
+			_consumer.onError(message);
+		} catch (EInvalidData e) {
+			// Ignored
+		}
+	}
+
+	public synchronized void onWarning(String message) {
+		try {
+			_consumer.onWarning(message);
+		} catch (EInvalidData e) {
+			// Ignored
+		}
+	}
 
 	public synchronized void processLine(String line) {
 		try {
@@ -44,10 +68,11 @@ public class HttpThread extends Thread {
 				String status = i.getStringVal("status");
 				if (status == "error") {
 					_consumer.onError(i.getStringVal("message"));
+					_consumer.stop();
 				} else if (status == "warning") {
 					_consumer.onWarning(i.getStringVal("message"));
 				} else {
-					// Should be a tick, ignore it
+					_consumer.onStatus(i.getStringVal("status"), i);
 				}
 			} else {
 				if (i.has("deleted")) {
@@ -85,6 +110,7 @@ public class HttpThread extends Thread {
 			// Delay before attempting a reconnect
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING
 					&& reconnect_delay > 0) {
+				onWarning("Attempting to reconnect after " + String.valueOf(reconnect_delay) + " second" + (reconnect_delay == 1 ? "" : "s"));
 				try {
 					Thread.sleep(reconnect_delay * 1000);
 				} catch (Exception e) {
@@ -98,13 +124,16 @@ public class HttpThread extends Thread {
 				DefaultHttpClient client = new DefaultHttpClient();
 				try {
 					HttpGet get = new HttpGet("http" + (_user.useSSL() ? "s" : "") + "://"
-							+ _user.getStreamBaseURL() + _definition.getHash());
+							+ _user.getStreamBaseURL() + (_consumer.isHistoric() ? "historics/" : "")
+							+ _definition.getHash());
 					try {
 						get.addHeader("Authorization", _user.getUsername() + ":" + _user.getAPIKey());
 						get.addHeader("User-Agent", _user.getUserAgent());
 						HttpResponse response = client.execute(get);
 						int statusCode = response.getStatusLine().getStatusCode();
 						if (statusCode == 200) {
+							// Connected successfully, tell the event handler
+							onConnect();
 							// Reset the reconnect delay
 							reconnect_delay = 0;
 							// Get a stream reader
@@ -125,6 +154,8 @@ public class HttpThread extends Thread {
 									processLine(line);
 								}
 							}
+							// Tell the event handler we've disconnected
+							onDisconnect();
 						} else if (statusCode >= 400 && statusCode < 500
 								&& statusCode != 420) {
 							// Connection was refused
@@ -163,6 +194,7 @@ public class HttpThread extends Thread {
 						}
 					} catch (Exception e) {
 						reason = "";
+						onWarning(e.getMessage());
 					} finally {
 						// Clean up the connection
 						try {
