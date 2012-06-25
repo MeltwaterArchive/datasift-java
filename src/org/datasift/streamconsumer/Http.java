@@ -31,7 +31,26 @@ public class Http extends StreamConsumer {
 	public Http(User user, Definition definition,
 			IStreamConsumerEvents eventHandler) throws EInvalidData,
 			ECompileFailed, EAccessDenied {
-		super(user, definition, eventHandler);
+		this(user, definition, eventHandler, false);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param User
+	 *            user
+	 * @param Definition
+	 *            definition
+	 * @param IStreamConsumerEvents
+	 *            eventHandler
+	 * @throws EInvalidData
+	 * @throws ECompileFailed
+	 * @throws EAccessDenied
+	 */
+	public Http(User user, Definition definition,
+			IStreamConsumerEvents eventHandler, boolean isHistoric) throws EInvalidData,
+			ECompileFailed, EAccessDenied {
+		super(user, definition, eventHandler, isHistoric);
 		thread = new HttpThread(this, user, definition);
 	}
 
