@@ -1,5 +1,5 @@
 /**
- * This simple example demonstrates consuming a stream using the stream hash.
+ * This simple example demonstrates creating a historic data and writing the output to a CSV file.
  */
 package org.datasift.examples;
 
@@ -22,12 +22,15 @@ public class HistoricDump implements IStreamConsumerEvents {
 	 */
 	public static void main(String[] args) {
 		if (args.length != 5) {
-			System.err.println("Usage: HistoricDump <keywords> <start_date> <end_date> <feeds> <csv_filename>");
+			System.err
+					.println("Usage: HistoricDump <keywords> <start_date> <end_date> <feeds> <csv_filename>");
 			System.err.println("Where...");
-			System.err.println("  <keywords>     comma separated list of keywords");
+			System.err
+					.println("  <keywords>     comma separated list of keywords");
 			System.err.println("  <start_date>   start date (yyyymmddhhmmss)");
 			System.err.println("  <end_date>     end date (yyyymmddhhmmss)");
-			System.err.println("  <feeds>        comma separated list of feeds (twitter,digg,etc)");
+			System.err
+					.println("  <feeds>        comma separated list of feeds (twitter,digg,etc)");
 			System.err.println("  <csv_filename> filename for the csv output");
 			System.exit(1);
 		}
@@ -92,11 +95,13 @@ public class HistoricDump implements IStreamConsumerEvents {
 			_fw = new FileWriter(fn);
 			_fw.append("ID,Created At,Username,Content\n");
 		} catch (IOException e) {
-			System.err.println("ERR: Failed to create and/or write to the CSV file: " + e.getMessage());
+			System.err
+					.println("ERR: Failed to create and/or write to the CSV file: "
+							+ e.getMessage());
 			System.exit(1);
 		}
 	}
-	
+
 	/**
 	 * Called when the connection has been established.
 	 * 
@@ -149,43 +154,45 @@ public class HistoricDump implements IStreamConsumerEvents {
 			} catch (EInvalidData e) {
 				// Ignored
 			}
-	
+
 			_fw.append(",\"");
-	
+
 			try {
 				_fw.append(i.getStringVal("interaction.created_at").replace(
 						"\"", "\\\""));
 			} catch (EInvalidData e) {
 				// Ignored
 			}
-	
+
 			_fw.append("\",\"");
-	
+
 			try {
 				_fw.append(i.getStringVal("interaction.author.username")
 						.replace("\"", "\\\""));
 			} catch (EInvalidData e) {
 				// Ignored
 			}
-	
+
 			_fw.append("\",\"");
-	
+
 			try {
-				_fw.append(i.getStringVal("interaction.content").replace(
-						"\"", "\\\"").replace('\n', ' '));
+				_fw.append(i.getStringVal("interaction.content")
+						.replace("\"", "\\\"").replace('\n', ' '));
 			} catch (EInvalidData e) {
 				// Ignored
 			}
-	
+
 			_fw.append("\"\n");
 			_fw.flush();
-			
+
 			_counter += 1;
 			if (_counter % 1000 == 0) {
 				System.err.print("\r" + String.valueOf(_counter++));
 			}
 		} catch (IOException e) {
-			System.err.println("ERR: Failed to write interaction to the CSV file: " + e.getMessage());
+			System.err
+					.println("ERR: Failed to write interaction to the CSV file: "
+							+ e.getMessage());
 		}
 	}
 
@@ -223,11 +230,12 @@ public class HistoricDump implements IStreamConsumerEvents {
 			}
 		} else {
 			try {
-				System.err.println("STATUS: " + type + " " + info.getStringVal("message"));
+				System.err.println("STATUS: " + type + " "
+						+ info.getStringVal("message"));
 			} catch (EInvalidData e1) {
-				System.err.println("STATUS: " + type); 
+				System.err.println("STATUS: " + type);
 			}
-			
+
 			try {
 				_h.reloadData();
 				System.err.println("STATUS: " + _h.getStatus() + " - "
@@ -286,7 +294,8 @@ public class HistoricDump implements IStreamConsumerEvents {
 		try {
 			_fw.close();
 		} catch (IOException e) {
-			System.err.println("ERR: Failed to close the CSV file: " + e.getMessage());
+			System.err.println("ERR: Failed to close the CSV file: "
+					+ e.getMessage());
 		}
 	}
 }
