@@ -42,7 +42,9 @@ Changelog
 
 * v.2.0.0 Added onConnect, onDisconnect and onStatus events, improved
           efficiency within the WebSocket library, and support for the
-          historics API (2012-06-22)
+          historics API (2012-06-22). Please note: Though support has been
+          added for the the Historics API, the API itself is not yet publicly
+          available. Access will be made available over the coming months. 
 
   The IStreamConsumerEvents and IMultiStreamConsumerEvents interfaces now
   contain callbacks for onConnect, onDisconnect and onStatus events. These
