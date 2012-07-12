@@ -7,7 +7,7 @@ package org.datasift;
  * @author MediaSift
  * @version 0.1
  */
-public class EAPIError extends Exception {
+public class EAPIError extends DataSiftException {
 	/**
 	 * Required by the superclass.
 	 */
