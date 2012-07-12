@@ -3,6 +3,7 @@
  */
 package org.datasift;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -312,8 +313,8 @@ public class User {
      * @param String hash The hash of the stream to be consumed.
      * @param String
      *            type The consumer type for which to construct a consumer.
-     * @throws EInvalidData
      * @return StreamConsumer The consumer object.
+     * @throws EInvalidData
      * @throws EAccessDenied
      * @throws ECompileFailed
      */
@@ -321,6 +322,46 @@ public class User {
             IStreamConsumerEvents eventHandler) throws EInvalidData,
             ECompileFailed, EAccessDenied {
         return StreamConsumer.factory(this, type, new Definition(this, null, hash), eventHandler);
+    }
+    
+    /**
+     * Create a push subscription for this user. Note that you must call the
+     * save method to actually create the subscription on the server.
+     * 
+     * @param String output_type The output_type of the required push subscription.
+     * @param String hash_type   The type of hash being supplied (stream or historic).
+     * @param String hash        The stream hash or historic playback ID.
+     * @param String name        A name for this push subscription.
+     * @return PushSubscription
+     * @throws EInvalidData
+     */
+    public PushSubscription createPushSubscription(String output_type, String hash_type, String hash, String name) throws EInvalidData {
+    	return PushSubscription.factory(this, output_type, hash_type, hash, name);
+    }
+    
+    /**
+     * Get a single push subscription.
+     * 
+     * @param int id The ID of the subscription to fetch.
+     * @return PushSubscription
+     * @throws EInvalidData 
+     * @throws EAccessDenied 
+     * @throws EAPIError 
+     */
+    public PushSubscription getPushSubscription(int id) throws EAPIError, EAccessDenied, EInvalidData {
+    	return PushSubscription.get(this, id);
+    }
+    
+    /**
+     * Get a list of push subscriptions in your account.
+     * 
+     * @return ArrayList<PushSubscription>
+     * @throws EInvalidData
+     * @throws EAPIError
+     * @throws EAccessDenied
+     */
+    public ArrayList<PushSubscription> listPushSubscriptions() throws EInvalidData, EAPIError, EAccessDenied {
+    	return PushSubscription.list(this);
     }
 
 	/**
