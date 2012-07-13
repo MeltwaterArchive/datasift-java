@@ -7,11 +7,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import org.datasift.*;
+import org.datasift.EAPIError;
+import org.datasift.EInvalidData;
+import org.datasift.Interaction;
+import org.datasift.JSONdn;
+import org.datasift.StreamConsumer;
+import org.datasift.User;
 import org.json.JSONException;
 
-// From http://code.google.com/p/weberknecht/
-// Slightly modified to enable sending of the DataSift auth header
 import de.roderick.weberknecht.WebSocket;
 import de.roderick.weberknecht.WebSocketConnection;
 import de.roderick.weberknecht.WebSocketEventHandler;
@@ -38,7 +41,7 @@ public class WSThread extends Thread {
 		_consumer = http;
 		_user = user;
 		_subscriptions = subscriptions;
-		_uri = new URI("ws://" + _user.getWebsocketBaseURL());
+		_uri = new URI("ws://" + _user.getWebsocketBaseURL() + (_consumer.isHistoric() ? "historics/" : ""));
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
