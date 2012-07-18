@@ -4,6 +4,7 @@
 package org.datasift.streamconsumer;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
@@ -42,11 +43,16 @@ public class WS extends StreamConsumer {
 	 * @throws WebSocketException 
 	 */
 	public WS(User user,
-			IMultiStreamConsumerEvents eventHandler) throws EInvalidData,
+			IMultiStreamConsumerEvents eventHandler, String...pid) throws EInvalidData,
 			ECompileFailed, EAccessDenied, EAPIError {
 		super(user, eventHandler);
 		try {
-			_thread = new WSThread(this, user);
+			_is_historic = pid != null;
+			if( _is_historic){
+				_thread = new WSThread(this, user, Arrays.asList(pid));
+			} else {
+				_thread = new WSThread(this, user);
+			}
 		} catch (WebSocketException e) {
 			throw new EAPIError(e.getMessage());
 		} catch (URISyntaxException e) {
@@ -73,9 +79,8 @@ public class WS extends StreamConsumer {
 	 * @throws URISyntaxException 
 	 * @throws WebSocketException 
 	 */
-	public WS(User user, IMultiStreamConsumerEvents eventHandler, boolean isHistoric) throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
-		this( user, eventHandler);
-		this._is_historic= isHistoric;
+	public WS(User user, IMultiStreamConsumerEvents eventHandler) throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
+		this( user, eventHandler, null);
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {

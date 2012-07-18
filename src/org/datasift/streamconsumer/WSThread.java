@@ -6,6 +6,8 @@ package org.datasift.streamconsumer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.datasift.EAPIError;
 import org.datasift.EInvalidData;
@@ -31,17 +33,17 @@ public class WSThread extends Thread {
 	private boolean _auto_reconnect = false;
 	private WebSocket _ws = null;
 	private URI _uri = null;
-	private ArrayList<String> _subscriptions = null;
+	private List<String> _subscriptions = null;
 
 	public WSThread(WS http, User user) throws WebSocketException, URISyntaxException {
 		this(http, user, new ArrayList<String>());
 	}
 	
-	public WSThread(WS http, User user, ArrayList<String> subscriptions) throws WebSocketException, URISyntaxException {
+	public WSThread(WS http, User user, List<String> subscriptions) throws WebSocketException, URISyntaxException {
 		_consumer = http;
 		_user = user;
 		_subscriptions = subscriptions;
-		_uri = new URI("ws://" + _user.getWebsocketBaseURL() + (_consumer.isHistoric() ? "historics/" : ""));
+		_uri = new URI("ws://" + _user.getWebsocketBaseURL() + (_consumer.isHistoric() ? "historics/multi?hashes="+ Arrays.deepToString(_subscriptions.toArray()).replace("[", "").replace("]", ""): ""));
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
@@ -67,7 +69,9 @@ public class WSThread extends Thread {
 					_consumer.stop();
 				} else if (status.equals("warning")) {
 					_consumer.onWarning(data.getStringVal("message"));
-				} else {
+				}else if (status.equals("success")) {
+					_consumer.onStatus(status, data);
+				}else {
 					// Dunno what that is, make it an error
 					_consumer.onError("Unhandled content received: " + line);
 				}

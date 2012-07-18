@@ -472,7 +472,7 @@ public class Historic {
 
 			try {
 				_feeds.clear();
-				JSONArray data = res.getJSONArray("feed");
+				JSONArray data = res.getJSONArray("sources");
 				for (int i = 0; i < data.length(); i++) {
 					_feeds.add(data.getString(i));
 				}
@@ -539,7 +539,7 @@ public class Historic {
 			params.put("start", String.valueOf(_start.getTime() / 1000));
 			params.put("end", String.valueOf(_end.getTime() / 1000));
 			params.put("name", _name);
-			params.put("feed", Utils.join(_feeds, ","));
+			params.put("sources", Utils.join(_feeds, ","));
 			params.put("sample", String.valueOf(_sample));
 
 			res = _user.callAPI("historics/prepare", params);
