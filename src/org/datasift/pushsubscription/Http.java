@@ -1,71 +1,52 @@
 package org.datasift.pushsubscription;
 
-import java.util.HashMap;
-
 import org.datasift.EInvalidData;
 import org.datasift.PushSubscription;
 import org.datasift.User;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Http extends PushSubscription {
-	protected int _delivery_frequency = 10;
-	protected int _max_size = 0;
-	protected String _url = "";
-	protected String _auth_type = "none";
-	protected String _auth_username = "";
-	protected String _auth_password = "";
-	
-	@Override
-	protected void setOutputParams(JSONObject output_params) throws JSONException {
-		if (output_params.has("delivery_frequency")) {
-			_delivery_frequency = output_params.getInt("delivery_frequency");
-		}
-
-		if (output_params.has("max_size")) {
-			_max_size = output_params.getInt("max_size");
-		}
-
-		if (output_params.has("auth")) {
-			JSONObject auth = output_params.getJSONObject("auth");
-			if (auth.has("type")) {
-				_auth_type = auth.getString("type");
-			}
-			
-			if (auth.has("username")) {
-				_auth_username = auth.getString("username");
-			}
-
-			if (auth.has("password")) {
-				_auth_password = auth.getString("password");
-			}
-		}
-	}
-	
-	@Override
-	protected HashMap<String, String> getOutputParams() {
-		HashMap<String, String> params = new HashMap<String, String>();
-		
-		params.put("output_params.delivery_frequency", String.valueOf(_delivery_frequency));
-		if (_max_size > 0) {
-			params.put("output_params.max_size", String.valueOf(_max_size));
-		}
-		params.put("output_params.url", _url);
-		params.put("output_params.auth.type", _auth_type);
-		if (!_auth_type.equals("none")) {
-			params.put("output_params.auth.username", _auth_username);
-			params.put("output_params.auth.password", _auth_password);
-		}
-		
-		return params;
-	}
-
 	public Http(User user) {
 		super(user);
+		initHttp();
 	}
 
 	public Http(User user, JSONObject json) throws EInvalidData {
 		super(user, json);
+		initHttp();
+	}
+	
+	public void initHttp() {
+		if (!_output_params.containsKey("delivery_frequency")) {
+			_output_params.put("delivery_frequency", "10");
+		}
+		if (!_output_params.containsKey("url")) {
+			_output_params.put("url", "");
+		}
+		if (!_output_params.containsKey("auth.type")) {
+			_output_params.put("auth.type", "none");
+		}
+		if (!_output_params.containsKey("auth.username")) {
+			_output_params.put("auth.username", "");
+		}
+		if (!_output_params.containsKey("auth.password")) {
+			_output_params.put("auth.password", "");
+		}
+	}
+	
+	public void setDeliveryFrequency(int freq) throws EInvalidData {
+		if (isDeleted()) {
+			throw new EInvalidData("Cannot modify a deleted subscription");
+		}
+		
+		_output_params.put("delivery_frequency", String.valueOf(freq));
+	}
+	
+	public int getDeliveryFrequency() {
+		if (_output_params.containsKey("delivery_frequency")) {
+			return Integer.parseInt(_output_params.get("delivery_frequency"));
+		}
+		return 10;
 	}
 	
 	public void setUrl(String url) throws EInvalidData {
@@ -73,11 +54,14 @@ public class Http extends PushSubscription {
 			throw new EInvalidData("Cannot modify a deleted subscription");
 		}
 
-		_url = url;
+		_output_params.put("url", url);
 	}
 	
 	public String getUrl() {
-		return _url;
+		if (_output_params.containsKey("url")) {
+			return _output_params.get("url");
+		}
+		return "";
 	}
 	
 	public void setMaxSize(int bytes) throws EInvalidData {
@@ -85,15 +69,18 @@ public class Http extends PushSubscription {
 			throw new EInvalidData("Cannot modify a deleted subscription");
 		}
 
-		_max_size = bytes;
+		_output_params.put("max_size", String.valueOf(bytes));
 	}
 	
 	public void removeMaxSize() {
-		_max_size = 0;
+		_output_params.remove("max_size");
 	}
 	
 	public int getMaxSize() {
-		return _max_size;
+		if (_output_params.containsKey("max_size")) {
+			return Integer.parseInt(_output_params.get("max_size"));
+		}
+		return 0;
 	}
 
 	public void setAuthType(String auth_type) throws EInvalidData {
@@ -101,11 +88,14 @@ public class Http extends PushSubscription {
 			throw new EInvalidData("Cannot modify a deleted subscription");
 		}
 
-		_auth_type = auth_type;
+		_output_params.put("auth.type", auth_type);
 	}
 	
 	public String getAuthType() {
-		return _auth_type;
+		if (_output_params.containsKey("auth.type")) {
+			return _output_params.get("auth.type");
+		}
+		return "";
 	}
 
 	public void setAuthUsername(String username) throws EInvalidData {
@@ -113,11 +103,11 @@ public class Http extends PushSubscription {
 			throw new EInvalidData("Cannot modify a deleted subscription");
 		}
 
-		_auth_username = username;
+		_output_params.put("auth.username", username);
 	}
 	
 	public String getAuthUsername() {
-		return _auth_username;
+		return _output_params.get("auth.username");
 	}
 
 	public void setAuthPassword(String password) throws EInvalidData {
@@ -125,10 +115,13 @@ public class Http extends PushSubscription {
 			throw new EInvalidData("Cannot modify a deleted subscription");
 		}
 
-		_auth_password = password;
+		_output_params.put("auth.password", password);
 	}
 	
 	public String getAuthPassword() {
-		return _auth_password;
+		if (_output_params.containsKey("auth.password")) {
+			return _output_params.get("auth.password");
+		}
+		return "";
 	}
 }

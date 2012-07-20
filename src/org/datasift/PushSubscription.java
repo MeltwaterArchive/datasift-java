@@ -6,6 +6,7 @@ package org.datasift;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.datasift.pushsubscription.Http;
 import org.json.JSONArray;
@@ -19,25 +20,6 @@ import org.json.JSONObject;
  * @version 0.1
  */
 abstract public class PushSubscription {
-	/**
-	 * This method must be implemented by type-specific implementations, and
-	 * will be passed the output_params JSONObject when a subscription is
-	 * loaded. The type-specific implementation must implement its own storage
-	 * for these parameters.
-	 * 
-	 * @param JSONObject output_params The incoming parameters.
-	 */
-	abstract protected void setOutputParams(JSONObject output_params) throws JSONException;
-
-	/**
-	 * This method must be implemented by type-specific implementations, and
-	 * should return the output parameters in the dot notation expected by
-	 * the API.
-	 * 
-	 * @return HashMap<String, String>
-	 */
-	abstract protected HashMap<String, String> getOutputParams();
-
 	/**
 	 * Hash type constants.
 	 */
@@ -259,6 +241,7 @@ abstract public class PushSubscription {
 	protected String _hash = "";
 	protected String _hash_type = "";
 	protected String _output_type = "";
+	protected HashMap<String, String> _output_params = new HashMap<String, String>();
 	protected boolean _deleted = false;
 	
 	public PushSubscription(User user) {
@@ -314,6 +297,7 @@ abstract public class PushSubscription {
 		}
 		
 		try {
+			_output_params.clear();
 			setOutputParams(json.getJSONObject("output_params"));
 		} catch (JSONException e) {
 			throw new EInvalidData("No valid output_params found");
@@ -361,7 +345,10 @@ abstract public class PushSubscription {
 	
 	public void save() throws EInvalidData, EAPIError, EAccessDenied {
 		// The output params and name are sent whether creating or updating.
-		HashMap<String, String> params = getOutputParams();
+		HashMap<String, String> params = new HashMap<String, String>();
+		for (String key : _output_params.keySet()) {
+			params.put("output_params." + key, _output_params.get(key));
+		}
 		params.put("name", getName());
 
 		String endpoint = "push/";
@@ -404,5 +391,23 @@ abstract public class PushSubscription {
 			_user.callAPI("push/delete", params);
 		}
 		_status = STATUS_DELETED;
+	}
+	
+	protected void setOutputParams(JSONObject output_params) throws JSONException {
+		setOutputParams(output_params, "");
+	}
+
+	protected void setOutputParams(JSONObject output_params, String prefix) throws JSONException {
+		Iterator<?> keys = output_params.keys();
+		while (keys.hasNext()) {
+			// Create a new CostItem
+			String key = (String) keys.next();
+			JSONObject nested = output_params.optJSONObject(key);
+			if (nested != null) {
+				setOutputParams(nested, (prefix.length() == 0 ? "" : prefix + ".") + key);
+			} else {
+				_output_params.put((prefix.length() == 0 ? "" : prefix + ".") + key, output_params.getString(key));
+			}
+		}
 	}
 }
