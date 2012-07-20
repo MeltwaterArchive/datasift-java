@@ -20,6 +20,25 @@ import org.json.JSONObject;
  */
 abstract public class PushSubscription {
 	/**
+	 * This method must be implemented by type-specific implementations, and
+	 * will be passed the output_params JSONObject when a subscription is
+	 * loaded. The type-specific implementation must implement its own storage
+	 * for these parameters.
+	 * 
+	 * @param JSONObject output_params The incoming parameters.
+	 */
+	abstract protected void setOutputParams(JSONObject output_params) throws JSONException;
+
+	/**
+	 * This method must be implemented by type-specific implementations, and
+	 * should return the output parameters in the dot notation expected by
+	 * the API.
+	 * 
+	 * @return HashMap<String, String>
+	 */
+	abstract protected HashMap<String, String> getOutputParams();
+
+	/**
 	 * Hash type constants.
 	 */
 	public final static String HASH_TYPE_STREAM   = "stream";
@@ -38,8 +57,8 @@ abstract public class PushSubscription {
 	/**
 	 * Order by constants.
 	 */
-	public final static String ORDER_ID = "id";
-	public final static String ORDER_CREATED_AT = "created_at";
+	public final static String ORDERBY_ID = "id";
+	public final static String ORDERBY_CREATED_AT = "created_at";
 	
 	/**
 	 * Order direction constants.
@@ -117,7 +136,7 @@ abstract public class PushSubscription {
 	 * @throws EAccessDenied
 	 */
 	static public ArrayList<PushSubscription> list(User user, int page, int per_page) throws EInvalidData, EAPIError, EAccessDenied {
-		return list(user, page, per_page, ORDER_CREATED_AT, ORDERDIR_ASC, false);
+		return list(user, page, per_page, ORDERBY_CREATED_AT, ORDERDIR_ASC, false);
 	}
 	
 	/**
@@ -148,7 +167,7 @@ abstract public class PushSubscription {
 			throw new EInvalidData("The specified per_page value is invalid");
 		}
 		
-		if (order_by != ORDER_ID && order_by != ORDER_CREATED_AT) {
+		if (order_by != ORDERBY_ID && order_by != ORDERBY_CREATED_AT) {
 			throw new EInvalidData("The specified order_by is not supported");
 		}
 
@@ -240,7 +259,6 @@ abstract public class PushSubscription {
 	protected String _hash = "";
 	protected String _hash_type = "";
 	protected String _output_type = "";
-	protected JSONObject _output_params = new JSONObject();
 	protected boolean _deleted = false;
 	
 	public PushSubscription(User user) {
@@ -296,9 +314,9 @@ abstract public class PushSubscription {
 		}
 		
 		try {
-			_output_params = json.getJSONObject("output_params");
+			setOutputParams(json.getJSONObject("output_params"));
 		} catch (JSONException e) {
-			throw new EInvalidData("No output_params found");
+			throw new EInvalidData("No valid output_params found");
 		}
 	}
 	
@@ -342,7 +360,9 @@ abstract public class PushSubscription {
 	}
 	
 	public void save() throws EInvalidData, EAPIError, EAccessDenied {
-		HashMap<String, String> params = new HashMap<String, String>();
+		// The output params and name are sent whether creating or updating.
+		HashMap<String, String> params = getOutputParams();
+		params.put("name", getName());
 
 		String endpoint = "push/";
 		if (getId() == 0) {
@@ -373,10 +393,6 @@ abstract public class PushSubscription {
 			params.put("id", String.valueOf(getId()));
 		}
 
-		// Name and output_params are sent whether creating or updating
-		params.put("name", getName());
-		params.put("output_params", _output_params.toString());
-		
 		// Call the API and pass the returned object into init to update this object
 		init(_user.callAPI(endpoint, params));
 	}

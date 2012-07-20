@@ -27,7 +27,7 @@ public class CreateFromHash {
 		String output_type = Env.getArg(0);
 		if (output_type.toLowerCase().equals("http")) {
 			int count = Env.getArgCount() - 4;
-			if ((Env.getArg(5).equals(Http.AUTH_TYPE_NONE) && count != 2) || (!Env.getArg(5).equals(Http.AUTH_TYPE_NONE) && count != 4)) {
+			if ((Env.getArg(5).equals("none") && count != 2) || (!Env.getArg(5).equals("none") && count != 4)) {
 				usage();
 			}
 		} else {
@@ -42,7 +42,7 @@ public class CreateFromHash {
 			if (output_type.toLowerCase().equals("http")) {
 				((Http)sub).setUrl(Env.getArg(4));
 				((Http)sub).setAuthType(Env.getArg(5));
-				if (!Env.getArg(5).equals(Http.AUTH_TYPE_NONE)) {
+				if (!Env.getArg(5).equals("none")) {
 					((Http)sub).setAuthUsername(Env.getArg(6));
 					((Http)sub).setAuthPassword(Env.getArg(7));
 				}
