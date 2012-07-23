@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.datasift.pushsubscription.LogEntry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -342,13 +343,13 @@ public class User {
     /**
      * Get a single push subscription.
      * 
-     * @param int id The ID of the subscription to fetch.
+     * @param String id The ID of the subscription to fetch.
      * @return PushSubscription
      * @throws EInvalidData 
      * @throws EAccessDenied 
      * @throws EAPIError 
      */
-    public PushSubscription getPushSubscription(int id) throws EAPIError, EAccessDenied, EInvalidData {
+    public PushSubscription getPushSubscription(String id) throws EAPIError, EAccessDenied, EInvalidData {
     	return PushSubscription.get(this, id);
     }
     
@@ -362,6 +363,49 @@ public class User {
      */
     public ArrayList<PushSubscription> listPushSubscriptions() throws EInvalidData, EAPIError, EAccessDenied {
     	return PushSubscription.list(this);
+    }
+    
+    /**
+     * Get the most recent push subscription log entries.
+     * 
+     * @return ArrayList<LogEntry>
+     * @throws EAccessDenied 
+     * @throws EInvalidData 
+     * @throws EAPIError 
+     */
+    public ArrayList<LogEntry> getPushSubscriptionLogs() throws EAPIError, EInvalidData, EAccessDenied {
+    	return PushSubscription.getLogs(this);
+    }
+    
+    /**
+     * Page through recent push subscription log entries.
+     * 
+     * @param int page     Which page to fetch.
+     * @param int per_page Based on this page size.
+     * @return ArrayList<LogEntry>
+     * @throws EAccessDenied 
+     * @throws EInvalidData 
+     * @throws EAPIError 
+     */
+    public ArrayList<LogEntry> getPushSubscriptionLogs(int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
+    	return PushSubscription.getLogs(this, page, per_page);
+    }
+
+    /**
+     * Page through recent push subscription log entries, specifying the sort
+     * order.
+     * 
+     * @param int    page      Which page to fetch.
+     * @param int    per_page  Based on this page size.
+     * @param String order_by  Which field to sort by.
+     * @param String order_dir In asc[ending] or desc[ending] order.
+     * @return ArrayList<LogEntry>
+     * @throws EAccessDenied 
+     * @throws EInvalidData 
+     * @throws EAPIError 
+     */
+    public ArrayList<LogEntry> getPushSubscriptionLogs(int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
+    	return PushSubscription.getLogs(this, page, per_page, order_by, order_dir);
     }
 
 	/**

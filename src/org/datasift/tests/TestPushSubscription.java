@@ -3,15 +3,12 @@
  */
 package org.datasift.tests;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import junit.framework.TestCase;
 
 import org.junit.Before;
 
 import org.datasift.*;
-import org.datasift.pushsubscription.Http;
+import org.datasift.pushsubscription.HttpOutputType;
 
 /**
  * @author MediaSift
@@ -37,7 +34,7 @@ public class TestPushSubscription extends TestCase {
 
 	public void testConstruction() {
 		try {
-			Http push = (Http) PushSubscription.factory(user, DataForTests.push_output_type, DataForTests.push_hash_type, DataForTests.definition_hash, DataForTests.push_name);
+			HttpOutputType push = (HttpOutputType) PushSubscription.factory(user, DataForTests.push_output_type, DataForTests.push_hash_type, DataForTests.definition_hash, DataForTests.push_name);
 			assertEquals("Output type is incorrect", DataForTests.push_output_type, push.getOutputType());
 			assertEquals("Hash type is incorrect", DataForTests.push_hash_type, push.getHashType());
 			assertEquals("Hash is incorrect", DataForTests.definition_hash, push.getHash());
@@ -67,7 +64,7 @@ public class TestPushSubscription extends TestCase {
 					"\"username\":\""+ DataForTests.push_output_params_auth_username + "\",\"password\":\""+ DataForTests.push_output_params_auth_password + "\"}}}",
 				200);
 
-			Http push = (Http) PushSubscription.get(user, DataForTests.push_id);
+			HttpOutputType push = (HttpOutputType) PushSubscription.get(user, DataForTests.push_id);
 			
 			assertEquals("Output type is incorrect", DataForTests.push_output_type, push.getOutputType());
 			assertEquals("Hash type is incorrect", DataForTests.push_hash_type, push.getHashType());

@@ -27,7 +27,7 @@ final public class DataForTests {
 	public static String historic_name			= "Historic for unit tests";
 	
 	// PushSubscription
-	public static int    push_id								= 123;
+	public static String push_id								= "b665761917bbcb7afd3102b4a645b41e";
 	public static String push_name								= "Push subscription for unit tests";
 	public static Date   push_created_at						= null;
 	public static String push_status							= "active";

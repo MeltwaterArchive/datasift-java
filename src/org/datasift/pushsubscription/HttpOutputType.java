@@ -5,13 +5,13 @@ import org.datasift.PushSubscription;
 import org.datasift.User;
 import org.json.JSONObject;
 
-public class Http extends PushSubscription {
-	public Http(User user) {
+public class HttpOutputType extends PushSubscription {
+	public HttpOutputType(User user) {
 		super(user);
 		initHttp();
 	}
 
-	public Http(User user, JSONObject json) throws EInvalidData {
+	public HttpOutputType(User user, JSONObject json) throws EInvalidData {
 		super(user, json);
 		initHttp();
 	}

@@ -7,7 +7,7 @@ import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
 import org.datasift.PushSubscription;
-import org.datasift.pushsubscription.Http;
+import org.datasift.pushsubscription.HttpOutputType;
 
 public class CreateFromHash {
 
@@ -22,12 +22,28 @@ public class CreateFromHash {
 		if (Env.getArgCount() < 4) {
 			usage();
 		}
-		
-		// Check we have the right number for the output_type given
+
+		// Common args
 		String output_type = Env.getArg(0);
+		String hash_type   = Env.getArg(1);
+		String hash        = Env.getArg(2);
+		String name        = Env.getArg(3);
+		
+		// Http output type args
+		int    delivery_frequency = 10;
+		String url                = "";
+		String auth_type          = "";
+		String auth_user          = "";
+		String auth_pass          = "";
+
+		// Check we have the right number for the output_type given
+		
 		if (output_type.toLowerCase().equals("http")) {
 			int count = Env.getArgCount() - 4;
-			if ((Env.getArg(5).equals("none") && count != 2) || (!Env.getArg(5).equals("none") && count != 4)) {
+			
+			auth_type = Env.getArg(6);
+			
+			if ((auth_type.equals("none") && count != 3) || (!auth_type.equals("none") && count != 5)) {
 				usage();
 			}
 		} else {
@@ -36,15 +52,25 @@ public class CreateFromHash {
 
 		try {
 			// Create a new PushSubscription
-			PushSubscription sub = Env.getUser().createPushSubscription(output_type, Env.getArg(1), Env.getArg(2), Env.getArg(3));
+			PushSubscription sub = Env.getUser().createPushSubscription(output_type, hash_type, hash, name);
 
 			// Add the output_type-specific parameters
 			if (output_type.toLowerCase().equals("http")) {
-				((Http)sub).setUrl(Env.getArg(4));
-				((Http)sub).setAuthType(Env.getArg(5));
-				if (!Env.getArg(5).equals("none")) {
-					((Http)sub).setAuthUsername(Env.getArg(6));
-					((Http)sub).setAuthPassword(Env.getArg(7));
+				HttpOutputType http_sub = (HttpOutputType) sub;
+				
+				delivery_frequency = Integer.parseInt(Env.getArg(4));
+				url = Env.getArg(5);
+
+				http_sub.setDeliveryFrequency(delivery_frequency);
+				http_sub.setUrl(url);
+				http_sub.setAuthType(auth_type);
+				
+				if (!auth_type.equals("none")) {
+					auth_user = Env.getArg(7);
+					auth_pass = Env.getArg(8);
+					
+					http_sub.setAuthUsername(auth_user);
+					http_sub.setAuthPassword(auth_pass);
 				}
 			} else {
 				usage("Unhandled output_type \"" + output_type + "\"!");
@@ -88,10 +114,11 @@ public class CreateFromHash {
 		System.err.println("       ...         = output_type-specific arguments (see below)");
 		System.err.println("");
 		System.err.println("HTTP parameters");
-		System.err.println("       url         = the url to which to post data");
-		System.err.println("       auth_type   = none | basic");
-		System.err.println("       auth_user   = the basic auth username (if auth_type == basic)");
-		System.err.println("       auth_pass   = the basic auth password (if auth_type == basic)");
+		System.err.println("       delivery_frequency = how often data should be posted");
+		System.err.println("       url                = the url to which to post data");
+		System.err.println("       auth_type          = none | basic");
+		System.err.println("       auth_user          = the basic auth username (if auth_type == basic)");
+		System.err.println("       auth_pass          = the basic auth password (if auth_type == basic)");
 		System.err.println("");
 		if (exit) {
 			System.exit(1);

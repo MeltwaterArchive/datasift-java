@@ -8,7 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.datasift.pushsubscription.Http;
+import org.datasift.pushsubscription.HttpOutputType;
+import org.datasift.pushsubscription.LogEntry;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +42,7 @@ abstract public class PushSubscription {
 	 */
 	public final static String ORDERBY_ID = "id";
 	public final static String ORDERBY_CREATED_AT = "created_at";
+	public final static String ORDERBY_REQUEST_TIME = "request_time";
 	
 	/**
 	 * Order direction constants.
@@ -51,17 +53,17 @@ abstract public class PushSubscription {
 	/**
 	 * Get a push subscription by ID.
 	 * 
-	 * @param User user The user who owns the subscription.
-	 * @param int  id   The subscription ID.
+	 * @param User   user The user who owns the subscription.
+	 * @param String id   The subscription ID.
 	 * @return PushSubscription
 	 * @throws EAPIError
 	 * @throws EAccessDenied
 	 * @throws EInvalidData
 	 */
-	static public PushSubscription get(User user, int id) throws EAPIError, EAccessDenied, EInvalidData {
+	static public PushSubscription get(User user, String id) throws EAPIError, EAccessDenied, EInvalidData {
 		HashMap<String, String> params = new HashMap<String, String>();
 
-		params.put("id", String.valueOf(id));
+		params.put("id", id);
 		
 		JSONObject res = user.callAPI("push/get", params);
 		String output_type = null;
@@ -190,7 +192,7 @@ abstract public class PushSubscription {
 	 */
 	static public PushSubscription factory(User user, String output_type) throws EInvalidData {
 		if (output_type.toLowerCase().equals("http")) {
-			return new Http(user);
+			return new HttpOutputType(user);
 		}
 		
 		throw new EInvalidData("Unknown output type \"" + output_type + "\"");
@@ -208,7 +210,7 @@ abstract public class PushSubscription {
 	 */
 	static public PushSubscription factory(User user, String output_type, JSONObject json) throws EInvalidData {
 		if (output_type.toLowerCase().equals("http")) {
-			return new Http(user, json);
+			return new HttpOutputType(user, json);
 		}
 		
 		throw new EInvalidData("Unknown output type \"" + output_type + "\"");
@@ -232,9 +234,142 @@ abstract public class PushSubscription {
 		retval._status = initial_status;
 		return retval;
 	}
+	
+	/**
+     * Get the most recent push subscription log entries.
+     * 
+     * @param User user The user making the request.
+     * @return ArrayList<LogEntry>
+	 * @throws EInvalidData 
+	 * @throws EAPIError 
+	 * @throws EAccessDenied 
+     */
+	public static ArrayList<LogEntry> getLogs(User user) throws EAPIError, EInvalidData, EAccessDenied {
+		return getLogs(user, null);
+	}
+    
+	/**
+     * Get the most recent push subscription log entries.
+     * 
+     * @param User   user The user making the request.
+     * @param String id   Optional subscription ID, or null.
+     * @return ArrayList<LogEntry>
+	 * @throws EInvalidData 
+	 * @throws EAPIError 
+	 * @throws EAccessDenied 
+     */
+	public static ArrayList<LogEntry> getLogs(User user, String id) throws EAPIError, EInvalidData, EAccessDenied {
+		return getLogs(user, id, 1, 20);
+	}
+    
+    /**
+     * Page through recent push subscription log entries.
+     * 
+     * @param User user     The user making the request.
+     * @param int  page     Which page to fetch.
+     * @param int  per_page Based on this page size.
+     * @return ArrayList<LogEntry>
+     * @throws EInvalidData 
+     * @throws EAPIError 
+     * @throws EAccessDenied 
+     */
+    public static ArrayList<LogEntry> getLogs(User user, int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
+		return getLogs(user, null, page, per_page, ORDERBY_REQUEST_TIME, ORDERDIR_DESC);
+    }
+
+    /**
+     * Page through recent push subscription log entries.
+     * 
+     * @param User   user   The user making the request.
+     * @param String id     Optional subscription ID, or null.
+     * @param int  page     Which page to fetch.
+     * @param int  per_page Based on this page size.
+     * @return ArrayList<LogEntry>
+     * @throws EInvalidData 
+     * @throws EAPIError 
+     * @throws EAccessDenied 
+     */
+    public static ArrayList<LogEntry> getLogs(User user, String id, int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
+		return getLogs(user, id, page, per_page, ORDERBY_REQUEST_TIME, ORDERDIR_DESC);
+    }
+
+    /**
+     * Page through recent push subscription log entries, specifying the sort
+     * order.
+     * 
+     * @param User   user      The user making the request.
+     * @param int    page      Which page to fetch.
+     * @param int    per_page  Based on this page size.
+     * @param String order_by  Which field to sort by.
+     * @param String order_dir In asc[ending] or desc[ending] order.
+     * @return ArrayList<LogEntry>
+     * @throws EAPIError 
+     * @throws EInvalidData 
+     * @throws EAccessDenied 
+     */
+    public static ArrayList<LogEntry> getLogs(User user, int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
+    	return getLogs(user, null, page, per_page, order_by, order_dir);
+    }
+
+    /**
+     * Page through recent push subscription log entries, specifying the sort
+     * order.
+     * 
+     * @param User   user      The user making the request.
+     * @param int    page      Which page to fetch.
+     * @param int    per_page  Based on this page size.
+     * @param String order_by  Which field to sort by.
+     * @param String order_dir In asc[ending] or desc[ending] order.
+     * @return ArrayList<LogEntry>
+     * @throws EAPIError 
+     * @throws EInvalidData 
+     * @throws EAccessDenied 
+     */
+    public static ArrayList<LogEntry> getLogs(User user, String id, int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
+		HashMap<String, String> params = new HashMap<String, String>();
+
+		if (page < 1) {
+			throw new EInvalidData("The specified page number is invalid");
+		}
+		
+		if (per_page < 1) {
+			throw new EInvalidData("The specified per_page value is invalid");
+		}
+		
+		if (order_by != ORDERBY_REQUEST_TIME) {
+			throw new EInvalidData("The specified order_by is not supported");
+		}
+
+		if (order_dir != ORDERDIR_ASC && order_dir != ORDERDIR_DESC) {
+			throw new EInvalidData("The specified order_dir is not supported");
+		}
+		
+		if (id != null && id.length() > 0) {
+			params.put("id", id);
+		}
+		params.put("page", String.valueOf(page));
+		params.put("per_page", String.valueOf(per_page));
+		params.put("order_by", order_by);
+		params.put("order_dir", order_dir);
+
+		JSONObject res = user.callAPI("push/log", params);
+
+		ArrayList<LogEntry> retval = new ArrayList<LogEntry>();
+
+		try {
+	        JSONArray log_entries = res.getJSONArray("log_entries");
+	        for (int i = 0; i < log_entries.length(); i++) {
+	            retval.add(new LogEntry(log_entries.getJSONObject(i)));
+	        }
+		} catch (JSONException e) {
+			throw new EAPIError("Failed to read the subscriptions from the response");
+		}
+		
+		return retval;
+    }
 
 	protected User _user = null;
-	protected int _id = 0;
+	protected String _id = "";
 	protected String _name = "";
 	protected Date _created_at = null;
 	protected String _status = "";
@@ -255,7 +390,7 @@ abstract public class PushSubscription {
 	
 	private void init(JSONObject json) throws EInvalidData {
 		try {
-			_id = json.getInt("id");
+			_id = json.getString("id");
 		} catch (JSONException e) {
 			throw new EInvalidData("No id found");
 		}
@@ -304,8 +439,12 @@ abstract public class PushSubscription {
 		}
 	}
 	
-	public int getId() {
+	public String getId() {
 		return _id;
+	}
+	
+	public boolean hasId() {
+		return getId().length() > 0;
 	}
 	
 	public String getName() {
@@ -352,7 +491,7 @@ abstract public class PushSubscription {
 		params.put("name", getName());
 
 		String endpoint = "push/";
-		if (getId() == 0) {
+		if (!hasId()) {
 			// Never saved, create it
 			endpoint += "create";
 			
@@ -377,7 +516,7 @@ abstract public class PushSubscription {
 			endpoint += "update";
 			
 			// ID
-			params.put("id", String.valueOf(getId()));
+			params.put("id", getId());
 		}
 
 		// Call the API and pass the returned object into init to update this object
@@ -385,12 +524,26 @@ abstract public class PushSubscription {
 	}
 	
 	public void delete() throws EAPIError, EAccessDenied {
-		if (getId() > 0) {
+		// Only call the API if we've got an ID (i.e. this subscription has
+		// been saved)
+		if (hasId()) {
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("id", String.valueOf(getId()));
 			_user.callAPI("push/delete", params);
 		}
 		_status = STATUS_DELETED;
+	}
+	
+	public ArrayList<LogEntry> getLog() throws EAPIError, EInvalidData, EAccessDenied {
+		return getLogs(_user, getId());
+	}
+	
+	public ArrayList<LogEntry> getLog(int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
+		return getLogs(_user, getId(), page, per_page);
+	}
+	
+	public ArrayList<LogEntry> getLog(int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
+		return getLogs(_user, getId(), page, per_page, order_by, order_dir);
 	}
 	
 	protected void setOutputParams(JSONObject output_params) throws JSONException {

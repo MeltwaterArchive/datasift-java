@@ -16,17 +16,18 @@ public class View {
 		// Set up the environment
 		Env.init(args);
 		
-		// Make sure we have a subscription ID
+		// Make sure we have at least one subscription ID
 		if (Env.getArgCount() == 0) {
 			System.err.println("Please specify one or more subscriptions to view!");
 			System.exit(1);
 		}
 		
-		// Delete the subscriptions given on the command line
+		// View the subscriptions given on the command line
 		for (int i = 0; i < Env.getArgCount(); i++) {
 			try {
-				String arg = Env.getArg(i);
-				Env.displaySubscriptionDetails(Env.getUser().getPushSubscription(Integer.parseInt(arg)));
+				String subscription_id = Env.getArg(i);
+				
+				Env.displaySubscriptionDetails(Env.getUser().getPushSubscription(subscription_id));
 				System.out.println("--");
 			} catch (EInvalidData e) {
 				System.err.println("InvalidData: " + e.getMessage());

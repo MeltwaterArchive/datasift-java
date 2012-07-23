@@ -17,7 +17,7 @@ public class Delete {
 		// Set up the environment
 		Env.init(args);
 		
-		// Make sure we have a subscription ID
+		// Make sure we have at least one subscription ID
 		if (Env.getArgCount() == 0) {
 			System.err.println("Please specify one or more subscriptions to delete!");
 			System.exit(1);
@@ -26,9 +26,10 @@ public class Delete {
 		// Delete the subscriptions given on the command line
 		for (int i = 0; i < Env.getArgCount(); i++) {
 			try {
-				String arg = Env.getArg(i);
-				PushSubscription sub = Env.getUser().getPushSubscription(Integer.parseInt(arg));
-				System.out.print("Deleting " + arg + ", " + sub.getName() + "...");
+				String subscription_id = Env.getArg(i);
+				
+				PushSubscription sub = Env.getUser().getPushSubscription(subscription_id);
+				System.out.print("Deleting " + subscription_id + ", " + sub.getName() + "...");
 				sub.delete();
 				System.out.println("done");
 			} catch (EInvalidData e) {
