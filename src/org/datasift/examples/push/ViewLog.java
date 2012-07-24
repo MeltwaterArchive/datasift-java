@@ -5,12 +5,12 @@
 package org.datasift.examples.push;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
 import org.datasift.PushSubscription;
+import org.datasift.pushsubscription.Log;
 import org.datasift.pushsubscription.LogEntry;
 
 public class ViewLog {
@@ -25,14 +25,13 @@ public class ViewLog {
 			switch (Env.getArgCount()) {
 				case 0:
 					// Show the latest log entries
-					ArrayList<LogEntry> logs = Env.getUser().getPushSubscriptionLogs();
+					Log log = Env.getUser().getPushSubscriptionLogs();
 					
-					if (logs.size() == 0) {
+					if (log.getCount() == 0) {
 						System.out.println("No log entries found.");
 					} else {
 						// Walk through the entries backwards, so the latest is shown last
-						for (int i = logs.size() - 1; i >= 0; i--) {
-							LogEntry l = logs.get(i);
+						for (LogEntry l : log) {
 							System.out.println(
 									new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(l.getRequestTime()) + " [" +
 									String.valueOf(l.getSubscriptionId()) + "] " +
@@ -48,13 +47,12 @@ public class ViewLog {
 					
 					PushSubscription push = Env.getUser().getPushSubscription(subscription_id);
 					
-					ArrayList<LogEntry> log = push.getLog();
-					if (log.size() == 0) {
+					Log subscription_log = push.getLog();
+					if (subscription_log.getCount() == 0) {
 						System.out.println("No log entries found for subscription " + subscription_id + ".");
 					} else {
 						// Walk through the entries backwards, so the latest is shown last
-						for (int i = log.size() - 1; i >= 0; i--) {
-							LogEntry l = log.get(i);
+						for (LogEntry l : subscription_log) {
 							System.out.println(
 									new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(l.getRequestTime()) + " " +
 									(l.getSuccess() ? "Success " : "") +

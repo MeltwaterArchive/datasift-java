@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.datasift.pushsubscription.LogEntry;
+import org.datasift.pushsubscription.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -373,7 +373,7 @@ public class User {
      * @throws EInvalidData 
      * @throws EAPIError 
      */
-    public ArrayList<LogEntry> getPushSubscriptionLogs() throws EAPIError, EInvalidData, EAccessDenied {
+    public Log getPushSubscriptionLogs() throws EAPIError, EInvalidData, EAccessDenied {
     	return PushSubscription.getLogs(this);
     }
     
@@ -387,7 +387,7 @@ public class User {
      * @throws EInvalidData 
      * @throws EAPIError 
      */
-    public ArrayList<LogEntry> getPushSubscriptionLogs(int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
+    public Log getPushSubscriptionLogs(int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
     	return PushSubscription.getLogs(this, page, per_page);
     }
 
@@ -404,7 +404,7 @@ public class User {
      * @throws EInvalidData 
      * @throws EAPIError 
      */
-    public ArrayList<LogEntry> getPushSubscriptionLogs(int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
+    public Log getPushSubscriptionLogs(int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
     	return PushSubscription.getLogs(this, page, per_page, order_by, order_dir);
     }
 

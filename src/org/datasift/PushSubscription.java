@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.datasift.pushsubscription.HttpOutputType;
-import org.datasift.pushsubscription.LogEntry;
+import org.datasift.pushsubscription.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -244,7 +244,7 @@ abstract public class PushSubscription {
 	 * @throws EAPIError 
 	 * @throws EAccessDenied 
      */
-	public static ArrayList<LogEntry> getLogs(User user) throws EAPIError, EInvalidData, EAccessDenied {
+	public static Log getLogs(User user) throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(user, null);
 	}
     
@@ -258,7 +258,7 @@ abstract public class PushSubscription {
 	 * @throws EAPIError 
 	 * @throws EAccessDenied 
      */
-	public static ArrayList<LogEntry> getLogs(User user, String id) throws EAPIError, EInvalidData, EAccessDenied {
+	public static Log getLogs(User user, String id) throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(user, id, 1, 20);
 	}
     
@@ -273,7 +273,7 @@ abstract public class PushSubscription {
      * @throws EAPIError 
      * @throws EAccessDenied 
      */
-    public static ArrayList<LogEntry> getLogs(User user, int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
+    public static Log getLogs(User user, int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(user, null, page, per_page, ORDERBY_REQUEST_TIME, ORDERDIR_DESC);
     }
 
@@ -289,7 +289,7 @@ abstract public class PushSubscription {
      * @throws EAPIError 
      * @throws EAccessDenied 
      */
-    public static ArrayList<LogEntry> getLogs(User user, String id, int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
+    public static Log getLogs(User user, String id, int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(user, id, page, per_page, ORDERBY_REQUEST_TIME, ORDERDIR_DESC);
     }
 
@@ -307,7 +307,7 @@ abstract public class PushSubscription {
      * @throws EInvalidData 
      * @throws EAccessDenied 
      */
-    public static ArrayList<LogEntry> getLogs(User user, int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
+    public static Log getLogs(User user, int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
     	return getLogs(user, null, page, per_page, order_by, order_dir);
     }
 
@@ -325,7 +325,7 @@ abstract public class PushSubscription {
      * @throws EInvalidData 
      * @throws EAccessDenied 
      */
-    public static ArrayList<LogEntry> getLogs(User user, String id, int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
+    public static Log getLogs(User user, String id, int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
 		HashMap<String, String> params = new HashMap<String, String>();
 
 		if (page < 1) {
@@ -354,13 +354,10 @@ abstract public class PushSubscription {
 
 		JSONObject res = user.callAPI("push/log", params);
 
-		ArrayList<LogEntry> retval = new ArrayList<LogEntry>();
+		Log retval = null;
 
 		try {
-	        JSONArray log_entries = res.getJSONArray("log_entries");
-	        for (int i = 0; i < log_entries.length(); i++) {
-	            retval.add(new LogEntry(log_entries.getJSONObject(i)));
-	        }
+			retval = new Log(res);
 		} catch (JSONException e) {
 			throw new EAPIError("Failed to read the subscriptions from the response");
 		}
@@ -377,6 +374,8 @@ abstract public class PushSubscription {
 	protected String _hash_type = "";
 	protected String _output_type = "";
 	protected HashMap<String, String> _output_params = new HashMap<String, String>();
+	protected Date _last_request = null;
+	protected Date _last_success = null;
 	protected boolean _deleted = false;
 	
 	public PushSubscription(User user) {
@@ -423,6 +422,18 @@ abstract public class PushSubscription {
 			_hash = json.getString("hash");
 		} catch (JSONException e) {
 			throw new EInvalidData("No hash found");
+		}
+		
+		try {
+			_last_request = new Date(json.getLong("last_request") * 1000);
+		} catch (JSONException e) {
+			_last_request = null;
+		}
+		
+		try {
+			_last_success = new Date(json.getLong("last_success") * 1000);
+		} catch (JSONException e) {
+			_last_success = null;
 		}
 		
 		try {
@@ -482,6 +493,14 @@ abstract public class PushSubscription {
 		return _output_type;
 	}
 	
+	public Date getLastRequest() {
+		return _last_request;
+	}
+	
+	public Date getLastSuccess() {
+		return _last_success;
+	}
+	
 	public void save() throws EInvalidData, EAPIError, EAccessDenied {
 		// The output params and name are sent whether creating or updating.
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -534,15 +553,15 @@ abstract public class PushSubscription {
 		_status = STATUS_DELETED;
 	}
 	
-	public ArrayList<LogEntry> getLog() throws EAPIError, EInvalidData, EAccessDenied {
+	public Log getLog() throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(_user, getId());
 	}
 	
-	public ArrayList<LogEntry> getLog(int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
+	public Log getLog(int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(_user, getId(), page, per_page);
 	}
 	
-	public ArrayList<LogEntry> getLog(int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
+	public Log getLog(int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(_user, getId(), page, per_page, order_by, order_dir);
 	}
 	

@@ -32,6 +32,8 @@ final public class DataForTests {
 	public static Date   push_created_at						= null;
 	public static String push_status							= "active";
 	public static String push_hash_type							= "stream";
+	public static Date   push_last_request						= null;
+	public static Date   push_last_success						= null;
 	public static String push_output_type						= "http";
 	public static int    push_output_params_delivery_frequency	= 60;
 	public static int    push_output_params_max_size			= 10240;
@@ -48,12 +50,28 @@ final public class DataForTests {
 		try {
 			DateFormat df	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
-			historic_start	= df.parse("2012-06-01 00:00:00");
-			historic_end	= df.parse("2012-06-01 23:59:59");
+			historic_start		= df.parse("2012-06-01 00:00:00");
+			historic_end		= df.parse("2012-06-01 23:59:59");
 			
-			push_created_at	= df.parse("2012-07-20 00:00:00");
+			push_created_at		= df.parse("2012-07-20 00:00:00");
+			push_last_request	= df.parse("2012-07-20 07:10:00");
+			push_last_success	= df.parse("2012-07-20 07:00:00");
 		} catch (ParseException e) {
 			// Not much we can do here
 		}
+	}
+	
+	public static String getHttpSubscriptionJson(String name, int delivery_frequency, int max_size, String url, String auth_type, String auth_user, String auth_pass) {
+		return	"{\"id\":" + String.valueOf(push_id)+ ",\"name\":\"" + (name.length() == 0 ? push_name : name) + "\"," +
+				"\"created_at\":" + String.valueOf(push_created_at.getTime() / 1000) + "," +
+				"\"status\":\""+ push_status + "\",\"hash\":\"" + definition_hash + "\"," +
+				"\"hash_type\":\"" + push_hash_type + "\",\"output_type\":\"" + push_output_type + "\"," +
+				"\"last_request\":" + String.valueOf(push_last_request.getTime() / 1000) + ",\"last_success\":" + String.valueOf(push_last_success.getTime() / 1000) + "," + 
+				"\"output_params\":{\"delivery_frequency\":" + String.valueOf(delivery_frequency == -1 ? push_output_params_delivery_frequency : delivery_frequency) + "," +
+				"\"max_size\":" + String.valueOf(max_size == -1 ? push_output_params_max_size : max_size) + "," +
+				"\"url\":\"" + (url.length() == 0 ? push_output_params_url : url) + "\"," +
+				"\"auth\":{\"type\":\""+ (auth_type.length() == 0 ? push_output_params_auth_type : auth_type) + "\"," +
+				"\"username\":\""+ (auth_user.length() == 0 ? push_output_params_auth_username : auth_user) + "\"," +
+				"\"password\":\""+ (auth_pass.length() == 0 ? push_output_params_auth_password : auth_pass) + "\"}}}";
 	}
 }
