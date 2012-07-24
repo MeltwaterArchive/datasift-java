@@ -525,7 +525,7 @@ abstract public class PushSubscription {
 		try {
 			retval = new Log(res);
 		} catch (JSONException e) {
-			throw new EAPIError("Failed to read the subscriptions from the response");
+			throw new EAPIError("Failed to read the logs from the response: " + e.getMessage());
 		}
 		
 		return retval;
