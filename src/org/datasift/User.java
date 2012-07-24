@@ -266,14 +266,14 @@ public class User {
      * 
      * @param start
      * @param end
-     * @param feeds
+     * @param sources
      * @return Historic
      * @throws EInvalidData
      * @throws EAccessDenied
      */
-    public Historic createHistoric(String hash, Date start, Date end, String feeds, int sample) throws EInvalidData, EAccessDenied
+    public Historic createHistoric(String hash, Date start, Date end, String sources, int sample) throws EInvalidData, EAccessDenied
     {
-    	return createHistoric(hash, start, end, feeds, sample, "");
+    	return createHistoric(hash, start, end, sources, sample, "");
     }
     
     /**
@@ -281,15 +281,15 @@ public class User {
      *  
      * @param start
      * @param end
-     * @param feeds
+     * @param sources
      * @param name
      * @return Historic
      * @throws EInvalidData
      * @throws EAccessDenied
      */
-    public Historic createHistoric(String hash, Date start, Date end, String feeds, int sample, String name) throws EInvalidData, EAccessDenied
+    public Historic createHistoric(String hash, Date start, Date end, String sources, int sample, String name) throws EInvalidData, EAccessDenied
     {
-    	return new Historic(this, new Definition(this, "", hash), start, end, feeds, sample, name);
+    	return new Historic(this, new Definition(this, "", hash), start, end, sources, sample, name);
     }
 
     /**

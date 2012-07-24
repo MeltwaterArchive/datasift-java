@@ -69,7 +69,7 @@ public class Historic {
 	/**
 	 * @access protected
 	 */
-	protected ArrayList<String> _feeds = new ArrayList<String>();
+	protected ArrayList<String> _sources = new ArrayList<String>();
 
 	/**
 	 * @access protected
@@ -114,12 +114,12 @@ public class Historic {
 	 * @param Date
 	 *            end The date/time at which to end the query.
 	 * @param String
-	 *            feeds Comma seperated list of interaction types required.
+	 *            sources Comma seperated list of interaction types required.
 	 * @param int sample The sample required (%).
 	 */
 	public Historic(User user, Definition def, Date start, Date end,
-			String feeds, int sample) throws EInvalidData, EAccessDenied {
-		this(user, def.getHash(), start, end, feeds, sample);
+			String sources, int sample) throws EInvalidData, EAccessDenied {
+		this(user, def.getHash(), start, end, sources, sample);
 	}
 
 	/**
@@ -135,15 +135,15 @@ public class Historic {
 	 * @param Date
 	 *            end The date/time at which to end the query.
 	 * @param String
-	 *            feeds Comma seperated list of interaction types required.
+	 *            sources Comma seperated list of interaction types required.
 	 * @param int sample The sample required (%).
 	 * @param String
 	 *            name The name of this query.
 	 */
 	public Historic(User user, Definition def, Date start, Date end,
-			String feeds, int sample, String name) throws EInvalidData,
+			String sources, int sample, String name) throws EInvalidData,
 			EAccessDenied {
-		this(user, def.getHash(), start, end, feeds, sample, name);
+		this(user, def.getHash(), start, end, sources, sample, name);
 	}
 
 	/**
@@ -159,12 +159,12 @@ public class Historic {
 	 * @param Date
 	 *            end The date/time at which to end the query.
 	 * @param String
-	 *            feeds Comma seperated list of interaction types required.
+	 *            sources Comma seperated list of interaction types required.
 	 * @param int sample The sample required (%).
 	 */
-	public Historic(User user, String hash, Date start, Date end, String feeds,
+	public Historic(User user, String hash, Date start, Date end, String sources,
 			int sample) {
-		this(user, hash, start, end, feeds, sample, "");
+		this(user, hash, start, end, sources, sample, "");
 	}
 
 	/**
@@ -180,20 +180,20 @@ public class Historic {
 	 * @param Date
 	 *            end The date/time at which to end the query.
 	 * @param String
-	 *            feeds Comma seperated list of interaction types required.
+	 *            sources Comma seperated list of interaction types required.
 	 * @param int sample The sample required (%).
 	 * @param String
 	 *            name The name of this query.
 	 */
-	public Historic(User user, String hash, Date start, Date end, String feeds,
+	public Historic(User user, String hash, Date start, Date end, String sources,
 			int sample, String name) {
 		_user = user;
 		_hash = hash;
 		_start = start;
 		_end = end;
-		_feeds.clear();
-		for (String k : feeds.split("/,/")) {
-			_feeds.add(k.trim());
+		_sources.clear();
+		for (String k : sources.split("/,/")) {
+			_sources.add(k.trim());
 		}
 		_sample = sample;
 		_name = (name.length() == 0 ? generateName() : name);
@@ -255,12 +255,12 @@ public class Historic {
 	}
 
 	/**
-	 * Get the list of feeds.
+	 * Get the list of sources.
 	 * 
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> getFeeds() {
-		return _feeds;
+	public ArrayList<String> getSources() {
+		return _sources;
 	}
 
 	/**
@@ -471,14 +471,14 @@ public class Historic {
 			}
 
 			try {
-				_feeds.clear();
-				JSONArray data = res.getJSONArray("feed");
+				_sources.clear();
+				JSONArray data = res.getJSONArray("sources");
 				for (int i = 0; i < data.length(); i++) {
-					_feeds.add(data.getString(i));
+					_sources.add(data.getString(i));
 				}
 			} catch (JSONException e) {
 				throw new EAPIError(
-						"Historic retrieved successfully but no feeds in the response.");
+						"Historic retrieved successfully but no sources in the response.");
 			}
 
 			try {
@@ -539,7 +539,7 @@ public class Historic {
 			params.put("start", String.valueOf(_start.getTime() / 1000));
 			params.put("end", String.valueOf(_end.getTime() / 1000));
 			params.put("name", _name);
-			params.put("source", Utils.join(_feeds, ","));
+			params.put("sources", Utils.join(_sources, ","));
 			params.put("sample", String.valueOf(_sample));
 
 			res = _user.callAPI("historics/prepare", params);
@@ -632,5 +632,103 @@ public class Historic {
 			ECompileFailed, EAccessDenied, EAPIError {
 		return StreamConsumer.historicFactory(this._user, type, this,
 				eventHandler);
+	}
+
+    /**
+     * Create a push subscription for this historic query.
+     * 
+     * @param String output_type The output type.
+     * @param String name        A friendly name.
+     * @return PushSubscription
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     * @throws EAPIError 
+     */
+    public PushSubscription createPushSubscription(String output_type, String name) throws EInvalidData, EAccessDenied, EAPIError {
+    	return PushSubscription.factory(_user, output_type, "historic", getHash(), name);
+    }
+    
+    /**
+     * Create a push subscription for this historic query with an initial
+     * status.
+     * 
+     * @param String output_type    The output type.
+     * @param String name           A friendly name.
+     * @param String initial_status The initial status.
+     * @return PushSubscription
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     * @throws EAPIError 
+     */
+    public PushSubscription createPushSubscription(String output_type, String name, String initial_status) throws EInvalidData, EAccessDenied, EAPIError {
+    	return PushSubscription.factory(_user, output_type, "historic", getHash(), name, initial_status);
+    }
+    
+	/**
+	 * Get a list of push subscriptions for this historic query. Limited
+	 * to 100 results.Results will be returned in ascending order by creation
+	 * date.
+	 * 
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	public ArrayList<PushSubscription> getPushSubscriptions() throws EInvalidData, EAPIError, EAccessDenied {
+		return getPushSubscriptions(1, 100);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for this historic query, where
+	 * each page contains up to 20 items. Results will be returned in
+	 * ascending order by creation date.
+	 * 
+	 * @param User user The user.
+	 * @param int  page The page number to fetch.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	public ArrayList<PushSubscription> getPushSubscriptions(int page) throws EInvalidData, EAPIError, EAccessDenied {
+		return getPushSubscriptions(page, 20);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for this historic query, where
+	 * each page contains up to per_page items. Results will be returned in
+	 * ascending order by creation date.
+	 * 
+	 * @param User user     The user.
+	 * @param int  page     The page number to fetch.
+	 * @param int  per_page The number of items per page.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	public ArrayList<PushSubscription> getPushSubscriptions(int page, int per_page) throws EInvalidData, EAPIError, EAccessDenied {
+		return getPushSubscriptions(page, per_page, PushSubscription.ORDERBY_CREATED_AT, PushSubscription.ORDERDIR_ASC);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for this historic query, where
+	 * each page contains up to per_page items. Results will be ordered
+	 * according to the supplied ordering parameters.
+	 * 
+	 * @param User user                The user.
+	 * @param int  page                The page number to fetch.
+	 * @param int  per_page            The number of items per page.
+	 * @param String order_by          The field on which to order the results.
+	 * @param String order_dir         The direction of the ordering.
+	 * @param boolean include_finished True to include subscriptions against
+	 *                                 finished historic queries.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	public ArrayList<PushSubscription> getPushSubscriptions(int page, int per_page, String order_by, String order_dir) throws EInvalidData, EAPIError, EAccessDenied {
+		return PushSubscription.listByPlaybackId(_user, getHash(), page, per_page, order_by, order_dir, true);
 	}
 }

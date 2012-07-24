@@ -23,14 +23,14 @@ public class HistoricDump implements IStreamConsumerEvents {
 	public static void main(String[] args) {
 		if (args.length != 5) {
 			System.err
-					.println("Usage: HistoricDump <keywords> <start_date> <end_date> <feeds> <csv_filename>");
+					.println("Usage: HistoricDump <keywords> <start_date> <end_date> <sources> <csv_filename>");
 			System.err.println("Where...");
 			System.err
 					.println("  <keywords>     comma separated list of keywords");
 			System.err.println("  <start_date>   start date (yyyymmddhhmmss)");
 			System.err.println("  <end_date>     end date (yyyymmddhhmmss)");
 			System.err
-					.println("  <feeds>        comma separated list of feeds (twitter,digg,etc)");
+					.println("  <sources>      comma separated list of sources (twitter,digg,etc)");
 			System.err.println("  <csv_filename> filename for the csv output");
 			System.exit(1);
 		}

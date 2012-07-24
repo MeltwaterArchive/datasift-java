@@ -141,8 +141,174 @@ abstract public class PushSubscription {
 	 * @throws EAccessDenied
 	 */
 	static public ArrayList<PushSubscription> list(User user, int page, int per_page, String order_by, String order_dir, boolean include_finished) throws EInvalidData, EAPIError, EAccessDenied {
+		return list(user, null, null, page, per_page, order_by, order_dir, include_finished);
+	}
+	
+	/**
+	 * Get a list of push subscriptions for the given stream hash. Limited
+	 * to 100 results.Results will be returned in ascending order by creation
+	 * date.
+	 * 
+	 * @param User user
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	static public ArrayList<PushSubscription> listByStreamHash(User user, String hash) throws EInvalidData, EAPIError, EAccessDenied {
+		return listByStreamHash(user, hash, 1, 100);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for the given stream hash, where
+	 * each page contains up to 20 items. Results will be returned in
+	 * ascending order by creation date.
+	 * 
+	 * @param User user The user.
+	 * @param int  page The page number to fetch.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	static public ArrayList<PushSubscription> listByStreamHash(User user, String hash, int page) throws EInvalidData, EAPIError, EAccessDenied {
+		return listByStreamHash(user, hash, page, 20);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for the given stream hash, where
+	 * each page contains up to per_page items. Results will be returned in
+	 * ascending order by creation date.
+	 * 
+	 * @param User user     The user.
+	 * @param int  page     The page number to fetch.
+	 * @param int  per_page The number of items per page.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	static public ArrayList<PushSubscription> listByStreamHash(User user, String hash, int page, int per_page) throws EInvalidData, EAPIError, EAccessDenied {
+		return listByStreamHash(user, hash, page, per_page, ORDERBY_CREATED_AT, ORDERDIR_ASC, false);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for the given stream hash, where
+	 * each page contains up to per_page items. Results will be ordered
+	 * according to the supplied ordering parameters.
+	 * 
+	 * @param User user                The user.
+	 * @param int  page                The page number to fetch.
+	 * @param int  per_page            The number of items per page.
+	 * @param String order_by          The field on which to order the results.
+	 * @param String order_dir         The direction of the ordering.
+	 * @param boolean include_finished True to include subscriptions against
+	 *                                 finished historic queries.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	static public ArrayList<PushSubscription> listByStreamHash(User user, String hash, int page, int per_page, String order_by, String order_dir, boolean include_finished) throws EInvalidData, EAPIError, EAccessDenied {
+		return list(user, "hash", hash, page, per_page, order_by, order_dir, include_finished);
+	}
+	
+	/**
+	 * Get a list of push subscriptions for the given stream hash. Limited
+	 * to 100 results.Results will be returned in ascending order by creation
+	 * date.
+	 * 
+	 * @param User user
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	static public ArrayList<PushSubscription> listByPlaybackId(User user, String playback_id) throws EInvalidData, EAPIError, EAccessDenied {
+		return listByPlaybackId(user, playback_id, 1, 100);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for the given stream hash, where
+	 * each page contains up to 20 items. Results will be returned in
+	 * ascending order by creation date.
+	 * 
+	 * @param User user The user.
+	 * @param int  page The page number to fetch.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	static public ArrayList<PushSubscription> listByPlaybackId(User user, String playback_id, int page) throws EInvalidData, EAPIError, EAccessDenied {
+		return listByPlaybackId(user, playback_id, page, 20);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for the given stream hash, where
+	 * each page contains up to per_page items. Results will be returned in
+	 * ascending order by creation date.
+	 * 
+	 * @param User user     The user.
+	 * @param int  page     The page number to fetch.
+	 * @param int  per_page The number of items per page.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	static public ArrayList<PushSubscription> listByPlaybackId(User user, String playback_id, int page, int per_page) throws EInvalidData, EAPIError, EAccessDenied {
+		return listByPlaybackId(user, playback_id, page, per_page, ORDERBY_CREATED_AT, ORDERDIR_ASC, false);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for the given stream hash, where
+	 * each page contains up to per_page items. Results will be ordered
+	 * according to the supplied ordering parameters.
+	 * 
+	 * @param User user                The user.
+	 * @param int  page                The page number to fetch.
+	 * @param int  per_page            The number of items per page.
+	 * @param String order_by          The field on which to order the results.
+	 * @param String order_dir         The direction of the ordering.
+	 * @param boolean include_finished True to include subscriptions against
+	 *                                 finished historic queries.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	static public ArrayList<PushSubscription> listByPlaybackId(User user, String playback_id, int page, int per_page, String order_by, String order_dir, boolean include_finished) throws EInvalidData, EAPIError, EAccessDenied {
+		return list(user, "playback_id", playback_id, page, per_page, order_by, order_dir, include_finished);
+	}
+	
+	/**
+	 * Get a page of push subscriptions in the given user's account, where
+	 * each page contains up to per_page items. Results will be ordered
+	 * according to the supplied ordering parameters.
+	 * 
+	 * @param User user                The user.
+	 * @param int  page                The page number to fetch.
+	 * @param int  per_page            The number of items per page.
+	 * @param String order_by          The field on which to order the results.
+	 * @param String order_dir         The direction of the ordering.
+	 * @param boolean include_finished True to include subscriptions against
+	 *                                 finished historic queries.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	static protected ArrayList<PushSubscription> list(User user, String hash_type, String hash, int page, int per_page, String order_by, String order_dir, boolean include_finished) throws EInvalidData, EAPIError, EAccessDenied {
 		HashMap<String, String> params = new HashMap<String, String>();
 
+		if (hash_type != null && hash_type.length() > 0) {
+			if (!hash_type.equals("hash") && !hash_type.equals("playback_id")) {
+				throw new EInvalidData("Hash type is invalid");
+			}
+			params.put(hash_type, hash);
+		}
+		
 		if (page < 1) {
 			throw new EInvalidData("The specified page number is invalid");
 		}
@@ -378,11 +544,11 @@ abstract public class PushSubscription {
 	protected Date _last_success = null;
 	protected boolean _deleted = false;
 	
-	public PushSubscription(User user) {
+	protected PushSubscription(User user) {
 		_user = user;
 	}
 	
-	public PushSubscription(User user, JSONObject json) throws EInvalidData {
+	protected PushSubscription(User user, JSONObject json) throws EInvalidData {
 		_user = user;
 		init(json);
 	}

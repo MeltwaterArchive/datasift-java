@@ -22,7 +22,7 @@ final public class DataForTests {
 	public static String historic_playback_id	= "93558e17de15072fa126370c37c5bd8f";
 	public static Date   historic_start			= null;
 	public static Date   historic_end			= null;
-	public static String historic_feeds			= "twitter";
+	public static String historic_sources		= "twitter";
 	public static int    historic_sample		= 10;
 	public static String historic_name			= "Historic for unit tests";
 	
