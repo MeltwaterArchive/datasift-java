@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.datasift.EInvalidData;
 import org.datasift.PushSubscription;
 import org.datasift.User;
-import org.datasift.pushsubscription.HttpOutputType;
+import org.datasift.pushsubscription.HttpPushSubscription;
 
 public class Env {
 	static private User _user = null;
@@ -67,12 +67,12 @@ public class Env {
 	    System.out.println("Output Type:   " + output_type);
 	    
 	    if (output_type.toLowerCase().equals("http")) {
-			System.out.println("Output Params: url       = " + ((HttpOutputType)subscription).getUrl()); 
-		    System.out.println("               max_post  = " + ((HttpOutputType)subscription).getMaxSize() + " bytes");
-		    System.out.println("               auth type = " + ((HttpOutputType)subscription).getAuthType());
-		    if (!((HttpOutputType)subscription).getAuthType().toLowerCase().equals("none")) {
-			    System.out.println("               auth user = " + ((HttpOutputType)subscription).getAuthUsername());
-			    System.out.println("               auth pass = " + ((HttpOutputType)subscription).getAuthPassword());
+			System.out.println("Output Params: url       = " + ((HttpPushSubscription)subscription).getUrl()); 
+		    System.out.println("               max_post  = " + ((HttpPushSubscription)subscription).getMaxSize() + " bytes");
+		    System.out.println("               auth type = " + ((HttpPushSubscription)subscription).getAuthType());
+		    if (!((HttpPushSubscription)subscription).getAuthType().toLowerCase().equals("none")) {
+			    System.out.println("               auth user = " + ((HttpPushSubscription)subscription).getAuthUsername());
+			    System.out.println("               auth pass = " + ((HttpPushSubscription)subscription).getAuthPassword());
 		    }
 	    }
 	}

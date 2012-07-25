@@ -7,7 +7,7 @@ import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
 import org.datasift.PushSubscription;
-import org.datasift.pushsubscription.HttpOutputType;
+import org.datasift.pushsubscription.HttpPushSubscription;
 
 public class CreateFromHash {
 
@@ -56,7 +56,7 @@ public class CreateFromHash {
 
 			// Add the output_type-specific parameters
 			if (output_type.toLowerCase().equals("http")) {
-				HttpOutputType http_sub = (HttpOutputType) sub;
+				HttpPushSubscription http_sub = (HttpPushSubscription) sub;
 				
 				delivery_frequency = Integer.parseInt(Env.getArg(4));
 				url = Env.getArg(5);

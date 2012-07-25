@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.datasift.pushsubscription.HttpOutputType;
+import org.datasift.pushsubscription.HttpPushSubscription;
 import org.datasift.pushsubscription.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -358,7 +358,7 @@ abstract public class PushSubscription {
 	 */
 	static public PushSubscription factory(User user, String output_type) throws EInvalidData {
 		if (output_type.toLowerCase().equals("http")) {
-			return new HttpOutputType(user);
+			return new HttpPushSubscription(user);
 		}
 		
 		throw new EInvalidData("Unknown output type \"" + output_type + "\"");
@@ -376,7 +376,7 @@ abstract public class PushSubscription {
 	 */
 	static public PushSubscription factory(User user, String output_type, JSONObject json) throws EInvalidData {
 		if (output_type.toLowerCase().equals("http")) {
-			return new HttpOutputType(user, json);
+			return new HttpPushSubscription(user, json);
 		}
 		
 		throw new EInvalidData("Unknown output type \"" + output_type + "\"");
@@ -616,6 +616,12 @@ abstract public class PushSubscription {
 		}
 	}
 	
+	public void reload() throws EInvalidData, EAPIError, EAccessDenied {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("id", getId());
+		init(_user.callAPI("push/get", params));
+	}
+	
 	public String getId() {
 		return _id;
 	}
@@ -706,6 +712,42 @@ abstract public class PushSubscription {
 
 		// Call the API and pass the returned object into init to update this object
 		init(_user.callAPI(endpoint, params));
+	}
+	
+	public void pause() throws EInvalidData, EAPIError, EAccessDenied {
+		// Only call the API if we've got an ID (i.e. this subscription has
+		// been saved)
+		if (hasId()) {
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("id", String.valueOf(getId()));
+			init(_user.callAPI("push/pause", params));
+		} else {
+			_status = STATUS_PAUSED;
+		}
+	}
+	
+	public void resume() throws EInvalidData, EAPIError, EAccessDenied {
+		// Only call the API if we've got an ID (i.e. this subscription has
+		// been saved)
+		if (hasId()) {
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("id", String.valueOf(getId()));
+			init(_user.callAPI("push/resume", params));
+		} else {
+			_status = STATUS_ACTIVE;
+		}
+	}
+	
+	public void stop() throws EInvalidData, EAPIError, EAccessDenied {
+		// Only call the API if we've got an ID (i.e. this subscription has
+		// been saved)
+		if (hasId()) {
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("id", String.valueOf(getId()));
+			init(_user.callAPI("push/stop", params));
+		} else {
+			_status = STATUS_STOPPED;
+		}
 	}
 	
 	public void delete() throws EAPIError, EAccessDenied {

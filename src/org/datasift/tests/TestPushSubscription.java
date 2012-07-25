@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 
 import org.datasift.*;
-import org.datasift.pushsubscription.HttpOutputType;
+import org.datasift.pushsubscription.HttpPushSubscription;
 
 /**
  * @author MediaSift
@@ -34,7 +34,7 @@ public class TestPushSubscription extends TestCase {
 
 	public void testConstruction() {
 		try {
-			HttpOutputType push = (HttpOutputType) PushSubscription.factory(user, DataForTests.push_output_type, DataForTests.push_hash_type, DataForTests.definition_hash, DataForTests.push_name);
+			HttpPushSubscription push = (HttpPushSubscription) PushSubscription.factory(user, DataForTests.push_output_type, DataForTests.push_hash_type, DataForTests.definition_hash, DataForTests.push_name);
 			assertEquals("Output type is incorrect", DataForTests.push_output_type, push.getOutputType());
 			assertEquals("Hash type is incorrect", DataForTests.push_hash_type, push.getHashType());
 			assertEquals("Hash is incorrect", DataForTests.definition_hash, push.getHash());
@@ -55,7 +55,7 @@ public class TestPushSubscription extends TestCase {
 	
 	public void testGetSubscription() {
 		try {
-			HttpOutputType push = getHttpTestSubscription();
+			HttpPushSubscription push = getHttpTestSubscription();
 			
 			assertEquals("Output type is incorrect", DataForTests.push_output_type, push.getOutputType());
 			assertEquals("Hash type is incorrect", DataForTests.push_hash_type, push.getHashType());
@@ -81,7 +81,7 @@ public class TestPushSubscription extends TestCase {
 	
 	public void testUpdateSubscription() {
 		try {
-			HttpOutputType push = getHttpTestSubscription();
+			HttpPushSubscription push = getHttpTestSubscription();
 			
 			assertEquals("Output type is incorrect", DataForTests.push_output_type, push.getOutputType());
 			assertEquals("Hash type is incorrect", DataForTests.push_hash_type, push.getHashType());
@@ -135,12 +135,12 @@ public class TestPushSubscription extends TestCase {
 		}
 	}
 	
-	private HttpOutputType getHttpTestSubscription() throws EAPIError, EAccessDenied, EInvalidData {
+	private HttpPushSubscription getHttpTestSubscription() throws EAPIError, EAccessDenied, EInvalidData {
 		return getHttpTestSubscription("", "", "", "");
 	}
 
-	private HttpOutputType getHttpTestSubscription(String name, String auth_type, String auth_user, String auth_pass) throws EAPIError, EAccessDenied, EInvalidData {
+	private HttpPushSubscription getHttpTestSubscription(String name, String auth_type, String auth_user, String auth_pass) throws EAPIError, EAccessDenied, EInvalidData {
 		api_client.setResponse(DataForTests.getHttpSubscriptionJson(name, -1, -1, "", auth_type, auth_user, auth_pass), 200);
-		return (HttpOutputType) PushSubscription.get(user, DataForTests.push_id);
+		return (HttpPushSubscription) PushSubscription.get(user, DataForTests.push_id);
 	}
 }
