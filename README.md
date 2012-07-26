@@ -40,6 +40,8 @@ more details.
 Changelog
 ---------
 
+* v.2.2.0 Push support (????-??-??)
+
 * v.2.1.1 Added support for streaming Historic queries via websockets and
           Fixed some bugs in the websocket reconnection logic (2012-07-26)
 
