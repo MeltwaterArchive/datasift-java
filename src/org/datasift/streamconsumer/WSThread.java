@@ -64,16 +64,18 @@ public class WSThread extends Thread {
 			JSONdn data = new JSONdn(line);
 			if (data.has("status")) {
 				String status = data.getStringVal("status");
+				String message = data.getStringVal("message");
 				if (status.equals("error") || status.equals("failure")) {
-					_consumer.onError(data.getStringVal("message"));
-					_consumer.stop();
+					if (message.equals("This streaming API service node is currently unavailable, please reconnect immediately.")) {
+					    _consumer.onWarning(message);
+					} else {
+					    _consumer.onError(message);
+					    _consumer.stop();
+					}
 				} else if (status.equals("warning")) {
-					_consumer.onWarning(data.getStringVal("message"));
-				}else if (status.equals("success")) {
+					_consumer.onWarning(message);
+				} else {
 					_consumer.onStatus(status, data);
-				}else {
-					// Dunno what that is, make it an error
-					_consumer.onError("Unhandled content received: " + line);
 				}
 			} else if (data.has("data")) {
 				Interaction i = new Interaction(data.getJSONObject("data").toString());
@@ -166,12 +168,14 @@ public class WSThread extends Thread {
 	}
 
 	public void run() {
-		if (getConsumerState() == StreamConsumer.STATE_RESTARTING) {
-			onRestarted();
-		}
 		int reconnect_delay = 0;
 		String reason = "";
 		do {
+			// If we are restaring register that we've restarted
+			if (getConsumerState() == StreamConsumer.STATE_RESTARTING) {
+			        onRestarted();
+			}
+
 			// Delay before attempting a reconnect
 			if ((getConsumerState() == StreamConsumer.STATE_RUNNING ||
 				getConsumerState() == StreamConsumer.STATE_RESTARTING)
@@ -252,14 +256,16 @@ public class WSThread extends Thread {
 					}
 
 					// If the state is not stopping or stopped, we got disconnected!
-					if (getConsumerState() != StreamConsumer.STATE_STOPPING && getConsumerState() != StreamConsumer.STATE_STOPPED) {
-						// Send the stop message
-						stopConsumer();
-						reason = "Socket disconnected";
-					} else {
-						// The stop was requested
-						reason = "Stop requested";
-					}
+                                        if (getConsumerState() != StreamConsumer.STATE_RESTARTING) {
+                                            if (getConsumerState() != StreamConsumer.STATE_STOPPING && getConsumerState() != StreamConsumer.STATE_STOPPED) {
+                                                    // Send the stop message
+                                                    stopConsumer();
+                                                    reason = "Socket disconnected";
+                                            } else {
+                                                    // The stop was requested
+                                                    reason = "Stop requested";
+                                            }
+                                        }
 
 					// Wait a maximum of 30 seconds while the stop process happens
 					int stopCounter = 60;
