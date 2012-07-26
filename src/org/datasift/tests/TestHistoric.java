@@ -75,7 +75,7 @@ public class TestHistoric extends TestCase {
 		long created_at = 1334790000L;
 		String status = "queued";
 		int progress = 45;
-		int sample = 42;
+		double sample = 42.0;
 		String source1 = "twitter";
 		String source2 = "digg";
 		String volume_info_type1 = "twitter";
