@@ -35,6 +35,8 @@ public class WS extends StreamConsumer {
 	 *            hashes
 	 * @param IMultiStreamConsumerEvents
 	 *            eventHandler
+	 * @param boolean 
+	 * 			   isHistoric
 	 * @throws EInvalidData
 	 * @throws ECompileFailed
 	 * @throws EAccessDenied
@@ -42,25 +44,10 @@ public class WS extends StreamConsumer {
 	 * @throws URISyntaxException 
 	 * @throws WebSocketException 
 	 */
-	public WS(User user,
-			IMultiStreamConsumerEvents eventHandler, String...pid) throws EInvalidData,
-			ECompileFailed, EAccessDenied, EAPIError {
-		super(user, eventHandler);
-		try {
-			_is_historic = pid != null;
-			if( _is_historic){
-				_thread = new WSThread(this, user, Arrays.asList(pid));
-			} else {
-				_thread = new WSThread(this, user);
-			}
-		} catch (WebSocketException e) {
-			throw new EAPIError(e.getMessage());
-		} catch (URISyntaxException e) {
-			throw new EAPIError(e.getMessage());
-		}
+	public WS(User user, IMultiStreamConsumerEvents eventHandler) throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
+		this( user, eventHandler, false, (String[]) null);
 	}
 
-	
 	/**
 	 * Constructor.
 	 * 
@@ -79,8 +66,38 @@ public class WS extends StreamConsumer {
 	 * @throws URISyntaxException 
 	 * @throws WebSocketException 
 	 */
-	public WS(User user, IMultiStreamConsumerEvents eventHandler) throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
-		this( user, eventHandler, null);
+	public WS(User user, IMultiStreamConsumerEvents eventHandler, String...hashes) throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
+		this(user, eventHandler, false, hashes);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param User
+	 *            user
+	 * @param ArrayList<String>
+	 *            hashes
+	 * @param IMultiStreamConsumerEvents
+	 *            eventHandler
+	 * @throws EInvalidData
+	 * @throws ECompileFailed
+	 * @throws EAccessDenied
+	 * @throws EAPIError 
+	 * @throws URISyntaxException 
+	 * @throws WebSocketException 
+	 */
+	public WS(User user,
+			IMultiStreamConsumerEvents eventHandler, boolean isHistoric, String...hashes) throws EInvalidData,
+			ECompileFailed, EAccessDenied, EAPIError {
+		super(user, eventHandler);
+		try {
+			_is_historic = isHistoric;
+			_thread = new WSThread(this, user, Arrays.asList(hashes));
+		} catch (WebSocketException e) {
+			throw new EAPIError(e.getMessage());
+		} catch (URISyntaxException e) {
+			throw new EAPIError(e.getMessage());
+		}
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
