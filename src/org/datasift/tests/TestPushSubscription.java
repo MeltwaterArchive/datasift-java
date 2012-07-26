@@ -5,10 +5,14 @@ package org.datasift.tests;
 
 import junit.framework.TestCase;
 
+import org.datasift.Config;
+import org.datasift.EAPIError;
+import org.datasift.EAccessDenied;
+import org.datasift.EInvalidData;
+import org.datasift.MockApiClient;
+import org.datasift.PushSubscription;
+import org.datasift.User;
 import org.junit.Before;
-
-import org.datasift.*;
-import org.datasift.pushsubscription.HttpPushSubscription;
 
 /**
  * @author MediaSift
@@ -32,30 +36,9 @@ public class TestPushSubscription extends TestCase {
 		user.setApiClient(api_client);
 	}
 
-	public void testConstruction() {
-		try {
-			HttpPushSubscription push = (HttpPushSubscription) PushSubscription.factory(user, DataForTests.push_output_type, DataForTests.push_hash_type, DataForTests.definition_hash, DataForTests.push_name);
-			assertEquals("Output type is incorrect", DataForTests.push_output_type, push.getOutputType());
-			assertEquals("Hash type is incorrect", DataForTests.push_hash_type, push.getHashType());
-			assertEquals("Hash is incorrect", DataForTests.definition_hash, push.getHash());
-			assertEquals("Name is incorrect", DataForTests.push_name, push.getName());
-			assertEquals("Default status is incorrect", "", push.getStatus());
-			assertNull("Default last request time is not null", push.getLastRequest());
-			assertNull("Default last success time is not null", push.getLastSuccess());
-			assertEquals("Default delivery frequency is incorrect", 10, push.getDeliveryFrequency());
-			assertEquals("Default max size is incorrect", 0, push.getMaxSize());
-			assertEquals("Default url is incorrect", "", push.getUrl());
-			assertEquals("Default auth type is incorrect", "none", push.getAuthType());
-			assertEquals("Default auth username is incorrect", "", push.getAuthUsername());
-			assertEquals("Default auth password is incorrect", "", push.getAuthPassword());
-		} catch (EInvalidData e) {
-			fail("EInvalidData: " + e.getMessage());
-		}
-	}
-	
 	public void testGetSubscription() {
 		try {
-			HttpPushSubscription push = getHttpTestSubscription();
+			PushSubscription push = getTestSubscription();
 			
 			assertEquals("Output type is incorrect", DataForTests.push_output_type, push.getOutputType());
 			assertEquals("Hash type is incorrect", DataForTests.push_hash_type, push.getHashType());
@@ -64,12 +47,12 @@ public class TestPushSubscription extends TestCase {
 			assertEquals("Status is incorrect", DataForTests.push_status, push.getStatus());
 			assertEquals("Last request time is incorrect", DataForTests.push_last_request, push.getLastRequest());
 			assertEquals("Last success time is incorrect", DataForTests.push_last_success, push.getLastSuccess());
-			assertEquals("Delivery frequency is incorrect", DataForTests.push_output_params_delivery_frequency, push.getDeliveryFrequency());
-			assertEquals("Max size is incorrect", DataForTests.push_output_params_max_size, push.getMaxSize());
-			assertEquals("URL is incorrect", DataForTests.push_output_params_url, push.getUrl());
-			assertEquals("Auth type is incorrect", DataForTests.push_output_params_auth_type, push.getAuthType());
-			assertEquals("Auth username is incorrect", DataForTests.push_output_params_auth_username, push.getAuthUsername());
-			assertEquals("Auth password is incorrect", DataForTests.push_output_params_auth_password, push.getAuthPassword());
+			assertEquals("Delivery frequency is incorrect", DataForTests.push_output_params_delivery_frequency, Integer.parseInt(push.getOutputParam("delivery_frequency")));
+			assertEquals("Max size is incorrect", DataForTests.push_output_params_max_size, Integer.parseInt(push.getOutputParam("max_size")));
+			assertEquals("URL is incorrect", DataForTests.push_output_params_url, push.getOutputParam("url"));
+			assertEquals("Auth type is incorrect", DataForTests.push_output_params_auth_type, push.getOutputParam("auth.type"));
+			assertEquals("Auth username is incorrect", DataForTests.push_output_params_auth_username, push.getOutputParam("auth.username"));
+			assertEquals("Auth password is incorrect", DataForTests.push_output_params_auth_password, push.getOutputParam("auth.password"));
 		} catch (EAPIError e) {
 			fail("EAPIError: " + e.getMessage());
 		} catch (EAccessDenied e) {
@@ -81,7 +64,7 @@ public class TestPushSubscription extends TestCase {
 	
 	public void testUpdateSubscription() {
 		try {
-			HttpPushSubscription push = getHttpTestSubscription();
+			PushSubscription push = getTestSubscription();
 			
 			assertEquals("Output type is incorrect", DataForTests.push_output_type, push.getOutputType());
 			assertEquals("Hash type is incorrect", DataForTests.push_hash_type, push.getHashType());
@@ -90,12 +73,13 @@ public class TestPushSubscription extends TestCase {
 			assertEquals("Status is incorrect", DataForTests.push_status, push.getStatus());
 			assertEquals("Last request time is incorrect", DataForTests.push_last_request, push.getLastRequest());
 			assertEquals("Last success time is incorrect", DataForTests.push_last_success, push.getLastSuccess());
-			assertEquals("Delivery frequency is incorrect", DataForTests.push_output_params_delivery_frequency, push.getDeliveryFrequency());
-			assertEquals("Max size is incorrect", DataForTests.push_output_params_max_size, push.getMaxSize());
-			assertEquals("URL is incorrect", DataForTests.push_output_params_url, push.getUrl());
-			assertEquals("Auth type is incorrect", DataForTests.push_output_params_auth_type, push.getAuthType());
-			assertEquals("Auth username is incorrect", DataForTests.push_output_params_auth_username, push.getAuthUsername());
-			assertEquals("Auth password is incorrect", DataForTests.push_output_params_auth_password, push.getAuthPassword());
+			assertEquals("Delivery frequency is incorrect", DataForTests.push_output_params_delivery_frequency, Integer.parseInt(push.getOutputParam("delivery_frequency")));
+			assertEquals("Max size is incorrect", DataForTests.push_output_params_max_size, Integer.parseInt(push.getOutputParam("max_size")));
+			assertEquals("URL is incorrect", DataForTests.push_output_params_url, push.getOutputParam("url"));
+			assertEquals("Auth type is incorrect", DataForTests.push_output_params_auth_type, push.getOutputParam("auth.type"));
+			assertEquals("Auth username is incorrect", DataForTests.push_output_params_auth_username, push.getOutputParam("auth.username"));
+			assertEquals("Auth password is incorrect", DataForTests.push_output_params_auth_password, push.getOutputParam("auth.password"));
+
 			
 			// Change the name and the auth type
 			String new_name = "My new subscription name";
@@ -105,9 +89,9 @@ public class TestPushSubscription extends TestCase {
 			
 			// Set the data
 			push.setName(new_name);
-			push.setAuthType(new_auth_type);
-			push.setAuthUsername(new_auth_user);
-			push.setAuthPassword(new_auth_pass);
+			push.setOutputParam("auth.type", new_auth_type);
+			push.setOutputParam("auth.username", new_auth_user);
+			push.setOutputParam("auth.password", new_auth_pass);
 			
 			// Save it
 			api_client.setResponse(DataForTests.getHttpSubscriptionJson(new_name, -1, -1, "", new_auth_type, new_auth_user, new_auth_pass), 200);
@@ -120,12 +104,12 @@ public class TestPushSubscription extends TestCase {
 			assertEquals("Status is incorrect", DataForTests.push_status, push.getStatus());
 			assertEquals("Last request time is incorrect", DataForTests.push_last_request, push.getLastRequest());
 			assertEquals("Last success time is incorrect", DataForTests.push_last_success, push.getLastSuccess());
-			assertEquals("Delivery frequency is incorrect", DataForTests.push_output_params_delivery_frequency, push.getDeliveryFrequency());
-			assertEquals("Max size is incorrect", DataForTests.push_output_params_max_size, push.getMaxSize());
-			assertEquals("URL is incorrect", DataForTests.push_output_params_url, push.getUrl());
-			assertEquals("Auth type is incorrect", new_auth_type, push.getAuthType());
-			assertEquals("Auth username is incorrect", new_auth_user, push.getAuthUsername());
-			assertEquals("Auth password is incorrect", new_auth_pass, push.getAuthPassword());
+			assertEquals("Delivery frequency is incorrect", DataForTests.push_output_params_delivery_frequency, Integer.parseInt(push.getOutputParam("delivery_frequency")));
+			assertEquals("Max size is incorrect", DataForTests.push_output_params_max_size, Integer.parseInt(push.getOutputParam("max_size")));
+			assertEquals("URL is incorrect", DataForTests.push_output_params_url, push.getOutputParam("url"));
+			assertEquals("Auth type is incorrect", new_auth_type, push.getOutputParam("auth.type"));
+			assertEquals("Auth username is incorrect", new_auth_user, push.getOutputParam("auth.username"));
+			assertEquals("Auth password is incorrect", new_auth_pass, push.getOutputParam("auth.password"));
 		} catch (EAPIError e) {
 			fail("EAPIError: " + e.getMessage());
 		} catch (EAccessDenied e) {
@@ -135,12 +119,12 @@ public class TestPushSubscription extends TestCase {
 		}
 	}
 	
-	private HttpPushSubscription getHttpTestSubscription() throws EAPIError, EAccessDenied, EInvalidData {
-		return getHttpTestSubscription("", "", "", "");
+	private PushSubscription getTestSubscription() throws EAPIError, EAccessDenied, EInvalidData {
+		return getTestSubscription("", "", "", "");
 	}
 
-	private HttpPushSubscription getHttpTestSubscription(String name, String auth_type, String auth_user, String auth_pass) throws EAPIError, EAccessDenied, EInvalidData {
+	private PushSubscription getTestSubscription(String name, String auth_type, String auth_user, String auth_pass) throws EAPIError, EAccessDenied, EInvalidData {
 		api_client.setResponse(DataForTests.getHttpSubscriptionJson(name, -1, -1, "", auth_type, auth_user, auth_pass), 200);
-		return (HttpPushSubscription) PushSubscription.get(user, DataForTests.push_id);
+		return user.getPushSubscription(DataForTests.push_id);
 	}
 }

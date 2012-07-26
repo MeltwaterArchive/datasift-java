@@ -64,7 +64,7 @@ public class Historic {
 	/**
 	 * @access protected
 	 */
-	protected int _sample = 100;
+	protected double _sample = 100;
 
 	/**
 	 * @access protected
@@ -115,10 +115,11 @@ public class Historic {
 	 *            end The date/time at which to end the query.
 	 * @param String
 	 *            sources Comma seperated list of interaction types required.
-	 * @param int sample The sample required (%).
+	 * @param double
+	 *            sample The sample required (%).
 	 */
 	public Historic(User user, Definition def, Date start, Date end,
-			String sources, int sample) throws EInvalidData, EAccessDenied {
+			String sources, double sample) throws EInvalidData, EAccessDenied {
 		this(user, def.getHash(), start, end, sources, sample);
 	}
 
@@ -136,12 +137,13 @@ public class Historic {
 	 *            end The date/time at which to end the query.
 	 * @param String
 	 *            sources Comma seperated list of interaction types required.
-	 * @param int sample The sample required (%).
+	 * @param double
+	 *            sample The sample required (%).
 	 * @param String
 	 *            name The name of this query.
 	 */
 	public Historic(User user, Definition def, Date start, Date end,
-			String sources, int sample, String name) throws EInvalidData,
+			String sources, double sample, String name) throws EInvalidData,
 			EAccessDenied {
 		this(user, def.getHash(), start, end, sources, sample, name);
 	}
@@ -160,10 +162,11 @@ public class Historic {
 	 *            end The date/time at which to end the query.
 	 * @param String
 	 *            sources Comma seperated list of interaction types required.
-	 * @param int sample The sample required (%).
+	 * @param double
+	 *            sample The sample required (%).
 	 */
 	public Historic(User user, String hash, Date start, Date end, String sources,
-			int sample) {
+			double sample) {
 		this(user, hash, start, end, sources, sample, "");
 	}
 
@@ -181,12 +184,13 @@ public class Historic {
 	 *            end The date/time at which to end the query.
 	 * @param String
 	 *            sources Comma seperated list of interaction types required.
-	 * @param int sample The sample required (%).
+	 * @param double
+	 *            sample The sample required (%).
 	 * @param String
 	 *            name The name of this query.
 	 */
 	public Historic(User user, String hash, Date start, Date end, String sources,
-			int sample, String name) {
+			double sample, String name) {
 		_user = user;
 		_hash = hash;
 		_start = start;
@@ -277,7 +281,7 @@ public class Historic {
 	 * 
 	 * @return int
 	 */
-	public int getSample() {
+	public double getSample() {
 		return _sample;
 	}
 
@@ -482,7 +486,7 @@ public class Historic {
 			}
 
 			try {
-				_sample = res.getInt("sample");
+				_sample = res.getDouble("sample");
 			} catch (JSONException e) {
 				throw new EAPIError(
 						"Historic retrieved successfully but no sample in the response.");
@@ -632,50 +636,6 @@ public class Historic {
 			ECompileFailed, EAccessDenied, EAPIError {
 		return StreamConsumer.historicFactory(this._user, type, this,
 				eventHandler);
-	}
-
-    /**
-     * Create a push subscription for this historic query.
-     * 
-     * @param String output_type The output type.
-     * @param String name        A friendly name.
-     * @return PushSubscription
-     * @throws EInvalidData
-     * @throws EAccessDenied
-     * @throws EAPIError 
-     */
-    public PushSubscription createPushSubscription(String output_type, String name) throws EInvalidData, EAccessDenied, EAPIError {
-    	return PushSubscription.factory(_user, output_type, "historic", getHash(), name);
-    }
-    
-    /**
-     * Create a push subscription for this historic query with an initial
-     * status.
-     * 
-     * @param String output_type    The output type.
-     * @param String name           A friendly name.
-     * @param String initial_status The initial status.
-     * @return PushSubscription
-     * @throws EInvalidData
-     * @throws EAccessDenied
-     * @throws EAPIError 
-     */
-    public PushSubscription createPushSubscription(String output_type, String name, String initial_status) throws EInvalidData, EAccessDenied, EAPIError {
-    	return PushSubscription.factory(_user, output_type, "historic", getHash(), name, initial_status);
-    }
-    
-	/**
-	 * Get a list of push subscriptions for this historic query. Limited
-	 * to 100 results.Results will be returned in ascending order by creation
-	 * date.
-	 * 
-	 * @return ArrayList<PushSubscription>
-	 * @throws EInvalidData
-	 * @throws EAPIError
-	 * @throws EAccessDenied
-	 */
-	public ArrayList<PushSubscription> getPushSubscriptions() throws EInvalidData, EAPIError, EAccessDenied {
-		return getPushSubscriptions(1, 100);
 	}
 	
 	/**

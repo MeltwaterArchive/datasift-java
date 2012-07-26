@@ -3,19 +3,24 @@ package org.datasift.examples.push;
 import java.util.ArrayList;
 
 import org.datasift.EInvalidData;
+import org.datasift.PushOutputParams;
 import org.datasift.PushSubscription;
 import org.datasift.User;
-import org.datasift.pushsubscription.HttpPushSubscription;
 
 public class Env {
 	static private User _user = null;
 	static private ArrayList<String> _args = null;
 	
 	static public void init(String[] args) {
+		// Using the staging environment
+		User._api_base_url = "api.stagingdatasift.com/";
+		User._stream_base_url = "stream.stagingdatasift.com/";
+		User._websocket_base_url = "websocket.stagingdatasift.com/";
+		
 		// Using the integration environment
-		User._api_base_url = "api.integrationdatasift.com/";
-		User._stream_base_url = "stream.integrationdatasift.com/";
-		User._websocket_base_url = "websocket.integrationdatasift.com/";
+//		User._api_base_url = "api.integrationdatasift.com/";
+//		User._stream_base_url = "stream.integrationdatasift.com/";
+//		User._websocket_base_url = "websocket.integrationdatasift.com/";
 		
 		// Using the sdallas0 environment
 //		User._api_base_url = "api.fido.sdallas0/";
@@ -66,14 +71,10 @@ public class Env {
 	    System.out.println("Created at:    " + subscription.getCreatedAt());
 	    System.out.println("Output Type:   " + output_type);
 	    
-	    if (output_type.toLowerCase().equals("http")) {
-			System.out.println("Output Params: url       = " + ((HttpPushSubscription)subscription).getUrl()); 
-		    System.out.println("               max_post  = " + ((HttpPushSubscription)subscription).getMaxSize() + " bytes");
-		    System.out.println("               auth type = " + ((HttpPushSubscription)subscription).getAuthType());
-		    if (!((HttpPushSubscription)subscription).getAuthType().toLowerCase().equals("none")) {
-			    System.out.println("               auth user = " + ((HttpPushSubscription)subscription).getAuthUsername());
-			    System.out.println("               auth pass = " + ((HttpPushSubscription)subscription).getAuthPassword());
-		    }
+		System.out.println("Output Params:");
+		PushOutputParams output_params = subscription.getOutputParams();
+	    for (String key : output_params.keySet()) {
+	    	System.out.println("  " + key + " = " + output_params.get(key));
 	    }
 	}
 }

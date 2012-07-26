@@ -336,8 +336,8 @@ public class User {
      * @return PushSubscription
      * @throws EInvalidData
      */
-    public PushSubscription createPushSubscription(String output_type, String hash_type, String hash, String name) throws EInvalidData {
-    	return PushSubscription.factory(this, output_type, hash_type, hash, name);
+    public PushDefinition createPushDefinition() {
+    	return new PushDefinition(this);
     }
     
     /**

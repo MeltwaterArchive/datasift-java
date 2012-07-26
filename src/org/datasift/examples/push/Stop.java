@@ -1,5 +1,5 @@
 /**
- * This example deletes one or more push subscriptions in your account.
+ * This example stops one or more push subscriptions in your account.
  */
 package org.datasift.examples.push;
 
@@ -8,7 +8,7 @@ import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
 import org.datasift.PushSubscription;
 
-public class Delete {
+public class Stop {
 
 	/**
 	 * @param args
@@ -19,7 +19,7 @@ public class Delete {
 		
 		// Make sure we have at least one subscription ID
 		if (Env.getArgCount() == 0) {
-			System.err.println("Please specify one or more subscriptions to delete!");
+			System.err.println("Please specify one or more subscriptions to stop!");
 			System.exit(1);
 		}
 		
@@ -29,8 +29,8 @@ public class Delete {
 				String subscription_id = Env.getArg(i);
 				
 				PushSubscription sub = Env.getUser().getPushSubscription(subscription_id);
-				System.out.print("Deleting " + subscription_id + ", " + sub.getName() + "...");
-				sub.delete();
+				System.out.print("Stopping " + subscription_id + ", " + sub.getName() + "...");
+				sub.pause();
 				System.out.println("done");
 			} catch (EInvalidData e) {
 				System.err.println("InvalidData: " + e.getMessage());

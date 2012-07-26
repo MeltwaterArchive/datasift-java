@@ -6,9 +6,7 @@ package org.datasift;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 
-import org.datasift.pushsubscription.HttpPushSubscription;
 import org.datasift.pushsubscription.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +18,12 @@ import org.json.JSONObject;
  * @author MediaSift
  * @version 0.1
  */
-abstract public class PushSubscription {
+public class PushSubscription extends PushDefinition {
+	/**
+	 * Auto-generated serialization version UID.
+	 */
+	private static final long serialVersionUID = -8162860993374079377L;
+	
 	/**
 	 * Hash type constants.
 	 */
@@ -62,17 +65,8 @@ abstract public class PushSubscription {
 	 */
 	static public PushSubscription get(User user, String id) throws EAPIError, EAccessDenied, EInvalidData {
 		HashMap<String, String> params = new HashMap<String, String>();
-
 		params.put("id", id);
-		
-		JSONObject res = user.callAPI("push/get", params);
-		String output_type = null;
-		try {
-			output_type = res.getString("output_type");
-		} catch (JSONException e) {
-			throw new EAPIError("No output_type in the response");
-		}
-		return factory(user, output_type, res);
+		return new PushSubscription(user, user.callAPI("push/get", params));
 	}
 
 	/**
@@ -337,67 +331,12 @@ abstract public class PushSubscription {
 		try {
 	        JSONArray subscriptions = res.getJSONArray("subscriptions");
 	        for (int i = 0; i < subscriptions.length(); i++) {
-	        	JSONObject subscription = subscriptions.getJSONObject(i);
-	            retval.add(factory(user, subscription.getString("output_type"), subscription));
+	            retval.add(new PushSubscription(user, subscriptions.getJSONObject(i)));
 	        }
 		} catch (JSONException e) {
 			throw new EAPIError("Failed to read the subscriptions from the response");
 		}
 		
-		return retval;
-	}
-	
-	/**
-	 * Factory method to create output_type-specific, empty PushSubscription
-	 * objects.
-	 * 
-	 * @param User   user        The user requesting the object.
-	 * @param String output_type The type of the object.
-	 * @return PushSubscription
-	 * @throws EInvalidData
-	 */
-	static public PushSubscription factory(User user, String output_type) throws EInvalidData {
-		if (output_type.toLowerCase().equals("http")) {
-			return new HttpPushSubscription(user);
-		}
-		
-		throw new EInvalidData("Unknown output type \"" + output_type + "\"");
-	}
-	
-	/**
-	 * Factory method to create output_type-specific PushSubscription objects.
-	 * 
-	 * @param User       user        The user requesting the object.
-	 * @param String     output_type The type of the object,
-	 * @param JSONObject json        The data with which to initialise the
-	 *                               object.
-	 * @return PushSubscription
-	 * @throws EInvalidData
-	 */
-	static public PushSubscription factory(User user, String output_type, JSONObject json) throws EInvalidData {
-		if (output_type.toLowerCase().equals("http")) {
-			return new HttpPushSubscription(user, json);
-		}
-		
-		throw new EInvalidData("Unknown output type \"" + output_type + "\"");
-	}
-
-	public static PushSubscription factory(User user, String output_type,
-			String hash_type, String hash, String name) throws EInvalidData {
-		return factory(user, output_type, hash_type, hash, name, "");
-	}
-	
-	public static PushSubscription factory(User user, String output_type,
-			String hash_type, String hash, String name, String initial_status) throws EInvalidData {
-		PushSubscription retval = factory(user, output_type);
-		if (!hash_type.equals(HASH_TYPE_STREAM) && !hash_type.equals(HASH_TYPE_HISTORIC)) {
-			throw new EInvalidData("Unknown hash type: \"" + hash_type + "\"");
-		}
-		retval._output_type = output_type;
-		retval._hash_type = hash_type;
-		retval._hash = hash;
-		retval._name = name;
-		retval._status = initial_status;
 		return retval;
 	}
 	
@@ -531,29 +470,21 @@ abstract public class PushSubscription {
 		return retval;
     }
 
-	protected User _user = null;
 	protected String _id = "";
-	protected String _name = "";
 	protected Date _created_at = null;
 	protected String _status = "";
 	protected String _hash = "";
 	protected String _hash_type = "";
-	protected String _output_type = "";
-	protected HashMap<String, String> _output_params = new HashMap<String, String>();
 	protected Date _last_request = null;
 	protected Date _last_success = null;
 	protected boolean _deleted = false;
 	
-	protected PushSubscription(User user) {
-		_user = user;
-	}
-	
-	protected PushSubscription(User user, JSONObject json) throws EInvalidData {
-		_user = user;
+	public PushSubscription(User user, JSONObject json) throws EInvalidData {
+		super(user);
 		init(json);
 	}
 	
-	private void init(JSONObject json) throws EInvalidData {
+	protected void init(JSONObject json) throws EInvalidData {
 		try {
 			_id = json.getString("id");
 		} catch (JSONException e) {
@@ -610,7 +541,7 @@ abstract public class PushSubscription {
 		
 		try {
 			_output_params.clear();
-			setOutputParams(json.getJSONObject("output_params"));
+			_output_params.parse(json.getJSONObject("output_params"));
 		} catch (JSONException e) {
 			throw new EInvalidData("No valid output_params found");
 		}
@@ -638,9 +569,16 @@ abstract public class PushSubscription {
 		if (isDeleted()) {
 			throw new EInvalidData("Cannot modify a deleted subscription");
 		}
-		_name = name;
+		super.setName(name);
 	}
-	
+
+	public void setOutputParam(String key, String val) throws EInvalidData {
+		if (isDeleted()) {
+			throw new EInvalidData("Cannot modify a deleted subscription");
+		}
+		super.setOutputParam(key, val);
+	}
+
 	public Date getCreatedAt() {
 		return _created_at;
 	}
@@ -771,23 +709,5 @@ abstract public class PushSubscription {
 	
 	public Log getLog(int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(_user, getId(), page, per_page, order_by, order_dir);
-	}
-	
-	protected void setOutputParams(JSONObject output_params) throws JSONException {
-		setOutputParams(output_params, "");
-	}
-
-	protected void setOutputParams(JSONObject output_params, String prefix) throws JSONException {
-		Iterator<?> keys = output_params.keys();
-		while (keys.hasNext()) {
-			// Create a new CostItem
-			String key = (String) keys.next();
-			JSONObject nested = output_params.optJSONObject(key);
-			if (nested != null) {
-				setOutputParams(nested, (prefix.length() == 0 ? "" : prefix + ".") + key);
-			} else {
-				_output_params.put((prefix.length() == 0 ? "" : prefix + ".") + key, output_params.getString(key));
-			}
-		}
 	}
 }

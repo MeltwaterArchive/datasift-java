@@ -367,7 +367,7 @@ public class Definition {
      * @throws EInvalidData
      * @throws EAccessDenied
      */
-    public Historic createHistoric(Date start, Date end, String sources, int sample) throws EInvalidData, EAccessDenied
+    public Historic createHistoric(Date start, Date end, String sources, double sample) throws EInvalidData, EAccessDenied
     {
     	return createHistoric(start, end, sources, sample, "");
     }
@@ -384,7 +384,7 @@ public class Definition {
      * @throws EInvalidData
      * @throws EAccessDenied
      */
-    public Historic createHistoric(Date start, Date end, String sources, int sample, String name) throws EInvalidData, EAccessDenied
+    public Historic createHistoric(Date start, Date end, String sources, double sample, String name) throws EInvalidData, EAccessDenied
     {
     	return new Historic(this._user, this, start, end, sources, sample, name);
     }
@@ -406,33 +406,6 @@ public class Definition {
             IStreamConsumerEvents eventHandler) throws EInvalidData,
             ECompileFailed, EAccessDenied {
         return StreamConsumer.factory(this._user, type, this, eventHandler);
-    }
-    
-    /**
-     * Create a push subscription for this stream.
-     * 
-     * @param String output_type    The output type.
-     * @param String name           A friendly name.
-     * @return PushSubscription
-     * @throws EInvalidData
-     * @throws EAccessDenied
-     */
-    public PushSubscription createPushSubscription(String output_type, String name) throws EInvalidData, EAccessDenied {
-    	return PushSubscription.factory(_user, output_type, "stream", getHash(), name);
-    }
-    
-    /**
-     * Create a push subscription for this stream with an initial status.
-     * 
-     * @param String output_type    The output type.
-     * @param String name           A friendly name.
-     * @param String initial_status The initial status.
-     * @return PushSubscription
-     * @throws EInvalidData
-     * @throws EAccessDenied
-     */
-    public PushSubscription createPushSubscription(String output_type, String name, String initial_status) throws EInvalidData, EAccessDenied {
-    	return PushSubscription.factory(_user, output_type, "stream", getHash(), name, initial_status);
     }
     
 	/**
