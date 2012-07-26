@@ -4,6 +4,7 @@
 package org.datasift.streamconsumer;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.datasift.EAPIError;
@@ -92,7 +93,7 @@ public class WS extends StreamConsumer {
 		super(user, eventHandler);
 		try {
 			_is_historic = isHistoric;
-			_thread = new WSThread(this, user, Arrays.asList(hashes));
+			_thread = new WSThread(this, user, hashes == null ? new ArrayList<String>() : Arrays.asList(hashes));
 		} catch (WebSocketException e) {
 			throw new EAPIError(e.getMessage());
 		} catch (URISyntaxException e) {
