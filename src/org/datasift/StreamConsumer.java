@@ -143,7 +143,7 @@ abstract public class StreamConsumer {
 	}
 
 	/**
-	 * Factory method that takes a Historic object.
+	 * Factory method that takes a Historic object for websockets.
 	 * 
 	 * @param user
 	 * @param type
@@ -159,16 +159,13 @@ abstract public class StreamConsumer {
 			Historic historic, IMultiStreamConsumerEvents eventHandler)
 			throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
 		if (type == StreamConsumer.TYPE_WS) {
-			return new WS(user, eventHandler, true);
+			return new WS(user, eventHandler, true, historic.getHash());
 		} 
 
 		throw new EInvalidData("Unknown or inappropriate consumer type: "
 				+ type);
 	}
-	
-	
-	
-	
+
 	/**
 	 * The user that owns this consumer.
 	 */

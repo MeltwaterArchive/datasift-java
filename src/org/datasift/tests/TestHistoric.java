@@ -40,7 +40,7 @@ public class TestHistoric extends TestCase {
 		try {
 			// createHistoric will compile the definition, so set up the response
 			api_client.setResponse("{\"hash\":\"" + DataForTests.definition_hash + "\",\"created_at\":\"2011-05-16 17:20:02\",\"dpu\":\"10\"}", 200);
-			Historic h = def.createHistoric(DataForTests.historic_start, DataForTests.historic_end, DataForTests.historic_feeds, DataForTests.historic_sample, DataForTests.historic_name);
+			Historic h = def.createHistoric(DataForTests.historic_start, DataForTests.historic_end, DataForTests.historic_sources, DataForTests.historic_sample, DataForTests.historic_name);
 
 			assertEquals("Definition ID is incorrect", DataForTests.definition_hash, h.getStreamHash());
 			assertEquals("Name is incorrect", DataForTests.historic_name, h.getName());
@@ -50,11 +50,11 @@ public class TestHistoric extends TestCase {
 			assertEquals("Progress is incorrect", 0, h.getProgress());
 			assertEquals("Sample is incorrect", DataForTests.historic_sample, h.getSample());
 			
-			String[] feeds_input = DataForTests.historic_feeds.split("/,/");
-			ArrayList<String> feeds = h.getFeeds();
-			assertEquals("Incorrect number of feeds", feeds_input.length, feeds.size());
-			for (String feed : feeds_input) {
-				assertTrue("Feed \"" + feed + "\" not found in feeds", feeds.contains(feed));
+			String[] sources_input = DataForTests.historic_sources.split("/,/");
+			ArrayList<String> sources = h.getSources();
+			assertEquals("Incorrect number of sources", sources_input.length, sources.size());
+			for (String source : sources_input) {
+				assertTrue("Source \"" + source + "\" not found in sources", sources.contains(source));
 			}
 			
 			HashMap<String,Integer> volume_info = h.getVolumeInfo();
@@ -76,8 +76,8 @@ public class TestHistoric extends TestCase {
 		String status = "queued";
 		int progress = 45;
 		int sample = 42;
-		String feed1 = "twitter";
-		String feed2 = "digg";
+		String source1 = "twitter";
+		String source2 = "digg";
 		String volume_info_type1 = "twitter";
 		int volume_info_num1 = 123;
 		String volume_info_type2 = "digg";
@@ -86,7 +86,7 @@ public class TestHistoric extends TestCase {
 		api_client.setResponse(
 			"{\"id\":\"" + playback_id + "\",\"definition_id\":\"" + definition_id + "\",\"name\":\"" + name + "\"," +
 			"\"start\":" + String.valueOf(start) + ",\"end\":" + String.valueOf(end) + ",\"created_at\":" + String.valueOf(created_at) +"," + 
-			"\"status\":\"" + status + "\",\"progress\":" + String.valueOf(progress) + ",\"feed\":[\"" + feed1 + "\",\"" + feed2 + "\"]," +
+			"\"status\":\"" + status + "\",\"progress\":" + String.valueOf(progress) + ",\"sources\":[\"" + source1 + "\",\"" + source2 + "\"]," +
 			"\"sample\":" + String.valueOf(sample) + ",\"volume_info\":{\"" + volume_info_type1 + "\":" + String.valueOf(volume_info_num1) + "," +
 			"\"" + volume_info_type2 + "\":" + String.valueOf(volume_info_num2) + "}}", 200);
 
@@ -102,10 +102,10 @@ public class TestHistoric extends TestCase {
 			assertEquals("Progress is incorrect", progress, h.getProgress());
 			assertEquals("Sample is incorrect", sample, h.getSample());
 			
-			ArrayList<String> feeds = h.getFeeds();
-			assertEquals("Incorrect number of feeds", 2, feeds.size());
-			assertTrue("Type 1 not found in feeds", feeds.contains(feed1));
-			assertTrue("Type 2 not found in feeds", feeds.contains(feed2));
+			ArrayList<String> sources = h.getSources();
+			assertEquals("Incorrect number of sources", 2, sources.size());
+			assertTrue("Type 1 not found in sources", sources.contains(source1));
+			assertTrue("Type 2 not found in sources", sources.contains(source2));
 			
 			HashMap<String,Integer> volume_info = h.getVolumeInfo();
 			assertEquals("Incorrect number of volume info records", 2, volume_info.size());
