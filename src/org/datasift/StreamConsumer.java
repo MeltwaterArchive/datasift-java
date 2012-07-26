@@ -5,7 +5,9 @@ package org.datasift;
 
 import java.util.ArrayList;
 
-import org.datasift.streamconsumer.*;
+import org.datasift.streamconsumer.Http;
+import org.datasift.streamconsumer.HttpMulti;
+import org.datasift.streamconsumer.WS;
 
 /**
  * @author MediaSift
@@ -134,7 +136,31 @@ abstract public class StreamConsumer {
 			throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
 		if (type == StreamConsumer.TYPE_HTTP) {
 			return new Http(user, new Definition(user, "", historic.getHash()), eventHandler, true);
-		}
+		} 
+
+		throw new EInvalidData("Unknown or inappropriate consumer type: "
+				+ type);
+	}
+
+	/**
+	 * Factory method that takes a Historic object for websockets.
+	 * 
+	 * @param user
+	 * @param type
+	 * @param definition
+	 * @param eventHandler
+	 * @return
+	 * @throws EAccessDenied
+	 * @throws ECompileFailed
+	 * @throws EInvalidData
+	 * @throws EAPIError 
+	 */
+	public static StreamConsumer historicFactory(User user, String type,
+			Historic historic, IMultiStreamConsumerEvents eventHandler)
+			throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
+		if (type == StreamConsumer.TYPE_WS) {
+			return new WS(user, eventHandler, true, historic.getHash());
+		} 
 
 		throw new EInvalidData("Unknown or inappropriate consumer type: "
 				+ type);

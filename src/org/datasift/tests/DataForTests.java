@@ -23,7 +23,7 @@ final public class DataForTests {
 	public static Date   historic_start			= null;
 	public static Date   historic_end			= null;
 	public static String historic_sources		= "twitter";
-	public static int    historic_sample		= 10;
+	public static double historic_sample		= 10.0;
 	public static String historic_name			= "Historic for unit tests";
 	
 	// PushSubscription

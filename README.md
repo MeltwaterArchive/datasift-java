@@ -40,6 +40,9 @@ more details.
 Changelog
 ---------
 
+* v.2.1.0 Added support for streaming Historic queries via websockets and
+          Fixed some bugs in the websocket reconnection logic (2012-07-26)
+
 * v.2.0.0 Added onConnect, onDisconnect and onStatus events, improved
           efficiency within the WebSocket library, and support for the
           historics API (2012-06-22). Please note: Though support has been
