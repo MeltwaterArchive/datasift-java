@@ -472,7 +472,7 @@ public class Historic {
 
 			try {
 				_feeds.clear();
-				JSONArray data = res.getJSONArray("feed");
+				JSONArray data = res.getJSONArray("sources");
 				for (int i = 0; i < data.length(); i++) {
 					_feeds.add(data.getString(i));
 				}

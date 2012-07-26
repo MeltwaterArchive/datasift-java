@@ -4,8 +4,15 @@
 package org.datasift.streamconsumer;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
-import org.datasift.*;
+import org.datasift.EAPIError;
+import org.datasift.EAccessDenied;
+import org.datasift.ECompileFailed;
+import org.datasift.EInvalidData;
+import org.datasift.IMultiStreamConsumerEvents;
+import org.datasift.StreamConsumer;
+import org.datasift.User;
 
 import de.roderick.weberknecht.WebSocketException;
 
@@ -36,16 +43,44 @@ public class WS extends StreamConsumer {
 	 * @throws WebSocketException 
 	 */
 	public WS(User user,
-			IMultiStreamConsumerEvents eventHandler) throws EInvalidData,
+			IMultiStreamConsumerEvents eventHandler, String...pid) throws EInvalidData,
 			ECompileFailed, EAccessDenied, EAPIError {
 		super(user, eventHandler);
 		try {
-			_thread = new WSThread(this, user);
+			_is_historic = pid != null;
+			if( _is_historic){
+				_thread = new WSThread(this, user, Arrays.asList(pid));
+			} else {
+				_thread = new WSThread(this, user);
+			}
 		} catch (WebSocketException e) {
 			throw new EAPIError(e.getMessage());
 		} catch (URISyntaxException e) {
 			throw new EAPIError(e.getMessage());
 		}
+	}
+
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param User
+	 *            user
+	 * @param ArrayList<String>
+	 *            hashes
+	 * @param IMultiStreamConsumerEvents
+	 *            eventHandler
+	 * @param boolean 
+	 * 			   isHistoric
+	 * @throws EInvalidData
+	 * @throws ECompileFailed
+	 * @throws EAccessDenied
+	 * @throws EAPIError 
+	 * @throws URISyntaxException 
+	 * @throws WebSocketException 
+	 */
+	public WS(User user, IMultiStreamConsumerEvents eventHandler) throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
+		this( user, eventHandler, null);
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
