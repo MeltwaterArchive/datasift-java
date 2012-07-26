@@ -69,7 +69,7 @@ public class Historic {
 	/**
 	 * @access protected
 	 */
-	protected ArrayList<String> _feeds = new ArrayList<String>();
+	protected ArrayList<String> _sources = new ArrayList<String>();
 
 	/**
 	 * @access protected
@@ -114,12 +114,12 @@ public class Historic {
 	 * @param Date
 	 *            end The date/time at which to end the query.
 	 * @param String
-	 *            feeds Comma seperated list of interaction types required.
+	 *            sources Comma seperated list of interaction types required.
 	 * @param int sample The sample required (%).
 	 */
 	public Historic(User user, Definition def, Date start, Date end,
-			String feeds, int sample) throws EInvalidData, EAccessDenied {
-		this(user, def.getHash(), start, end, feeds, sample);
+			String sources, int sample) throws EInvalidData, EAccessDenied {
+		this(user, def.getHash(), start, end, sources, sample);
 	}
 
 	/**
@@ -135,15 +135,15 @@ public class Historic {
 	 * @param Date
 	 *            end The date/time at which to end the query.
 	 * @param String
-	 *            feeds Comma seperated list of interaction types required.
+	 *            sources Comma seperated list of interaction types required.
 	 * @param int sample The sample required (%).
 	 * @param String
 	 *            name The name of this query.
 	 */
 	public Historic(User user, Definition def, Date start, Date end,
-			String feeds, int sample, String name) throws EInvalidData,
+			String sources, int sample, String name) throws EInvalidData,
 			EAccessDenied {
-		this(user, def.getHash(), start, end, feeds, sample, name);
+		this(user, def.getHash(), start, end, sources, sample, name);
 	}
 
 	/**
@@ -159,12 +159,12 @@ public class Historic {
 	 * @param Date
 	 *            end The date/time at which to end the query.
 	 * @param String
-	 *            feeds Comma seperated list of interaction types required.
+	 *            sources Comma seperated list of interaction types required.
 	 * @param int sample The sample required (%).
 	 */
-	public Historic(User user, String hash, Date start, Date end, String feeds,
+	public Historic(User user, String hash, Date start, Date end, String sources,
 			int sample) {
-		this(user, hash, start, end, feeds, sample, "");
+		this(user, hash, start, end, sources, sample, "");
 	}
 
 	/**
@@ -180,20 +180,20 @@ public class Historic {
 	 * @param Date
 	 *            end The date/time at which to end the query.
 	 * @param String
-	 *            feeds Comma seperated list of interaction types required.
+	 *            sources Comma seperated list of interaction types required.
 	 * @param int sample The sample required (%).
 	 * @param String
 	 *            name The name of this query.
 	 */
-	public Historic(User user, String hash, Date start, Date end, String feeds,
+	public Historic(User user, String hash, Date start, Date end, String sources,
 			int sample, String name) {
 		_user = user;
 		_hash = hash;
 		_start = start;
 		_end = end;
-		_feeds.clear();
-		for (String k : feeds.split("/,/")) {
-			_feeds.add(k.trim());
+		_sources.clear();
+		for (String k : sources.split("/,/")) {
+			_sources.add(k.trim());
 		}
 		_sample = sample;
 		_name = (name.length() == 0 ? generateName() : name);
@@ -255,12 +255,12 @@ public class Historic {
 	}
 
 	/**
-	 * Get the list of feeds.
+	 * Get the list of sources.
 	 * 
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> getFeeds() {
-		return _feeds;
+	public ArrayList<String> getSources() {
+		return _sources;
 	}
 
 	/**
@@ -471,14 +471,14 @@ public class Historic {
 			}
 
 			try {
-				_feeds.clear();
+				_sources.clear();
 				JSONArray data = res.getJSONArray("sources");
 				for (int i = 0; i < data.length(); i++) {
-					_feeds.add(data.getString(i));
+					_sources.add(data.getString(i));
 				}
 			} catch (JSONException e) {
 				throw new EAPIError(
-						"Historic retrieved successfully but no feeds in the response.");
+						"Historic retrieved successfully but no sources in the response.");
 			}
 
 			try {
@@ -539,7 +539,7 @@ public class Historic {
 			params.put("start", String.valueOf(_start.getTime() / 1000));
 			params.put("end", String.valueOf(_end.getTime() / 1000));
 			params.put("name", _name);
-			params.put("source", Utils.join(_feeds, ","));
+			params.put("source", Utils.join(_sources, ","));
 			params.put("sample", String.valueOf(_sample));
 
 			res = _user.callAPI("historics/prepare", params);
