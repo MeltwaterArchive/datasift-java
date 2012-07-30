@@ -12,21 +12,6 @@ public class Env {
 	static private ArrayList<String> _args = null;
 	
 	static public void init(String[] args) {
-		// Using the staging environment
-		User._api_base_url = "api.stagingdatasift.com/";
-		User._stream_base_url = "stream.stagingdatasift.com/";
-		User._websocket_base_url = "websocket.stagingdatasift.com/";
-		
-		// Using the integration environment
-//		User._api_base_url = "api.integrationdatasift.com/";
-//		User._stream_base_url = "stream.integrationdatasift.com/";
-//		User._websocket_base_url = "websocket.integrationdatasift.com/";
-		
-		// Using the sdallas0 environment
-//		User._api_base_url = "api.fido.sdallas0/";
-//		User._stream_base_url = "stream.fido.sdallas0/";
-//		User._websocket_base_url = "websocket.fido.sdallas0/";
-
 		// Make sure we have credentials on the command line
 		if (args.length < 2) {
 			System.out.println("Please specify your DataSift username and API key as the first two command line arguments!");
@@ -69,6 +54,8 @@ public class Env {
 	    System.out.println("Name:          " + subscription.getName());
 	    System.out.println("Status:        " + subscription.getStatus());
 	    System.out.println("Created at:    " + subscription.getCreatedAt());
+	    System.out.println("Last request:  " + subscription.getLastRequest());
+	    System.out.println("Last success:  " + subscription.getLastSuccess());
 	    System.out.println("Output Type:   " + output_type);
 	    
 		System.out.println("Output Params:");
