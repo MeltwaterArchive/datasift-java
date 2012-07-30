@@ -34,7 +34,6 @@ public class PushFromHash {
 		try {
 			// Create the PushDefinition
 			PushDefinition pushDef = Env.getUser().createPushDefinition();
-			pushDef.setName(name);
 			pushDef.setOutputType(output_type);
 			
 			// Now add the output_type-specific args from the command line
@@ -49,9 +48,9 @@ public class PushFromHash {
 			// Subscribe the definition to the hash
 			PushSubscription pushSub = null;
 			if (hash_type.equals("stream")) {
-				pushSub = pushDef.subscribeStreamHash(hash);
+				pushSub = pushDef.subscribeStreamHash(hash, name);
 			} else if (hash_type.equals("historic")) {
-				pushSub = pushDef.subscribeHistoricPlaybackId(hash);
+				pushSub = pushDef.subscribeHistoricPlaybackId(hash, name);
 			} else {
 				usage("Invalid hash_type: " + hash_type);
 			}

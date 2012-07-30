@@ -50,7 +50,6 @@ public class PushStreamFromCSDL {
 		try {
 			// Create the PushDefinition
 			PushDefinition pushDef = Env.getUser().createPushDefinition();
-			pushDef.setName(name);
 			pushDef.setOutputType(output_type);
 			
 			// Now add the output_type-specific args from the command line
@@ -63,7 +62,7 @@ public class PushStreamFromCSDL {
 			}
 
 			// Subscribe the push definition to the stream definition
-			PushSubscription pushSub = pushDef.subscribe(streamDef);
+			PushSubscription pushSub = pushDef.subscribe(streamDef, name);
 
 			// Display the details of the new subscription
 			Env.displaySubscriptionDetails(pushSub);

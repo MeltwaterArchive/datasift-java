@@ -88,7 +88,6 @@ public class TestPushSubscription extends TestCase {
 			String new_auth_pass = "mypassword";
 			
 			// Set the data
-			push.setName(new_name);
 			push.setOutputParam("auth.type", new_auth_type);
 			push.setOutputParam("auth.username", new_auth_user);
 			push.setOutputParam("auth.password", new_auth_pass);

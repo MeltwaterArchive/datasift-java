@@ -470,20 +470,70 @@ public class PushSubscription extends PushDefinition {
 		return retval;
     }
 
+    /**
+     * @var String The subscription ID.
+     */
 	protected String _id = "";
+	
+	/**
+	 * @var Date The date this subscription was created.
+	 */
 	protected Date _created_at = null;
+	
+	/**
+	 * @var String The name of this subscription.
+	 */
+	protected String _name = "";
+	
+	/**
+	 * @var String The current status of this subscription.
+	 */
 	protected String _status = "";
+	
+	/**
+	 * @var String The hash to which this subscription is subscribed.
+	 */
 	protected String _hash = "";
+	
+	/**
+	 * @var String "stream" or "historic"
+	 */
 	protected String _hash_type = "";
+	
+	/**
+	 * @var Date The date/time of the last push request.
+	 */
 	protected Date _last_request = null;
+	
+	/**
+	 * @var Date The date/time of the last successful push request.
+	 */
 	protected Date _last_success = null;
+	
+	/**
+	 * @var boolean True if this subscription has been deleted (becomes
+	 *              read-only).
+	 */
 	protected boolean _deleted = false;
 	
+	/**
+	 * Construct a PushSubscription object from a JSONObject.
+	 * 
+	 * @param User       user The user that owns this subscription.
+	 * @param JSONObject json The JSON object containing the subscription details.
+	 * @throws EInvalidData
+	 */
 	public PushSubscription(User user, JSONObject json) throws EInvalidData {
 		super(user);
 		init(json);
 	}
 	
+	/**
+	 * Extract data from a JSONObject.
+	 * 
+	 * @param JSONObject json The JSONObject containing the data.
+	 * @throws EInvalidData
+	 */
 	protected void init(JSONObject json) throws EInvalidData {
 		try {
 			_id = json.getString("id");
@@ -547,31 +597,45 @@ public class PushSubscription extends PushDefinition {
 		}
 	}
 	
+	/**
+	 * Re-fetch this subscription from the DataSift API.
+	 *  
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
 	public void reload() throws EInvalidData, EAPIError, EAccessDenied {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("id", getId());
 		init(_user.callAPI("push/get", params));
 	}
 	
+	/**
+	 * Get the subscription ID.
+	 * 
+	 * @return String
+	 */
 	public String getId() {
 		return _id;
 	}
 	
-	public boolean hasId() {
-		return getId().length() > 0;
-	}
-	
+	/**
+	 * Get the subscription name.
+	 * 
+	 * @return String
+	 */
 	public String getName() {
 		return _name;
 	}
 	
-	public void setName(String name) throws EInvalidData {
-		if (isDeleted()) {
-			throw new EInvalidData("Cannot modify a deleted subscription");
-		}
-		super.setName(name);
-	}
-
+	/**
+	 * Set an output parameter. Checks to see if the subscription has been
+	 * deleted, and if not calls the base class to set the parameter.
+	 * 
+	 * @param String key The output parameter to set.
+	 * @param String val The value to which to set it.
+	 * @throws EInvalidData
+	 */
 	public void setOutputParam(String key, String val) throws EInvalidData {
 		if (isDeleted()) {
 			throw new EInvalidData("Cannot modify a deleted subscription");
@@ -579,134 +643,191 @@ public class PushSubscription extends PushDefinition {
 		super.setOutputParam(key, val);
 	}
 
+	/**
+	 * Get the date this subscription was created.
+	 * 
+	 * @return Date
+	 */
 	public Date getCreatedAt() {
 		return _created_at;
 	}
 
+	/**
+	 * Get the current status of this subscription.
+	 * 
+	 * @return String
+	 * @see PushSubscription.STATUS_*
+	 */
 	public String getStatus() {
 		return _status;
 	}
 	
+	/**
+	 * Returns true if this subscription has been deleted.
+	 * 
+	 * @return boolean
+	 */
 	public boolean isDeleted() {
 		return getStatus() == STATUS_DELETED;
 	}
 	
+	/**
+	 * Get the hash type to which this subscription is subscribed.
+	 * 
+	 * @return String
+	 */
 	public String getHashType() {
 		return _hash_type;
 	}
 	
+	/**
+	 * Get the hash or playback ID to which this subscription is subscribed.
+	 * 
+	 * @return String
+	 */
 	public String getHash() {
 		return _hash;
 	}
 	
+	/**
+	 * Get the output type.
+	 * 
+	 * @return String
+	 */
 	public String getOutputType() {
 		return _output_type;
 	}
 	
+	/**
+	 * Get the date/time of the last push request.
+	 * 
+	 * @return Date
+	 */
 	public Date getLastRequest() {
 		return _last_request;
 	}
 	
+	/**
+	 * Get the date/time of the last successful push request.
+	 * 
+	 * @return Date
+	 */
 	public Date getLastSuccess() {
 		return _last_success;
 	}
 	
+	/**
+	 * Save changes to the name and output_parameters of this subscription.
+	 * 
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
 	public void save() throws EInvalidData, EAPIError, EAccessDenied {
-		// The output params and name are sent whether creating or updating.
+		// Can only update the name and output_params
 		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("id", getId());
 		for (String key : _output_params.keySet()) {
 			params.put("output_params." + key, _output_params.get(key));
 		}
 		params.put("name", getName());
 
-		String endpoint = "push/";
-		if (!hasId()) {
-			// Never saved, create it
-			endpoint += "create";
-			
-			// Add the hash/playback_id
-			if (getHashType().equals(HASH_TYPE_STREAM)) {
-				params.put("hash", getHash());
-			} else if (getHashType().equals(HASH_TYPE_HISTORIC)) {
-				params.put("playback_id", getHash());
-			} else {
-				throw new EInvalidData("Unknown hash_type: \"" + getHashType() + "\"");
-			}
-			
-			// Output type
-			params.put("output_type", getOutputType());
-			
-			// Add the initial status if it's not empty
-			if (getStatus().length() > 0) {
-				params.put("initial_status", getStatus());
-			}
-		} else {
-			// Already been saved, do an update
-			endpoint += "update";
-			
-			// ID
-			params.put("id", getId());
-		}
-
 		// Call the API and pass the returned object into init to update this object
-		init(_user.callAPI(endpoint, params));
+		init(_user.callAPI("push/update", params));
 	}
 	
+	/**
+	 * Pause this subscription.
+	 * 
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
 	public void pause() throws EInvalidData, EAPIError, EAccessDenied {
-		// Only call the API if we've got an ID (i.e. this subscription has
-		// been saved)
-		if (hasId()) {
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("id", String.valueOf(getId()));
-			init(_user.callAPI("push/pause", params));
-		} else {
-			_status = STATUS_PAUSED;
-		}
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("id", String.valueOf(getId()));
+		init(_user.callAPI("push/pause", params));
 	}
 	
+	/**
+	 * Resume this subscription.
+	 * 
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
 	public void resume() throws EInvalidData, EAPIError, EAccessDenied {
-		// Only call the API if we've got an ID (i.e. this subscription has
-		// been saved)
-		if (hasId()) {
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("id", String.valueOf(getId()));
-			init(_user.callAPI("push/resume", params));
-		} else {
-			_status = STATUS_ACTIVE;
-		}
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("id", String.valueOf(getId()));
+		init(_user.callAPI("push/resume", params));
 	}
 	
+	/**
+	 * Stop this subscription.
+	 * 
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
 	public void stop() throws EInvalidData, EAPIError, EAccessDenied {
-		// Only call the API if we've got an ID (i.e. this subscription has
-		// been saved)
-		if (hasId()) {
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("id", String.valueOf(getId()));
-			init(_user.callAPI("push/stop", params));
-		} else {
-			_status = STATUS_STOPPED;
-		}
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("id", String.valueOf(getId()));
+		init(_user.callAPI("push/stop", params));
 	}
 	
+	/**
+	 * Delete this subscription.
+	 * 
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
 	public void delete() throws EAPIError, EAccessDenied {
-		// Only call the API if we've got an ID (i.e. this subscription has
-		// been saved)
-		if (hasId()) {
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("id", String.valueOf(getId()));
-			_user.callAPI("push/delete", params);
-		}
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("id", String.valueOf(getId()));
+		_user.callAPI("push/delete", params);
+		// The delete API call doesn't return the object, so set the status
+		// manually
 		_status = STATUS_DELETED;
 	}
 	
+	/**
+	 * Get the log for this subscription.
+	 * 
+	 * @return Log
+	 * @throws EAPIError
+	 * @throws EInvalidData
+	 * @throws EAccessDenied
+	 */
 	public Log getLog() throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(_user, getId());
 	}
 	
+	/**
+	 * Get a page of the log for this subscription.
+	 * 
+	 * @param int page     The page to get.
+	 * @param int per_page The number of entries per page.
+	 * @return Log
+	 * @throws EAPIError
+	 * @throws EInvalidData
+	 * @throws EAccessDenied
+	 */
 	public Log getLog(int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(_user, getId(), page, per_page);
 	}
 	
+	/**
+	 * Get a page of the log for this subscription order as specified.
+	 * 
+	 * @param int    page      The page to get.
+	 * @param int    per_page  The number of entries per page.
+	 * @param String order_by  By which field to order the entries. 
+	 * @param String order_dir The direction of the sorting ("asc" or "desc").
+	 * @return Log
+	 * @throws EAPIError
+	 * @throws EInvalidData
+	 * @throws EAccessDenied
+	 */
 	public Log getLog(int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
 		return getLogs(_user, getId(), page, per_page, order_by, order_dir);
 	}

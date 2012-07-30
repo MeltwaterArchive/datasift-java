@@ -79,7 +79,6 @@ public class PushHistoricFromCSDL {
 			
 			// Create the PushDefinition
 			PushDefinition pushDef = Env.getUser().createPushDefinition();
-			pushDef.setName(name);
 			pushDef.setOutputType(output_type);
 			
 			// Now add the output_type-specific args from the command line
@@ -92,7 +91,7 @@ public class PushHistoricFromCSDL {
 			}
 
 			// Subscribe the push definition to the stream definition
-			PushSubscription pushSub = pushDef.subscribe(historic);
+			PushSubscription pushSub = pushDef.subscribe(historic, name);
 			
 			// Start the historic query
 			historic.start();
