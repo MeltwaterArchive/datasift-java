@@ -54,7 +54,7 @@ public class PushDefinition implements Serializable {
 	 * 
 	 * @param User user The user creating this object.
 	 */
-	protected PushDefinition(User user) {
+	public PushDefinition(User user) {
 		_user = user;
 	}
 	
