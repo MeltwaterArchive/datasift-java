@@ -71,10 +71,10 @@ public class PushSubscription extends PushDefinition {
 
 	/**
 	 * Get a list of push subscriptions in the given user's account. Limited
-	 * to 100 results.Results will be returned in ascending order by creation
+	 * to 100 results. Results will be returned in ascending order by creation
 	 * date.
 	 * 
-	 * @param User user
+	 * @param User user The user making the request.
 	 * @return ArrayList<PushSubscription>
 	 * @throws EInvalidData
 	 * @throws EAPIError
@@ -323,6 +323,10 @@ public class PushSubscription extends PushDefinition {
 		params.put("per_page", String.valueOf(per_page));
 		params.put("order_by", order_by);
 		params.put("order_dir", order_dir);
+		
+		if (include_finished) {
+			params.put("include_finished", "1");
+		}
 
 		JSONObject res = user.callAPI("push/get", params);
 
