@@ -81,7 +81,8 @@ public class PushFromHash {
 			System.err.println(message);
 		}
 		System.err.println("");
-		System.err.println("Usage: PushFromHash output_type hash_type hash name ...");
+		System.err.println("Usage: PushFromHash \\");
+		System.err.println("             <username> <api_key> <output_type> <hash_type> <hash> <name> ...");
 		System.err.println("");
 		System.err.println("Where: output_type = http (currently only http is supported)");
 		System.err.println("       hash_type   = stream | historic");

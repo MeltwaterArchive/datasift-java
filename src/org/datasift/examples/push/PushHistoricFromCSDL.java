@@ -90,7 +90,7 @@ public class PushHistoricFromCSDL {
 				pushDef.setOutputParam(bits[0], bits[1]);
 			}
 
-			// Subscribe the push definition to the stream definition
+			// Subscribe the push definition to the historic query
 			PushSubscription pushSub = pushDef.subscribe(historic, name);
 			
 			// Start the historic query

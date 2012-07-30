@@ -34,7 +34,7 @@ public class ViewLog {
 						for (LogEntry l : log) {
 							System.out.println(
 									new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(l.getRequestTime()) + " [" +
-									String.valueOf(l.getSubscriptionId()) + "] " +
+									l.getSubscriptionId() + "] " +
 									(l.getSuccess() ? "Success " : "") +
 									l.getMessage());
 						}

@@ -49,14 +49,13 @@ public class Env {
 	}
 	
 	static public void displaySubscriptionDetails(PushSubscription subscription) {
-	    String output_type = subscription.getOutputType();
-	    System.out.println("ID:            " + String.valueOf(subscription.getId()));
+	    System.out.println("ID:            " + subscription.getId());
 	    System.out.println("Name:          " + subscription.getName());
 	    System.out.println("Status:        " + subscription.getStatus());
 	    System.out.println("Created at:    " + subscription.getCreatedAt());
 	    System.out.println("Last request:  " + subscription.getLastRequest());
 	    System.out.println("Last success:  " + subscription.getLastSuccess());
-	    System.out.println("Output Type:   " + output_type);
+	    System.out.println("Output Type:   " + subscription.getOutputType());
 	    
 		System.out.println("Output Params:");
 		PushOutputParams output_params = subscription.getOutputParams();
