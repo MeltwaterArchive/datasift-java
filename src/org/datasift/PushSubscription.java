@@ -38,6 +38,7 @@ public class PushSubscription extends PushDefinition {
 	public final static String STATUS_STOPPED   = "stopped";
 	public final static String STATUS_FINISHING = "finishing";
 	public final static String STATUS_FINISHED  = "finished";
+	public final static String STATUS_FAILED    = "failed";
 	public final static String STATUS_DELETED   = "deleted";
 	
 	/**
