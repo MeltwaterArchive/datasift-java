@@ -46,29 +46,7 @@ public class WS extends StreamConsumer {
 	 * @throws WebSocketException 
 	 */
 	public WS(User user, IMultiStreamConsumerEvents eventHandler) throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
-		this( user, eventHandler, false, (String[]) null);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param User
-	 *            user
-	 * @param ArrayList<String>
-	 *            hashes
-	 * @param IMultiStreamConsumerEvents
-	 *            eventHandler
-	 * @param boolean 
-	 * 			   isHistoric
-	 * @throws EInvalidData
-	 * @throws ECompileFailed
-	 * @throws EAccessDenied
-	 * @throws EAPIError 
-	 * @throws URISyntaxException 
-	 * @throws WebSocketException 
-	 */
-	public WS(User user, IMultiStreamConsumerEvents eventHandler, String...hashes) throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
-		this(user, eventHandler, false, hashes);
+		this( user, eventHandler, (String[]) null);
 	}
 
 	/**
@@ -88,11 +66,10 @@ public class WS extends StreamConsumer {
 	 * @throws WebSocketException 
 	 */
 	public WS(User user,
-			IMultiStreamConsumerEvents eventHandler, boolean isHistoric, String...hashes) throws EInvalidData,
+			IMultiStreamConsumerEvents eventHandler, String...hashes) throws EInvalidData,
 			ECompileFailed, EAccessDenied, EAPIError {
 		super(user, eventHandler);
 		try {
-			_is_historic = isHistoric;
 			_thread = new WSThread(this, user, hashes == null ? new ArrayList<String>() : Arrays.asList(hashes));
 		} catch (WebSocketException e) {
 			throw new EAPIError(e.getMessage());

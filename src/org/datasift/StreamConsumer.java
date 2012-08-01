@@ -119,54 +119,6 @@ abstract public class StreamConsumer {
 	}
 	
 	/**
-	 * Factory method that takes a Historic object.
-	 * 
-	 * @param user
-	 * @param type
-	 * @param definition
-	 * @param eventHandler
-	 * @return
-	 * @throws EAccessDenied
-	 * @throws ECompileFailed
-	 * @throws EInvalidData
-	 * @throws EAPIError 
-	 */
-	public static StreamConsumer historicFactory(User user, String type,
-			Historic historic, IStreamConsumerEvents eventHandler)
-			throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
-		if (type == StreamConsumer.TYPE_HTTP) {
-			return new Http(user, new Definition(user, "", historic.getHash()), eventHandler, true);
-		} 
-
-		throw new EInvalidData("Unknown or inappropriate consumer type: "
-				+ type);
-	}
-
-	/**
-	 * Factory method that takes a Historic object for websockets.
-	 * 
-	 * @param user
-	 * @param type
-	 * @param definition
-	 * @param eventHandler
-	 * @return
-	 * @throws EAccessDenied
-	 * @throws ECompileFailed
-	 * @throws EInvalidData
-	 * @throws EAPIError 
-	 */
-	public static StreamConsumer historicFactory(User user, String type,
-			Historic historic, IMultiStreamConsumerEvents eventHandler)
-			throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
-		if (type == StreamConsumer.TYPE_WS) {
-			return new WS(user, eventHandler, true, historic.getHash());
-		} 
-
-		throw new EInvalidData("Unknown or inappropriate consumer type: "
-				+ type);
-	}
-
-	/**
 	 * The user that owns this consumer.
 	 */
 	protected User _user = null;
@@ -186,11 +138,6 @@ abstract public class StreamConsumer {
 	 */
 	protected int _state = StreamConsumer.STATE_STOPPED;
 	
-	/**
-	 * True if this is a historic consumer.
-	 */
-	protected boolean _is_historic = false;
-
 	/**
 	 * The event handler.
 	 */
@@ -249,31 +196,6 @@ abstract public class StreamConsumer {
 	 *            definition The definition that this consumer will consume.
 	 * @param IStreamConsumerEvents
 	 *            eventHandler The class that will receive events.
-	 * @param boolean
-	 *            isHistoric True if this is a historic consumer.
-	 * @throws EAccessDenied
-	 * @throws ECompileFailed
-	 * @throws EInvalidData
-	 */
-	protected StreamConsumer(User user, Definition definition,
-			IStreamConsumerEvents eventHandler, boolean isHistoric) throws EInvalidData,
-			ECompileFailed, EAccessDenied {
-		// Set the event handler
-		_eventHandler = eventHandler;
-
-		// Call the common init function
-		Init(user, definition, isHistoric);
-	}
-
-	/**
-	 * Constructor. Do not use this directly, use the factory method instead.
-	 * 
-	 * @param User
-	 *            user The user this consumer will run as.
-	 * @param Definition
-	 *            definition The definition that this consumer will consume.
-	 * @param IStreamConsumerEvents
-	 *            eventHandler The class that will receive events.
 	 * @throws EAccessDenied
 	 * @throws ECompileFailed
 	 * @throws EInvalidData
@@ -300,22 +222,6 @@ abstract public class StreamConsumer {
 	 */
 	protected void Init(User user, Definition definition) throws EInvalidData,
 			ECompileFailed, EAccessDenied {
-		Init(user, definition, false);
-	}
-
-	/**
-	 * Initialise the object.
-	 * 
-	 * @param user
-	 *            The user this consumer should run as.
-	 * @param definition
-	 *            The definition this consumer will consume.
-	 * @throws EAccessDenied
-	 * @throws ECompileFailed
-	 * @throws EInvalidData
-	 */
-	protected void Init(User user, Definition definition, boolean isHistoric) throws EInvalidData,
-			ECompileFailed, EAccessDenied {
 		// Set the user
 		_user = user;
 
@@ -328,9 +234,6 @@ abstract public class StreamConsumer {
 				_definition.compile();
 			}
 		}
-		
-		// Set whether this is a historic consumer
-		_is_historic = isHistoric;
 	}
 
 	/**
@@ -342,15 +245,6 @@ abstract public class StreamConsumer {
 		return _state;
 	}
 	
-	/**
-	 * Get whether this is a historic consumer.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isHistoric() {
-		return _is_historic;
-	}
-
 	/**
 	 * Set the current state to stopped.
 	 * @throws EInvalidData 

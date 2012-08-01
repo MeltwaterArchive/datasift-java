@@ -14,7 +14,7 @@ public class Http extends StreamConsumer {
 	 * This is the thread that consumes the HTTP stream.
 	 */
 	private HttpThread thread = null;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -31,26 +31,7 @@ public class Http extends StreamConsumer {
 	public Http(User user, Definition definition,
 			IStreamConsumerEvents eventHandler) throws EInvalidData,
 			ECompileFailed, EAccessDenied {
-		this(user, definition, eventHandler, false);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param User
-	 *            user
-	 * @param Definition
-	 *            definition
-	 * @param IStreamConsumerEvents
-	 *            eventHandler
-	 * @throws EInvalidData
-	 * @throws ECompileFailed
-	 * @throws EAccessDenied
-	 */
-	public Http(User user, Definition definition,
-			IStreamConsumerEvents eventHandler, boolean isHistoric) throws EInvalidData,
-			ECompileFailed, EAccessDenied {
-		super(user, definition, eventHandler, isHistoric);
+		super(user, definition, eventHandler);
 		thread = new HttpThread(this, user, definition);
 	}
 

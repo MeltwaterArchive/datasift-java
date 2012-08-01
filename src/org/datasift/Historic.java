@@ -620,25 +620,6 @@ public class Historic {
 	}
 
 	/**
-	 * Returns a DataSift_StreamConsumer-derived object for this definition, for
-	 * the given type.
-	 * 
-	 * @param type
-	 * @param eventHandler
-	 * @return StreamConsumer
-	 * @throws EInvalidData
-	 * @throws ECompileFailed
-	 * @throws EAccessDenied
-	 * @throws EAPIError
-	 */
-	public StreamConsumer getConsumer(String type,
-			IStreamConsumerEvents eventHandler) throws EInvalidData,
-			ECompileFailed, EAccessDenied, EAPIError {
-		return StreamConsumer.historicFactory(this._user, type, this,
-				eventHandler);
-	}
-	
-	/**
 	 * Get a page of push subscriptions for this historic query, where
 	 * each page contains up to 20 items. Results will be returned in
 	 * ascending order by creation date.

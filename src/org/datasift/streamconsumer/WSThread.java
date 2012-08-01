@@ -43,7 +43,7 @@ public class WSThread extends Thread {
 		_consumer = http;
 		_user = user;
 		_subscriptions = subscriptions;
-		_uri = new URI("ws://" + _user.getWebsocketBaseURL() + (_consumer.isHistoric() ? "historics/multi?hashes="+ Arrays.deepToString(_subscriptions.toArray()).replace("[", "").replace("]", ""): ""));
+		_uri = new URI("ws://" + _user.getWebsocketBaseURL() + "multi?hashes="+ Arrays.deepToString(_subscriptions.toArray()).replace("[", "").replace("]", ""));
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
