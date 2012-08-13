@@ -90,6 +90,11 @@ public class Historic {
 	 * @access protected
 	 */
 	protected HashMap<String, Integer> _volume_info = new HashMap<String, Integer>();
+	
+	/**
+	 * @access protected
+	 */
+	protected boolean _deleted = false;
 
 	/**
 	 * Generate a name based on the current date/time.
@@ -315,6 +320,10 @@ public class Historic {
 	 */
 	public void setName(String name) throws EInvalidData, EAPIError,
 			EAccessDenied {
+		if (_deleted) {
+			throw new EInvalidData("Cannot set the name of a deleted historic");
+		}
+		
 		if (_playback_id.length() == 0) {
 			_name = name;
 		} else {
@@ -405,6 +414,10 @@ public class Historic {
 	 * @throws EAPIError
 	 */
 	public void reloadData() throws EInvalidData, EAccessDenied, EAPIError {
+		if (_deleted) {
+			throw new EInvalidData("Cannot reload the data for a deleted historic");
+		}
+		
 		if (_playback_id.length() == 0) {
 			throw new EInvalidData(
 					"Cannot reload the data for a historic query that hasn't been prepared.");
@@ -509,6 +522,8 @@ public class Historic {
 				throw new EAPIError(
 						"Historic retrieved successfully but no volume info in the response.");
 			}
+			
+			_deleted = _status.equals("deleted");
 		} catch (EAPIError e) {
 			switch (e.getCode()) {
 			case 400:
@@ -530,6 +545,10 @@ public class Historic {
 	 * @throws EAPIError
 	 */
 	public void prepare() throws EInvalidData, EAccessDenied, EAPIError {
+		if (_deleted) {
+			throw new EInvalidData("Cannot prepare a deleted historic");
+		}
+		
 		if (_playback_id.length() != 0) {
 			throw new EInvalidData(
 					"This historic query has already been prepared.");
@@ -591,6 +610,10 @@ public class Historic {
 	 * @throws EAPIError
 	 */
 	public void start() throws EInvalidData, EAccessDenied, EAPIError {
+		if (_deleted) {
+			throw new EInvalidData("Cannot start a deleted historic");
+		}
+		
 		if (_playback_id.length() == 0) {
 			throw new EInvalidData(
 					"Cannot start a historic that hasn't been prepared.");
@@ -617,6 +640,85 @@ public class Historic {
 		}
 
 		reloadData();
+	}
+
+	/**
+	 * Stop this historic query.
+	 * 
+	 * @throws EInvalidData
+	 * @throws EAccessDenied
+	 * @throws EAPIError
+	 */
+	public void stop() throws EInvalidData, EAccessDenied, EAPIError {
+		if (_deleted) {
+			throw new EInvalidData("Cannot stop a deleted historic");
+		}
+		
+		if (_playback_id.length() == 0) {
+			throw new EInvalidData(
+					"Cannot stop a historic that hasn't been prepared.");
+		}
+
+		try {
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("id", _playback_id);
+			_user.callAPI("historics/stop", params);
+		} catch (EAPIError e) {
+			switch (e.getCode()) {
+			case 400:
+				// Missing or invalid parameters
+				throw new EInvalidData(e.getMessage());
+
+			case 404:
+				// Historic query not found
+				throw new EInvalidData(e.getMessage());
+
+			default:
+				throw new EAPIError("Unexpected APIError code: " + e.getCode()
+						+ " [" + e.getMessage() + "]");
+			}
+		}
+
+		reloadData();
+	}
+
+	/**
+	 * Delete this historic query.
+	 * 
+	 * @throws EInvalidData
+	 * @throws EAccessDenied
+	 * @throws EAPIError
+	 */
+	public void delete() throws EInvalidData, EAccessDenied, EAPIError {
+		if (_deleted) {
+			throw new EInvalidData("Cannot delete a deleted historic");
+		}
+		
+		if (_playback_id.length() == 0) {
+			throw new EInvalidData(
+					"Cannot delete a historic that hasn't been prepared.");
+		}
+
+		try {
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("id", _playback_id);
+			_user.callAPI("historics/delete", params);
+			_deleted = true;
+		} catch (EAPIError e) {
+			switch (e.getCode()) {
+			case 400:
+				// Missing or invalid parameters
+				throw new EInvalidData(e.getMessage());
+
+			case 404:
+				// Historic query not found
+				throw new EInvalidData(e.getMessage());
+
+			default:
+				throw new EAPIError("Unexpected APIError code: " + e.getCode()
+						+ " [" + e.getMessage() + "]");
+			}
+		}
 	}
 
 	/**
