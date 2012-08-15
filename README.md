@@ -11,6 +11,8 @@ All examples and tests use the username and API key in Config.java.
 
 Download the JAR file at https://github.com/datasift/datasift-java/downloads
 
+Note that we use [git flow](https://github.com/nvie/gitflow) to manage development.
+
 Requirements
 ------------
 
@@ -36,6 +38,8 @@ more details.
 
 Changelog
 ---------
+
+* Added the develop branch as required by git flow (2012-08-15)
 
 * v.1.3.4 Added SSL support for HTTP streams (2012-05-15)
 
