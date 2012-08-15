@@ -4,8 +4,16 @@
 package org.datasift.streamconsumer;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-import org.datasift.*;
+import org.datasift.EAPIError;
+import org.datasift.EAccessDenied;
+import org.datasift.ECompileFailed;
+import org.datasift.EInvalidData;
+import org.datasift.IMultiStreamConsumerEvents;
+import org.datasift.StreamConsumer;
+import org.datasift.User;
 
 import de.roderick.weberknecht.WebSocketException;
 
@@ -28,6 +36,28 @@ public class WS extends StreamConsumer {
 	 *            hashes
 	 * @param IMultiStreamConsumerEvents
 	 *            eventHandler
+	 * @param boolean 
+	 * 			   isHistoric
+	 * @throws EInvalidData
+	 * @throws ECompileFailed
+	 * @throws EAccessDenied
+	 * @throws EAPIError 
+	 * @throws URISyntaxException 
+	 * @throws WebSocketException 
+	 */
+	public WS(User user, IMultiStreamConsumerEvents eventHandler) throws EInvalidData, ECompileFailed, EAccessDenied, EAPIError {
+		this( user, eventHandler, (String[]) null);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param User
+	 *            user
+	 * @param ArrayList<String>
+	 *            hashes
+	 * @param IMultiStreamConsumerEvents
+	 *            eventHandler
 	 * @throws EInvalidData
 	 * @throws ECompileFailed
 	 * @throws EAccessDenied
@@ -36,11 +66,11 @@ public class WS extends StreamConsumer {
 	 * @throws WebSocketException 
 	 */
 	public WS(User user,
-			IMultiStreamConsumerEvents eventHandler) throws EInvalidData,
+			IMultiStreamConsumerEvents eventHandler, String...hashes) throws EInvalidData,
 			ECompileFailed, EAccessDenied, EAPIError {
 		super(user, eventHandler);
 		try {
-			_thread = new WSThread(this, user);
+			_thread = new WSThread(this, user, hashes == null ? new ArrayList<String>() : Arrays.asList(hashes));
 		} catch (WebSocketException e) {
 			throw new EAPIError(e.getMessage());
 		} catch (URISyntaxException e) {

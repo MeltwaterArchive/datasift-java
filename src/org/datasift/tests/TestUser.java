@@ -38,6 +38,7 @@ public class TestUser extends TestCase {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		DataForTests.init();
 		user = new User(Config.username, Config.api_key);
 		api_client = new MockApiClient(user);
 		user.setApiClient(api_client);

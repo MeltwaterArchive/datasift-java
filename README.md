@@ -21,6 +21,9 @@ The following libraries are included in the lib folder.
 * HttpClient from the Apache Software Foundation (4.1.1 included)
   http://hc.apache.org/httpcomponents-client-ga/
 
+* Trove (3.0.3 included)
+  http://trove.starlight-systems.com/
+
 * Junit (4.9b2 included)
   http://www.junit.org/
 
@@ -31,7 +34,7 @@ creating a user, or by calling user.enableSSL(false) on the user object.
 License
 -------
 
-All code contained in this repository is Copyright 2011 MediaSift Ltd.
+All code contained in this repository is Copyright 2011-2012 MediaSift Ltd.
 
 This code is released under the BSD license. Please see the LICENSE file for
 more details.
@@ -40,6 +43,16 @@ Changelog
 ---------
 
 * Added the develop branch as required by git flow (2012-08-15)
+
+* v.2.0.0 Added onConnect, onDisconnect and onStatus events, improved
+          efficiency within the WebSocket library, and support for the
+          historics API (2012-06-22). Please note: Though support has been
+          added for the the Historics API, the API itself is not yet publicly
+          available. Access will be made available over the coming months. 
+
+  The IStreamConsumerEvents and IMultiStreamConsumerEvents interfaces now
+  contain callbacks for onConnect, onDisconnect and onStatus events. These
+  MUST be implemented in your event handler.
 
 * v.1.3.4 Added SSL support for HTTP streams (2012-05-15)
 

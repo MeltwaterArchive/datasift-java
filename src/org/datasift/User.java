@@ -3,8 +3,11 @@
  */
 package org.datasift;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
+import org.datasift.pushsubscription.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +25,7 @@ public class User {
 	 *
 	 * @access public
 	 */
-	public final static String _user_agent = "DataSiftJava/1.3.3";
+	public final static String _user_agent = "DataSiftJava/2.2.0";
 
 	/**
 	 * The base URL for API calls. No http://, and with the trailing slash.
@@ -37,6 +40,13 @@ public class User {
 	 * @access public
 	 */
 	public static String _stream_base_url = "stream.datasift.com/";
+
+	/**
+	 * The base URL for Websocket streaming. No http://, and with the trailing slash.
+	 *
+	 * @access public
+	 */
+	public static String _websocket_base_url = "websocket.datasift.com/";
 
 	/**
 	 * Usage period constant: hour
@@ -106,6 +116,23 @@ public class User {
 	 * @throws EInvalidData
 	 */
 	public User(String username, String api_key) throws EInvalidData {
+		this(username, api_key, true);
+	}
+	
+	/**
+	 * Constructor. A username and API key are required when constructing an
+	 * instance of this class.
+	 *
+	 * @access public
+	 * @param String
+	 *            username The user's username.
+	 * @param String
+	 *            api_key The user's API key.
+	 * @param boolean
+	 *            use_ssl Set to false to disable SSL.
+	 * @throws EInvalidData
+	 */
+	public User(String username, String api_key, boolean use_ssl) throws EInvalidData {
 		if (username.length() == 0) {
 			throw new EInvalidData(
 				"Please supply valid credentials when creating a DataSift_User object."
@@ -120,6 +147,7 @@ public class User {
 
 		_username = username;
 		_api_key = api_key;
+		_use_ssl = use_ssl;
 	}
 
 	/**
@@ -170,6 +198,16 @@ public class User {
 	 */
 	public String getStreamBaseURL() {
 		return _stream_base_url;
+	}
+	
+	/**
+	 * Returns the base URL for HTTP stream request.
+	 *
+	 * @access public
+	 * @return String The stream base URL.
+	 */
+	public String getWebsocketBaseURL() {
+		return _websocket_base_url;
 	}
 	
 	/**
@@ -224,6 +262,50 @@ public class User {
 	}
 	
     /**
+     * Create a historic query using the given stream hash.
+     * 
+     * @param start
+     * @param end
+     * @param sources
+     * @return Historic
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     */
+    public Historic createHistoric(String hash, Date start, Date end, String sources, int sample) throws EInvalidData, EAccessDenied
+    {
+    	return createHistoric(hash, start, end, sources, sample, "");
+    }
+    
+    /**
+     * Create a named historic query from this definiton.
+     *  
+     * @param start
+     * @param end
+     * @param sources
+     * @param name
+     * @return Historic
+     * @throws EInvalidData
+     * @throws EAccessDenied
+     */
+    public Historic createHistoric(String hash, Date start, Date end, String sources, int sample, String name) throws EInvalidData, EAccessDenied
+    {
+    	return new Historic(this, new Definition(this, "", hash), start, end, sources, sample, name);
+    }
+
+    /**
+     * Get an existing historic.
+     * 
+     * @param playback_id
+     * @return Historic
+     * @throws EAPIError 
+     * @throws EAccessDenied 
+     * @throws EInvalidData 
+     */
+	public Historic getHistoric(String playback_id) throws EInvalidData, EAccessDenied, EAPIError {
+		return new Historic(this, playback_id);
+	}
+	
+    /**
      * Returns a DataSift_StreamConsumer-derived object for the given hash,
      * for the given type.
      * 
@@ -232,8 +314,8 @@ public class User {
      * @param String hash The hash of the stream to be consumed.
      * @param String
      *            type The consumer type for which to construct a consumer.
-     * @throws EInvalidData
      * @return StreamConsumer The consumer object.
+     * @throws EInvalidData
      * @throws EAccessDenied
      * @throws ECompileFailed
      */
@@ -241,6 +323,89 @@ public class User {
             IStreamConsumerEvents eventHandler) throws EInvalidData,
             ECompileFailed, EAccessDenied {
         return StreamConsumer.factory(this, type, new Definition(this, null, hash), eventHandler);
+    }
+    
+    /**
+     * Create a push subscription for this user. Note that you must call the
+     * save method to actually create the subscription on the server.
+     * 
+     * @param String output_type The output_type of the required push subscription.
+     * @param String hash_type   The type of hash being supplied (stream or historic).
+     * @param String hash        The stream hash or historic playback ID.
+     * @param String name        A name for this push subscription.
+     * @return PushSubscription
+     * @throws EInvalidData
+     */
+    public PushDefinition createPushDefinition() {
+    	return new PushDefinition(this);
+    }
+    
+    /**
+     * Get a single push subscription.
+     * 
+     * @param String id The ID of the subscription to fetch.
+     * @return PushSubscription
+     * @throws EInvalidData 
+     * @throws EAccessDenied 
+     * @throws EAPIError 
+     */
+    public PushSubscription getPushSubscription(String id) throws EAPIError, EAccessDenied, EInvalidData {
+    	return PushSubscription.get(this, id);
+    }
+    
+    /**
+     * Get a list of push subscriptions in your account.
+     * 
+     * @return ArrayList<PushSubscription>
+     * @throws EInvalidData
+     * @throws EAPIError
+     * @throws EAccessDenied
+     */
+    public ArrayList<PushSubscription> listPushSubscriptions() throws EInvalidData, EAPIError, EAccessDenied {
+    	return PushSubscription.list(this);
+    }
+    
+    /**
+     * Get the most recent push subscription log entries.
+     * 
+     * @return ArrayList<LogEntry>
+     * @throws EAccessDenied 
+     * @throws EInvalidData 
+     * @throws EAPIError 
+     */
+    public Log getPushSubscriptionLogs() throws EAPIError, EInvalidData, EAccessDenied {
+    	return PushSubscription.getLogs(this);
+    }
+    
+    /**
+     * Page through recent push subscription log entries.
+     * 
+     * @param int page     Which page to fetch.
+     * @param int per_page Based on this page size.
+     * @return ArrayList<LogEntry>
+     * @throws EAccessDenied 
+     * @throws EInvalidData 
+     * @throws EAPIError 
+     */
+    public Log getPushSubscriptionLogs(int page, int per_page) throws EAPIError, EInvalidData, EAccessDenied {
+    	return PushSubscription.getLogs(this, page, per_page);
+    }
+
+    /**
+     * Page through recent push subscription log entries, specifying the sort
+     * order.
+     * 
+     * @param int    page      Which page to fetch.
+     * @param int    per_page  Based on this page size.
+     * @param String order_by  Which field to sort by.
+     * @param String order_dir In asc[ending] or desc[ending] order.
+     * @return ArrayList<LogEntry>
+     * @throws EAccessDenied 
+     * @throws EInvalidData 
+     * @throws EAPIError 
+     */
+    public Log getPushSubscriptionLogs(int page, int per_page, String order_by, String order_dir) throws EAPIError, EInvalidData, EAccessDenied {
+    	return PushSubscription.getLogs(this, page, per_page, order_by, order_dir);
     }
 
 	/**
@@ -350,6 +515,8 @@ public class User {
 			try {
 				switch (res.getStatusCode()) {
 				case 200:
+				case 202:
+				case 204:
 					break;
 
 				case 400:

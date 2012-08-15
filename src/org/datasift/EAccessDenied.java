@@ -9,7 +9,7 @@ package org.datasift;
  * @author MediaSift
  * @version 0.1
  */
-public class EAccessDenied extends Exception {
+public class EAccessDenied extends DataSiftException {
 	/**
 	 * Required by the superclass.
 	 */
@@ -19,7 +19,6 @@ public class EAccessDenied extends Exception {
 	 * 
 	 */
 	public EAccessDenied() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -27,6 +26,5 @@ public class EAccessDenied extends Exception {
 	 */
 	public EAccessDenied(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 }

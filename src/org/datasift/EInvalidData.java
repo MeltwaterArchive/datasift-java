@@ -7,7 +7,7 @@ package org.datasift;
  * @author MediaSift
  * @version 0.1
  */
-public class EInvalidData extends Exception {
+public class EInvalidData extends DataSiftException {
 	/**
 	 * Required by the superclass.
 	 */
@@ -17,7 +17,6 @@ public class EInvalidData extends Exception {
 	 * 
 	 */
 	public EInvalidData() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -25,6 +24,5 @@ public class EInvalidData extends Exception {
 	 */
 	public EInvalidData(String arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 }
