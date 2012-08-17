@@ -4,7 +4,7 @@
 	<property name="deploy.dir" value="../deploy"/>
 	<property name="classes.dir" value="../deploy/classes"/>
 
-	<property name="version" value="2.2.0"/>
+	<property name="version" value="2.1.0"/>
 	
 	<path id="class.path">
 		<fileset dir="../lib">

@@ -42,6 +42,9 @@ more details.
 Changelog
 ---------
 
+* v.2.1.0 Finalised support for Historics and addedsupport for Push
+          delivery (2012-08-17)
+
 * Added the develop branch as required by git flow (2012-08-15)
 
 * v.2.0.0 Added onConnect, onDisconnect and onStatus events, improved
