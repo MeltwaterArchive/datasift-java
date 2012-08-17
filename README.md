@@ -42,8 +42,10 @@ more details.
 Changelog
 ---------
 
-* v.2.1.0 Finalised support for Historics and addedsupport for Push
+* v.2.2.0 Finalised support for Historics and addedsupport for Push
           delivery (2012-08-17)
+
+* v.2.1.1 Fixed some bugs in the websocket reconnection logic (2012-07-26)
 
 * Added the develop branch as required by git flow (2012-08-15)
 

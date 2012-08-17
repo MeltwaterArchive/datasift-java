@@ -14,7 +14,7 @@
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
-  <version>2.1.0</version>
+  <version>2.2.0</version>
 
   <name>DataSift Java Client library</name>
   <description>A client library for interacting with the DataSift API on the JVM.</description>
