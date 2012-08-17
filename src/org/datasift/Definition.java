@@ -361,15 +361,15 @@ public class Definition {
      * 
      * @param start
      * @param end
-     * @param feeds
+     * @param sources
      * @param sample
      * @return Historic
      * @throws EInvalidData
      * @throws EAccessDenied
      */
-    public Historic createHistoric(Date start, Date end, String feeds, int sample) throws EInvalidData, EAccessDenied
+    public Historic createHistoric(Date start, Date end, String sources, double sample) throws EInvalidData, EAccessDenied
     {
-    	return createHistoric(start, end, feeds, sample, "");
+    	return createHistoric(start, end, sources, sample, "");
     }
     
     /**
@@ -377,16 +377,16 @@ public class Definition {
      *  
      * @param start
      * @param end
-     * @param feeds
+     * @param sources
      * @param sample
      * @param name
      * @return Historic
      * @throws EInvalidData
      * @throws EAccessDenied
      */
-    public Historic createHistoric(Date start, Date end, String feeds, int sample, String name) throws EInvalidData, EAccessDenied
+    public Historic createHistoric(Date start, Date end, String sources, double sample, String name) throws EInvalidData, EAccessDenied
     {
-    	return new Historic(this._user, this, start, end, feeds, sample, name);
+    	return new Historic(this._user, this, start, end, sources, sample, name);
     }
 
     /**
@@ -407,6 +407,74 @@ public class Definition {
             ECompileFailed, EAccessDenied {
         return StreamConsumer.factory(this._user, type, this, eventHandler);
     }
+    
+	/**
+	 * Get a list of push subscriptions for this definition. Limited
+	 * to 100 results.Results will be returned in ascending order by creation
+	 * date.
+	 * 
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	public ArrayList<PushSubscription> getPushSubscriptions() throws EInvalidData, EAPIError, EAccessDenied {
+		return getPushSubscriptions(1, 100);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for this definition, where
+	 * each page contains up to 20 items. Results will be returned in
+	 * ascending order by creation date.
+	 * 
+	 * @param User user The user.
+	 * @param int  page The page number to fetch.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	public ArrayList<PushSubscription> getPushSubscriptions(int page) throws EInvalidData, EAPIError, EAccessDenied {
+		return getPushSubscriptions(page, 20);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for this definition, where
+	 * each page contains up to per_page items. Results will be returned in
+	 * ascending order by creation date.
+	 * 
+	 * @param User user     The user.
+	 * @param int  page     The page number to fetch.
+	 * @param int  per_page The number of items per page.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	public ArrayList<PushSubscription> getPushSubscriptions(int page, int per_page) throws EInvalidData, EAPIError, EAccessDenied {
+		return getPushSubscriptions(page, per_page, PushSubscription.ORDERBY_CREATED_AT, PushSubscription.ORDERDIR_ASC);
+	}
+	
+	/**
+	 * Get a page of push subscriptions for this definition, where
+	 * each page contains up to per_page items. Results will be ordered
+	 * according to the supplied ordering parameters.
+	 * 
+	 * @param User user                The user.
+	 * @param int  page                The page number to fetch.
+	 * @param int  per_page            The number of items per page.
+	 * @param String order_by          The field on which to order the results.
+	 * @param String order_dir         The direction of the ordering.
+	 * @param boolean include_finished True to include subscriptions against
+	 *                                 finished historic queries.
+	 * @return ArrayList<PushSubscription>
+	 * @throws EInvalidData
+	 * @throws EAPIError
+	 * @throws EAccessDenied
+	 */
+	public ArrayList<PushSubscription> getPushSubscriptions(int page, int per_page, String order_by, String order_dir) throws EInvalidData, EAPIError, EAccessDenied {
+		return PushSubscription.listByStreamHash(_user, getHash(), page, per_page, order_by, order_dir, false);
+	}
 
     /**
      * Get a list of interactions available for the currently set hash

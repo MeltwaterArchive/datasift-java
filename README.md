@@ -11,6 +11,8 @@ All examples and tests use the username and API key in Config.java.
 
 Download the JAR file at https://github.com/datasift/datasift-java/downloads
 
+Note that we use [git flow](https://github.com/nvie/gitflow) to manage development.
+
 Requirements
 ------------
 
@@ -40,8 +42,10 @@ more details.
 Changelog
 ---------
 
-* v.2.1.1 Added support for streaming Historic queries via websockets and
-          Fixed some bugs in the websocket reconnection logic (2012-07-26)
+* v.2.1.0 Finalised support for Historics and addedsupport for Push
+          delivery (2012-08-17)
+
+* Added the develop branch as required by git flow (2012-08-15)
 
 * v.2.0.0 Added onConnect, onDisconnect and onStatus events, improved
           efficiency within the WebSocket library, and support for the

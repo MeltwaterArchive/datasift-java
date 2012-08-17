@@ -124,7 +124,7 @@ public class HttpThread extends Thread {
 				DefaultHttpClient client = new DefaultHttpClient();
 				try {
 					HttpGet get = new HttpGet("http" + (_user.useSSL() ? "s" : "") + "://"
-							+ _user.getStreamBaseURL() + (_consumer.isHistoric() ? "historics/" : "")
+							+ _user.getStreamBaseURL()
 							+ _definition.getHash());
 					try {
 						get.addHeader("Authorization", _user.getUsername() + ":" + _user.getAPIKey());

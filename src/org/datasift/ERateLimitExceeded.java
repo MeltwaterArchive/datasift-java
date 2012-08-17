@@ -10,7 +10,7 @@ package org.datasift;
  * @author MediaSift
  * @version 0.1
  */
-public class ERateLimitExceeded extends Exception {
+public class ERateLimitExceeded extends DataSiftException {
 	/**
 	 * Required by the superclass.
 	 */
@@ -20,7 +20,6 @@ public class ERateLimitExceeded extends Exception {
 	 * 
 	 */
 	public ERateLimitExceeded() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -28,6 +27,5 @@ public class ERateLimitExceeded extends Exception {
 	 */
 	public ERateLimitExceeded(String arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 }
