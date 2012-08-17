@@ -21,21 +21,16 @@ import java.io.UnsupportedEncodingException;
 
 public class WebSocketMessage
 {
-	private Byte[] message;
+	private byte[] message;
 
-
-	public WebSocketMessage(final Byte[] message)
+	public WebSocketMessage(byte[] message)
 	{
-		this.message = message;
+        this.message = message;
 	}
 
 
 	public String getText()
 	{
-		byte[] message = new byte[this.message.length];
-		for (int i = 0; i < this.message.length; i++) {
-			message[i] = this.message[i];
-		}
 		try {
 			return new String(message, "UTF-8");
 		}

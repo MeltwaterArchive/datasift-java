@@ -9,7 +9,7 @@ package org.datasift;
  * @author MediaSift
  * @version 0.1
  */
-public class ECompileFailed extends Exception {
+public class ECompileFailed extends DataSiftException {
 	/**
 	 * Required by the superclass.
 	 */
@@ -19,7 +19,6 @@ public class ECompileFailed extends Exception {
 	 * 
 	 */
 	public ECompileFailed() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -27,7 +26,6 @@ public class ECompileFailed extends Exception {
 	 */
 	public ECompileFailed(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -35,7 +33,6 @@ public class ECompileFailed extends Exception {
 	 */
 	public ECompileFailed(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -44,6 +41,5 @@ public class ECompileFailed extends Exception {
 	 */
 	public ECompileFailed(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 }

@@ -14,7 +14,7 @@ public class Http extends StreamConsumer {
 	 * This is the thread that consumes the HTTP stream.
 	 */
 	private HttpThread thread = null;
-	
+
 	/**
 	 * Constructor.
 	 * 

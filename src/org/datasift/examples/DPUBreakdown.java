@@ -4,9 +4,6 @@
  */
 package org.datasift.examples;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -32,15 +29,13 @@ public class DPUBreakdown {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// if (args.length != 1) {
-		// System.out.println("Please specify the filename of a CSDL definition.");
-		// return;
-		// }
+		if (args.length != 1) {
+			System.out.println("Please specify the filename of a CSDL definition.");
+			return;
+		}
 
 		try {
-
-			// String csdl = DPUBreakdown.readFileAsString(args[0]);
-			String csdl = DPUBreakdown.readFileAsString("csdl.txt");
+			String csdl = Utils.readFileAsString(args[0]);
 
 			// Authenticate
 			System.out.println("Creating user...");
@@ -121,11 +116,11 @@ public class DPUBreakdown {
 
 			// Top border
 			System.out.print("/-");
-			System.out.print(repeatString("-", maxlen_Target));
+			System.out.print(Utils.repeatString("-", maxlen_Target));
 			System.out.print("---");
-			System.out.print(repeatString("-", maxlen_TimesUsed));
+			System.out.print(Utils.repeatString("-", maxlen_TimesUsed));
 			System.out.print("---");
-			System.out.print(repeatString("-", maxlen_Complexity));
+			System.out.print(Utils.repeatString("-", maxlen_Complexity));
 			System.out.println("-\\");
 
 			// Header row
@@ -142,11 +137,11 @@ public class DPUBreakdown {
 
 			// Header bottom border
 			System.out.print("|-");
-			System.out.print(repeatString("-", maxlen_Target));
+			System.out.print(Utils.repeatString("-", maxlen_Target));
 			System.out.print("-+-");
-			System.out.print(repeatString("-", maxlen_TimesUsed));
+			System.out.print(Utils.repeatString("-", maxlen_TimesUsed));
 			System.out.print("-+-");
-			System.out.print(repeatString("-", maxlen_Complexity));
+			System.out.print(Utils.repeatString("-", maxlen_Complexity));
 			System.out.println("-|");
 
 			// Now the rows
@@ -164,11 +159,11 @@ public class DPUBreakdown {
 
 			// Total top border
 			System.out.print("|-");
-			System.out.print(repeatString("-", maxlen_Target));
+			System.out.print(Utils.repeatString("-", maxlen_Target));
 			System.out.print("-+-");
-			System.out.print(repeatString("-", maxlen_TimesUsed));
+			System.out.print(Utils.repeatString("-", maxlen_TimesUsed));
 			System.out.print("-+-");
-			System.out.print(repeatString("-", maxlen_Complexity));
+			System.out.print(Utils.repeatString("-", maxlen_Complexity));
 			System.out.println("-|");
 
 			// Total
@@ -182,11 +177,11 @@ public class DPUBreakdown {
 
 			// Bottom border
 			System.out.print("\\-");
-			System.out.print(repeatString("-", maxlen_Target));
+			System.out.print(Utils.repeatString("-", maxlen_Target));
 			System.out.print("---");
-			System.out.print(repeatString("-", maxlen_TimesUsed));
+			System.out.print(Utils.repeatString("-", maxlen_TimesUsed));
 			System.out.print("---");
-			System.out.print(repeatString("-", maxlen_Complexity));
+			System.out.print(Utils.repeatString("-", maxlen_Complexity));
 			System.out.println("-/");
 			System.out.println();
 		} catch (EInvalidData e) {
@@ -206,47 +201,6 @@ public class DPUBreakdown {
 			System.out.print("IOException: ");
 			System.out.println(e.getMessage());
 		}
-	}
-
-	/**
-	 * 
-	 * @param filePath
-	 * @return
-	 * @throws java.io.IOException
-	 */
-	private static String readFileAsString(String filePath)
-			throws java.io.IOException {
-		byte[] buffer = new byte[(int) new File(filePath).length()];
-		BufferedInputStream f = null;
-		try {
-			f = new BufferedInputStream(new FileInputStream(filePath));
-			f.read(buffer);
-		} finally {
-			if (f != null)
-				try {
-					f.close();
-				} catch (IOException ignored) {
-				}
-		}
-		return new String(buffer);
-	}
-
-	private static String repeatString(String s, int reps) {
-		if (reps < 0) {
-			return "";
-		}
-
-		if (s == null) {
-			return null;
-		}
-
-		StringBuilder stringBuilder = new StringBuilder(s.length() * reps);
-
-		for (int i = 0; i < reps; i++) {
-			stringBuilder.append(s);
-		}
-
-		return stringBuilder.toString();
 	}
 
 	public static class TableRow {

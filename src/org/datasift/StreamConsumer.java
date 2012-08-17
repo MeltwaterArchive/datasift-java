@@ -5,7 +5,9 @@ package org.datasift;
 
 import java.util.ArrayList;
 
-import org.datasift.streamconsumer.*;
+import org.datasift.streamconsumer.Http;
+import org.datasift.streamconsumer.HttpMulti;
+import org.datasift.streamconsumer.WS;
 
 /**
  * @author MediaSift
@@ -115,7 +117,7 @@ abstract public class StreamConsumer {
 		return StreamConsumer.factory(user, type, new Definition(user, csdl),
 				eventHandler);
 	}
-
+	
 	/**
 	 * The user that owns this consumer.
 	 */
@@ -135,7 +137,7 @@ abstract public class StreamConsumer {
 	 * The current state.
 	 */
 	protected int _state = StreamConsumer.STATE_STOPPED;
-
+	
 	/**
 	 * The event handler.
 	 */
@@ -242,7 +244,7 @@ abstract public class StreamConsumer {
 	public int getState() {
 		return _state;
 	}
-
+	
 	/**
 	 * Set the current state to stopped.
 	 * @throws EInvalidData 
@@ -253,6 +255,30 @@ abstract public class StreamConsumer {
 		} else {
 			throw new EInvalidData("The state must be STOPPING before it can be set to STOPPED.");
 		}
+	}
+
+	/**
+	 * This is called when the consumer has successfully connected.
+	 */
+	public void onConnect() {
+		if (_eventHandler != null) {
+			_eventHandler.onConnect(this);
+		} else if (_multiEventHandler != null) {
+			_multiEventHandler.onConnect(this);
+		}
+		// If we don't have a handler for this event, swallow it!
+	}
+
+	/**
+	 * This is called when the consumer has successfully connected.
+	 */
+	public void onDisconnect() {
+		if (_eventHandler != null) {
+			_eventHandler.onDisconnect(this);
+		} else if (_multiEventHandler != null) {
+			_multiEventHandler.onDisconnect(this);
+		}
+		// If we don't have a handler for this event, swallow it!
 	}
 
 	/**
@@ -326,6 +352,23 @@ abstract public class StreamConsumer {
 		} else {
 			throw new EInvalidData(
 					"You must provide an onMultiDeleted method or a multiEventHandler object");
+		}
+	}
+	
+	/**
+	 * Called for each status message received down the stream.
+	 * 
+	 * @param type
+	 * @param info
+	 * @throws EInvalidData
+	 */
+	public void onStatus(String type, JSONdn info) throws EInvalidData {
+		if (_eventHandler != null) {
+			_eventHandler.onStatus(this, type, info);
+		} else if (_multiEventHandler != null) {
+			_multiEventHandler.onStatus(this, type, info);
+		} else {
+			throw new EInvalidData("You must provide an onStatus method or an eventHandler object");
 		}
 	}
 
