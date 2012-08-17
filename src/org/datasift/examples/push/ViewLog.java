@@ -10,6 +10,7 @@ import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
 import org.datasift.PushSubscription;
+import org.datasift.examples.push.Env;
 import org.datasift.pushsubscription.Log;
 import org.datasift.pushsubscription.LogEntry;
 
@@ -74,5 +75,7 @@ public class ViewLog {
 		} catch (EInvalidData e) {
 			System.err.println("APIError: " + e.getMessage());
 		}
+		
+		System.out.println("Rate-limit-remaining: " + Env.getUser().getRateLimitRemaining());
 	}
 }

@@ -1,15 +1,13 @@
 /**
- * This example deletes one or more push subscriptions in your account.
+ * This example views the details of a Historics query in your account.
  */
-package org.datasift.examples.push;
+package org.datasift.examples.historics;
 
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
-import org.datasift.PushSubscription;
-import org.datasift.examples.push.Env;
 
-public class Delete {
+public class View {
 
 	/**
 	 * @param args
@@ -18,21 +16,19 @@ public class Delete {
 		// Set up the environment
 		Env.init(args);
 		
-		// Make sure we have at least one subscription ID
+		// Make sure we have at least one Historics playback ID
 		if (Env.getArgCount() == 0) {
-			System.err.println("Please specify one or more subscriptions to delete!");
+			System.err.println("Please specify one or more playback IDs to view!");
 			System.exit(1);
 		}
 		
-		// Delete the subscriptions given on the command line
+		// View the subscriptions given on the command line
 		for (int i = 0; i < Env.getArgCount(); i++) {
 			try {
-				String subscription_id = Env.getArg(i);
+				String playback_id = Env.getArg(i);
 				
-				PushSubscription sub = Env.getUser().getPushSubscription(subscription_id);
-				System.out.print("Deleting " + subscription_id + ", " + sub.getName() + "...");
-				sub.delete();
-				System.out.println("done");
+				Env.displayHistoricDetails(Env.getUser().getHistoric(playback_id));
+				System.out.println("--");
 			} catch (EInvalidData e) {
 				System.err.println("InvalidData: " + e.getMessage());
 			} catch (EAPIError e) {

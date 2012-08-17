@@ -8,6 +8,7 @@ import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
 import org.datasift.PushDefinition;
 import org.datasift.PushSubscription;
+import org.datasift.examples.push.Env;
 
 public class PushFromHash {
 
@@ -65,6 +66,7 @@ public class PushFromHash {
 			System.err.println("EAccessDenied: " + e.getMessage());
 		}
 		
+		System.out.println("Rate-limit-remaining: " + Env.getUser().getRateLimitRemaining());
 	}
 	
 	public static void usage() {

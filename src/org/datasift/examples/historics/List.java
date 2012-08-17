@@ -1,7 +1,7 @@
 /**
- * This example lists the current push subscriptions in your account.
+ * This example lists the current Historics queries in your account.
  */
-package org.datasift.examples.push;
+package org.datasift.examples.historics;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,8 +9,7 @@ import java.util.Iterator;
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
-import org.datasift.PushSubscription;
-import org.datasift.examples.push.Env;
+import org.datasift.Historic;
 
 public class List {
 
@@ -22,17 +21,17 @@ public class List {
 			// Set up the environment
 			Env.init(args);
 			
-			// Get subscriptions
-			ArrayList<PushSubscription> subscriptions = Env.getUser().listPushSubscriptions();
+			// Get historics
+			ArrayList<Historic> historics = Env.getUser().listHistorics();
 			
 			// Did we get any?
-			if (subscriptions.size() == 0) {
-				System.out.println("No subscriptions exist in your account.");
+			if (historics.size() == 0) {
+				System.out.println("No Historics queries exist in your account.");
 			} else {
 				// Display the details
-				Iterator<PushSubscription> i = subscriptions.iterator();
+				Iterator<Historic> i = historics.iterator();
 				while (i.hasNext()) {
-				    Env.displaySubscriptionDetails(i.next());
+				    Env.displayHistoricDetails(i.next());
 				    System.out.println("--");
 				}
 			}

@@ -7,6 +7,7 @@ import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
 import org.datasift.PushSubscription;
+import org.datasift.examples.push.Env;
 
 public class Stop {
 
@@ -40,6 +41,8 @@ public class Stop {
 				System.err.println("AccessDenied: " + e.getMessage());
 			}
 		}
+		
+		System.out.println("Rate-limit-remaining: " + Env.getUser().getRateLimitRemaining());
 	}
 
 }

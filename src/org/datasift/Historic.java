@@ -22,6 +22,73 @@ import org.json.JSONObject;
 public class Historic {
 
 	/**
+	 * Get the first 100 Historics queries.
+	 * 
+	 * @param user
+	 * @return ArrayList<Historic>
+	 * @throws EInvalidData 
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 */
+	static public ArrayList<Historic> list(User user) throws EAPIError, EAccessDenied, EInvalidData {
+		return list(user, 1, 100);
+	}
+	
+	/**
+	 * Get a page of 20 Historics queries.
+	 * 
+	 * @param user
+	 * @param page
+	 * @return ArrayList<Historic>
+	 * @throws EInvalidData 
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 */
+	static public ArrayList<Historic> list(User user, int page) throws EAPIError, EAccessDenied, EInvalidData {
+		return list(user, page, 20);
+	}
+	
+	/**
+	 * Get a page of Historics queries.
+	 * 
+	 * @param user
+	 * @param page
+	 * @param per_page
+	 * @return ArrayList<Historic>
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 * @throws EInvalidData 
+	 */
+	static public ArrayList<Historic> list(User user, int page, int per_page) throws EAPIError, EAccessDenied, EInvalidData {
+		if (page < 1) {
+			throw new EInvalidData("The specified page number is invalid");
+		}
+		
+		if (per_page < 1) {
+			throw new EInvalidData("The specified per_page value is invalid");
+		}
+		
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("page", String.valueOf(page));
+		params.put("max", String.valueOf(per_page));
+
+		JSONObject res = user.callAPI("historics/get", params);
+		
+		ArrayList<Historic> retval = new ArrayList<Historic>();
+
+		try {
+	        JSONArray data = res.getJSONArray("data");
+	        for (int i = 0; i < data.length(); i++) {
+	            retval.add(new Historic(user, data.getJSONObject(i)));
+	        }
+		} catch (JSONException e) {
+			throw new EAPIError("Failed to read the Historics queries from the response");
+		}
+		
+		return retval;
+	}
+	
+	/**
 	 * @access protected
 	 */
 	protected User _user = null;
@@ -226,6 +293,19 @@ public class Historic {
 
 		reloadData();
 	}
+	
+	/**
+	 * Construct a Historic object from a json object.
+	 * 
+	 * @param user
+	 * @param json
+	 * @throws EAPIError 
+	 * @throws EInvalidData 
+	 */
+	public Historic(User user, JSONObject json) throws EAPIError, EInvalidData {
+		_user = user;
+		init(json);
+	}
 
 	/**
 	 * Get the start date.
@@ -250,7 +330,7 @@ public class Historic {
 	 * 
 	 * @return Date
 	 */
-	public Date getCreatedAtDate() {
+	public Date getCreatedAt() {
 		return _created_at;
 	}
 
@@ -423,107 +503,10 @@ public class Historic {
 					"Cannot reload the data for a historic query that hasn't been prepared.");
 		}
 
-		JSONObject res = null;
-
 		try {
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("id", _playback_id);
-
-			res = _user.callAPI("historics/get", params);
-
-			try {
-				_playback_id = res.getString("id");
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no playback ID in the response.");
-			}
-
-			try {
-				_hash = res.getString("definition_id");
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no stream hash in the response.");
-			}
-
-			try {
-				_name = res.getString("name");
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no name in the response.");
-			}
-
-			try {
-				_start = new Date(res.getLong("start") * 1000);
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no start timestmp in the response.");
-			}
-
-			try {
-				_end = new Date(res.getLong("end") * 1000);
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no end timestmp in the response.");
-			}
-
-			try {
-				_status = res.getString("status");
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no status in the response.");
-			}
-
-			try {
-				_progress = res.getInt("progress");
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no progress in the response.");
-			}
-
-			try {
-				_created_at = new Date(res.getLong("created_at") * 1000);
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no created at timestmp in the response.");
-			}
-
-			try {
-				_sources.clear();
-				JSONArray data = res.getJSONArray("sources");
-				for (int i = 0; i < data.length(); i++) {
-					_sources.add(data.getString(i));
-				}
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no sources in the response.");
-			}
-
-			try {
-				_sample = res.getDouble("sample");
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no sample in the response.");
-			}
-
-			try {
-				_volume_info.clear();
-				JSONObject volume_info = res.getJSONObject("volume_info");
-				Iterator<?> volume_info_iterator = volume_info.keys();
-				while (volume_info_iterator.hasNext()) {
-					String key = (String) volume_info_iterator.next();
-					try {
-						_volume_info.put(key, volume_info.getInt(key));
-					} catch (JSONException e) {
-						throw new EAPIError(
-								"Historic retrieved successfully but invalid volume info in the response.");
-					}
-				}
-			} catch (JSONException e) {
-				throw new EAPIError(
-						"Historic retrieved successfully but no volume info in the response.");
-			}
-			
-			_deleted = _status.equals("deleted");
+			init(_user.callAPI("historics/get", params));
 		} catch (EAPIError e) {
 			switch (e.getCode()) {
 			case 400:
@@ -535,6 +518,108 @@ public class Historic {
 						+ " [" + e.getMessage() + "]");
 			}
 		}
+	}
+	
+	/**
+	 * Populate this object from a JSONObject object.
+	 * 
+	 * @param res
+	 * @throws EAPIError
+	 */
+	protected void init(JSONObject res) throws EInvalidData {
+		try {
+			_playback_id = res.getString("id");
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The playback ID is missing.");
+		}
+
+		try {
+			_hash = res.getString("definition_id");
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The stream hash is missing.");
+		}
+
+		try {
+			_name = res.getString("name");
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The name is missing.");
+		}
+
+		try {
+			_start = new Date(res.getLong("start") * 1000);
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The start timestmp is missing.");
+		}
+
+		try {
+			_end = new Date(res.getLong("end") * 1000);
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The end timestmp is missing.");
+		}
+
+		try {
+			_status = res.getString("status");
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The status is missing.");
+		}
+
+		try {
+			_progress = res.getInt("progress");
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The progress is missing.");
+		}
+
+		try {
+			_created_at = new Date(res.getLong("created_at") * 1000);
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The created at timestmp is missing.");
+		}
+
+		try {
+			_sources.clear();
+			JSONArray data = res.getJSONArray("sources");
+			for (int i = 0; i < data.length(); i++) {
+				_sources.add(data.getString(i));
+			}
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The sources is missing.");
+		}
+
+		try {
+			_sample = res.getDouble("sample");
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The sample is missing.");
+		}
+
+		try {
+			_volume_info.clear();
+			JSONObject volume_info = res.getJSONObject("volume_info");
+			Iterator<?> volume_info_iterator = volume_info.keys();
+			while (volume_info_iterator.hasNext()) {
+				String key = (String) volume_info_iterator.next();
+				try {
+					_volume_info.put(key, volume_info.getInt(key));
+				} catch (JSONException e) {
+					throw new EInvalidData(
+							"The volume info is invalid.");
+				}
+			}
+		} catch (JSONException e) {
+			throw new EInvalidData(
+					"The volume info is missing.");
+		}
+		
+		_deleted = _status.equals("deleted");
 	}
 
 	/**

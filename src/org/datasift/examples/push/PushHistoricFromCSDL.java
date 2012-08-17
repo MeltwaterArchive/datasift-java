@@ -18,6 +18,7 @@ import org.datasift.Historic;
 import org.datasift.PushDefinition;
 import org.datasift.PushSubscription;
 import org.datasift.examples.Utils;
+import org.datasift.examples.push.Env;
 
 public class PushHistoricFromCSDL {
 
@@ -106,6 +107,7 @@ public class PushHistoricFromCSDL {
 			System.err.println("EAccessDenied: " + e.getMessage());
 		}
 		
+		System.out.println("Rate-limit-remaining: " + Env.getUser().getRateLimitRemaining());
 	}
 	
 	public static void usage() {

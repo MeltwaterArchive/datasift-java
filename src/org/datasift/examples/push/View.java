@@ -6,6 +6,7 @@ package org.datasift.examples.push;
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
+import org.datasift.examples.push.Env;
 
 public class View {
 
@@ -37,6 +38,8 @@ public class View {
 				System.err.println("AccessDenied: " + e.getMessage());
 			}
 		}
+		
+		System.out.println("Rate-limit-remaining: " + Env.getUser().getRateLimitRemaining());
 	}
 
 }

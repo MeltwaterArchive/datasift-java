@@ -1,15 +1,14 @@
 /**
- * This example deletes one or more push subscriptions in your account.
+ * This example stops one or more Historics queries in your account.
  */
-package org.datasift.examples.push;
+package org.datasift.examples.historics;
 
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
 import org.datasift.EInvalidData;
-import org.datasift.PushSubscription;
-import org.datasift.examples.push.Env;
+import org.datasift.Historic;
 
-public class Delete {
+public class Stop {
 
 	/**
 	 * @param args
@@ -20,18 +19,18 @@ public class Delete {
 		
 		// Make sure we have at least one subscription ID
 		if (Env.getArgCount() == 0) {
-			System.err.println("Please specify one or more subscriptions to delete!");
+			System.err.println("Please specify one or more Historics queries to stop!");
 			System.exit(1);
 		}
 		
 		// Delete the subscriptions given on the command line
 		for (int i = 0; i < Env.getArgCount(); i++) {
 			try {
-				String subscription_id = Env.getArg(i);
+				String playback_id = Env.getArg(i);
 				
-				PushSubscription sub = Env.getUser().getPushSubscription(subscription_id);
-				System.out.print("Deleting " + subscription_id + ", " + sub.getName() + "...");
-				sub.delete();
+				Historic historic = Env.getUser().getHistoric(playback_id);
+				System.out.print("Stopping " + playback_id + ", " + historic.getName() + "...");
+				historic.stop();
 				System.out.println("done");
 			} catch (EInvalidData e) {
 				System.err.println("InvalidData: " + e.getMessage());

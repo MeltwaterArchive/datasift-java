@@ -271,7 +271,7 @@ public class User {
      * @throws EInvalidData
      * @throws EAccessDenied
      */
-    public Historic createHistoric(String hash, Date start, Date end, String sources, int sample) throws EInvalidData, EAccessDenied
+    public Historic createHistoric(String hash, Date start, Date end, String sources, double sample) throws EInvalidData, EAccessDenied
     {
     	return createHistoric(hash, start, end, sources, sample, "");
     }
@@ -287,8 +287,7 @@ public class User {
      * @throws EInvalidData
      * @throws EAccessDenied
      */
-    public Historic createHistoric(String hash, Date start, Date end, String sources, int sample, String name) throws EInvalidData, EAccessDenied
-    {
+    public Historic createHistoric(String hash, Date start, Date end, String sources, double sample, String name) throws EInvalidData, EAccessDenied {
     	return new Historic(this, new Definition(this, "", hash), start, end, sources, sample, name);
     }
 
@@ -303,6 +302,45 @@ public class User {
      */
 	public Historic getHistoric(String playback_id) throws EInvalidData, EAccessDenied, EAPIError {
 		return new Historic(this, playback_id);
+	}
+	
+	/**
+	 * List the first 100 Historics queries.
+	 * 
+	 * @return ArrayList<Historic>
+	 * @throws EInvalidData 
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 */
+	public ArrayList<Historic> listHistorics() throws EAPIError, EAccessDenied, EInvalidData {
+		return Historic.list(this);
+	}
+	
+	/**
+	 * List Historics queries.
+	 * 
+	 * @param int page The page to retrieve.
+	 * @return ArrayList<Historic>
+	 * @throws EInvalidData 
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 */
+	public ArrayList<Historic> listHistorics(int page) throws EAPIError, EAccessDenied, EInvalidData {
+		return Historic.list(this, page);
+	}
+	
+	/**
+	 * List Historics queries.
+	 * 
+	 * @param int page     The page to retrieve.
+	 * @param int per_page The number of queries per page.
+	 * @return ArrayList<Historic>
+	 * @throws EInvalidData 
+	 * @throws EAccessDenied 
+	 * @throws EAPIError 
+	 */
+	public ArrayList<Historic> listHistorics(int page, int per_page) throws EAPIError, EAccessDenied, EInvalidData {
+		return Historic.list(this, page, per_page);
 	}
 	
     /**
