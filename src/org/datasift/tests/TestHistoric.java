@@ -123,34 +123,3 @@ public class TestHistoric extends TestCase {
 	}
 }
 
-class TestHistoricEventCatcher implements IStreamConsumerEvents {
-
-	public void onConnect(StreamConsumer c) {
-	}
-	
-	public void onDisconnect(StreamConsumer c) {
-	}
-
-	public void onInteraction(StreamConsumer c, Interaction i)
-			throws EInvalidData {
-	}
-
-	public void onDeleted(StreamConsumer c, Interaction i)
-			throws EInvalidData {
-	}
-
-	public void onStatus(StreamConsumer consumer, String type, JSONdn info) {
-	}
-
-	public void onWarning(StreamConsumer consumer, String message)
-			throws EInvalidData {
-	}
-
-	public void onError(StreamConsumer consumer, String message)
-			throws EInvalidData {
-	}
-
-	public void onStopped(StreamConsumer consumer, String reason) {
-	}
-
-}
