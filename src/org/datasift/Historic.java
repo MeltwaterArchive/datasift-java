@@ -472,7 +472,8 @@ public class Historic {
 
 	/**
 	 * Get the data availability info. If the historic has not yet been
-	 * prepared that will be done automagically to obtain the cost.
+	 * prepared that will be done automagically to obtain the availability
+	 * data.
 	 * 
 	 * @return HistoricDataAvailability
 	 * @throws EAPIError 
