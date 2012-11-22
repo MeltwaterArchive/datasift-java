@@ -1,2 +1,0 @@
-#!/bin/bash
-java -cp ./deploy/datasift-java-2.1.0.jar org.datasift.examples.push.$3 $1 $2 ${@:4}
