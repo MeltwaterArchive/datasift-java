@@ -1,6 +1,6 @@
 # gh-pages
 
-All files in the gh-pages branch are auto-generated. They are used to auto-build the DataSift Java Client Library [documentation](http://datasift.github.com/datasift-php/ "DataSift Java Client Library Documentation").
+All files in the gh-pages branch are auto-generated. They are used to auto-build the DataSift Java Client Library [documentation](http://datasift.github.com/datasift-java/ "DataSift Java Client Library Documentation").
 
 For more information about DataSift APIs, visit our [developer documentation site](http://dev.datasift.com/ "DataSift Developer site").
 
