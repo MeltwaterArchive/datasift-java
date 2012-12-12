@@ -5,4 +5,4 @@ command="$3"
 
 dir="$(dirname $0)"
 
-java -cp "$dir/deploy/datasift-java-2.2.0.jar:$dir/lib/*"  "org.datasift.examples.push.$command" "$user" "$apikey" ${@:4}
+java -cp "$dir/target/datasift-java-2.2.0.jar:$dir/lib/*"  "org.datasift.examples.push.$command" "$user" "$apikey" ${@:4}
