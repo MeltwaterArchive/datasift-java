@@ -1,9 +1,11 @@
 #!/bin/bash
 #-v
 
-export BASE_DIR="$( cd "$( dirname $0 )/../../../.." && pwd )/"
+#export BASE_DIR="$( cd "$( dirname $0 )/../../../.." && pwd )/"
+export BASE_DIR="`pwd`/"
 
 source ${BASE_DIR}ms-tools/doc-tools/docathon/sub/make-docs-util-defs.sh
+export BASE_DIR="/tmp/$(basename $0).$$.tmp/"
 initialise $*
 
 ### Java-specific parameters
@@ -24,7 +26,7 @@ pre_build
 (
 	message "building documents"
 	cd ${GH_PAGES_DIR} ; stop_on_error
-	javadoc -sourcepath ../master/src/ -windowtitle 'DataSift Java API' org.datasift org.json de.roderick ; stop_on_error
+	javadoc -sourcepath ../code/src/ -windowtitle 'DataSift Java API' org.datasift org.json de.roderick ; stop_on_error
 ) || error "stopped parent"
 
 (
@@ -35,3 +37,4 @@ pre_build
 post_build
 
 finalise
+
