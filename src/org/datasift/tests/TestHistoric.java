@@ -56,9 +56,7 @@ public class TestHistoric extends TestCase {
 			for (String source : sources_input) {
 				assertTrue("Source \"" + source + "\" not found in sources", sources.contains(source));
 			}
-			
-			HashMap<String,Integer> volume_info = h.getVolumeInfo();
-			assertEquals("We have volume info for a historic query that has only been created locally", 0, volume_info.size());
+
 		} catch (EInvalidData e) {
 			fail("EInvalidData: " + e.getMessage());
 		} catch (EAccessDenied e) {
@@ -78,17 +76,13 @@ public class TestHistoric extends TestCase {
 		double sample = 42.0;
 		String source1 = "twitter";
 		String source2 = "digg";
-		String volume_info_type1 = "twitter";
-		int volume_info_num1 = 123;
-		String volume_info_type2 = "digg";
-		int volume_info_num2 = 456;
+
 		
 		api_client.setResponse(
 			"{\"id\":\"" + playback_id + "\",\"definition_id\":\"" + definition_id + "\",\"name\":\"" + name + "\"," +
 			"\"start\":" + String.valueOf(start) + ",\"end\":" + String.valueOf(end) + ",\"created_at\":" + String.valueOf(created_at) +"," + 
 			"\"status\":\"" + status + "\",\"progress\":" + String.valueOf(progress) + ",\"sources\":[\"" + source1 + "\",\"" + source2 + "\"]," +
-			"\"sample\":" + String.valueOf(sample) + ",\"volume_info\":{\"" + volume_info_type1 + "\":" + String.valueOf(volume_info_num1) + "," +
-			"\"" + volume_info_type2 + "\":" + String.valueOf(volume_info_num2) + "}}", 200);
+			"\"sample\":" + String.valueOf(sample) + "}", 200);
 
 		try {
 			Historic h = user.getHistoric(DataForTests.historic_playback_id);
@@ -107,12 +101,6 @@ public class TestHistoric extends TestCase {
 			assertTrue("Type 1 not found in sources", sources.contains(source1));
 			assertTrue("Type 2 not found in sources", sources.contains(source2));
 			
-			HashMap<String,Integer> volume_info = h.getVolumeInfo();
-			assertEquals("Incorrect number of volume info records", 2, volume_info.size());
-			assertTrue("Type 1 not found in volume info", volume_info.containsKey(volume_info_type1));
-			assertTrue("Type 2 not found in volume info", volume_info.containsKey(volume_info_type2));
-			assertEquals("Type 1 volume info value is incorrect", volume_info_num1, volume_info.get(volume_info_type1).intValue());
-			assertEquals("Type 2 volume info value is incorrect", volume_info_num2, volume_info.get(volume_info_type2).intValue());
 		} catch (EInvalidData e) {
 			fail("InvalidData: " + e.getMessage());
 		} catch (EAccessDenied e) {
