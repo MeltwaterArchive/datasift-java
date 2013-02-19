@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 Roderick Baier
+ *  Copyright (C) 2012 Roderick Baier
  *  
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,21 +21,26 @@ import java.io.UnsupportedEncodingException;
 
 public class WebSocketMessage
 {
-	private byte[] message;
+    private Byte[] message;
 
-	public WebSocketMessage(byte[] message)
-	{
+
+    public WebSocketMessage(final Byte[] message)
+    {
         this.message = message;
-	}
+    }
 
 
-	public String getText()
-	{
-		try {
-			return new String(message, "UTF-8");
-		}
-		catch (UnsupportedEncodingException uee) {
-			return null;
-		}
-	}
+    public String getText()
+    {
+        byte[] message = new byte[this.message.length];
+        for (int i = 0; i < this.message.length; i++) {
+            message[i] = this.message[i];
+        }
+        try {
+            return new String(message, "UTF-8");
+        }
+        catch (UnsupportedEncodingException uee) {
+            return null;
+        }
+    }
 }
