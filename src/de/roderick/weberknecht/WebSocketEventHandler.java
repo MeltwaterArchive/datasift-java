@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 Roderick Baier
+ *  Copyright (C) 2012 Roderick Baier
  *  
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,20 @@ package de.roderick.weberknecht;
 
 public interface WebSocketEventHandler
 {
-	public void onOpen();
-	
-	
-	public void onMessage(WebSocketMessage message);
-	
-	
-	public void onClose();
+    public void onOpen();
+
+
+    public void onMessage(WebSocketMessage message);
+
+
+    //Modified by akshay.shirahatti@datasift.com
+    public void onClose(Boolean flag);
+
+
+    //Modified by akshay.shirahatti@datasift.com
+    public void onPing(WebSocketMessage message);
+
+
+    public void onPong();
+
 }
