@@ -253,8 +253,8 @@ public class User {
 	 * Creates and returns a Definition object based on the given CSDL.
 	 *
 	 * @access public
-	 * @param String
-	 *            csdl CSDL with which to prime the object.
+	 * @param csdl
+	 *            CSDL with which to prime the object.
 	 * @return Definition A definition object tied to this user.
 	 */
 	public Definition createDefinition(String csdl) {

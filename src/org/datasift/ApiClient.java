@@ -39,9 +39,7 @@ public class ApiClient {
 
 	/**
 	 * Make a call to the API.
-	 * 
-	 * @param user
-	 *            The user object.
+	 *
 	 * @param endpoint
 	 *            The endpoint to be called.
 	 * @param params
@@ -59,8 +57,7 @@ public class ApiClient {
 			for (String key : params.keySet()) {
 				qparams.add(new BasicNameValuePair(key, params.get(key)));
 			}
-
-			HttpPost post = new HttpPost("http://" + User._api_base_url + endpoint + ".json");
+			HttpPost post = new HttpPost("http" + (_user.useSSL() ? "s" : "") + "://" + User._api_base_url + endpoint + ".json");
 			post.addHeader("Auth", _user.getUsername() + ":" + _user.getAPIKey());
 			post.setEntity(new UrlEncodedFormEntity(qparams, "UTF-8"));
 
