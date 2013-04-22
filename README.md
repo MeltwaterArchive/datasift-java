@@ -42,6 +42,8 @@ more details.
 Changelog
 ---------
 
+* v.2.2.1 Updates to WebSocket Library, APIClient uses SSL.(2013-04-22)
+
 * v.2.2.0 Finalised support for Historics and addedsupport for Push
           delivery (2012-08-17)
 
