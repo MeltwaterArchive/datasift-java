@@ -22,11 +22,11 @@ public class CreateFromHash {
 		Env.init(args);
 		
 		// Check we have enough arguments
-		if (Env.getArgCount() < 4) {
+		if (Env.getArgCount() != 6) {
 			usage();
 		}
 
-		// Fixed args
+		// Get the args
 		String stream_hash = Env.getArg(0);
 		String start_date  = Env.getArg(1);
 		String end_date    = Env.getArg(2);
