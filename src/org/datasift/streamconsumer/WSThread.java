@@ -5,9 +5,7 @@ package org.datasift.streamconsumer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.datasift.EAPIError;
 import org.datasift.EInvalidData;
@@ -18,7 +16,6 @@ import org.datasift.User;
 import org.json.JSONException;
 
 import de.roderick.weberknecht.WebSocket;
-import de.roderick.weberknecht.WebSocketConnection;
 import de.roderick.weberknecht.WebSocketEventHandler;
 import de.roderick.weberknecht.WebSocketException;
 import de.roderick.weberknecht.WebSocketMessage;
@@ -34,6 +31,8 @@ public class WSThread extends Thread {
 	private WebSocket _ws = null;
 	private URI _uri = null;
 	private List<String> _subscriptions = null;
+    //Added by akshay.shirahatti@datasift.com
+    private Map<String, String> headers = null;
 
 	public WSThread(WS http, User user) throws WebSocketException, URISyntaxException {
 		this(http, user, new ArrayList<String>());
@@ -44,6 +43,11 @@ public class WSThread extends Thread {
 		_user = user;
 		_subscriptions = subscriptions;
 		_uri = new URI("ws://" + _user.getWebsocketBaseURL() + "multi?hashes="+ Arrays.deepToString(_subscriptions.toArray()).replace("[", "").replace("]", ""));
+
+        //Added by akshay.shirahatti@datasift.com
+        headers = new HashMap<String,String>();
+        headers.put("Authorization", _user.getUsername() + ":" + _user.getAPIKey());
+        headers.put("User-Agent", _user.getUserAgent());
 	}
 
 	public void setAutoReconnect(boolean auto_reconnect) {
@@ -194,12 +198,11 @@ public class WSThread extends Thread {
 						_ws.close();
 					}
 					_ws = null;
-					_ws = new WebSocketConnection(_uri);
-					_ws.addHeader("Authorization: " + _user.getUsername() + ":" + _user.getAPIKey());
-					_ws.addHeader("User-Agent: " + _user.getUserAgent());
+					_ws = new WebSocket(_uri, null, headers);
 					
 					// Register Event Handlers
 					_ws.setEventHandler(new WebSocketEventHandler() {
+                        @Override
 						public void onOpen()
 						{
 							// Socket connected, tell the event handler
@@ -218,6 +221,7 @@ public class WSThread extends Thread {
 							}
 						}
 
+                        @Override
 						public void onMessage(WebSocketMessage message)
 						{
 							// Message received
@@ -227,25 +231,53 @@ public class WSThread extends Thread {
 							}
 						}
 
-						public void onClose()
+                        @Override
+						public void onClose(Boolean flag)
 						{
+                            if(flag){
+                                try {
+                                    _consumer.stop();
+                                }
+                                catch(EInvalidData e) {
+                                    //Ignore
+                                }
+                            }
+                            else {
 							// Socket closed - tell the event handler
 							_consumer.onDisconnect();
 							// Decide what to do next
 							switch (getConsumerState()) {
-							case StreamConsumer.STATE_RUNNING:
-								if (_auto_reconnect) {
-									restartConsumer();
-								} else {
-									stopped();
-								}
-								break;
-							case StreamConsumer.STATE_STOPPING:
-								stopped();
-								break;
-							}
+                                case StreamConsumer.STATE_RUNNING:
+                                    if (_auto_reconnect) {
+                                        restartConsumer();
+                                    } else {
+                                        stopped();
+                                    }
+                                    break;
+                                case StreamConsumer.STATE_STOPPING:
+                                    stopped();
+                                    break;
+                                }
+                            }
 						}
-					});
+
+                        @Override
+                        public void onPing(WebSocketMessage msg) {
+                            try {
+                                //send a PONG with same msg
+                                _ws.sendPong(msg.getText());
+                            }
+                            catch(WebSocketException e){
+                                //ignore
+                            }
+                        }
+
+                        @Override
+                        public void onPong() {
+                           //onPong event is not really required.
+                        }
+
+                    });
 
 					// Establish WebSocket Connection
 					_ws.connect();

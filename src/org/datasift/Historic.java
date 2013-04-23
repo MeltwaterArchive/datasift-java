@@ -156,11 +156,6 @@ public class Historic {
 	/**
 	 * @access protected
 	 */
-	protected HashMap<String, Integer> _volume_info = new HashMap<String, Integer>();
-	
-	/**
-	 * @access protected
-	 */
 	protected boolean _deleted = false;
 
 	/**
@@ -381,15 +376,6 @@ public class Historic {
 	}
 
 	/**
-	 * Get the volume info.
-	 * 
-	 * @return HashMap<String,Integer>
-	 */
-	public HashMap<String, Integer> getVolumeInfo() {
-		return _volume_info;
-	}
-
-	/**
 	 * Set the name of this historic query. If the query has already been
 	 * prepared this will send the change to the API.
 	 * 
@@ -472,7 +458,8 @@ public class Historic {
 
 	/**
 	 * Get the data availability info. If the historic has not yet been
-	 * prepared that will be done automagically to obtain the cost.
+	 * prepared that will be done automagically to obtain the availability
+	 * data.
 	 * 
 	 * @return HistoricDataAvailability
 	 * @throws EAPIError 
@@ -599,24 +586,6 @@ public class Historic {
 		} catch (JSONException e) {
 			throw new EInvalidData(
 					"The sample is missing.");
-		}
-
-		try {
-			_volume_info.clear();
-			JSONObject volume_info = res.getJSONObject("volume_info");
-			Iterator<?> volume_info_iterator = volume_info.keys();
-			while (volume_info_iterator.hasNext()) {
-				String key = (String) volume_info_iterator.next();
-				try {
-					_volume_info.put(key, volume_info.getInt(key));
-				} catch (JSONException e) {
-					throw new EInvalidData(
-							"The volume info is invalid.");
-				}
-			}
-		} catch (JSONException e) {
-			throw new EInvalidData(
-					"The volume info is missing.");
 		}
 		
 		_deleted = _status.equals("deleted");

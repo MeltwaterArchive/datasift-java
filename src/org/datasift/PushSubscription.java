@@ -516,12 +516,6 @@ public class PushSubscription extends PushDefinition {
 	protected Date _last_success = null;
 	
 	/**
-	 * @var boolean True if this subscription has been deleted (becomes
-	 *              read-only).
-	 */
-	protected boolean _deleted = false;
-	
-	/**
 	 * Construct a PushSubscription object from a JSONObject.
 	 * 
 	 * @param User       user The user that owns this subscription.
@@ -634,6 +628,16 @@ public class PushSubscription extends PushDefinition {
 	}
 	
 	/**
+	 * Set the name of this subscription. Note you must call save to store
+	 * this change on the server.
+	 * 
+	 * @param String new_name The new name for this subscription.
+	 */
+	public void setName(String new_name) {
+		_name = new_name;
+	}
+	
+	/**
 	 * Set an output parameter. Checks to see if the subscription has been
 	 * deleted, and if not calls the base class to set the parameter.
 	 * 
@@ -695,15 +699,6 @@ public class PushSubscription extends PushDefinition {
 	}
 	
 	/**
-	 * Get the output type.
-	 * 
-	 * @return String
-	 */
-	public String getOutputType() {
-		return _output_type;
-	}
-	
-	/**
 	 * Get the date/time of the last push request.
 	 * 
 	 * @return Date
@@ -733,7 +728,7 @@ public class PushSubscription extends PushDefinition {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("id", getId());
 		for (String key : _output_params.keySet()) {
-			params.put("output_params." + key, _output_params.get(key));
+			params.put(OUTPUT_PARAMS_PREFIX + key, _output_params.get(key));
 		}
 		params.put("name", getName());
 
