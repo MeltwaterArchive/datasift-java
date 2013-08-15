@@ -6,6 +6,8 @@ package org.datasift.streamconsumer;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.datasift.EAPIError;
 import org.datasift.EAccessDenied;
@@ -70,7 +72,7 @@ public class WS extends StreamConsumer {
 			ECompileFailed, EAccessDenied, EAPIError {
 		super(user, eventHandler);
 		try {
-			_thread = new WSThread(this, user, hashes == null ? new ArrayList<String>() : Arrays.asList(hashes));
+			_thread = new WSThread(this, user, hashes == null ? new ConcurrentLinkedQueue<String>() : new ConcurrentLinkedQueue<String>(Arrays.asList(hashes)));
 		} catch (WebSocketException e) {
 			throw new EAPIError(e.getMessage());
 		} catch (URISyntaxException e) {

@@ -30,7 +30,7 @@ public class WSThread extends Thread {
 	private boolean _auto_reconnect = false;
 	private WebSocket _ws = null;
 	private URI _uri = null;
-	private List<String> _subscriptions = null;
+	private Collection<String> _subscriptions = null;
     //Added by akshay.shirahatti@datasift.com
     private Map<String, String> headers = null;
 
@@ -38,7 +38,7 @@ public class WSThread extends Thread {
 		this(http, user, new ArrayList<String>());
 	}
 	
-	public WSThread(WS http, User user, List<String> subscriptions) throws WebSocketException, URISyntaxException {
+	public WSThread(WS http, User user, Collection<String> subscriptions) throws WebSocketException, URISyntaxException {
 		_consumer = http;
 		_user = user;
 		_subscriptions = subscriptions;
@@ -208,7 +208,7 @@ public class WSThread extends Thread {
 							// Socket connected, tell the event handler
 							_consumer.onConnect();
 							// Send subscribes
-							for (String hash : _subscriptions) {
+                            for(String hash : _subscriptions){
 								try {
 									do_subscribe(hash);
 								} catch (EAPIError e) {
