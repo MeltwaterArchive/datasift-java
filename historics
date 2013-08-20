@@ -1,8 +1,0 @@
-#!/bin/bash
-user="$1"
-apikey="$2"
-command="$3"
-
-dir="$(dirname $0)"
-
-java -cp "$dir/deploy/datasift-java-2.2.0.jar:$dir/lib/*" "org.datasift.examples.historics.$command" "$user" "$apikey" ${@:4}

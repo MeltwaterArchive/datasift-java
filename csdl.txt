@@ -1,1 +1,0 @@
-interaction.content contains_any "bbc,twitter,facebook,google,ibm,microsoft,datasift"
