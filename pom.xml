@@ -104,5 +104,20 @@
       <artifactId>hsqldb</artifactId>
       <version>1.8.0.10</version>
     </dependency>
+    <dependency>
+    	<groupId>org.apache.flume</groupId>
+    	<artifactId>flume-ng-configuration</artifactId>
+    	<version>1.2.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.flume</groupId>
+    	<artifactId>flume-ng-core</artifactId>
+    	<version>1.2.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.flume</groupId>
+    	<artifactId>flume-ng-sdk</artifactId>
+    	<version>1.2.0</version>
+    </dependency>
   </dependencies>
 </project>
