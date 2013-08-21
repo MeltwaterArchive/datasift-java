@@ -42,9 +42,12 @@ more details.
 Changelog
 ---------
 
+* v.2.2.2 Fixes concurrent modification exception reported
+          in https://github.com/datasift/datasift-java/issues/45 (2013-08-21)
+
 * v.2.2.1 Updates to WebSocket Library, APIClient uses SSL.(2013-04-22)
 
-* v.2.2.0 Finalised support for Historics and addedsupport for Push
+* v.2.2.0 Finalised support for Historics and added support for Push
           delivery (2012-08-17)
 
 * v.2.1.1 Fixed some bugs in the websocket reconnection logic (2012-07-26)
@@ -55,7 +58,7 @@ Changelog
           efficiency within the WebSocket library, and support for the
           historics API (2012-06-22). Please note: Though support has been
           added for the the Historics API, the API itself is not yet publicly
-          available. Access will be made available over the coming months. 
+          available. Access will be made available over the coming months.
 
   The IStreamConsumerEvents and IMultiStreamConsumerEvents interfaces now
   contain callbacks for onConnect, onDisconnect and onStatus events. These
@@ -78,7 +81,7 @@ Changelog
   The IStreamConsumerEvents and IMultiStreamConsumerEvents interfaces now
   contain callbacks for onWarning and onError events. These MUST be implemented
   in your event handler.
-  
+
   The WebSocket consumer has been modified to request that the server
   unsubscribe from all streams and disconnect rather than simply closing
   the connection. This change is largely transparent except that you'll get
@@ -92,7 +95,7 @@ Changelog
 
   Modified the football example to display the IDs of interactions so you can
   visually match deletion notifications with the original tweet.
-  
+
   NB: If you are using an implementation of IStreamConsumerEvents to handle
   events, you must implement the new onDeleted method or the code will throw
   an exception when a delete notification is received. The multi-stream
