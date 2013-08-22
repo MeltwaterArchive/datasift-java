@@ -66,6 +66,11 @@
             <artifactId>high-scale-lib</artifactId>
             <version>1.0.3</version>
         </dependency>
+        <dependency>
+            <groupId>io.higgs</groupId>
+            <artifactId>http-client</artifactId>
+            <version>0.0.1</version>
+        </dependency>
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
