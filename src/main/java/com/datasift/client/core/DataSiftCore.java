@@ -104,14 +104,4 @@ public class DataSiftCore extends ApiClient {
         applyConfig(request).execute();
         return future;
     }
-     /*
-    public FutureData<BufferedStream> stream(String csdl) {
-        FutureData<BufferedStream> future = new FutureData<>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(VALIDATE));
-        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, BufferedStream.class)))
-                .form("csdl", csdl);
-        applyConfig(request).execute();
-        return future;
-    }
-    */
 }
