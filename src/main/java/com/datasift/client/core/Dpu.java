@@ -1,7 +1,32 @@
 package com.datasift.client.core;
 
+import com.datasift.client.DataSiftClient;
+import com.datasift.client.DataSiftResult;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import java.util.HashMap;
+
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class Dpu {
+public class Dpu extends DataSiftResult {
+    @JsonProperty
+    private double dpu;
+    @JsonProperty
+    private DpuDetails detail;
+
+    @Override
+    public String toString() {
+        try {
+            return DataSiftClient.MAPPER.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "Unable to generate string representation of this response/result";
+        }
+    }
+
+    public static class DpuDetails extends HashMap<String, Object> {
+        //TODO try to revise a more predictable structure
+    }
 }

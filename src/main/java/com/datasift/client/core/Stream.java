@@ -15,10 +15,24 @@ public class Stream extends DataSiftResult {
     @JsonProperty
     protected float dpu;
     @JsonProperty
-    protected float hash;
+    protected String hash;
 
-    public float getHash() {
-        return hash;
+    protected Stream() {
+    }
+
+    /**
+     * Create a stream instance containing only a hash
+     *
+     * @param str the hash obtained from DataSift for a stream
+     * @return an instance which can be used by the client
+     */
+    public static Stream fromString(String str) {
+        if (str == null || str.isEmpty()) {
+            throw new IllegalArgumentException("Cannot create a stream from an empty or null string");
+        }
+        Stream stream = new Stream();
+        stream.hash = str;
+        return stream;
     }
 
     public DateTime getCreatedAt() {
@@ -29,4 +43,8 @@ public class Stream extends DataSiftResult {
         return dpu;
     }
 
+    @JsonProperty
+    public String hash() {
+        return hash;
+    }
 }

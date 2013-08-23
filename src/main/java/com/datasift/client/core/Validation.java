@@ -15,6 +15,16 @@ public class Validation extends DataSiftResult {
     @JsonProperty
     protected float dpu;
 
+    protected Validation() {
+    }
+
+    /**
+     * @return true if the CSDL that was used in the request was checked and found to be valid. False otherwise.
+     */
+    public boolean isValid() {
+        return response.status() == 200;
+    }
+
     public DateTime getCreatedAt() {
         return new DateTime(createdAt);
     }
