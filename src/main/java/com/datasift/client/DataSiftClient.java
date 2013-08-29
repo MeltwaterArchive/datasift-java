@@ -5,14 +5,13 @@ import com.datasift.client.historics.DataSiftHistorics;
 import com.datasift.client.managedsource.DataSiftManagedSource;
 import com.datasift.client.preview.DataSiftPreview;
 import com.datasift.client.push.DataSiftPush;
+import com.datasift.client.stream.StreamingData;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import io.higgs.http.client.HttpRequestBuilder;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 /**
@@ -32,6 +31,7 @@ public class DataSiftClient {
     protected DataSiftCore core;
     protected DataSiftPreview preview;
     protected DataSiftPush push;
+    protected StreamingData liveStream;
 
     public DataSiftClient() {
         this(new DataSiftConfig());
@@ -51,6 +51,7 @@ public class DataSiftClient {
         this.core = new DataSiftCore(config);
         this.preview = new DataSiftPreview(config);
         this.push = new DataSiftPush(config);
+        this.liveStream = new StreamingData(config);
     }
 
     protected void configureMapper() {
@@ -100,6 +101,13 @@ public class DataSiftClient {
      */
     public DataSiftConfig config() {
         return config;
+    }
+
+    /**
+     * Access to the DataSift streaming API
+     */
+    public StreamingData liveStream() {
+        return liveStream;
     }
 
     public void shutdown() {

@@ -6,7 +6,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashSet;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class FutureData<T> {
-    protected NonBlockingHashSet<FutureResponse<T>> listeners = new NonBlockingHashSet<>();
+    protected NonBlockingHashSet<FutureResponse<T>> listeners = new NonBlockingHashSet<FutureResponse<T>>();
     private T data;
 
     /**

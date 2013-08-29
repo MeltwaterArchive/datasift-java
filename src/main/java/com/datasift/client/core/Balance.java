@@ -37,7 +37,8 @@ public class Balance extends DataSiftResult {
     }
 
     /**
-     * @return The license cost for your data plus, if your remaining_dpus falls to zero and you continue to run streams, the additional DPU cost you have incurred so far this month.
+     * @return The license cost for your data plus, if your remaining_dpus falls to zero and you continue to run
+     * streams, the additional DPU cost you have incurred so far this month.
      */
     public double cost() {
         return balance.cost;

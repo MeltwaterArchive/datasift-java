@@ -12,7 +12,8 @@ public class DataSiftResult {
     protected String error;
     //
     protected Response response;
-    protected FailedResponse failedResponse;
+    private Throwable cause;
+    private boolean failed;
 
     /**
      * A response is considered successful if if a response has been received, the response doesn't contain an error
@@ -21,7 +22,7 @@ public class DataSiftResult {
      * @return true if this API result was successful.
      */
     public boolean isSuccessful() {
-        return failedResponse == null
+        return !hasFailed()
                 && response != null
                 && error == null
                 && response.status() > 199
@@ -34,17 +35,30 @@ public class DataSiftResult {
 
     public void setResponse(Response response) {
         this.response = response;
+        failed = response.hasFailed();
+        cause = response.failureCause();
     }
 
-    public void failedBecauseOf(FailedResponse failedResponse) {
-        this.failedResponse = failedResponse;
+    /**
+     * @return true if the request for this response has failed for some reason
+     */
+    public boolean hasFailed() {
+        return failed;
+    }
+
+    /**
+     * @return If the request has failed, this returns the reason for the failure
+     *         May* be null
+     */
+    public Throwable failureCause() {
+        return cause;
     }
 
     /**
      * @return True if the response status is anything but a 401 Unauthorized
      */
     public boolean isAuthorizationSuccesful() {
-        return response.status() != 401;
+        return !hasFailed() && response.status() != 401;
     }
 
     /**
@@ -79,5 +93,10 @@ public class DataSiftResult {
     @Override
     public String toString() {
         return response.toString();
+    }
+
+    public void failed(Throwable e) {
+        failed = e == null ? false : true;
+        cause = e;
     }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class ParamBuilder {
-    protected Map<String, Object> params = new HashMap<>();
+    protected Map<String, Object> params = new HashMap<String, Object>();
 
     /**
      * Adds or replaces a parameter

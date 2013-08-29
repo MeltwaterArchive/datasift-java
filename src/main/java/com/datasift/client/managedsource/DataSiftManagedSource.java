@@ -10,6 +10,5 @@ public class DataSiftManagedSource {
         if (config == null) {
             throw new IllegalArgumentException("Config cannot be nulll");
         }
-
     }
 }

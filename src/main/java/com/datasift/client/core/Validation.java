@@ -15,7 +15,7 @@ public class Validation extends DataSiftResult {
     @JsonProperty
     protected float dpu;
 
-    protected Validation() {
+    public Validation() {
     }
 
     /**

@@ -12,16 +12,40 @@ import java.util.Map;
 public class Response {
     protected String data;
     protected io.higgs.http.client.Response rawResponse;
-    private Map<String, List<String>> headers = new HashMap<>();
+    protected boolean failed;
+    protected Throwable cause;
+    private Map<String, List<String>> headers = new HashMap<String, List<String>>();
 
     public Response(String data, io.higgs.http.client.Response rawResponse) {
         this.data = data;
         this.rawResponse = rawResponse;
-        //we're doing this here to ensure it's only done once and to avoid exposing any classes from the underlying client
+        //we're doing this here to ensure it's only done once and to avoid exposing any classes from the underlying
+        // client
         //this means we can swap out the client if need be without breaking the public API
-        for (String name : rawResponse.getHeaders().names()) {
-            headers.put(name, rawResponse.getHeaders().getAll(name));
+        if (rawResponse.getHeaders() != null) {
+            for (String name : rawResponse.getHeaders().names()) {
+                headers.put(name, rawResponse.getHeaders().getAll(name));
+            }
         }
+        if (rawResponse.hasFailed()) {
+            this.failed = true;
+            this.cause = rawResponse.failureCause();
+        }
+    }
+
+    /**
+     * @return true if the request for this response has failed for some reason
+     */
+    public boolean hasFailed() {
+        return failed;
+    }
+
+    /**
+     * @return If the request has failed, this returns the reason for the failure
+     *         May* be null
+     */
+    public Throwable failureCause() {
+        return cause;
     }
 
     /**

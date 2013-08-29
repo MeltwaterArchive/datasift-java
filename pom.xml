@@ -36,10 +36,8 @@
     </developers>
 
     <properties>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <netty.version>4.0.1.Final</netty.version>
-        <netty.group>io.netty</netty.group>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -57,11 +55,6 @@
             <version>1.7.0</version>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>${netty.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.boundary</groupId>
             <artifactId>high-scale-lib</artifactId>
             <version>1.0.3</version>
@@ -69,7 +62,12 @@
         <dependency>
             <groupId>io.higgs</groupId>
             <artifactId>http-client</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.higgs</groupId>
+            <artifactId>ws-client</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
         </dependency>
         <!--json support-->
         <dependency>
@@ -94,11 +92,6 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.1.12</version>
         </dependency>
         <!-- Test -->
         <dependency>
@@ -138,7 +131,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.datasift.demo.CoreApi</mainClass>
+                            <mainClass>com.datasift.client.stream.StreamingData</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
@@ -165,6 +158,32 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!--copy dependencies to lib forlder-->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
