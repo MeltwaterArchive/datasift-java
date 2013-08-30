@@ -12,6 +12,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
+import org.cliffc.high_scale_lib.NonBlockingHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -28,7 +30,10 @@ public class StreamingData {
     protected WebSocketStream liveStream;
     protected DataSiftConfig config;
     protected Map<Stream, StreamSubscription> subscriptions = new NonBlockingHashMap<Stream, StreamSubscription>();
-    protected StreamErrorListener listener;
+    protected ErrorListener errorListener;
+    protected StreamEventListener streamEventListener;
+    protected boolean connected;
+    protected Set<StreamSubscription> unsentSubscriptions = new NonBlockingHashSet<StreamSubscription>();
 
     static {
         //DS produces some fairly big websocket frames. usually 1 or 2 MB max but set to 20 to be sure
@@ -60,7 +65,7 @@ public class StreamingData {
                             fireMessage(new DataSiftMessage(mi));
                         } else {
                             if (mi.getData().get("deleted") != null) {
-                                listener.onDelete(new DeletedInteraction(mi));
+                                streamEventListener.onDelete(new DeletedInteraction(mi));
                             } else {
                                 fireInteraction(mi.getHash(), new Interaction(mi.getData()));
                             }
@@ -81,13 +86,16 @@ public class StreamingData {
 
             liveStream.events().on(new Function1<ChannelHandlerContext>() {
                 public void apply(ChannelHandlerContext frame) {
-                    listener.streamClosed();
+                    streamEventListener.streamClosed();
+                    connected = false;
                 }
             }, WebSocketEvent.DISCONNECT);
 
             liveStream.events().on(new Function1<ChannelHandlerContext>() {
                 public void apply(ChannelHandlerContext frame) {
-                    listener.streamOpened();
+                    streamEventListener.streamOpened();
+                    connected = true;
+                    pushUnsentSubscriptions();
                 }
             }, WebSocketEvent.CONNECT);
         }
@@ -106,12 +114,16 @@ public class StreamingData {
             throw new IllegalArgumentException("Message can't be null!");
         }
         for (Map.Entry<Stream, StreamSubscription> e : subscriptions.entrySet()) {
-            if (message.isInfo()) {
-                e.getValue().onDataSiftInfoMessage(message);
-            } else if (message.isWarning()) {
-                e.getValue().onDataSiftWarning(message);
+            if (message.hashHashes()) {
+                //if we have hashes then only subscriptions for each hash should be notified
+                for (Stream hash : message.hashes()) {
+                    if (e.getKey().isSameAs(hash)) {
+                        e.getValue().onDataSiftLogMessage(message);
+                    }
+                }
             } else {
-                e.getValue().onDataSiftError(message);
+                //otherwise let everyone know
+                e.getValue().onDataSiftLogMessage(message);
             }
         }
     }
@@ -120,7 +132,7 @@ public class StreamingData {
         if (e == null) {
             throw new IllegalArgumentException("Error can't be null!");
         }
-        listener.exceptionCaught(e);
+        errorListener.exceptionCaught(e);
     }
 
     /**
@@ -132,36 +144,47 @@ public class StreamingData {
      * @param listener an error callback
      * @return
      */
-    public StreamingData onError(StreamErrorListener listener) {
-        this.listener = listener;
+    public StreamingData onError(ErrorListener listener) {
+        this.errorListener = listener;
         return this;
     }
 
+    public void onStreamEvent(StreamEventListener streamEventListener) {
+        this.streamEventListener = streamEventListener;
+    }
+
     public StreamingData subscribe(final StreamSubscription subscription) {
-        if (listener == null) {
+        if (errorListener == null) {
             throw new IllegalStateException("You must call listen before subscribing to streams otherwise you'll miss" +
-                    " deletes and any exceptions that may occur");
+                    " any exceptions that may occur");
+        }
+        if (streamEventListener == null) {
+            throw new IllegalStateException("You must call onStreamEvent before subscribing to streams otherwise " +
+                    "you'll miss delete messages, which you are required to handle");
         }
         connect();
-        liveStream.connectFuture().addListener(new GenericFutureListener<Future<Void>>() {
-            public void operationComplete(Future<Void> future) throws Exception {
-                if (future.isSuccess()) {
-                    subscriptions.put(subscription.stream(), subscription);
-                    liveStream.emit(" { \"action\" : \"subscribe\" , \"hash\": \"" + subscription.stream().hash() +
-                            "\"}").addListener(new GenericFutureListener<Future<Void>>() {
-                        public void operationComplete(Future<Void> f) throws Exception {
-                            if (!f.isSuccess()) {
-                                fireError(f.cause());
+        unsentSubscriptions.add(subscription);
+        if (connected) {
+            pushUnsentSubscriptions();
+        }
+        return this;
+    }
+
+    protected void pushUnsentSubscriptions() {
+        for (final StreamSubscription subscription : unsentSubscriptions) {
+            subscriptions.put(subscription.stream(), subscription);
+            liveStream.emit("{\"action\":\"subscribe\",\"hash\":\"" + subscription.stream().hash() + "\"}")
+                    .addListener(new GenericFutureListener<Future<Void>>() {
+                        public void operationComplete(Future<Void> future) throws Exception {
+                            if (future.isSuccess()) {
+                                unsentSubscriptions.remove(subscription);
+                            } else {
+                                fireError(future.cause());
                                 subscribe(subscription);
                             }
                         }
                     });
-                } else {
-                    fireError(future.cause());
-                }
-            }
-        });
-        return this;
+        }
     }
 
     public StreamingData unsubscribe(Stream stream) {
@@ -175,5 +198,4 @@ public class StreamingData {
         liveStream.emit(" { \"action\" : \"unsubscribe\" , \"hash\": \"" + stream.hash() + "\"}");
         return this;
     }
-
 }

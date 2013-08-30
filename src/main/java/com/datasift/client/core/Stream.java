@@ -83,4 +83,8 @@ public class Stream extends DataSiftResult {
     public boolean isSameAs(String hash) {
         return this.hash.equals(hash);
     }
+
+    public boolean isSameAs(Stream hash) {
+        return this.hash.equals(hash.hash);
+    }
 }

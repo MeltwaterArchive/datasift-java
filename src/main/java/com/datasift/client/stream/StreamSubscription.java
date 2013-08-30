@@ -22,11 +22,7 @@ public abstract class StreamSubscription {
         return stream;
     }
 
-    public abstract void onDataSiftWarning(DataSiftMessage di);
-
-    public abstract void onDataSiftError(DataSiftMessage di);
-
-    public abstract void onDataSiftInfoMessage(DataSiftMessage di);
+    public abstract void onDataSiftLogMessage(DataSiftMessage dm);
 
     public abstract void onMessage(Interaction i);
 
