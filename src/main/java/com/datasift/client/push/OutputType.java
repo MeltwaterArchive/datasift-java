@@ -22,20 +22,21 @@ import com.datasift.client.push.connectors.ZoomData;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class OutputType<T> {
-    public static final OutputType<BigQuery> BIG_QUERY = new OutputType("bigquery");
-    public static final OutputType<CouchDB> COUCH_DB = new OutputType("couchdb");
-    public static final OutputType<DynamoDB> DYNAMO_DB = new OutputType("dynamodb");
-    public static final OutputType<ElasticSearch> ELASTIC_SEARCH = new OutputType("elasticsearch");
-    public static final OutputType<FTP> FTP_TYPE = new OutputType("ftp");
-    public static final OutputType<Http> HTTP_TYPE = new OutputType("http");
-    public static final OutputType<MongoDB> MONGO_DB = new OutputType("mongodb");
-    public static final OutputType<Precog> PRECOG = new OutputType("precog");
-    public static final OutputType<Redis> REDIS = new OutputType("redis");
-    public static final OutputType<S3> S3_OUTPUT = new OutputType("s3");
-    public static final OutputType<SFTP> SFTP_OUTPUT = new OutputType("sftp");
-    public static final OutputType<SplunkStormRest> SLUNK_STORM_REST = new OutputType("splunkstormrest");
-    public static final OutputType<SplunkStorm> SPLUNK_STORM = new OutputType("splunkstorm");
-    public static final OutputType<SplunkEnterprise> SPLUNK_ENTERPRISE = new OutputType("splunk");
+    public static final OutputType<BigQuery> BIG_QUERY = new OutputType<BigQuery>("bigquery");
+    public static final OutputType<CouchDB> COUCH_DB = new OutputType<CouchDB>("couchdb");
+    public static final OutputType<DynamoDB> DYNAMO_DB = new OutputType<DynamoDB>("dynamodb");
+    public static final OutputType<ElasticSearch> ELASTIC_SEARCH = new OutputType<ElasticSearch>("elasticsearch");
+    public static final OutputType<FTP> FTP_TYPE = new OutputType<FTP>("ftp");
+    public static final OutputType<Http> HTTP_TYPE = new OutputType<Http>("http");
+    public static final OutputType<MongoDB> MONGO_DB = new OutputType<MongoDB>("mongodb");
+    public static final OutputType<Precog> PRECOG = new OutputType<Precog>("precog");
+    public static final OutputType<Redis> REDIS = new OutputType<Redis>("redis");
+    public static final OutputType<S3> S3_OUTPUT = new OutputType<S3>("s3");
+    public static final OutputType<SFTP> SFTP_OUTPUT = new OutputType<SFTP>("sftp");
+    public static final OutputType<SplunkStormRest> SLUNK_STORM_REST =
+            new OutputType<SplunkStormRest>("splunkstormrest");
+    public static final OutputType<SplunkStorm> SPLUNK_STORM = new OutputType<SplunkStorm>("splunkstorm");
+    public static final OutputType<SplunkEnterprise> SPLUNK_ENTERPRISE = new OutputType<SplunkEnterprise>("splunk");
     public static final OutputType<ZoomData> ZOOM_DATA = new OutputType("zoomdata");
     private final String value;
 
