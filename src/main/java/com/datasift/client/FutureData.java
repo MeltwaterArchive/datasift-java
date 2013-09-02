@@ -10,6 +10,23 @@ public class FutureData<T> {
     private T data;
 
     /**
+     * Wraps any object in a {@link FutureData} instance
+     * <p/>
+     * Intended use is to enable any object obtained without a future to be passed to API methods.
+     * This allows API methods to accept FutureData objects and alleviates the need for a user to add
+     * many callbacks and instead just pass futures around as if they were already obtained values
+     *
+     * @param obj the object to wrap
+     * @param <A> the type of the object
+     * @return a future that will fire onData events for the given object
+     */
+    public static <A> FutureData<A> wrap(A obj) {
+        FutureData<A> future = new FutureData<A>();
+        future.data = obj;
+        return future;
+    }
+
+    /**
      * Invoked when a response is received and this future data is now available for use/processing
      *
      * @param data the data received or an object wrapping said data
