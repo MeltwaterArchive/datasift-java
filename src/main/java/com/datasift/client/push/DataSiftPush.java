@@ -38,4 +38,16 @@ public class DataSiftPush extends ApiClient {
         applyConfig(request).execute();
         return future;
     }
+
+    public <T extends PushConnector> FutureData<PushValidation> create(OutputType<T> outputType, T connector) {
+        FutureData<PushValidation> future = new FutureData<PushValidation>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(CREATE));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushValidation())))
+                .form("output_type", outputType.value());
+        for (Map.Entry<String, String> e : connector.parameters().verifyAndGet().entrySet()) {
+            request.form(e.getKey(), e.getValue());
+        }
+        applyConfig(request).execute();
+        return future;
+    }
 }
