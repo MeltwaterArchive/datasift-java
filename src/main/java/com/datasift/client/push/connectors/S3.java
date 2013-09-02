@@ -1,11 +1,14 @@
-package com.datasift.client.push.destinations;
+package com.datasift.client.push.connectors;
+
 
 /**
+ * <a href="http://dev.datasift.com/docs/push/connectors/s3">Official docs</a>
+ *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class S3Connector extends BaseConnector<S3Connector> {
-    protected S3Connector() {
-        setup(this);
+public class S3 extends BaseConnector<S3> {
+    protected S3() {
+        setup(this, "access_key", "secret_key", "delivery_frequency", "max_size", "bucket", "acl");
     }
 
     /**
@@ -14,7 +17,7 @@ public class S3Connector extends BaseConnector<S3Connector> {
      * @param format one of the allowed S3 formats, defaults to json_meta
      * @return this
      */
-    public S3Connector format(S3OutputFormat format) {
+    public S3 format(S3OutputFormat format) {
         String strFormat;
         switch (format) {
             case JSON_ARRAY:
@@ -28,7 +31,7 @@ public class S3Connector extends BaseConnector<S3Connector> {
                 strFormat = "json_meta";
                 break;
         }
-        addParam("format", strFormat);
+        setParam("format", strFormat);
         return this;
     }
 
@@ -37,8 +40,8 @@ public class S3Connector extends BaseConnector<S3Connector> {
      *            encoded, otherwise your /push/create request will fail.
      * @return this
      */
-    public S3Connector accessKey(String key) {
-        return setParam("access_key", key, true);
+    public S3 accessKey(String key) {
+        return setParam("access_key", key);
     }
 
     /**
@@ -46,8 +49,8 @@ public class S3Connector extends BaseConnector<S3Connector> {
      *               properly encoded, otherwise your /push/create request will fail.
      * @return this
      */
-    public S3Connector secretKey(String secret) {
-        return setParam("secret_key", secret, true);
+    public S3 secretKey(String secret) {
+        return setParam("secret_key", secret);
     }
 
     /**
@@ -65,8 +68,8 @@ public class S3Connector extends BaseConnector<S3Connector> {
      * @param frequency an int representative of what is desribed above
      * @return this
      */
-    public S3Connector deliveryFrequency(int frequency) {
-        return setParam("delivery_frequency", String.valueOf(frequency), true);
+    public S3 deliveryFrequency(int frequency) {
+        return setParam("delivery_frequency", String.valueOf(frequency));
     }
 
     /**
@@ -83,16 +86,16 @@ public class S3Connector extends BaseConnector<S3Connector> {
      * @param maxSize max size as described
      * @return this
      */
-    public S3Connector maxSize(int maxSize) {
-        return setParam("max_size", String.valueOf(maxSize), true);
+    public S3 maxSize(int maxSize) {
+        return setParam("max_size", String.valueOf(maxSize));
     }
 
     /**
      * @param bucket The bucket within that account into which DataSift will deposit the file
      * @return this
      */
-    public S3Connector bucket(String bucket) {
-        return setParam("bucket", bucket, true);
+    public S3 bucket(String bucket) {
+        return setParam("bucket", bucket);
     }
 
     /**
@@ -100,8 +103,8 @@ public class S3Connector extends BaseConnector<S3Connector> {
      *
      * @return this
      */
-    public S3Connector directory(String directory) {
-        return setParam("directory", directory, false);
+    public S3 directory(String directory) {
+        return setParam("directory", directory);
     }
 
     /**
@@ -110,8 +113,8 @@ public class S3Connector extends BaseConnector<S3Connector> {
      *
      * @return this
      */
-    public S3Connector filePrefix(String prefix) {
-        return setParam("file_prefix", prefix, false);
+    public S3 filePrefix(String prefix) {
+        return setParam("file_prefix", prefix);
     }
 
     /**
@@ -125,8 +128,8 @@ public class S3Connector extends BaseConnector<S3Connector> {
      *
      * @return this
      */
-    public S3Connector acl(String acl) {
-        return setParam("acl", acl, true);
+    public S3 acl(String acl) {
+        return setParam("acl", acl);
     }
 
     public static enum S3OutputFormat {

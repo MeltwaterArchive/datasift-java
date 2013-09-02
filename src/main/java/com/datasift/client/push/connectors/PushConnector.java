@@ -1,6 +1,4 @@
-package com.datasift.client.push.destinations;
-
-import java.util.Map;
+package com.datasift.client.push.connectors;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -14,5 +12,5 @@ public interface PushConnector {
      * <p/>
      * Each connector implementation should* do it's own verification of the map's contents
      */
-    Map<String, String> parameters();
+    Prepared parameters();
 }

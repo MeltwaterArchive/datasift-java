@@ -1,11 +1,13 @@
-package com.datasift.client.push.destinations;
+package com.datasift.client.push.connectors;
 
 /**
+ * <a href="http://dev.datasift.com/docs/push/connectors/couchdb">Official docs</a>
+ *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class CouchDBConnector extends BaseConnector<CouchDBConnector> {
-    protected CouchDBConnector() {
-        setup(this);
+public class CouchDB extends BaseConnector<CouchDB> {
+    protected CouchDB() {
+        setup(this, "host", "db_name", "auth.username", "auth.password");
     }
 
     /**
@@ -15,7 +17,7 @@ public class CouchDBConnector extends BaseConnector<CouchDBConnector> {
      * @param port the port on which the connection will be attempted
      * @return this
      */
-    public CouchDBConnector url(String host, int port) {
+    public CouchDB url(String host, int port) {
         return host(host).port(port);
     }
 
@@ -23,24 +25,24 @@ public class CouchDBConnector extends BaseConnector<CouchDBConnector> {
      * @param host The host name of your CouchDB installation.
      * @return this
      */
-    public CouchDBConnector host(String host) {
-        return setParam("host", host, true);
+    public CouchDB host(String host) {
+        return setParam("host", host);
     }
 
     /**
      * @param host You can specify a port or accept the default.
      * @return this
      */
-    public CouchDBConnector port(int host) {
-        return setParam("port", String.valueOf(host), true);
+    public CouchDB port(int host) {
+        return setParam("port", String.valueOf(host));
     }
 
     /**
      * @param name The name of an existing database.
      * @return this
      */
-    public CouchDBConnector dbName(String name) {
-        return setParam("db_name", name, true);
+    public CouchDB dbName(String name) {
+        return setParam("db_name", name);
     }
 
     /**
@@ -50,7 +52,7 @@ public class CouchDBConnector extends BaseConnector<CouchDBConnector> {
      * @param password the password
      * @return this
      */
-    public CouchDBConnector auth(String username, String password) {
+    public CouchDB auth(String username, String password) {
         return username(username).password(password);
     }
 
@@ -58,16 +60,16 @@ public class CouchDBConnector extends BaseConnector<CouchDBConnector> {
      * @param username he username for authorization.
      * @return this
      */
-    public CouchDBConnector username(String username) {
-        return setParam("auth.username", username, true);
+    public CouchDB username(String username) {
+        return setParam("auth.username", username);
     }
 
     /**
      * @param password The password for authorization.
      * @return this
      */
-    public CouchDBConnector password(String password) {
-        return setParam("auth.password", password, true);
+    public CouchDB password(String password) {
+        return setParam("auth.password", password);
     }
 
     /**
@@ -77,12 +79,12 @@ public class CouchDBConnector extends BaseConnector<CouchDBConnector> {
      *
      * @return this
      */
-    public CouchDBConnector useSSL(String yesOrNo) {
+    public CouchDB useSSL(String yesOrNo) {
         if (yesOrNo == null || !"yes".equals(yesOrNo) || !"no".equals(yesOrNo)) {
             throw new IllegalArgumentException("The strings yes or no are the only valid options for the use ssl " +
                     "option");
         }
-        return setParam("use_ssl", yesOrNo, true);
+        return setParam("use_ssl", yesOrNo);
     }
 
     /**
@@ -93,12 +95,12 @@ public class CouchDBConnector extends BaseConnector<CouchDBConnector> {
      *
      * @return this
      */
-    public CouchDBConnector verifySSL(String yesOrNo) {
+    public CouchDB verifySSL(String yesOrNo) {
         if (yesOrNo == null || !"yes".equals(yesOrNo) || !"no".equals(yesOrNo)) {
             throw new IllegalArgumentException("The strings yes or no are the only valid options for the veirfy ssl " +
                     "option");
         }
-        return setParam("verify_ssl", yesOrNo, false);
+        return setParam("verify_ssl", yesOrNo);
     }
 
     /**
@@ -110,7 +112,7 @@ public class CouchDBConnector extends BaseConnector<CouchDBConnector> {
      *
      * @return this
      */
-    public CouchDBConnector format(CouchDBFormat format) {
+    public CouchDB format(CouchDBFormat format) {
         String strFormat;
         switch (format) {
             case FULL_INTERACTION_META:
@@ -121,7 +123,7 @@ public class CouchDBConnector extends BaseConnector<CouchDBConnector> {
                 strFormat = "basic_interaction_meta";
                 break;
         }
-        return setParam("format", strFormat, false);
+        return setParam("format", strFormat);
     }
 
     public static enum CouchDBFormat {
