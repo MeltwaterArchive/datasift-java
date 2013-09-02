@@ -1,4 +1,4 @@
-package com.datasift.client.historics;
+package com.datasift.client.push;
 
 import com.datasift.client.DataSiftResult;
 

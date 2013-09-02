@@ -2,8 +2,6 @@ package com.datasift.client;
 
 import io.higgs.core.func.Function2;
 import io.higgs.http.client.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -12,9 +10,7 @@ import java.io.IOException;
  */
 public class ApiClient {
 
-    private static final String msg = "Failed to decode a response, can't create instance of the expected result type";
     protected DataSiftConfig config;
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     public ApiClient(DataSiftConfig config) {
         if (config == null) {

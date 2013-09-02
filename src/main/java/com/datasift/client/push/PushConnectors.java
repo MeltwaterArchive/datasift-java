@@ -1,10 +1,16 @@
-package com.datasift.client.push.destinations;
+package com.datasift.client.push;
+
+import com.datasift.client.push.connectors.BigQuery;
+import com.datasift.client.push.connectors.CouchDB;
+import com.datasift.client.push.connectors.DynamoDB;
+import com.datasift.client.push.connectors.ElasticSearch;
+import com.datasift.client.push.connectors.S3;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class OutputTypeBuilder {
-    private OutputTypeBuilder() {
+public class PushConnectors {
+    private PushConnectors() {
     }
 
     /**
@@ -25,8 +31,8 @@ public class OutputTypeBuilder {
      *
      * @return a new configurable BigQuery connector
      */
-    public static BigQueryConnector bigQuery() {
-        return new BigQueryConnector();
+    public static BigQuery bigQuery() {
+        return new BigQuery();
     }
 
     /**
@@ -49,7 +55,29 @@ public class OutputTypeBuilder {
      *
      * @return a new configurable S3 connector
      */
-    public static S3Connector s3() {
-        return new S3Connector();
+    public static S3 s3() {
+        return new S3();
+    }
+
+    /**
+     * Data format delivered:
+     * CouchDB native format (JSON). Each interaction is stored as one document.
+     * Storage type:
+     * One document per interaction.
+     * Limitations:
+     * There is no set limit to the number of values or amount of data that columns can hold.
+     * Links:
+     * Take a look at the <a href="http://www.couchbase.org/content/couchdb-drivers">CouchDB Drivers.</a>
+     */
+    public static CouchDB couchDB() {
+        return new CouchDB();
+    }
+
+    public static DynamoDB dynamoDB() {
+        return new DynamoDB();
+    }
+
+    public static ElasticSearch elasticSearch() {
+        return new ElasticSearch();
     }
 }
