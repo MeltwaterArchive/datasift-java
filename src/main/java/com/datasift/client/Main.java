@@ -35,24 +35,16 @@ public class Main {
         System.out.println(validation);
         if (validation.isSuccessful()) {
             //we now know it's valid so asynchronously compile the CSDL and obtain a stream
-            datasift.core().compile(csdl)
-                    .onData(new FutureResponse<Stream>() {
-                        public void apply(Stream stream) {
-                            System.out.println(stream.hash());
-                            FutureData<Dpu> dpus = datasift.core().dpu(stream);
-                            dpus.onData(new FutureResponse<Dpu>() {
-                                public void apply(Dpu data) {
-                                    System.out.println(data);
-                                }
-                            });
-                        }
-                    });
+            FutureData<Stream> stream = datasift.core().compile(csdl);
+            FutureData<Dpu> dpus = datasift.core().dpu(stream);
+            dpus.onData(new FutureResponse<Dpu>() {
+                public void apply(Dpu data) {
+                    System.out.println(data);
+                }
+            });
         }
         System.out.println(datasift.core().balance().sync());
         System.out.println(datasift.core().usage().sync());
-//        clean up and free up any resources -  ONLY WHEN  FINISHED
-//        A java.nio.channels.ClosedChannelException will occur if you try to make an API call after calling shutdown
-//        datasift.shutdown();
 
         datasift.liveStream().onError(new ErrorListener() {
             public void exceptionCaught(Throwable t) {
@@ -66,6 +58,7 @@ public class Main {
             }
         });
 
+        //this is a synchronous operation which checks the DataSift API to see if the hash is valid
         Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");
 
         datasift.liveStream().subscribe(new StreamSubscription(stream) {

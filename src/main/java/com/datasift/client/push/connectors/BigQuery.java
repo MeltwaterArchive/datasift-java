@@ -4,7 +4,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class BigQuery extends BaseConnector<BigQuery> {
-    protected BigQuery() {
+    public BigQuery() {
         setup(this, "auth.client_id", "auth.service_account", "auth.key_file", "project_id", "dataset_id", "table_id");
     }
 

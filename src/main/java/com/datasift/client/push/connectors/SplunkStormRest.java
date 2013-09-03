@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class SplunkStormRest extends BaseConnector<SplunkStormRest> {
-    protected SplunkStormRest() {
+    public SplunkStormRest() {
         setup(this, "api_hostname", "project_id", "access_token");
     }
 

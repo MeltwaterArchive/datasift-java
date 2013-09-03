@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class SFTP extends BaseConnector<SFTP> {
-    protected SFTP() {
+    public SFTP() {
         setup(this, "host", "port", "directory", "delivery_frequency", "max_size", "auth.username", "auth.password");
     }
 

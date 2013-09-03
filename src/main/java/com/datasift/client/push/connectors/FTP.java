@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class FTP extends BaseConnector<FTP> {
-    protected FTP() {
+    public FTP() {
         setup(this, "host", "port", "directory", "delivery_frequency", "max_size", "auth.username", "auth.password");
     }
 

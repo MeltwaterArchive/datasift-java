@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Precog extends BaseConnector<Precog> {
-    protected Precog() {
+    public Precog() {
         setup(this, "domain", "path", "owner_id", "auth.api_key");
     }
 

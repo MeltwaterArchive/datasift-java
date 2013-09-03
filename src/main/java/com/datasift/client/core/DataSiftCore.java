@@ -3,6 +3,7 @@ package com.datasift.client.core;
 import com.datasift.client.ApiClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.FutureData;
+import com.datasift.client.FutureResponse;
 import io.higgs.http.client.POST;
 import io.higgs.http.client.Request;
 import io.higgs.http.client.future.PageReader;
@@ -71,10 +72,21 @@ public class DataSiftCore extends ApiClient {
      * @return a DPU breakdown of the stream's usage
      */
     public FutureData<Dpu> dpu(@NotNull Stream stream) {
-        FutureData<Dpu> future = new FutureData<Dpu>();
-        URI uri = newParams().put("hash", stream.hash()).forURL(config.newAPIEndpointURI(DPU));
-        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new Dpu())));
-        applyConfig(request).execute();
+        return dpu(FutureData.wrap(stream));
+    }
+
+    public FutureData<Dpu> dpu(@NotNull FutureData<Stream> streamFuture) {
+        final FutureData<Dpu> future = new FutureData<Dpu>();
+        final Dpu dpu = new Dpu();
+        //
+        final FutureResponse<Stream> response = new FutureResponse<Stream>() {
+            public void apply(Stream stream) {
+                URI uri = newParams().put("hash", stream.hash()).forURL(config.newAPIEndpointURI(DPU));
+                Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new Dpu())));
+                applyConfig(request).execute();
+            }
+        };
+        processFuture(streamFuture, future, dpu, response);
         return future;
     }
 

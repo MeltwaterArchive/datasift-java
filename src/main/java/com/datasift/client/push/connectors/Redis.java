@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Redis extends BaseConnector<Redis> {
-    protected Redis() {
+    public Redis() {
         setup(this, "host", "port", "database", "list", "format", "auth.password");
     }
 

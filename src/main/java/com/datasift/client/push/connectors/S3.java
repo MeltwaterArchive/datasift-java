@@ -7,7 +7,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class S3 extends BaseConnector<S3> {
-    protected S3() {
+    public S3() {
         setup(this, "access_key", "secret_key", "delivery_frequency", "max_size", "bucket", "acl");
     }
 

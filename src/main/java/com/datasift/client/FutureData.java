@@ -14,13 +14,18 @@ public class FutureData<T> {
      * <p/>
      * Intended use is to enable any object obtained without a future to be passed to API methods.
      * This allows API methods to accept FutureData objects and alleviates the need for a user to add
-     * many callbacks and instead just pass futures around as if they were already obtained values
+     * many callbacks and instead just pass futures around as if they were already obtained values.
+     * Note that any listeners added will be immediately invoked/notified, seeing as the result they would
+     * await has already been obtained
      *
      * @param obj the object to wrap
      * @param <A> the type of the object
      * @return a future that will fire onData events for the given object
      */
     public static <A> FutureData<A> wrap(A obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("You cannot wrap null as future data");
+        }
         FutureData<A> future = new FutureData<A>();
         future.data = obj;
         return future;

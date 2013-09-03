@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class SplunkStorm extends BaseConnector<SplunkStorm> {
-    protected SplunkStorm() {
+    public SplunkStorm() {
         setup(this, "host", "port");
     }
 

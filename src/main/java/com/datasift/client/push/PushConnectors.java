@@ -4,7 +4,17 @@ import com.datasift.client.push.connectors.BigQuery;
 import com.datasift.client.push.connectors.CouchDB;
 import com.datasift.client.push.connectors.DynamoDB;
 import com.datasift.client.push.connectors.ElasticSearch;
+import com.datasift.client.push.connectors.FTP;
+import com.datasift.client.push.connectors.Http;
+import com.datasift.client.push.connectors.MongoDB;
+import com.datasift.client.push.connectors.Precog;
+import com.datasift.client.push.connectors.Redis;
 import com.datasift.client.push.connectors.S3;
+import com.datasift.client.push.connectors.SFTP;
+import com.datasift.client.push.connectors.SplunkEnterprise;
+import com.datasift.client.push.connectors.SplunkStorm;
+import com.datasift.client.push.connectors.SplunkStormRest;
+import com.datasift.client.push.connectors.ZoomData;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -80,4 +90,45 @@ public class PushConnectors {
     public static ElasticSearch elasticSearch() {
         return new ElasticSearch();
     }
+
+    public static FTP ftp() {
+        return new FTP();
+    }
+
+    public static Http http() {
+        return new Http();
+    }
+
+    public static MongoDB mongoDB() {
+        return new MongoDB();
+    }
+
+    public static Precog precog() {
+        return new Precog();
+    }
+
+    public static Redis redis() {
+        return new Redis();
+    }
+
+    public static SFTP sftp() {
+        return new SFTP();
+    }
+
+    public static SplunkStormRest splunkStormRest() {
+        return new SplunkStormRest();
+    }
+
+    public static SplunkStorm splunkStorm() {
+        return new SplunkStorm();
+    }
+
+    public static SplunkEnterprise splunkEnterprise() {
+        return new SplunkEnterprise();
+    }
+
+    public static ZoomData zoomdata() {
+        return new ZoomData();
+    }
+
 }

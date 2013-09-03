@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class CouchDB extends BaseConnector<CouchDB> {
-    protected CouchDB() {
+    public CouchDB() {
         setup(this, "host", "db_name", "auth.username", "auth.password");
     }
 

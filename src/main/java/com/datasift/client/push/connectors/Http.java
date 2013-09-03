@@ -8,7 +8,7 @@ import io.netty.handler.codec.http.HttpMethod;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Http extends BaseConnector<Http> {
-    protected Http() {
+    public Http() {
         setup(this, "method", "url", "delivery_frequency", "max_size", "auth.type", "verify_ssl", "use_gzip");
     }
 

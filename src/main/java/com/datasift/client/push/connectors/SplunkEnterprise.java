@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class SplunkEnterprise extends BaseConnector<SplunkEnterprise> {
-    protected SplunkEnterprise() {
+    public SplunkEnterprise() {
         setup(this, "host", "port", "auth.username", "auth.password");
     }
 

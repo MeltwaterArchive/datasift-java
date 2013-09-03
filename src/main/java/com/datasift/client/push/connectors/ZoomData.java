@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class ZoomData extends BaseConnector<ZoomData> {
-    protected ZoomData() {
+    public ZoomData() {
         setup(this, "host", "port", "auth.username", "auth.password");
     }
 

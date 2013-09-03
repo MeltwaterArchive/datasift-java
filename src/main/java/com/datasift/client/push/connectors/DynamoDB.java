@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class DynamoDB extends BaseConnector<DynamoDB> {
-    protected DynamoDB() {
+    public DynamoDB() {
         setup(this, "table", "auth.access_key", "auth.secret_key", "region");
     }
 

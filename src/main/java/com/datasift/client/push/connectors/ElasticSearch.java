@@ -6,7 +6,7 @@ package com.datasift.client.push.connectors;
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class ElasticSearch extends BaseConnector<ElasticSearch> {
-    protected ElasticSearch() {
+    public ElasticSearch() {
         setup(this, "host");
     }
 
