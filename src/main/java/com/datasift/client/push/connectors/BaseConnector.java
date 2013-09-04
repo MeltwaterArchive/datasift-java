@@ -38,7 +38,7 @@ public class BaseConnector<T> implements PushConnector {
         if (paramName == null || value == null) {
             throw new IllegalArgumentException(paramName + " is null but no parameters are allowed to be");
         }
-        params.add(paramName, value);
+        params.add(PREFIX + paramName, value);
         return thisRef;
     }
 

@@ -11,17 +11,11 @@ import java.util.Map;
  */
 public class HistoricsQuery extends DataSiftResult {
     @JsonProperty
-    protected String hash;
-    @JsonProperty
     protected double dpus;
     @JsonProperty
     protected String id;
     @JsonProperty
     protected Availability availability;
-
-    public String getHash() {
-        return hash;
-    }
 
     public double getDpus() {
         return dpus;

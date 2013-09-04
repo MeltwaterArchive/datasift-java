@@ -1,5 +1,9 @@
-package com.datasift.client;
+package com.datasift.client.examples;
 
+import com.datasift.client.DataSiftClient;
+import com.datasift.client.DataSiftConfig;
+import com.datasift.client.FutureData;
+import com.datasift.client.FutureResponse;
 import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Validation;
@@ -10,8 +14,8 @@ import com.datasift.client.stream.Interaction;
 import com.datasift.client.stream.StreamEventListener;
 import com.datasift.client.stream.StreamSubscription;
 
-public class Main {
-    private Main() {
+public class CoreApi {
+    private CoreApi() {
     }
 
     public static void main(String... args) throws InterruptedException {
@@ -58,7 +62,6 @@ public class Main {
             }
         });
 
-        //this is a synchronous operation which checks the DataSift API to see if the hash is valid
         Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");
 
         datasift.liveStream().subscribe(new StreamSubscription(stream) {

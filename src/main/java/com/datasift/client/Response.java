@@ -58,8 +58,8 @@ public class Response {
     /**
      * @return Status reason/message e.g. "OK" or "Not Found"
      */
-    public int statusMessage() {
-        return rawResponse.getStatus().code();
+    public String statusMessage() {
+        return rawResponse.getStatus().reasonPhrase();
     }
 
     /**

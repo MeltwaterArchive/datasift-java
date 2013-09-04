@@ -1,5 +1,6 @@
 package com.datasift.client;
 
+import com.datasift.client.util.WrappedResponse;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
 
 /**
@@ -22,11 +23,12 @@ public class FutureData<T> {
      * @param <A> the type of the object
      * @return a future that will fire onData events for the given object
      */
-    public static <A> FutureData<A> wrap(A obj) {
+    public static <A extends DataSiftResult> FutureData<A> wrap(A obj) {
         if (obj == null) {
             throw new IllegalArgumentException("You cannot wrap null as future data");
         }
         FutureData<A> future = new FutureData<A>();
+        obj.setResponse(new WrappedResponse());
         future.data = obj;
         return future;
     }
