@@ -8,6 +8,7 @@ import com.datasift.client.push.connectors.FTP;
 import com.datasift.client.push.connectors.Http;
 import com.datasift.client.push.connectors.MongoDB;
 import com.datasift.client.push.connectors.Precog;
+import com.datasift.client.push.connectors.PushConnector;
 import com.datasift.client.push.connectors.Redis;
 import com.datasift.client.push.connectors.S3;
 import com.datasift.client.push.connectors.SFTP;
@@ -21,7 +22,7 @@ import com.datasift.client.push.connectors.ZoomData;
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class OutputType<T> {
+public class OutputType<T extends PushConnector> {
     public static final OutputType<BigQuery> BIG_QUERY = new OutputType<BigQuery>("bigquery");
     public static final OutputType<CouchDB> COUCH_DB = new OutputType<CouchDB>("couchdb");
     public static final OutputType<DynamoDB> DYNAMO_DB = new OutputType<DynamoDB>("dynamodb");
@@ -33,8 +34,7 @@ public class OutputType<T> {
     public static final OutputType<Redis> REDIS = new OutputType<Redis>("redis");
     public static final OutputType<S3> S3_OUTPUT = new OutputType<S3>("s3");
     public static final OutputType<SFTP> SFTP_OUTPUT = new OutputType<SFTP>("sftp");
-    public static final OutputType<SplunkStormRest> SLUNK_STORM_REST =
-            new OutputType<SplunkStormRest>("splunkstormrest");
+    public static final OutputType<SplunkStormRest> SPLUNK_STORM_REST = new OutputType<SplunkStormRest>("splunkstormrest");
     public static final OutputType<SplunkStorm> SPLUNK_STORM = new OutputType<SplunkStorm>("splunkstorm");
     public static final OutputType<SplunkEnterprise> SPLUNK_ENTERPRISE = new OutputType<SplunkEnterprise>("splunk");
     public static final OutputType<ZoomData> ZOOM_DATA = new OutputType("zoomdata");
@@ -45,6 +45,10 @@ public class OutputType<T> {
             throw new IllegalArgumentException("Output type value cannot be null");
         }
         this.value = value;
+    }
+
+    public static <T extends PushConnector> OutputType<T> fromString(String type) {
+        return new OutputType<T>(type);
     }
 
     public String value() {

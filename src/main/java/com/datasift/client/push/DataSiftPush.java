@@ -74,7 +74,7 @@ public class DataSiftPush extends ApiClient {
      */
     public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
                                                                          final T connector,
-                                                                         final FutureData<HistoricsQuery> historics,
+                                                                         FutureData<HistoricsQuery> historics,
                                                                          FutureData<Stream> stream,
                                                                          final String name,
                                                                          final String initialStatus,
