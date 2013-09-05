@@ -5,7 +5,7 @@ import com.datasift.client.DataSiftConfig;
 import com.datasift.client.FutureData;
 import com.datasift.client.FutureResponse;
 import com.datasift.client.core.Stream;
-import com.datasift.client.historics.HistoricsQuery;
+import com.datasift.client.historics.PreparedHistoricsQuery;
 import com.datasift.client.push.connectors.PushConnector;
 import io.higgs.http.client.POST;
 import io.higgs.http.client.future.PageReader;
@@ -45,7 +45,7 @@ public class DataSiftPush extends ApiClient {
 
     public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
                                                                          final T connector,
-                                                                         final FutureData<HistoricsQuery> historics,
+                                                                         final FutureData<PreparedHistoricsQuery> historics,
                                                                          FutureData<Stream> stream,
                                                                          final String name) {
         return create(outputType, connector, historics, stream, name, null, 0, 0);
@@ -74,7 +74,7 @@ public class DataSiftPush extends ApiClient {
      */
     public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
                                                                          final T connector,
-                                                                         FutureData<HistoricsQuery> historics,
+                                                                         FutureData<PreparedHistoricsQuery> historics,
                                                                          FutureData<Stream> stream,
                                                                          final String name,
                                                                          final String initialStatus,
@@ -100,8 +100,8 @@ public class DataSiftPush extends ApiClient {
         final PushSubscription subscription = new PushSubscription();
         //we need to unwrap the future data object, either historics or stream
         if (historics != null) {
-            processFuture(historics, future, subscription, new FutureResponse<HistoricsQuery>() {
-                public void apply(HistoricsQuery data) {
+            processFuture(historics, future, subscription, new FutureResponse<PreparedHistoricsQuery>() {
+                public void apply(PreparedHistoricsQuery data) {
                     //using the unwrapped data, perform the actual query using historics as the source
                     performCreateQuery(outputType, connector, name, initialStatus, start, end, future, subscription,
                             data, null);
@@ -124,7 +124,7 @@ public class DataSiftPush extends ApiClient {
     private <T extends PushConnector> void performCreateQuery(OutputType<T> outputType, T connector, String name,
                                                               String initialStatus, long start, long end,
                                                               FutureData<PushSubscription> future,
-                                                              PushSubscription subscription, HistoricsQuery historics,
+                                                              PushSubscription subscription, PreparedHistoricsQuery historics,
                                                               Stream stream) {
         URI uri = newParams().forURL(config.newAPIEndpointURI(CREATE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, subscription)))
