@@ -1,16 +1,24 @@
 package com.datasift.client.push;
 
 import com.datasift.client.ApiClient;
+import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
 import com.datasift.client.FutureResponse;
 import com.datasift.client.core.Stream;
 import com.datasift.client.historics.PreparedHistoricsQuery;
 import com.datasift.client.push.connectors.PushConnector;
+import com.datasift.client.stream.Interaction;
+import com.fasterxml.jackson.databind.JavaType;
+import io.higgs.core.func.Function2;
 import io.higgs.http.client.POST;
+import io.higgs.http.client.Response;
 import io.higgs.http.client.future.PageReader;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +31,266 @@ public class DataSiftPush extends ApiClient {
 
     public DataSiftPush(DataSiftConfig config) {
         super(config);
+    }
+
+    /**
+     * Pause the push subscription with the given ID
+     *
+     * @param id the id of the push subscription to pause
+     * @return the push subscription that has been paused
+     */
+    public FutureData<PushSubscription> pause(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("A push subscription ID is required");
+        }
+        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())))
+                .form("id", id);
+        applyConfig(request).execute();
+        return future;
+    }
+
+    /**
+     * Set a paused subscription to run again
+     *
+     * @param id the id of the push subscription to resume
+     * @return the push subscription
+     */
+    public FutureData<PushSubscription> resume(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("A push subscription ID is required");
+        }
+        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(RESUME));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())))
+                .form("id", id);
+        applyConfig(request).execute();
+        return future;
+    }
+
+    /**
+     * Stop/cancel a given push subscription
+     *
+     * @param id the id of the push subscription
+     * @return the subscription that was stopped
+     */
+    public FutureData<PushSubscription> stop(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("A push subscription ID is required");
+        }
+        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())))
+                .form("id", id);
+        applyConfig(request).execute();
+        return future;
+    }
+
+    /**
+     * Delete a push subsctiption
+     *
+     * @param id the id of the subscription to delete
+     * @return a DataSiftResult which can be checked for success or failure of the request
+     */
+    public FutureData<DataSiftResult> delete(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("A push subscription ID is required");
+        }
+        FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult())))
+                .form("id", id);
+        applyConfig(request).execute();
+        return future;
+    }
+
+    public FutureData<PushSubscription> update(String id, PushConnector connector) {
+        return update(id, connector, null);
+    }
+
+    /**
+     * Updates the name or output parameters for a push sucription
+     *
+     * @param id        the subscription ID
+     * @param connector the output parameters to update to
+     * @param name      an optional name to update with
+     * @return the updated push subscription
+     */
+    public FutureData<PushSubscription> update(String id, PushConnector connector, String name) {
+        if (id == null || id.isEmpty() || connector == null) {
+            throw new IllegalArgumentException("A push subscription ID and output parameters is required");
+        }
+        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())))
+                .form("id", id);
+        for (Map.Entry<String, String> e : connector.parameters().verifyAndGet().entrySet()) {
+            request.form(e.getKey(), e.getValue());
+        }
+        if (name != null && !name.isEmpty()) {
+            request.form("name", name);
+        }
+        applyConfig(request).execute();
+        return future;
+    }
+
+    /**
+     * Retrieve one or more interactions from a Push queue
+     *
+     * @param id     the push subscription ID
+     * @param size   max number of interactions to get
+     * @param cursor a pointer into the push
+     * @return
+     */
+    public FutureData<PulledInteractions> pull(String id, int size, String cursor) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("A push subscription ID is required");
+        }
+        final FutureData<PulledInteractions> future = new FutureData<PulledInteractions>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(PULL));
+        POST request = config.http().POST(uri, new PageReader(new Function2<String, Response>() {
+            public void apply(String s, Response response) {
+                if (!response.hasFailed()) {
+                    JavaType type = DataSiftClient.MAPPER.getTypeFactory()
+                            .constructCollectionType(List.class, Interaction.class);
+                    try {
+                        List<Interaction> interactions = DataSiftClient.MAPPER.readValue(s, type);
+                        PulledInteractions pi = new PulledInteractions();
+                        pi.data(interactions);
+                        future.received(pi);
+                    } catch (IOException e) {
+                        fail(s, response, e);
+                    }
+                } else {
+                    fail(s, response, null);
+                }
+            }
+
+            private void fail(String s, Response response, Throwable e) {
+                PulledInteractions pi = new PulledInteractions();
+                pi.failed(e != null ? e : response.failureCause());
+                pi.setResponse(new com.datasift.client.Response(s, response));
+                future.received(pi);
+            }
+        })).form("id", id);
+        if (cursor != null && !cursor.isEmpty()) {
+            request.form("cursor", cursor);
+        }
+        if (size > 0) {
+            request.form("size", size);
+        }
+        applyConfig(request).execute();
+        return future;
+    }
+
+    public FutureData<PushLogMessages> log(String id, int page) {
+        return log(id, page, 0, null, null);
+    }
+
+    /**
+     * Retreive log messages about subscriptions
+     *
+     * @param id             the ID of a subscription
+     * @param page           the page number
+     * @param perPage        numbe rof items per page
+     * @param orderBy        the field DataSift will use to order the result
+     * @param orderDirection the direction of ordering, asc or desc
+     * @return a set of log messages
+     */
+    public FutureData<PushLogMessages> log(String id, int page, int perPage, String orderBy, String orderDirection) {
+        FutureData<PushLogMessages> future = new FutureData<PushLogMessages>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages())));
+        if (id != null && !id.isEmpty()) {
+            request.form("id", id);
+        }
+        if (page > 0) {
+            request.form("page", page);
+        }
+        if (perPage > 0) {
+            request.form("per_page", perPage);
+        }
+        if (orderBy != null && !orderBy.isEmpty()) {
+            request.form("order_by", id);
+        }
+        if (orderDirection != null && !orderDirection.isEmpty()) {
+            request.form("order_dir", orderDirection);
+        }
+        applyConfig(request).execute();
+        return future;
+    }
+
+    /**
+     * @param id A push subscription ID
+     * @return the push subscription for the given ID
+     */
+    public FutureData<PushSubscription> get(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("A subscription ID is required");
+        }
+
+        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())));
+        applyConfig(request).execute();
+        return future;
+    }
+
+    /**
+     * Get all pus subscriptions for the given stream
+     *
+     * @param hash
+     * @param page
+     * @param perPage
+     * @param orderBy
+     * @param orderDirection
+     * @param includeFinished
+     * @return
+     */
+    public FutureData<PushSubscription> get(Stream hash, int page, int perPage, String orderBy,
+                                            String orderDirection, boolean includeFinished) {
+        FutureData<PushSubscription> future = new FutureData<PushLogMessages>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages())));
+        request.form("id", hash.hash()).form("include_finished", includeFinished ? 1 : 0);
+        if (page > 0) {
+            request.form("page", page);
+        }
+        if (perPage > 0) {
+            request.form("per_page", perPage);
+        }
+        if (orderBy != null && !orderBy.isEmpty()) {
+            request.form("order_by", hash);
+        }
+        if (orderDirection != null && !orderDirection.isEmpty()) {
+            request.form("order_dir", orderDirection);
+        }
+        applyConfig(request).execute();
+        return future;
+    }
+
+    public FutureData<PushSubscription> get(String historicsId, int page, int perPage, String orderBy, String orderDirection) {
+        FutureData<PushLogMessages> future = new FutureData<PushLogMessages>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages())));
+        if (id != null && !id.isEmpty()) {
+            request.form("id", id);
+        }
+        if (page > 0) {
+            request.form("page", page);
+        }
+        if (perPage > 0) {
+            request.form("per_page", perPage);
+        }
+        if (orderBy != null && !orderBy.isEmpty()) {
+            request.form("order_by", id);
+        }
+        if (orderDirection != null && !orderDirection.isEmpty()) {
+            request.form("order_dir", orderDirection);
+        }
+        applyConfig(request).execute();
+        return future;
     }
 
     /**
@@ -42,10 +310,10 @@ public class DataSiftPush extends ApiClient {
         return future;
     }
 
-
     public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
                                                                          final T connector,
-                                                                         final FutureData<PreparedHistoricsQuery> historics,
+                                                                         final FutureData<PreparedHistoricsQuery>
+                                                                                 historics,
                                                                          FutureData<Stream> stream,
                                                                          final String name) {
         return create(outputType, connector, historics, stream, name, null, 0, 0);
@@ -124,7 +392,8 @@ public class DataSiftPush extends ApiClient {
     private <T extends PushConnector> void performCreateQuery(OutputType<T> outputType, T connector, String name,
                                                               String initialStatus, long start, long end,
                                                               FutureData<PushSubscription> future,
-                                                              PushSubscription subscription, PreparedHistoricsQuery historics,
+                                                              PushSubscription subscription,
+                                                              PreparedHistoricsQuery historics,
                                                               Stream stream) {
         URI uri = newParams().forURL(config.newAPIEndpointURI(CREATE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, subscription)))
