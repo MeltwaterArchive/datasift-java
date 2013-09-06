@@ -7,6 +7,7 @@ import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
 import com.datasift.client.FutureResponse;
 import com.datasift.client.core.Stream;
+import com.datasift.client.historics.HistoricsQuery;
 import com.datasift.client.historics.PreparedHistoricsQuery;
 import com.datasift.client.push.connectors.PushConnector;
 import com.datasift.client.stream.Interaction;
@@ -98,7 +99,7 @@ public class DataSiftPush extends ApiClient {
             throw new IllegalArgumentException("A push subscription ID is required");
         }
         FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult())))
                 .form("id", id);
         applyConfig(request).execute();
@@ -122,7 +123,7 @@ public class DataSiftPush extends ApiClient {
             throw new IllegalArgumentException("A push subscription ID and output parameters is required");
         }
         FutureData<PushSubscription> future = new FutureData<PushSubscription>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        URI uri = newParams().forURL(config.newAPIEndpointURI(UPDATE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())))
                 .form("id", id);
         for (Map.Entry<String, String> e : connector.parameters().verifyAndGet().entrySet()) {
@@ -141,7 +142,7 @@ public class DataSiftPush extends ApiClient {
      * @param id     the push subscription ID
      * @param size   max number of interactions to get
      * @param cursor a pointer into the push
-     * @return
+     * @return a set of interactions pulled from the specified push queue
      */
     public FutureData<PulledInteractions> pull(String id, int size, String cursor) {
         if (id == null || id.isEmpty()) {
@@ -200,7 +201,7 @@ public class DataSiftPush extends ApiClient {
      */
     public FutureData<PushLogMessages> log(String id, int page, int perPage, String orderBy, String orderDirection) {
         FutureData<PushLogMessages> future = new FutureData<PushLogMessages>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        URI uri = newParams().forURL(config.newAPIEndpointURI(LOG));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages())));
         if (id != null && !id.isEmpty()) {
             request.form("id", id);
@@ -212,7 +213,7 @@ public class DataSiftPush extends ApiClient {
             request.form("per_page", perPage);
         }
         if (orderBy != null && !orderBy.isEmpty()) {
-            request.form("order_by", id);
+            request.form("order_by", orderBy);
         }
         if (orderDirection != null && !orderDirection.isEmpty()) {
             request.form("order_dir", orderDirection);
@@ -231,29 +232,29 @@ public class DataSiftPush extends ApiClient {
         }
 
         FutureData<PushSubscription> future = new FutureData<PushSubscription>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
+        URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())));
         applyConfig(request).execute();
         return future;
     }
 
     /**
-     * Get all pus subscriptions for the given stream
+     * Get all push subscriptions for the given stream
      *
-     * @param hash
-     * @param page
-     * @param perPage
-     * @param orderBy
-     * @param orderDirection
-     * @param includeFinished
-     * @return
+     * @param hash            the ID of the stream to fetch all associated push subscriptions for
+     * @param page            a page number
+     * @param perPage         the amount of items per page
+     * @param orderBy         the field name to order data by e.g. created_at
+     * @param orderDirection  an order, asc or desc
+     * @param includeFinished whether to included completed subscriptions or not
+     * @return an {@link Iterable}
      */
-    public FutureData<PushSubscription> get(Stream hash, int page, int perPage, String orderBy,
-                                            String orderDirection, boolean includeFinished) {
-        FutureData<PushSubscription> future = new FutureData<PushLogMessages>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages())));
-        request.form("id", hash.hash()).form("include_finished", includeFinished ? 1 : 0);
+    public FutureData<PushCollection> get(Stream hash, int page, int perPage, String orderBy,
+                                          String orderDirection, boolean includeFinished) {
+        FutureData<PushCollection> future = new FutureData<PushCollection>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushCollection())));
+        request.form("hash", hash.hash()).form("include_finished", includeFinished ? 1 : 0);
         if (page > 0) {
             request.form("page", page);
         }
@@ -261,7 +262,7 @@ public class DataSiftPush extends ApiClient {
             request.form("per_page", perPage);
         }
         if (orderBy != null && !orderBy.isEmpty()) {
-            request.form("order_by", hash);
+            request.form("order_by", orderBy);
         }
         if (orderDirection != null && !orderDirection.isEmpty()) {
             request.form("order_dir", orderDirection);
@@ -270,13 +271,23 @@ public class DataSiftPush extends ApiClient {
         return future;
     }
 
-    public FutureData<PushSubscription> get(String historicsId, int page, int perPage, String orderBy, String orderDirection) {
-        FutureData<PushLogMessages> future = new FutureData<PushLogMessages>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages())));
-        if (id != null && !id.isEmpty()) {
-            request.form("id", id);
-        }
+    /**
+     * Get all push subscriptions for the given historics
+     *
+     * @param historics       the ID of the stream to fetch all associated push subscriptions for
+     * @param page            a page number
+     * @param perPage         the amount of items per page
+     * @param orderBy         the field name to order data by e.g. created_at
+     * @param orderDirection  an order, asc or desc
+     * @param includeFinished whether to included completed subscriptions or not
+     * @return an {@link Iterable}
+     */
+    public FutureData<PushCollection> get(HistoricsQuery historics, int page, int perPage, String orderBy,
+                                          String orderDirection, boolean includeFinished) {
+        FutureData<PushCollection> future = new FutureData<PushCollection>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushCollection())));
+        request.form("playback_id", historics.getId()).form("include_finished", includeFinished ? 1 : 0);
         if (page > 0) {
             request.form("page", page);
         }
@@ -284,7 +295,7 @@ public class DataSiftPush extends ApiClient {
             request.form("per_page", perPage);
         }
         if (orderBy != null && !orderBy.isEmpty()) {
-            request.form("order_by", id);
+            request.form("order_by", orderBy);
         }
         if (orderDirection != null && !orderDirection.isEmpty()) {
             request.form("order_dir", orderDirection);
@@ -317,6 +328,36 @@ public class DataSiftPush extends ApiClient {
                                                                          FutureData<Stream> stream,
                                                                          final String name) {
         return create(outputType, connector, historics, stream, name, null, 0, 0);
+    }
+
+    /**
+     * Create a push subscription from a prepared query
+     *
+     * @return the created subscription
+     */
+    public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
+                                                                         final T connector,
+                                                                         PreparedHistoricsQuery historics,
+                                                                         final String name,
+                                                                         final String initialStatus,
+                                                                         final long start,
+                                                                         final long end) {
+        return create(outputType, connector, FutureData.wrap(historics), null, name, initialStatus, start, end);
+    }
+
+    /**
+     * Create a push subscription from a live stream
+     *
+     * @return the created subscription
+     */
+    public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
+                                                                         final T connector,
+                                                                         Stream stream,
+                                                                         final String name,
+                                                                         final String initialStatus,
+                                                                         final long start,
+                                                                         final long end) {
+        return create(outputType, connector, null, FutureData.wrap(stream), name, initialStatus, start, end);
     }
 
     /**

@@ -37,6 +37,21 @@ public class HistoricsQuery extends DataSiftResult {
     @JsonProperty
     private List<Chunk> chunks;
 
+    /**
+     * Create a HistoricsQuery instance containing only an ID
+     *
+     * @param historicsQueryId the id obtained from DataSift
+     * @return an instance which can be used by the client
+     */
+    public static HistoricsQuery fromString(String historicsQueryId) {
+        if (historicsQueryId == null || historicsQueryId.isEmpty()) {
+            throw new IllegalArgumentException("Cannot create a stream from an empty or null string");
+        }
+        HistoricsQuery stream = new HistoricsQuery();
+        stream.id = historicsQueryId;
+        return stream;
+    }
+
     public String getId() {
         return id;
     }
