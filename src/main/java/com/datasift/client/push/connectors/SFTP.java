@@ -180,7 +180,6 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("format", strFormat);
     }
 
-
     public static enum SFTPFormat {
         JSON_META,
         JSON_ARRAY,

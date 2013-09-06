@@ -20,7 +20,7 @@ public class WrappedResponse extends Response {
         try {
             DUMMY_URL = new URI("http://localhost/wrapped-response");
         } catch (URISyntaxException e) {
-
+            throw new IllegalStateException("Invalid dumy URL????");
         }
     }
 

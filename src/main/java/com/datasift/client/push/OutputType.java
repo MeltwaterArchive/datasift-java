@@ -34,7 +34,8 @@ public class OutputType<T extends PushConnector> {
     public static final OutputType<Redis> REDIS = new OutputType<Redis>("redis");
     public static final OutputType<S3> S3_OUTPUT = new OutputType<S3>("s3");
     public static final OutputType<SFTP> SFTP_OUTPUT = new OutputType<SFTP>("sftp");
-    public static final OutputType<SplunkStormRest> SPLUNK_STORM_REST = new OutputType<SplunkStormRest>("splunkstormrest");
+    public static final OutputType<SplunkStormRest> SPLUNK_STORM_REST =
+            new OutputType<SplunkStormRest>("splunkstormrest");
     public static final OutputType<SplunkStorm> SPLUNK_STORM = new OutputType<SplunkStorm>("splunkstorm");
     public static final OutputType<SplunkEnterprise> SPLUNK_ENTERPRISE = new OutputType<SplunkEnterprise>("splunk");
     public static final OutputType<ZoomData> ZOOM_DATA = new OutputType("zoomdata");

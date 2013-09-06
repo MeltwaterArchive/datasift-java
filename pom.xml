@@ -9,7 +9,7 @@
     <groupId>com.datasift.client</groupId>
     <artifactId>datasift-java</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.0</version>
+    <version>3.0.0-SNAPSHOT</version>
     <name>DataSift Java Client library</name>
     <description>A client library for interacting with the DataSift API on the JVM.</description>
 
@@ -21,8 +21,8 @@
     <url>https://github.com/datasift/datasift-java</url>
     <licenses>
         <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <name>BSD</name>
+            <url>https://raw.github.com/datasift/datasift-java/develop/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -93,11 +93,10 @@
             <artifactId>jaxb-api</artifactId>
             <version>2.2</version>
         </dependency>
-        <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -188,10 +187,4 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>boundary-site</id>
-            <url>http://maven.boundary.com/artifactory/repo</url>
-        </repository>
-    </repositories>
 </project>

@@ -8,7 +8,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashSet;
  */
 public class FutureData<T> {
     protected NonBlockingHashSet<FutureResponse<T>> listeners = new NonBlockingHashSet<FutureResponse<T>>();
-    private T data;
+    protected T data;
 
     /**
      * Wraps any object in a {@link FutureData} instance

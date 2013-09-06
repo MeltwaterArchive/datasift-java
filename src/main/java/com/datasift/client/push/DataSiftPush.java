@@ -460,6 +460,5 @@ public class DataSiftPush extends ApiClient {
             request.form("end", end);
         }
         applyConfig(request).execute();
-
     }
 }
