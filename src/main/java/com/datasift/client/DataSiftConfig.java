@@ -26,6 +26,7 @@ public class DataSiftConfig {
      */
     protected HttpRequestBuilder http = HttpRequestBuilder.instance();
     private String versionPrefix = "v1";
+    private String urlEncodingFormat = "ISO-8859-1";
 
     public DataSiftConfig() {
         http.userAgent("Mozilla/5.0 (compatible; Java Client/3.0.0; +https://github.com/datasift/datasift-java)");
@@ -161,5 +162,24 @@ public class DataSiftConfig {
 
     public HttpRequestBuilder http() {
         return http;
+    }
+
+    /**
+     * @return The format that should be used to URL encode prameters
+     */
+    public String urlEncodingFormat() {
+        return urlEncodingFormat;
+    }
+
+    /**
+     * Sets the format that should be used to encode URL parameters when the option arises
+     * e.g. ISO-8859-1 or UTF-8
+     *
+     * @param format the format
+     * @return this
+     */
+    public DataSiftConfig urlEncodingFormat(String format) {
+        urlEncodingFormat = format;
+        return this;
     }
 }

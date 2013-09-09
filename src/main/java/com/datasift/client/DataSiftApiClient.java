@@ -8,11 +8,11 @@ import java.io.IOException;
 /**
  * The API client is a base class which provides a common set of functionality to the other API classes.
  */
-public class ApiClient {
+public class DataSiftApiClient {
 
     protected DataSiftConfig config;
 
-    public ApiClient(DataSiftConfig config) {
+    public DataSiftApiClient(DataSiftConfig config) {
         if (config == null) {
             throw new IllegalArgumentException("Config cannot be nulll");
         }

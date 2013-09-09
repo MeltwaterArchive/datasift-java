@@ -17,6 +17,22 @@ public class PreparedHistoricsQuery extends DataSiftResult {
     @JsonProperty
     protected Availability availability;
 
+    /**
+     * Create a PreparedHistorics instance containing only an ID
+     *
+     * @param id the id obtained from DataSift from calling push/create i.e.
+     *           {@link DataSiftHistorics#prepare(String, long, long, String, int, String...)}
+     * @return an instance which can be used by the client
+     */
+    public static PreparedHistoricsQuery fromString(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("Cannot create a prepared historic from an empty or null string");
+        }
+        PreparedHistoricsQuery historic = new PreparedHistoricsQuery();
+        historic.id = id;
+        return historic;
+    }
+
     public double getDpus() {
         return dpus;
     }

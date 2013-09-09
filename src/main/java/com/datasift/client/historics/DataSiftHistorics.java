@@ -1,6 +1,6 @@
 package com.datasift.client.historics;
 
-import com.datasift.client.ApiClient;
+import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * This class provides access to the DataSift Historics API.
  */
-public class DataSiftHistorics extends ApiClient {
+public class DataSiftHistorics extends DataSiftApiClient {
     public final String PREPARE = "historics/prepare", START = "historics/start", STOP = "historics/stop",
             UPDATE = "historics/update", STATUS = "historics/status", DELETE = "historics/delete",
             GET = "historics/get";
@@ -102,28 +102,22 @@ public class DataSiftHistorics extends ApiClient {
         return future;
     }
 
-    public FutureData<HistoricsStatus> status(String id, DateTime start, DateTime end) {
-        return status(id, start, end, null);
+    public FutureData<HistoricsStatus> status(DateTime start, DateTime end) {
+        return status(start, end, null);
     }
 
     /**
      * Check the status of data availability in our archive for the given time period
      *
-     * @param id      the ID of the historics
      * @param start   the dat from which the archive should be checked
      * @param end     the up to which the archive should be checked
      * @param sources an optional list of data sources that should be queried, e.g. [facebook,twitter,...]
      * @return a report of the current status/availability of data for the given time period
      */
-    public FutureData<HistoricsStatus> status(String id, DateTime start, DateTime end, String... sources) {
-        if (id == null || start == null || end == null) {
-            throw new IllegalArgumentException("ID, start and end are required to query the status of our historics " +
-                    "archive");
-        }
+    public FutureData<HistoricsStatus> status(DateTime start, DateTime end, String... sources) {
         FutureData<HistoricsStatus> future = new FutureData<HistoricsStatus>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STATUS));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsStatus())))
-                .form("id", id)
                 .form("start", TimeUnit.MILLISECONDS.toSeconds(start.getMillis()))
                 .form("end", TimeUnit.MILLISECONDS.toSeconds(end.getMillis()));
         if (sources != null && sources.length > 0) {

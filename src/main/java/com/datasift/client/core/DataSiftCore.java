@@ -1,6 +1,6 @@
 package com.datasift.client.core;
 
-import com.datasift.client.ApiClient;
+import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.FutureData;
 import com.datasift.client.FutureResponse;
@@ -16,7 +16,7 @@ import static com.datasift.client.core.Usage.Period;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class DataSiftCore extends ApiClient {
+public class DataSiftCore extends DataSiftApiClient {
     public final String VALIDATE = "validate", COMPILE = "compile", BALANCE = "balance", DPU = "dpu", USAGE = "usage";
 
     public DataSiftCore(DataSiftConfig config) {

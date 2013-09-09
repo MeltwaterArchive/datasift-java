@@ -1,6 +1,6 @@
 package com.datasift.client.push;
 
-import com.datasift.client.ApiClient;
+import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * @author Courtney Robinson <courtney@crlog.info>
  */
-public class DataSiftPush extends ApiClient {
+public class DataSiftPush extends DataSiftApiClient {
     public final String VALIDATE = "push/validate", CREATE = "push/create", PAUSE = "push/pause",
             RESUME = "push/resume", UPDATE = "push/update", STOP = "push/stop", DELETE = "push/delete",
             LOG = "push/log", GET = "push/get", PULL = "push/pull";
