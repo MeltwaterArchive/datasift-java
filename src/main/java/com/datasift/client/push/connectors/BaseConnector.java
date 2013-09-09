@@ -43,46 +43,46 @@ public class BaseConnector<T> implements PushConnector {
             return PushConnectors.bigQuery().putAll(params);
         }
         if (COUCH_DB.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.couchDB().putAll(params);
         }
         if (DYNAMO_DB.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.dynamoDB().putAll(params);
         }
         if (ELASTIC_SEARCH.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.elasticSearch().putAll(params);
         }
         if (FTP_TYPE.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.ftp().putAll(params);
         }
         if (HTTP_TYPE.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.http().putAll(params);
         }
         if (MONGO_DB.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.mongoDB().putAll(params);
         }
         if (PRECOG.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.precog().putAll(params);
         }
         if (REDIS.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.redis().putAll(params);
         }
         if (S3_OUTPUT.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.s3().putAll(params);
         }
         if (SFTP_OUTPUT.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.sftp().putAll(params);
         }
         if (SPLUNK_STORM_REST.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.splunkStormRest().putAll(params);
         }
         if (SPLUNK_ENTERPRISE.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.splunkEnterprise().putAll(params);
         }
         if (SPLUNK_STORM.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.splunkStorm().putAll(params);
         }
         if (ZOOM_DATA.value().equals(type)) {
-            return PushConnectors.bigQuery().putAll(params);
+            return PushConnectors.zoomdata().putAll(params);
         }
         return null;
     }
