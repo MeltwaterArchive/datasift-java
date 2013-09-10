@@ -16,7 +16,7 @@ public class Instagram extends BaseSource<Instagram> {
      * @return this
      */
     public Instagram enableLikes(boolean enabled) {
-        return setParam("likes", enabled, PARAMETERS);
+        return setParam("likes", enabled);
     }
 
     /**
@@ -25,10 +25,11 @@ public class Instagram extends BaseSource<Instagram> {
      * @return this
      */
     public Instagram enableComments(boolean enabled) {
-        return setParam("comments", enabled, PARAMETERS);
+        return setParam("comments", enabled);
     }
 
     public Instagram id(String url) {
-        return setParam("id", url, PARAMETERS);
+        return setParam("id", url);
     }
+
 }
