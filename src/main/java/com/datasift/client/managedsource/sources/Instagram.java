@@ -9,4 +9,26 @@ public class Instagram extends BaseSource<Instagram> {
     public Instagram(DataSiftConfig config) {
         setup(this, config);
     }
+
+    /**
+     * set to true, if you want to receive like interactions.
+     *
+     * @return this
+     */
+    public Instagram enableLikes(boolean enabled) {
+        return setParam("likes", enabled, PARAMETERS);
+    }
+
+    /**
+     * set to true, if you want to receive comment interactions.
+     *
+     * @return this
+     */
+    public Instagram enableComments(boolean enabled) {
+        return setParam("comments", enabled, PARAMETERS);
+    }
+
+    public Instagram id(String url) {
+        return setParam("id", url, PARAMETERS);
+    }
 }

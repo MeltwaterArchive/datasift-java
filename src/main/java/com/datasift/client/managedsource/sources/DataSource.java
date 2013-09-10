@@ -12,7 +12,9 @@ public interface DataSource {
     String getURLEncoded();
 
     /**
+     * Note values can be any JSON serializable type.
+     *
      * @return a set of parameters for this data source
      */
-    Map<String, String> params();
+    Map<String, Map<String, Object>> params();
 }
