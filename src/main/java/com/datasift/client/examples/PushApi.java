@@ -4,7 +4,6 @@ import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.FutureData;
 import com.datasift.client.core.Stream;
-import com.datasift.client.push.OutputType;
 import com.datasift.client.push.PushConnectors;
 import com.datasift.client.push.PushSubscription;
 import com.datasift.client.push.connectors.S3;
@@ -26,7 +25,6 @@ public class PushApi {
                 .bucket("some-bucket")
                 .directory("abc");
         FutureData<PushSubscription> subscriptionFuture = datasift.push().create(
-                OutputType.S3_OUTPUT,
                 s3,
                 null,  //historics must be null, we're creating from a stream
                 FutureData.wrap(stream),

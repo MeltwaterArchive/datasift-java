@@ -38,7 +38,7 @@ public class OutputType<T extends PushConnector> {
             new OutputType<SplunkStormRest>("splunkstormrest");
     public static final OutputType<SplunkStorm> SPLUNK_STORM = new OutputType<SplunkStorm>("splunkstorm");
     public static final OutputType<SplunkEnterprise> SPLUNK_ENTERPRISE = new OutputType<SplunkEnterprise>("splunk");
-    public static final OutputType<ZoomData> ZOOM_DATA = new OutputType("zoomdata");
+    public static final OutputType<ZoomData> ZOOM_DATA = new OutputType<ZoomData>("zoomdata");
     private final String value;
 
     public OutputType(String value) {

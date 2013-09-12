@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public abstract class BaseSource<T extends DataSource> implements DataSource<T> {
+public abstract class BaseSource<T extends DataSource<T>> implements DataSource<T> {
     protected final ManagedDataSourceType<T> type;
     protected DataSiftConfig config;
     protected Logger log = LoggerFactory.getLogger(getClass());
