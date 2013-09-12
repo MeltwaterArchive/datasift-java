@@ -1,5 +1,7 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
+
 /**
  * <a href="http://dev.datasift.com/docs/push/connectors/sftp">Official docs</a>
  *
@@ -7,6 +9,7 @@ package com.datasift.client.push.connectors;
  */
 public class SFTP extends BaseConnector<SFTP> {
     public SFTP() {
+        super(OutputType.SFTP_OUTPUT);
         setup(this, "host", "port", "directory", "delivery_frequency", "max_size", "auth.username", "auth.password");
     }
 

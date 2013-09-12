@@ -1,5 +1,7 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
+
 /**
  * See <a href="http://dev.datasift.com/docs/push/connectors/dynamodb">Official docs</a>
  *
@@ -7,6 +9,7 @@ package com.datasift.client.push.connectors;
  */
 public class DynamoDB extends BaseConnector<DynamoDB> {
     public DynamoDB() {
+        super(OutputType.DYNAMO_DB);
         setup(this, "table", "auth.access_key", "auth.secret_key", "region");
     }
 

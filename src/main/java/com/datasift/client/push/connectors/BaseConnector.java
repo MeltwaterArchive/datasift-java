@@ -26,13 +26,18 @@ import static com.datasift.client.push.OutputType.ZOOM_DATA;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class BaseConnector<T> implements PushConnector {
+public class BaseConnector<T extends PushConnector<T>> implements PushConnector<T> {
     protected static final String PREFIX = "output_params.";
     protected final Set<String> required;
     protected final Prepared params;
     private T thisRef;
+    private OutputType<T> type;
 
-    public BaseConnector() {
+    public BaseConnector(OutputType<T> type) {
+        if (type == null) {
+            throw new IllegalArgumentException("A valid type is required");
+        }
+        this.type = type;
         required = new NonBlockingHashSet<String>();
         params = new Prepared(required);
     }
@@ -114,6 +119,11 @@ public class BaseConnector<T> implements PushConnector {
     @Override
     public Prepared parameters() {
         return params;
+    }
+
+    @Override
+    public OutputType<T> type() {
+        return type;
     }
 
     protected T putAll(Map<String, Object> params) {

@@ -1,5 +1,7 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
+
 /**
  * <a href="http://dev.datasift.com/docs/push/connectors/redis">Official docs</a>
  *
@@ -7,6 +9,7 @@ package com.datasift.client.push.connectors;
  */
 public class Redis extends BaseConnector<Redis> {
     public Redis() {
+        super(OutputType.REDIS);
         setup(this, "host", "port", "database", "list", "format", "auth.password");
     }
 

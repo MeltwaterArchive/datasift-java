@@ -1,5 +1,7 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
+
 /**
  * <a href="http://dev.datasift.com/docs/push/connectors/precog">Official docs</a>
  *
@@ -7,6 +9,7 @@ package com.datasift.client.push.connectors;
  */
 public class Precog extends BaseConnector<Precog> {
     public Precog() {
+        super(OutputType.PRECOG);
         setup(this, "domain", "path", "owner_id", "auth.api_key");
     }
 

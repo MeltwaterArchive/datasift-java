@@ -1,5 +1,7 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
+
 /**
  * <a href="http://dev.datasift.com/docs/push/connectors/couchdb">Official docs</a>
  *
@@ -7,6 +9,7 @@ package com.datasift.client.push.connectors;
  */
 public class SplunkStormRest extends BaseConnector<SplunkStormRest> {
     public SplunkStormRest() {
+        super(OutputType.SPLUNK_STORM_REST);
         setup(this, "api_hostname", "project_id", "access_token");
     }
 

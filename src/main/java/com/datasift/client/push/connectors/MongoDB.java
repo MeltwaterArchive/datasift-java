@@ -1,5 +1,7 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
+
 /**
  * <a href="http://dev.datasift.com/docs/push/connectors/mongodb">Official docs</a>
  *
@@ -7,6 +9,7 @@ package com.datasift.client.push.connectors;
  */
 public class MongoDB extends BaseConnector<MongoDB> {
     public MongoDB() {
+        super(OutputType.MONGO_DB);
         setup(this, "host", "db_name", "auth.username", "auth.password");
     }
 

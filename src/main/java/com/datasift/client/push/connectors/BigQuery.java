@@ -1,10 +1,13 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
+
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class BigQuery extends BaseConnector<BigQuery> {
     public BigQuery() {
+        super(OutputType.BIG_QUERY);
         setup(this, "auth.client_id", "auth.service_account", "auth.key_file", "project_id", "dataset_id", "table_id");
     }
 

@@ -309,11 +309,11 @@ public class DataSiftPush extends DataSiftApiClient {
      *
      * @return the results of the validation
      */
-    public <T extends PushConnector> FutureData<PushValidation> validate(OutputType<T> outputType, T connector) {
+    public <T extends PushConnector> FutureData<PushValidation> validate(T connector) {
         FutureData<PushValidation> future = new FutureData<PushValidation>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(VALIDATE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushValidation())))
-                .form("output_type", outputType.value());
+                .form("output_type", connector.type().value());
         for (Map.Entry<String, String> e : connector.parameters().verifyAndGet().entrySet()) {
             request.form(e.getKey(), e.getValue());
         }
@@ -321,13 +321,12 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
-                                                                         final T connector,
+    public <T extends PushConnector> FutureData<PushSubscription> create(final T connector,
                                                                          final FutureData<PreparedHistoricsQuery>
                                                                                  historics,
                                                                          FutureData<Stream> stream,
                                                                          final String name) {
-        return create(outputType, connector, historics, stream, name, null, 0, 0);
+        return create(connector, historics, stream, name, null, 0, 0);
     }
 
     /**
@@ -335,14 +334,13 @@ public class DataSiftPush extends DataSiftApiClient {
      *
      * @return the created subscription
      */
-    public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
-                                                                         final T connector,
+    public <T extends PushConnector> FutureData<PushSubscription> create(final T connector,
                                                                          PreparedHistoricsQuery historics,
                                                                          final String name,
                                                                          final String initialStatus,
                                                                          final long start,
                                                                          final long end) {
-        return create(outputType, connector, FutureData.wrap(historics), null, name, initialStatus, start, end);
+        return create(connector, FutureData.wrap(historics), null, name, initialStatus, start, end);
     }
 
     /**
@@ -350,14 +348,13 @@ public class DataSiftPush extends DataSiftApiClient {
      *
      * @return the created subscription
      */
-    public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
-                                                                         final T connector,
+    public <T extends PushConnector> FutureData<PushSubscription> create(final T connector,
                                                                          Stream stream,
                                                                          final String name,
                                                                          final String initialStatus,
                                                                          final long start,
                                                                          final long end) {
-        return create(outputType, connector, null, FutureData.wrap(stream), name, initialStatus, start, end);
+        return create(connector, null, FutureData.wrap(stream), name, initialStatus, start, end);
     }
 
     /**
@@ -381,10 +378,9 @@ public class DataSiftPush extends DataSiftApiClient {
      * @param <T>
      * @return the subscription that will be created
      */
-    public <T extends PushConnector> FutureData<PushSubscription> create(final OutputType<T> outputType,
-                                                                         final T connector,
-                                                                         FutureData<PreparedHistoricsQuery> historics,
-                                                                         FutureData<Stream> stream,
+    public <T extends PushConnector> FutureData<PushSubscription> create(final T connector,
+                                                                         FutureData<PreparedHistoricsQuery>
+                                                                                 historics, FutureData<Stream> stream,
                                                                          final String name,
                                                                          final String initialStatus,
                                                                          final long start,
@@ -412,7 +408,7 @@ public class DataSiftPush extends DataSiftApiClient {
             processFuture(historics, future, subscription, new FutureResponse<PreparedHistoricsQuery>() {
                 public void apply(PreparedHistoricsQuery data) {
                     //using the unwrapped data, perform the actual query using historics as the source
-                    performCreateQuery(outputType, connector, name, initialStatus, start, end, future, subscription,
+                    performCreateQuery(connector, name, initialStatus, start, end, future, subscription,
                             data, null);
                 }
             });
@@ -421,7 +417,7 @@ public class DataSiftPush extends DataSiftApiClient {
             processFuture(stream, future, subscription, new FutureResponse<Stream>() {
                 public void apply(Stream data) {
                     //using the unwrapped data, perform the actual query usihistoricsng a live stream as the source
-                    performCreateQuery(outputType, connector, name, initialStatus, start, end, future, subscription,
+                    performCreateQuery(connector, name, initialStatus, start, end, future, subscription,
                             null, data);
                 }
             });
@@ -430,7 +426,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    private <T extends PushConnector> void performCreateQuery(OutputType<T> outputType, T connector, String name,
+    private <T extends PushConnector> void performCreateQuery(T connector, String name,
                                                               String initialStatus, long start, long end,
                                                               FutureData<PushSubscription> future,
                                                               PushSubscription subscription,
@@ -438,7 +434,7 @@ public class DataSiftPush extends DataSiftApiClient {
                                                               Stream stream) {
         URI uri = newParams().forURL(config.newAPIEndpointURI(CREATE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, subscription)))
-                .form("output_type", outputType.value())
+                .form("output_type", connector.type().value())
                 .form("name", name);
 
         for (Map.Entry<String, String> e : connector.parameters().verifyAndGet().entrySet()) {

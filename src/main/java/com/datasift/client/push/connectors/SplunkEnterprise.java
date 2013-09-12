@@ -1,5 +1,7 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
+
 /**
  * <a href="http://dev.datasift.com/docs/push/connectors/couchdb">Official docs</a>
  *
@@ -7,6 +9,7 @@ package com.datasift.client.push.connectors;
  */
 public class SplunkEnterprise extends BaseConnector<SplunkEnterprise> {
     public SplunkEnterprise() {
+        super(OutputType.SPLUNK_ENTERPRISE);
         setup(this, "host", "port", "auth.username", "auth.password");
     }
 

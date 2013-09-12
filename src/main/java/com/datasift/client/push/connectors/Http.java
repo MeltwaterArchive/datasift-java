@@ -1,5 +1,6 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
@@ -9,6 +10,7 @@ import io.netty.handler.codec.http.HttpMethod;
  */
 public class Http extends BaseConnector<Http> {
     public Http() {
+        super(OutputType.HTTP_TYPE);
         setup(this, "method", "url", "delivery_frequency", "max_size", "auth.type", "verify_ssl", "use_gzip");
     }
 

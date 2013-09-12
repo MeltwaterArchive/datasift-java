@@ -1,5 +1,7 @@
 package com.datasift.client.push.connectors;
 
+import com.datasift.client.push.OutputType;
+
 /**
  * <a href="http://dev.datasift.com/docs/push/connectors/elasticsearch">Official docs</a>
  *
@@ -7,6 +9,7 @@ package com.datasift.client.push.connectors;
  */
 public class ElasticSearch extends BaseConnector<ElasticSearch> {
     public ElasticSearch() {
+        super(OutputType.ELASTIC_SEARCH);
         setup(this, "host");
     }
 

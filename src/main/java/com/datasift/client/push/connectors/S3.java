@@ -1,6 +1,8 @@
 package com.datasift.client.push.connectors;
 
 
+import com.datasift.client.push.OutputType;
+
 /**
  * <a href="http://dev.datasift.com/docs/push/connectors/s3">Official docs</a>
  *
@@ -8,6 +10,7 @@ package com.datasift.client.push.connectors;
  */
 public class S3 extends BaseConnector<S3> {
     public S3() {
+        super(OutputType.S3_OUTPUT);
         setup(this, "access_key", "secret_key", "delivery_frequency", "max_size", "bucket", "acl");
     }
 
