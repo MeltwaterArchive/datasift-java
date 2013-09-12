@@ -1,13 +1,14 @@
 package com.datasift.client.managedsource.sources;
 
 import com.datasift.client.DataSiftConfig;
+import com.datasift.client.managedsource.ManagedDataSourceType;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class GooglePlus extends BaseSource<GooglePlus> {
     public GooglePlus(DataSiftConfig config) {
-        super(config);
+        super(config, ManagedDataSourceType.GOOGLE_PLUS);
     }
 
     public GooglePlus setParams(boolean enableComments, boolean enablePlusOnes) {
@@ -64,7 +65,7 @@ public class GooglePlus extends BaseSource<GooglePlus> {
     public GooglePlus addOAutToken(String oAuthAccessToken, String oAuthRefreshToken, String name, long expires) {
         if (oAuthAccessToken == null || oAuthAccessToken.isEmpty() ||
                 oAuthRefreshToken == null || oAuthRefreshToken.isEmpty()) {
-            throw new IllegalArgumentException("A valid OAuth token is required");
+            throw new IllegalArgumentException("A valid OAuth and refresh token is required");
         }
         AuthParams parameterSet = newAuthParams(name, expires);
         parameterSet.set("value", oAuthAccessToken);

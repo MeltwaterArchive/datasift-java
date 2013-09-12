@@ -1,6 +1,7 @@
 package com.datasift.client.managedsource.sources;
 
 import com.datasift.client.DataSiftConfig;
+import com.datasift.client.managedsource.ManagedDataSourceType;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -8,7 +9,7 @@ import com.datasift.client.DataSiftConfig;
 public class FacebookPage extends BaseSource<FacebookPage> {
 
     public FacebookPage(DataSiftConfig config) {
-        super(config);
+        super(config, ManagedDataSourceType.FACEBOOK_PAGE);
     }
 
     public FacebookPage setParams(boolean enableLikes, boolean enableComments, boolean enablePostsByOthers) {

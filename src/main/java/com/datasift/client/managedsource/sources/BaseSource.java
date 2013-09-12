@@ -2,6 +2,7 @@ package com.datasift.client.managedsource.sources;
 
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
+import com.datasift.client.managedsource.ManagedDataSourceType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
@@ -17,15 +18,24 @@ import java.util.Set;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public abstract class BaseSource<T extends DataSource> implements DataSource {
+public abstract class BaseSource<T extends DataSource> implements DataSource<T> {
+    protected final ManagedDataSourceType<T> type;
     protected DataSiftConfig config;
     protected Logger log = LoggerFactory.getLogger(getClass());
     protected Map<String, Object> parameters = new NonBlockingHashMap<String, Object>();
     protected Set<ResourceParams> resources = new NonBlockingHashSet<ResourceParams>();
     protected Set<AuthParams> auth = new NonBlockingHashSet<AuthParams>();
 
-    public BaseSource(DataSiftConfig config) {
+    public BaseSource(DataSiftConfig config, ManagedDataSourceType<T> type) {
+        if (type == null) {
+            throw new IllegalArgumentException("A type is required, cannot be null");
+        }
         this.config = config;
+        this.type = type;
+    }
+
+    public ManagedDataSourceType<T> type() {
+        return type;
     }
 
     protected T setParametersField(String name, Object value) {
@@ -96,6 +106,8 @@ public abstract class BaseSource<T extends DataSource> implements DataSource {
     public static class ResourceParams {
         @JsonProperty
         private Map<String, Object> parameters = new NonBlockingHashMap<String, Object>();
+        @JsonProperty
+        private String name;
 
         private ResourceParams() {
         }
@@ -104,15 +116,19 @@ public abstract class BaseSource<T extends DataSource> implements DataSource {
             return parameters;
         }
 
-        public void set(String name, String value) {
+        public void set(String name, Object value) {
             parameters.put(name, value);
+        }
+
+        public void name(String name) {
+            this.name = name;
         }
     }
 
     public static class AuthParams {
         @JsonProperty
         private Map<String, Object> parameters = new NonBlockingHashMap<String, Object>();
-        @JsonProperty
+        @JsonProperty("expires_at")
         private long expires;
         @JsonProperty
         private String name;

@@ -1,12 +1,31 @@
 package com.datasift.client.managedsource.sources;
 
+import com.datasift.client.managedsource.ManagedDataSourceType;
+
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public interface DataSource {
+public interface DataSource<T extends DataSource<T>> {
+    /**
+     * @return A URL encoded string which represents the resources for this data source
+     *         note this is the value for the "resources" field and does not include the key itself
+     */
     String getURLEncodedResources();
 
+    /**
+     * @return A URL encoded string which represents the auth information for this data source
+     *         note this is the value for the "auth" field and does not include the key itself
+     */
     String getURLEncodedAuth();
 
+    /**
+     * @return A URL encoded string which represents the parameters for this data source
+     *         note this is the value for the "parameters" field and does not include the key itself
+     */
     String getURLEncodedParameters();
+
+    /**
+     * @return a managed source type of the data source this represents
+     */
+    ManagedDataSourceType<T> type();
 }
