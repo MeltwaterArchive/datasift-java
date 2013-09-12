@@ -82,11 +82,11 @@ public class DataSiftCore extends DataSiftApiClient {
         final FutureResponse<Stream> response = new FutureResponse<Stream>() {
             public void apply(Stream stream) {
                 URI uri = newParams().put("hash", stream.hash()).forURL(config.newAPIEndpointURI(DPU));
-                Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new Dpu())));
+                Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, dpu)));
                 applyConfig(request).execute();
             }
         };
-        processFuture(streamFuture, future, dpu, response);
+        unwrapFuture(streamFuture, future, dpu, response);
         return future;
     }
 

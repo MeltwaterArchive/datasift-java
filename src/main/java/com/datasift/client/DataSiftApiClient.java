@@ -57,26 +57,29 @@ public class DataSiftApiClient {
      * to see if the response was successful, if it was not then the expected future is passed the failed response
      * If the result of the unprocessed future is successful then the response callback is applied.
      *
-     * @param unprocessedFuture
-     * @param expectedFuture
-     * @param expectedInstance
-     * @param response
+     * @param futureToUnwrap             the unprocessed future which needs to be unwrapped
+     * @param futureReturnedToUser       the future that has been returned to the user and which callbacks need to be
+     *                                   triggered on
+     * @param expectedInstance           the instance of the result type to use in failure scenarios
+     * @param responseToExecuteOnSuccess a future response object which contains the code which will execute once the
+     *                                   wrapped future has been unwrapped and its result is successful
      * @param <T>
      * @param <A>
      */
-    protected <T extends DataSiftResult, A extends DataSiftResult> void processFuture(FutureData<T> unprocessedFuture,
-                                                                                      final FutureData<A> expectedFuture
-            ,
-                                                                                      final A expectedInstance,
-                                                                                      final FutureResponse<T> response
+    protected <T extends DataSiftResult, A extends DataSiftResult> void unwrapFuture(FutureData<T> futureToUnwrap,
+                                                                                     final FutureData<A>
+                                                                                             futureReturnedToUser,
+                                                                                     final A expectedInstance,
+                                                                                     final FutureResponse<T>
+                                                                                             responseToExecuteOnSuccess
     ) {
-        unprocessedFuture.onData(new FutureResponse<T>() {
+        futureToUnwrap.onData(new FutureResponse<T>() {
             public void apply(T stream) {
                 if (stream.isSuccessful()) {
-                    response.apply(stream);
+                    responseToExecuteOnSuccess.apply(stream);
                 } else {
                     expectedInstance.setResponse(stream.getResponse());
-                    expectedFuture.received(expectedInstance);
+                    futureReturnedToUser.received(expectedInstance);
                 }
             }
         });

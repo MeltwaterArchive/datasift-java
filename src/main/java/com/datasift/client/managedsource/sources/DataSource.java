@@ -28,4 +28,19 @@ public interface DataSource<T extends DataSource<T>> {
      * @return a managed source type of the data source this represents
      */
     ManagedDataSourceType<T> type();
+
+    /**
+     * @return true if any auth information has been set for this data source
+     */
+    boolean hasAuth();
+
+    /**
+     * @return true if any resource parameters have been configured for this data source
+     */
+    boolean hasResources();
+
+    /**
+     * @return true if any "parameter" params have been configured for this data source
+     */
+    boolean hasParams();
 }

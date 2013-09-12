@@ -405,7 +405,7 @@ public class DataSiftPush extends DataSiftApiClient {
         final PushSubscription subscription = new PushSubscription();
         //we need to unwrap the future data object, either historics or stream
         if (historics != null) {
-            processFuture(historics, future, subscription, new FutureResponse<PreparedHistoricsQuery>() {
+            unwrapFuture(historics, future, subscription, new FutureResponse<PreparedHistoricsQuery>() {
                 public void apply(PreparedHistoricsQuery data) {
                     //using the unwrapped data, perform the actual query using historics as the source
                     performCreateQuery(connector, name, initialStatus, start, end, future, subscription,
@@ -414,7 +414,7 @@ public class DataSiftPush extends DataSiftApiClient {
             });
         }
         if (stream != null) {
-            processFuture(stream, future, subscription, new FutureResponse<Stream>() {
+            unwrapFuture(stream, future, subscription, new FutureResponse<Stream>() {
                 public void apply(Stream data) {
                     //using the unwrapped data, perform the actual query usihistoricsng a live stream as the source
                     performCreateQuery(connector, name, initialStatus, start, end, future, subscription,

@@ -38,6 +38,21 @@ public abstract class BaseSource<T extends DataSource> implements DataSource<T> 
         return type;
     }
 
+    @Override
+    public boolean hasAuth() {
+        return auth.size() > 0;
+    }
+
+    @Override
+    public boolean hasResources() {
+        return resources.size() > 0;
+    }
+
+    @Override
+    public boolean hasParams() {
+        return parameters.size() > 0;
+    }
+
     protected T setParametersField(String name, Object value) {
         if (name == null || name.isEmpty() || value == null) {
             throw new IllegalArgumentException("Both name and value are required");
@@ -83,7 +98,7 @@ public abstract class BaseSource<T extends DataSource> implements DataSource<T> 
 
     public String getURLEncodedResources() {
         try {
-            return URLEncoder.encode(DataSiftClient.MAPPER.writeValueAsString(parameters), config.urlEncodingFormat());
+            return URLEncoder.encode(DataSiftClient.MAPPER.writeValueAsString(resources), config.urlEncodingFormat());
         } catch (UnsupportedEncodingException e) {
             log.warn("Failed to encode parameters", e);
         } catch (JsonProcessingException e) {
@@ -94,7 +109,7 @@ public abstract class BaseSource<T extends DataSource> implements DataSource<T> 
 
     public String getURLEncodedAuth() {
         try {
-            return URLEncoder.encode(DataSiftClient.MAPPER.writeValueAsString(parameters), config.urlEncodingFormat());
+            return URLEncoder.encode(DataSiftClient.MAPPER.writeValueAsString(auth), config.urlEncodingFormat());
         } catch (UnsupportedEncodingException e) {
             log.warn("Failed to encode parameters", e);
         } catch (JsonProcessingException e) {
@@ -109,7 +124,7 @@ public abstract class BaseSource<T extends DataSource> implements DataSource<T> 
         @JsonProperty
         private String name;
 
-        private ResourceParams() {
+        protected ResourceParams() {
         }
 
         public Map<String, Object> getParameters() {
@@ -133,7 +148,7 @@ public abstract class BaseSource<T extends DataSource> implements DataSource<T> 
         @JsonProperty
         private String name;
 
-        private AuthParams() {
+        protected AuthParams() {
         }
 
         public Map<String, Object> getParameters() {
