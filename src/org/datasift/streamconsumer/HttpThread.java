@@ -7,8 +7,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.datasift.*;
 import org.json.JSONException;
@@ -22,7 +27,10 @@ public class HttpThread extends Thread {
 	private User _user = null;
 	private Definition _definition = null;
 	private boolean _auto_reconnect = false;
-
+	private String _proxy=null;
+	private int _proxy_port=0;
+	private char[] _proxy_user=null;
+	private char[] _proxy_password=null;
 	public HttpThread(Http http, User user, Definition definition) {
 		_consumer = http;
 		_user = user;
@@ -32,7 +40,17 @@ public class HttpThread extends Thread {
 	public void setAutoReconnect(boolean auto_reconnect) {
 		_auto_reconnect = auto_reconnect;
 	}
-
+	
+	public void setProxy(String proxy, int port) {
+		_proxy=proxy;
+		_proxy_port=port;
+	}	
+	
+	public void setProxyCredentials(char[] proxy_user, char[] proxy_password) {
+		_proxy_user=proxy_user;
+		_proxy_password=proxy_password;
+	}
+	
 	public synchronized int getConsumerState() {
 		return _consumer.getState();
 	}
@@ -122,6 +140,14 @@ public class HttpThread extends Thread {
 			if (getConsumerState() == StreamConsumer.STATE_RUNNING) {
 				// Attempt to connect and start processing incoming interactions
 				DefaultHttpClient client = new DefaultHttpClient();
+				if (_proxy!=null){
+					HttpHost httpproxy = new HttpHost(_proxy,_proxy_port);
+					client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, httpproxy);
+					if (_proxy_user!=null){
+						Credentials defaultcreds = new UsernamePasswordCredentials(_proxy_user.toString(), _proxy_password.toString());
+						client.getCredentialsProvider().setCredentials(new AuthScope("myhost", 80, AuthScope.ANY_REALM), defaultcreds);
+					}
+				}
 				try {
 					HttpGet get = new HttpGet("http" + (_user.useSSL() ? "s" : "") + "://"
 							+ _user.getStreamBaseURL()

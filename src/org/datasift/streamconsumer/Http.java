@@ -38,6 +38,14 @@ public class Http extends StreamConsumer {
 	public void setAutoReconnect(boolean auto_reconnect) {
 		thread.setAutoReconnect(auto_reconnect);
 	}
+	
+	public void setProxy(String proxy, int port) {
+		thread.setProxy(proxy, port);
+	}	
+	
+	public void setProxyCredentials(char[] proxy_user, char[] proxy_password) {
+		thread.setProxyCredentials(proxy_user, proxy_password);
+	}
 
 	public boolean isRunning() {
 		if (thread == null) {
