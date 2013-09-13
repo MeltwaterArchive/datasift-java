@@ -81,6 +81,20 @@ public class JSONdn extends JSONObject {
 					+ "\") does not exist");
 		}
 	}
+	
+	/**
+	 * Get a boolean value or falls back to the default provided if not found
+	 * @param key
+	 * @param defaultVal
+	 * @return
+	 */
+	public boolean getBooleanVal(String key, boolean defaultVal) {
+		try {
+			return (this.has(key)) ? this.getBooleanVal(key) : defaultVal;
+		} catch (EInvalidData e) {
+			throw new RuntimeException("Key (\""+key+"\") allegedly present but value not found");
+		}
+	}
 
 	/**
 	 * Get a double value.
@@ -98,6 +112,20 @@ public class JSONdn extends JSONObject {
 		} catch (JSONException e) {
 			throw new EInvalidData("Requested key (\"" + key
 					+ "\") does not exist");
+		}
+	}
+	
+	/**
+	 * Get a double value or falls back to the default provided if not found
+	 * @param key
+	 * @param defaultVal
+	 * @return
+	 */
+	public double getDoubleVal(String key, double defaultVal) {
+		try {
+			return (this.has(key)) ? this.getDoubleVal(key) : defaultVal;
+		} catch (EInvalidData e) {
+			throw new RuntimeException("Key (\""+key+"\") allegedly present but value not found");
 		}
 	}
 
@@ -119,6 +147,20 @@ public class JSONdn extends JSONObject {
 					+ "\") does not exist");
 		}
 	}
+	
+	/**
+	 * Get a int value or falls back to the default provided if not found
+	 * @param key
+	 * @param defaultVal
+	 * @return
+	 */
+	public int getIntVal(String key, int defaultVal) {
+		try {
+			return (this.has(key)) ? this.getIntVal(key) : defaultVal;
+		} catch (EInvalidData e) {
+			throw new RuntimeException("Key (\""+key+"\") allegedly present but value not found");
+		}
+	}
 
 	/**
 	 * Get a long value.
@@ -138,6 +180,20 @@ public class JSONdn extends JSONObject {
 					+ "\") does not exist");
 		}
 	}
+	
+	/**
+	 * Get a long value or falls back to the default provided if not found
+	 * @param key
+	 * @param defaultVal
+	 * @return
+	 */
+	public long getLongVal(String key, long defaultVal) {
+		try {
+			return (this.has(key)) ? this.getLongVal(key) : defaultVal;
+		} catch (EInvalidData e) {
+			throw new RuntimeException("Key (\""+key+"\") allegedly present but value not found");
+		}
+	}
 
 	/**
 	 * Get a string value.
@@ -155,6 +211,20 @@ public class JSONdn extends JSONObject {
 		} catch (JSONException e) {
 			throw new EInvalidData("Requested key (\"" + key
 					+ "\") does not exist");
+		}
+	}
+	
+	/**
+	 * Get a String value or falls back to the default provided if not found
+	 * @param key
+	 * @param defaultVal
+	 * @return
+	 */
+	public String getStringVal(String key, String defaultVal) {
+		try {
+			return (this.has(key)) ? this.getStringVal(key) : defaultVal;
+		} catch (EInvalidData e) {
+			throw new RuntimeException("Key (\""+key+"\") allegedly present but value not found");
 		}
 	}
 
