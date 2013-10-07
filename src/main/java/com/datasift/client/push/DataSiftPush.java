@@ -287,7 +287,7 @@ public class DataSiftPush extends DataSiftApiClient {
         FutureData<PushCollection> future = new FutureData<PushCollection>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushCollection())));
-        request.form("playback_id", historics.getId()).form("include_finished", includeFinished ? 1 : 0);
+        request.form("historics_id", historics.getId()).form("include_finished", includeFinished ? 1 : 0);
         if (page > 0) {
             request.form("page", page);
         }
@@ -337,10 +337,20 @@ public class DataSiftPush extends DataSiftApiClient {
     public <T extends PushConnector> FutureData<PushSubscription> create(final T connector,
                                                                          PreparedHistoricsQuery historics,
                                                                          final String name,
-                                                                         final String initialStatus,
+                                                                         final Status initialStatus,
                                                                          final long start,
                                                                          final long end) {
         return create(connector, FutureData.wrap(historics), null, name, initialStatus, start, end);
+    }
+
+    public <T extends PushConnector> FutureData<PushSubscription> create(T con,
+                                                                         FutureData<PreparedHistoricsQuery> query,
+                                                                         String name) {
+        return create(con, query, null, name);
+    }
+
+    public <T extends PushConnector> FutureData<PushSubscription> create(final T con, Stream stream, String name) {
+        return create(con, stream, name, null, 0, 0);
     }
 
     /**
@@ -351,7 +361,7 @@ public class DataSiftPush extends DataSiftApiClient {
     public <T extends PushConnector> FutureData<PushSubscription> create(final T connector,
                                                                          Stream stream,
                                                                          final String name,
-                                                                         final String initialStatus,
+                                                                         final Status initialStatus,
                                                                          final long start,
                                                                          final long end) {
         return create(connector, null, FutureData.wrap(stream), name, initialStatus, start, end);
@@ -363,7 +373,6 @@ public class DataSiftPush extends DataSiftApiClient {
      * If the push subscription is to a a live stream the historics paramer MUST be null and if the subscription
      * is to a historics then the stream parameter MUST be null.
      *
-     * @param outputType    One of the DataSift supported output types (connectors)
      * @param connector     a connector matching the one used in the first parameter
      * @param historics     a historics to which the subscription is being made or null if the subscription is to a
      *                      live stream
@@ -382,7 +391,7 @@ public class DataSiftPush extends DataSiftApiClient {
                                                                          FutureData<PreparedHistoricsQuery>
                                                                                  historics, FutureData<Stream> stream,
                                                                          final String name,
-                                                                         final String initialStatus,
+                                                                         final Status initialStatus,
                                                                          final long start,
                                                                          final long end) {
         if (name == null) {
@@ -391,12 +400,6 @@ public class DataSiftPush extends DataSiftApiClient {
         if (historics != null && stream != null) {
             throw new IllegalArgumentException("A push subscription cannot be created with both a historic and live " +
                     "stream. One must be null");
-        }
-        if (initialStatus != null
-                && (!"active".equals(initialStatus)
-                || !"paused".equals(initialStatus)
-                || !"waiting_for_start".equals(initialStatus))) {
-            throw new IllegalArgumentException(String.format("%s is an invalid initial status"));
         }
         if (end > 0 && !(end > start)) {
             throw new IllegalArgumentException("If end is specified it must be greater than the start");
@@ -427,7 +430,7 @@ public class DataSiftPush extends DataSiftApiClient {
     }
 
     private <T extends PushConnector> void performCreateQuery(T connector, String name,
-                                                              String initialStatus, long start, long end,
+                                                              Status initialStatus, long start, long end,
                                                               FutureData<PushSubscription> future,
                                                               PushSubscription subscription,
                                                               PreparedHistoricsQuery historics,
@@ -442,12 +445,12 @@ public class DataSiftPush extends DataSiftApiClient {
         }
 
         if (historics != null) {
-            request.form("playback_id", historics.getId());
+            request.form("historics_id", historics.getId());
         } else {
             request.form("hash", stream.hash());
         }
         if (initialStatus != null) {
-            request.form("initial_status", initialStatus);
+            request.form("initial_status", initialStatus.val());
         }
         if (start > 0) {
             request.form("start", start);

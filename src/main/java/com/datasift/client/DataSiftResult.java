@@ -35,8 +35,11 @@ public class DataSiftResult {
 
     public void setResponse(Response response) {
         this.response = response;
-        failed = response.hasFailed();
-        cause = response.failureCause();
+        //setResponse can happen after a result has been marked as failed
+        //so if it is already failed then keep it as a failure
+        failed = failed ? failed : response.hasFailed();
+        //likewise if already failed keep the existing cause
+        cause = cause != null ? cause : response.failureCause();
     }
 
     /**
@@ -90,6 +93,13 @@ public class DataSiftResult {
         return limit == null || limit.size() == 0 ? DataSiftClient.DEFAULT_NUM : Integer.parseInt(limit.get(0));
     }
 
+    /**
+     * @return if {@link #isSuccessful()} == false then this returns the error message DataSift returned or null if true
+     */
+    public String getError() {
+        return error;
+    }
+
     @Override
     public String toString() {
         return response.toString();
@@ -98,5 +108,9 @@ public class DataSiftResult {
     public void failed(Throwable e) {
         failed = e == null ? false : true;
         cause = e;
+    }
+
+    public void successful() {
+        failed = false;
     }
 }

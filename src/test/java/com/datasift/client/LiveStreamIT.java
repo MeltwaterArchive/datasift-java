@@ -20,12 +20,12 @@ import static org.junit.Assert.fail;
 public class LiveStreamIT extends IntegrationTestBase {
     @Before
     public void handleEvents() {
-        dataSift.liveStream().onError(new ErrorListener() {
+        datasift.liveStream().onError(new ErrorListener() {
             public void exceptionCaught(Throwable t) {
                 throw new RuntimeException("It crapped out for some reason", t);
             }
         });
-        dataSift.liveStream().onStreamEvent(new StreamEventListener() {
+        datasift.liveStream().onStreamEvent(new StreamEventListener() {
             public void onDelete(DeletedInteraction di) {
                 assertNotNull(di);
             }
@@ -34,7 +34,7 @@ public class LiveStreamIT extends IntegrationTestBase {
 
     @Before
     public void testDeletes() {
-        dataSift.liveStream().onStreamEvent(new StreamEventListener() {
+        datasift.liveStream().onStreamEvent(new StreamEventListener() {
             public void onDelete(DeletedInteraction di) {
                 assertNotNull(di);
             }
@@ -43,7 +43,7 @@ public class LiveStreamIT extends IntegrationTestBase {
 
     @Test(timeout = Settings.TIMEOUT)
     public void testWarningLogMessageReceived() {
-        dataSift.liveStream().subscribe(new StreamSubscription(Stream.fromString("invalid-hash")) {
+        datasift.liveStream().subscribe(new StreamSubscription(Stream.fromString("invalid-hash")) {
             public void onDataSiftLogMessage(DataSiftMessage dm) {
                 assertNotNull(dm);
                 if (!dm.isWarning()) {
@@ -61,13 +61,14 @@ public class LiveStreamIT extends IntegrationTestBase {
 
     @Test(timeout = Settings.TIMEOUT)
     public void testLiveStream() {
-        dataSift.liveStream().subscribe(new StreamSubscription(Stream.fromString(settings.getSampleStreamHash())) {
-            private int count = 0;
+        datasift.liveStream().subscribe(new StreamSubscription(Stream.fromString(settings.getSampleStreamHash())) {
+            private int count;
 
             public void onDataSiftLogMessage(DataSiftMessage dm) {
                 assertNotNull(dm);
-                if (dm.isError()) {
-                    fail(dm.getMessage());
+                if (!dm.isInfo()) {
+                    doNotify();
+                    throw new IllegalStateException(dm.getMessage());
                 }
             }
 
@@ -76,6 +77,7 @@ public class LiveStreamIT extends IntegrationTestBase {
                 assertNotNull(i.get("interaction.id"));
                 //all interactions are guaranteed to have an ID
                 assertNotEquals("", i.get("interaction.id"));
+                System.out.println(i);
                 //after we've received N amount of interactions then consider the test passed
                 if (++count >= settings.getLiveStreamCount()) {
                     doNotify();

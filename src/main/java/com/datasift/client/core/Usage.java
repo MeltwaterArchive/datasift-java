@@ -3,7 +3,6 @@ package com.datasift.client.core;
 import com.datasift.client.DataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -11,17 +10,17 @@ import java.util.Map;
  */
 public class Usage extends DataSiftResult {
     @JsonProperty
-    private Date start;
+    private String start;
     @JsonProperty
-    private Date end;
+    private String end;
     @JsonProperty
     private Map<String, UsageStream> streams;
 
-    public Date getStart() {
+    public String getStart() {
         return start;
     }
 
-    public Date getEnd() {
+    public String getEnd() {
         return end;
     }
 
@@ -32,7 +31,7 @@ public class Usage extends DataSiftResult {
         return streams;
     }
 
-    public static enum Period { DAY, HOUR, CURRENT }
+    public static enum Period {DAY, HOUR, CURRENT}
 
     public static class UsageStream {
         @JsonProperty

@@ -45,6 +45,10 @@ public class PreparedHistoricsQuery extends DataSiftResult {
         return availability;
     }
 
+    protected void id(String id) {
+        this.id = id;
+    }
+
     public static class Availability {
         @JsonProperty
         protected long start;

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 public class Balance extends DataSiftResult {
     @JsonProperty
-    BalanceData balance;
+    protected BalanceData balance;
 
     protected Balance() {
     }
@@ -42,6 +42,10 @@ public class Balance extends DataSiftResult {
      */
     public double cost() {
         return balance.cost;
+    }
+
+    public BalanceData getBalance() {
+        return balance;
     }
 
     @Override

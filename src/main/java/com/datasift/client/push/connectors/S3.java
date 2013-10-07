@@ -11,7 +11,7 @@ import com.datasift.client.push.OutputType;
 public class S3 extends BaseConnector<S3> {
     public S3() {
         super(OutputType.S3_OUTPUT);
-        setup(this, "access_key", "secret_key", "delivery_frequency", "max_size", "bucket", "acl");
+        setup(this, "auth.access_key", "auth.secret_key", "delivery_frequency", "max_size", "bucket", "acl");
     }
 
     /**
@@ -44,7 +44,7 @@ public class S3 extends BaseConnector<S3> {
      * @return this
      */
     public S3 accessKey(String key) {
-        return setParam("access_key", key);
+        return setParam("auth.access_key", key);
     }
 
     /**
@@ -53,7 +53,7 @@ public class S3 extends BaseConnector<S3> {
      * @return this
      */
     public S3 secretKey(String secret) {
-        return setParam("secret_key", secret);
+        return setParam("auth.secret_key", secret);
     }
 
     /**

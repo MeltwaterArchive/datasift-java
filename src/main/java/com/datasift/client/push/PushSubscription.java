@@ -28,7 +28,7 @@ public class PushSubscription extends DataSiftResult {
     @JsonProperty("output_params")
     private Map<String, Object> outputParams;
     @JsonProperty
-    private String status;
+    private Status status;
     @JsonProperty("last_request")
     private long lastRequest;
     @JsonProperty("last_success")
@@ -50,7 +50,7 @@ public class PushSubscription extends DataSiftResult {
         return OutputType.fromString(outputType);
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -62,7 +62,7 @@ public class PushSubscription extends DataSiftResult {
         return userId;
     }
 
-    public String getHash() {
+    public String hash() {
         return hash;
     }
 
@@ -74,7 +74,7 @@ public class PushSubscription extends DataSiftResult {
         return BaseConnector.fromMap(getOutputType(), outputParams);
     }
 
-    public String getStatus() {
+    public Status status() {
         return status;
     }
 

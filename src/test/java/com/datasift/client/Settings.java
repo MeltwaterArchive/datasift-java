@@ -16,7 +16,9 @@ public class Settings {
     private String username,
             apiKey,
             sampleStreamHash,
-            urlEncodeWith;
+            urlEncodeWith,
+            s3AccessKey,
+            s3SecretKey;
     private int liveStreamCount;
 
     public String getUsername() {
@@ -37,5 +39,13 @@ public class Settings {
 
     public int getLiveStreamCount() {
         return liveStreamCount;
+    }
+
+    public String getS3AccessKey() {
+        return s3AccessKey;
+    }
+
+    public String getS3SecretKey() {
+        return s3SecretKey;
     }
 }

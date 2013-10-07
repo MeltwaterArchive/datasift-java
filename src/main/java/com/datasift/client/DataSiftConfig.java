@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 /**
  */
 public class DataSiftConfig {
-    private final String illConfigured = "(%s) is null, this is an ill-configured object and all " +
+    private static final String illConfigured = "(%s) is null, this is an ill-configured object and all " +
             "API requests using it will fail";
     //TODO, add proxy support for version 3.1.0
     protected String proxyHost;
@@ -25,7 +25,7 @@ public class DataSiftConfig {
      * so it'll never be creating a whole new load of resources for each instance.
      */
     protected HttpRequestBuilder http = HttpRequestBuilder.instance();
-    private String versionPrefix = "v1";
+    private String versionPrefix = "v1.1";
     private String urlEncodingFormat = "ISO-8859-1";
 
     public DataSiftConfig() {

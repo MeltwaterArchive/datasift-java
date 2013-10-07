@@ -16,6 +16,14 @@ public class Dpu extends DataSiftResult {
     @JsonProperty
     private DpuDetails detail;
 
+    public double getDpu() {
+        return dpu;
+    }
+
+    public DpuDetails getDetail() {
+        return detail;
+    }
+
     @Override
     public String toString() {
         try {

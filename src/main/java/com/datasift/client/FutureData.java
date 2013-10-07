@@ -80,6 +80,10 @@ public class FutureData<T> {
      *                              the user must check to ensure null isn't returned
      */
     public T sync() throws InterruptedException {
+        //if data is present there's no need to block
+        if (data != null) {
+            return data;
+        }
         synchronized (this) {
             wait();
         }

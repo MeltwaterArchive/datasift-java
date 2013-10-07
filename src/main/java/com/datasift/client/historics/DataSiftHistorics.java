@@ -4,12 +4,15 @@ import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
+import com.datasift.client.FutureResponse;
 import io.higgs.http.client.POST;
 import io.higgs.http.client.future.PageReader;
 import org.joda.time.DateTime;
 
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 
 /**
  * This class provides access to the DataSift Historics API.
@@ -24,6 +27,31 @@ public class DataSiftHistorics extends DataSiftApiClient {
     }
 
     /**
+     * Start the historics query given
+     *
+     * @return a result which can be checked for success or failure, A status 204 indicates success,
+     *         or using {@link com.datasift.client.DataSiftResult#isSuccessful()}
+     */
+    public FutureData<DataSiftResult> start(FutureData<PreparedHistoricsQuery> query) {
+        if (query == null) {
+            throw new IllegalArgumentException("A valid PreparedHistoricsQuery is required");
+        }
+        final FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        DataSiftResult h = new DataSiftResult();
+
+        FutureResponse<PreparedHistoricsQuery> r = new FutureResponse<PreparedHistoricsQuery>() {
+            public void apply(PreparedHistoricsQuery data) {
+                if (data.getId() == null || data.getId().isEmpty()) {
+                    throw new IllegalArgumentException("A valid PreparedHistoricsQuery is required");
+                }
+                start(data.getId(), future);
+            }
+        };
+        unwrapFuture(query, future, h, r);
+        return future;
+    }
+
+    /**
      * Start the historics query with the given ID
      *
      * @param id the historics id
@@ -31,15 +59,26 @@ public class DataSiftHistorics extends DataSiftApiClient {
      *         or using {@link com.datasift.client.DataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> start(String id) {
+        return start(id, null);
+    }
+
+    protected FutureData<DataSiftResult> start(String id, FutureData<DataSiftResult> f) {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("A valid ID is required to start a Historics query");
         }
-        FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        FutureData<DataSiftResult> future = f != null ? f : new FutureData<DataSiftResult>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(START));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult())))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
+    }
+
+    public FutureData<DataSiftResult> stop(PreparedHistoricsQuery query, String reason) {
+        if (query == null || query.getId() == null || query.getId().isEmpty()) {
+            throw new IllegalArgumentException("A valid PreparedHistoricsQuery is required");
+        }
+        return stop(query.getId(), reason);
     }
 
     /**
@@ -62,6 +101,13 @@ public class DataSiftHistorics extends DataSiftApiClient {
         }
         applyConfig(request).execute();
         return future;
+    }
+
+    public FutureData<DataSiftResult> delete(PreparedHistoricsQuery query) {
+        if (query == null || query.getId() == null || query.getId().isEmpty()) {
+            throw new IllegalArgumentException("A valid PreparedHistoricsQuery is required");
+        }
+        return delete(query.getId());
     }
 
     /**
@@ -118,8 +164,8 @@ public class DataSiftHistorics extends DataSiftApiClient {
         FutureData<HistoricsStatus> future = new FutureData<HistoricsStatus>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STATUS));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsStatus())))
-                .form("start", TimeUnit.MILLISECONDS.toSeconds(start.getMillis()))
-                .form("end", TimeUnit.MILLISECONDS.toSeconds(end.getMillis()));
+                .form("start", MILLISECONDS.toSeconds(start.getMillis()))
+                .form("end", MILLISECONDS.toSeconds(end.getMillis()));
         if (sources != null && sources.length > 0) {
             StringBuilder b = new StringBuilder();
             for (String source : sources) {
@@ -179,6 +225,22 @@ public class DataSiftHistorics extends DataSiftApiClient {
     }
 
     /**
+     * @param hash  The hash of the CSDL for your playback query.
+     *              Example values: 2459b03a13577579bca76471778a5c3d
+     * @param start Unix timestamp for the start time.
+     *              Example values: 1325548800
+     * @param end   nix timestamp for the end time. Must be at least 24 in the past.
+     *              Example values: 1325548800
+     * @param name  The name you assign to your playback query.
+     *              Example values: Football
+     * @return the prepared Historics
+     */
+    public FutureData<PreparedHistoricsQuery> prepare(String hash, DateTime start, DateTime end, String name) {
+        return prepare(hash, MILLISECONDS.toSeconds(start.getMillis()), MILLISECONDS.toSeconds(end.getMillis()),
+                name, -1);
+    }
+
+    /**
      * @param hash    The hash of the CSDL for your playback query.
      *                Example values: 2459b03a13577579bca76471778a5c3d
      * @param start   Unix timestamp for the start time.
@@ -210,13 +272,14 @@ public class DataSiftHistorics extends DataSiftApiClient {
         if (sample > 0) {
             request.form("sample", sample);
         }
-        if (sources != null && sources.length > 0) {
-            StringBuilder b = new StringBuilder();
-            for (String source : sources) {
-                b.append(source).append(",");
-            }
-            request.form("sources", b.toString().substring(0, b.length() - 1));
+        if (sources == null || sources.length == 0) {
+            sources = new String[]{ "twitter" };
         }
+        StringBuilder b = new StringBuilder();
+        for (String source : sources) {
+            b.append(source).append(",");
+        }
+        request.form("sources", b.toString().substring(0, b.length() - 1));
         applyConfig(request).execute();
         return future;
     }

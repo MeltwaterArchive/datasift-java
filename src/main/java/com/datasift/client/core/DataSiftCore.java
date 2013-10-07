@@ -100,7 +100,7 @@ public class DataSiftCore extends DataSiftApiClient {
      */
     public FutureData<Usage> usage(Period timePeriod) {
         FutureData<Usage> future = new FutureData<Usage>();
-        String period = null;
+        String period;
         switch (timePeriod) {
             case HOUR:
                 period = "hour";

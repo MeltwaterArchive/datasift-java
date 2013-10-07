@@ -16,12 +16,12 @@ import static org.junit.Assert.fail;
 public class LiveStreamTest extends IntegrationTestBase {
     @Test(expected = IllegalStateException.class)
     public void requireErrorListener() {
-        dataSift.liveStream().onStreamEvent(new StreamEventListener() {
+        datasift.liveStream().onStreamEvent(new StreamEventListener() {
             public void onDelete(DeletedInteraction di) {
                 fail("Error listener is required");
             }
         });
-        dataSift.liveStream().subscribe(new StreamSubscription(Stream.fromString("doesn't-matter")) {
+        datasift.liveStream().subscribe(new StreamSubscription(Stream.fromString("doesn't-matter")) {
             public void onDataSiftLogMessage(DataSiftMessage dm) {
                 fail("Error listener is required");
             }
@@ -34,12 +34,12 @@ public class LiveStreamTest extends IntegrationTestBase {
 
     @Test(expected = IllegalStateException.class)
     public void requireStremEventListener() {
-        dataSift.liveStream().onStreamEvent(new StreamEventListener() {
+        datasift.liveStream().onStreamEvent(new StreamEventListener() {
             public void onDelete(DeletedInteraction di) {
                 fail("Stream event listener is required");
             }
         });
-        dataSift.liveStream().subscribe(new StreamSubscription(Stream.fromString("doesn't-matter")) {
+        datasift.liveStream().subscribe(new StreamSubscription(Stream.fromString("doesn't-matter")) {
             public void onDataSiftLogMessage(DataSiftMessage dm) {
                 fail("Stream event listener is required");
             }
@@ -51,7 +51,7 @@ public class LiveStreamTest extends IntegrationTestBase {
     }
 
     public void testDeletes() {
-        dataSift.liveStream().subscribe(new StreamSubscription(Stream.fromString("doesn't-matter")) {
+        datasift.liveStream().subscribe(new StreamSubscription(Stream.fromString("doesn't-matter")) {
             @Override
             public void onDataSiftLogMessage(DataSiftMessage dm) {
                 System.out.println("Shouldn't happen");

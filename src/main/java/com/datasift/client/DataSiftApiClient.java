@@ -2,6 +2,7 @@ package com.datasift.client;
 
 import io.higgs.core.func.Function2;
 import io.higgs.http.client.Request;
+import io.netty.handler.codec.http.HttpResponseStatus;
 
 import java.io.IOException;
 
@@ -36,7 +37,11 @@ public class DataSiftApiClient {
         return new Function2<String, io.higgs.http.client.Response>() {
             public void apply(String s, io.higgs.http.client.Response response) {
                 T result = instance;
-                if (response.hasFailed()) {
+                if (response.getStatus() != null && HttpResponseStatus.NO_CONTENT.equals(response.getStatus())) {
+                    //if a 204 is returned don't attempt to parse a JSON out of it,
+                    // since there shouldn't be any content as the status implies
+                    result.successful();
+                } else if (response.hasFailed()) {
                     result.failed(response.failureCause());
                 } else {
                     try {
