@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class CoreAPITest extends TestUtil {
+public class CoreAPITestIT extends TestUtil {
 
     @Test(timeout = Settings.TIMEOUT)
     public void validate() throws InterruptedException {
@@ -117,12 +117,12 @@ public class CoreAPITest extends TestUtil {
         });
     }
 
-    @Test
-    public void balanceSync() throws InterruptedException {
-        Balance data = datasift.core().balance().sync();
-        successful(data);
-        assertNotNull("Balance data must be returned", data);
-    }
+//    @Test
+//    public void balanceSync() throws InterruptedException {
+//        Balance data = datasift.core().balance().sync();
+//        successful(data);
+//        assertNotNull("Balance data must be returned", data);
+//    }
 
     @Test(timeout = Settings.TIMEOUT)
     public void usage() {
@@ -134,10 +134,10 @@ public class CoreAPITest extends TestUtil {
         });
     }
 
-    @Test
-    public void usageSync() throws InterruptedException {
-        Usage data = datasift.core().usage().sync();
-        successful(data);
-        assertNotNull(data.getStreams());
-    }
+//    @Test
+//    public void usageSync() throws InterruptedException {
+//        Usage data = datasift.core().usage().sync();
+//        successful(data);
+//        assertNotNull(data.getStreams());
+//    }
 }

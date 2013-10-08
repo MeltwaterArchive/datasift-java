@@ -12,10 +12,10 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class DataSiftPushTest extends TestUtil {
+public class DataSiftPushTestIT extends TestUtil {
     protected PushSubscription subscription;
 
-    public DataSiftPushTest() throws Exception {
+    public DataSiftPushTestIT() throws Exception {
         super.setup(); //once
     }
 

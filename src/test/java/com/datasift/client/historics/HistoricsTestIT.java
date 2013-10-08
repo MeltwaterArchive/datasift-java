@@ -15,13 +15,13 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class HistoricsTest extends TestUtil {
+public class HistoricsTestIT extends TestUtil {
 
     protected PushSubscription subscription;
     private Stream stream;
     private PreparedHistoricsQuery query;
 
-    public HistoricsTest() throws Exception {
+    public HistoricsTestIT() throws Exception {
         super.setup();
     }
 
