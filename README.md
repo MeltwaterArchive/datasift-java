@@ -1,19 +1,15 @@
 DataSift API
 ============
 
-This is the official Java library for accessing DataSift. See the examples
-folder for some simple example usage.
-
-Note that we use [Hubflow](https://github.com/datasift/gitflow) to manage development.
+This is the official Java library for accessing DataSift. See the tests and examples folder for some simple usage.
+If you used a 2.x.x or lower version of the library then we have written a migration guide to help the transition.
+See [MIGRATING_TO_V-3.0.0.md](MIGRATING_TO_V-3.0.0.md)
 
 Requirements
 ------------
 
 The following libraries are required [Netty](http://netty.io), [Higgs.IO](http://higgs.io), [HighScale lib](https://github.com/boundary/high-scale-lib) and JUnit for testing.
-
-The library will use SSL connections by default. While we recommend using SSL
-you may disable it if required.
-
+For
 License
 -------
 
