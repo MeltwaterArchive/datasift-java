@@ -11,13 +11,13 @@ The new library introduces a few things that will need getting used to if you've
 * All HTTP requests are now asynchronous by default.
 * All HTTP responses which are wrapped in "FutureData<T>" can be made synchronous by calling the sync() method.
 * Previous versions of the were oriented around a "user" object. Version 3+ changes to be oriented around a DataSiftClient object. Which at a minimum makes more features feel semantically correct
-* The old client used HTTP to stream data, this pushed the envelope for what HTTP could do...just a bit, when we introduced multi-streams we're sure we were breaking some on written rule. To remedy this, the new client uses WebSockets for all streaming, in fact the new client only does multi-streams internally but the API hides this so that you can just subscribe to one or as many streams as you like without worrying about anything else.
+* The old client used HTTP to stream data, this pushed the envelope for what HTTP should do...just a bit, when we introduced multi-streams we're sure we were breaking some unwritten rule. To remedy this, the new client uses WebSockets for all streaming, in fact the new client only does multi-streams internally but the API hides this so that you can just subscribe to one or as many streams as you like without worrying about anything else.
 * All features that were missing in the previous client have been added to 3.0.0
 * Every DataSift result type has common methods to check if the request was successful, if authentication failed, rate limits and so on.
 * Where it was previously set so that strings are used for various things that never change, the new client defines proper types as either enums or data classes. Essentially we've tried to make as many things type safe where it seemed appropriate.
 * Where parameters are optional an overloaded version as been provided so that you don't have to pass null etc for params you don't want to specify
 * A lot more verification is done in the client on parameters before making a request, saving you the round trip and possibly valuable DPUs and rate limit requests.
-* All currently supported (push connectors)[http://dev.datasift.com/docs/push/connectors] have a type safe way of generating the parameters required.
+* All currently supported [push connectors](http://dev.datasift.com/docs/push/connectors) have a type safe way of generating the parameters required.
 
 Maven
 ===
@@ -37,9 +37,9 @@ There has been a ticket open to have the client in maven for a very long time, f
 Code: Basics
 ===
 
-Code examples are available in (src/main/java/com/datasift/client/examples)[src/main/java/com/datasift/client/examples].
+Code examples are available in [src/main/java/com/datasift/client/examples](src/main/java/com/datasift/client/examples).
 
-You begin by providing a configuration object to the DataSift client. From there the client instance gives you access to the rest of the DataSift API. This is organized in a similar way to the (DataSift REST API documentation)[http://dev.datasift.com/docs/rest-api] except where it didn't make sense to do so.
+You begin by providing a configuration object to the DataSift client. From there the client instance gives you access to the rest of the DataSift API. This is organized in a similar way to the [DataSift REST API documentation](http://dev.datasift.com/docs/rest-api) except where it didn't make sense to do so.
 
 ```java
 
@@ -103,7 +103,7 @@ When exceptions occur it is unlikely we'll know which stream/subscription caused
 
 ### onStreamEvent
 
-Twitter sends us a notification whenever one of their users deletes a Tweet. We pass these notifications on to you as part of your stream. If you are storing Tweets you must take account of all of these delete messages in order to comply with Twitter's Terms of Service. For more information on deletes see the DataSift documentation on (Twitter Delete Messages)[http://dev.datasift.com/docs/resources/twitter-deletes]
+Twitter sends us a notification whenever one of their users deletes a Tweet. We pass these notifications on to you as part of your stream. If you are storing Tweets you must take account of all of these delete messages in order to comply with Twitter's Terms of Service. For more information on deletes see the DataSift documentation on [Twitter Delete Messages](http://dev.datasift.com/docs/resources/twitter-deletes)
 
 Push
 --
