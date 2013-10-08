@@ -77,7 +77,6 @@ public class LiveStreamIT extends IntegrationTestBase {
                 assertNotNull(i.get("interaction.id"));
                 //all interactions are guaranteed to have an ID
                 assertNotEquals("", i.get("interaction.id"));
-                System.out.println(i);
                 //after we've received N amount of interactions then consider the test passed
                 if (++count >= settings.getLiveStreamCount()) {
                     doNotify();

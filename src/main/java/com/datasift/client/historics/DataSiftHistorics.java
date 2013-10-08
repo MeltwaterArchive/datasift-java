@@ -225,13 +225,13 @@ public class DataSiftHistorics extends DataSiftApiClient {
     }
 
     /**
-     * @param hash  The hash of the CSDL for your playback query.
+     * @param hash  The hash of the CSDL for your historics query.
      *              Example values: 2459b03a13577579bca76471778a5c3d
      * @param start Unix timestamp for the start time.
      *              Example values: 1325548800
      * @param end   nix timestamp for the end time. Must be at least 24 in the past.
      *              Example values: 1325548800
-     * @param name  The name you assign to your playback query.
+     * @param name  The name you assign to your historics query.
      *              Example values: Football
      * @return the prepared Historics
      */
@@ -241,19 +241,19 @@ public class DataSiftHistorics extends DataSiftApiClient {
     }
 
     /**
-     * @param hash    The hash of the CSDL for your playback query.
+     * @param hash    The hash of the CSDL for your historics query.
      *                Example values: 2459b03a13577579bca76471778a5c3d
      * @param start   Unix timestamp for the start time.
      *                Example values: 1325548800
      * @param end     nix timestamp for the end time. Must be at least 24 in the past.
      *                Example values: 1325548800
-     * @param name    The name you assign to your playback query.
+     * @param name    The name you assign to your historics query.
      *                Example values: Football
      * @param sources Comma-separated list of data sources to include. Currently,
      *                the only source you can use is twitter. In the future, you will be able to choose any source
      *                listed as a valid value that you would use in the interaction.type target.
      *                Example values: twitter
-     * @return the prepared playback
+     * @return the prepared historics
      */
     public FutureData<PreparedHistoricsQuery> prepare(String hash, long start, long end, String name,
                                                       String... sources) {

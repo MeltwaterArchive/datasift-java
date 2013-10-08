@@ -31,7 +31,7 @@ public class Usage extends DataSiftResult {
         return streams;
     }
 
-    public static enum Period {DAY, HOUR, CURRENT}
+    public static enum Period { DAY, HOUR, CURRENT }
 
     public static class UsageStream {
         @JsonProperty
