@@ -14,8 +14,9 @@
     <description>A client library for interacting with the DataSift API on the JVM.</description>
 
     <scm>
-        <connection>scm:git:git://github.com/datasift/datasift-java</connection>
-        <developerConnection>scm:git:ssh://git@github.com:datasift/datasift-java.git</developerConnection>
+        <connection>scm:git:git@github.com:datasift/datasift-java.git</connection>
+        <developerConnection>scm:git:git@github.com:datasift/datasift-java.git</developerConnection>
+        <url>git@github.com:datasift/datasift-java.git</url>
     </scm>
 
     <url>https://github.com/datasift/datasift-java</url>
