@@ -16,7 +16,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class DataSiftPreview extends DataSiftApiClient {
-    public final String CREATE = "preview/create", GET = "preview/get";
+    public final String CREATE = "preview/create", GET = "preview/list";
 
     public DataSiftPreview(DataSiftConfig config) {
         super(config);

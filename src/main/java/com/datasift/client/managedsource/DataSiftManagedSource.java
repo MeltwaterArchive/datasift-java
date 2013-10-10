@@ -18,7 +18,7 @@ import java.net.URI;
  */
 public class DataSiftManagedSource extends DataSiftApiClient {
     public static final String CREATE = "source/create", UPDATE = "source/update", START = "source/start",
-            STOP = "source/stop", DELETE = "source/delete", GET = "source/get";
+            STOP = "source/stop", DELETE = "source/delete", GET = "source/list";
 
     public DataSiftManagedSource(DataSiftConfig config) {
         super(config);
@@ -59,13 +59,13 @@ public class DataSiftManagedSource extends DataSiftApiClient {
                 .form("source_type", source.type().value())
                 .form("name", name);
         if (source.hasParams()) {
-            request.form("parameters", source.getURLEncodedParameters());
+            request.form("parameters", source.getParametersAsJSON());
         }
         if (source.hasResources()) {
-            request.form("resources", source.getURLEncodedResources());
+            request.form("resources", source.getResourcesAsJSON());
         }
         if (source.hasAuth()) {
-            request.form("auth", source.getURLEncodedAuth());
+            request.form("auth", source.getAuthAsJSON());
         }
         applyConfig(request).execute();
         return future;

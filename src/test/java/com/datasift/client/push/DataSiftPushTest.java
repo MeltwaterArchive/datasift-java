@@ -29,7 +29,7 @@ public class DataSiftPushTest extends TestUtil {
     public void testDelete() throws InterruptedException {
         PushSubscription s = datasift.push().stop(subscription.getId()).sync();
         successful(s);
-        //when invoked it may take a few moments to get to finished state depending on the stream so finished or
+        //when invoked it may take a few moments to list to finished state depending on the stream so finished or
         // finishing all are valid
         assertTrue(s.status().isFinished() || s.status().isFinishingPaused() || s.status().isFinishing());
         DataSiftResult s2 = datasift.push().delete(subscription.getId()).sync();

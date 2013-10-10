@@ -10,19 +10,19 @@ public interface DataSource<T extends DataSource<T>> {
      * @return A URL encoded string which represents the resources for this data source
      *         note this is the value for the "resources" field and does not include the key itself
      */
-    String getURLEncodedResources();
+    String getResourcesAsJSON();
 
     /**
      * @return A URL encoded string which represents the auth information for this data source
      *         note this is the value for the "auth" field and does not include the key itself
      */
-    String getURLEncodedAuth();
+    String getAuthAsJSON();
 
     /**
      * @return A URL encoded string which represents the parameters for this data source
      *         note this is the value for the "parameters" field and does not include the key itself
      */
-    String getURLEncodedParameters();
+    String getParametersAsJSON();
 
     /**
      * @return a managed source type of the data source this represents

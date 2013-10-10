@@ -11,6 +11,9 @@ import com.datasift.client.stream.StreamEventListener;
 import com.datasift.client.stream.StreamSubscription;
 
 public class LiveStream {
+    private LiveStream() {
+    }
+
     public static void main(String... args) throws InterruptedException {
         DataSiftConfig config = new DataSiftConfig("username", "api-key");
         final DataSiftClient datasift = new DataSiftClient(config);

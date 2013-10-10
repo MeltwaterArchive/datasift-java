@@ -138,7 +138,7 @@ public class StreamingData {
     /**
      * Subscribes a callback to listen for exceptions that may occur during streaming.
      * When exceptions occur it is unlikely we'll know which stream/subscription caused the exception
-     * so instead of notifying all stream subscribers of the same exception this provides a way to get
+     * so instead of notifying all stream subscribers of the same exception this provides a way to list
      * the error  just once
      *
      * @param listener an error callback

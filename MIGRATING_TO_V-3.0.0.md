@@ -370,6 +370,66 @@ Push
 * datasift.__push()__.get(...)
 * datasift.__push()__.pull(...)
 
+### Push: <3.0.0
+
+```java
+
+try {
+    User user = new User("username", "api-key");
+    // Create the PushDefinition
+    PushDefinition pushDef = user.createPushDefinition();
+    pushDef.setOutputType("s3");
+
+    // Now add the output_type-specific args from the command line
+    pushDef.setOutputParam("auth.access_key", "aws-key");
+    pushDef.setOutputParam("auth.secret_key", "aws-secret");
+    pushDef.setOutputParam("bucket", "bucket-name");
+    pushDef.setOutputParam("directory", "directory");
+    pushDef.setOutputParam("acl", "private");
+    pushDef.setOutputParam("delivery_frequency", "0");
+    pushDef.setOutputParam("max_size", "10485760");
+    pushDef.setOutputParam("file_prefix", "DataSiftJava-");
+    // Subscribe the definition to the hash
+    PushSubscription pushSub = pushDef.subscribeStreamHash(hash, name);
+} catch (EInvalidData e) {
+    System.err.println("EInvalidData: " + e.getMessage());
+} catch (EAPIError e) {
+    System.err.println("EAPIError: " + e.getMessage());
+} catch (EAccessDenied e) {
+    System.err.println("EAccessDenied: " + e.getMessage());
+}
+
+```
+
+### Push: 3.0.0+
+
+```java
+
+S3 s3 = PushConnectors
+        .s3()
+        .accessKey(settings.getS3AccessKey())
+        .secretKey(settings.getS3SecretKey())
+        .bucket("apitests")
+        .directory("java-client")
+        .acl("private")
+        .deliveryFrequency(0)
+        .maxSize(10485760)
+        .filePrefix("DataSiftJava-");
+
+PushValidation pv = datasift.push().validate(s3).sync();
+
+if(pv.isSuccessful()){
+ //valid push configuration submitted
+ PushSubscription subscription = datasift.push().create(s3, stream, name).sync();
+ //change name or other config
+ s3.bucket("new-bucket");
+ PushSubscription updatedSubscription = datasift.push().update(subscription.getId(), s3, "New name").sync();
+ PushSubscription pausedSubscription = datasift.push().pause(subscription.getId()).sync();
+ PushSubscription activeSubscription = datasift.push().resume(pausedSubscription.getId()).sync();
+}
+
+```
+
 Historics
 ---
 
@@ -381,11 +441,101 @@ Historics
 * datasift.__historics()__.delete(...)
 * datasift.__historics()__.get(...)
 
+
+### Historics: <3.0.0
+
+```java
+
+        try {
+            User user = new User("username", "api-key");
+            // Create the Historic
+            Historic historic = user.createHistoric(stream_hash, start, end, sources, sample, name);
+            historic.prepare();
+            historic.start();
+            historic.stop();
+            historic.delete();
+            user.getHistoric("id...");
+            user.listHistorics();
+        } catch (EInvalidData e) {
+            System.err.println("EInvalidData: " + e.getMessage());
+        } catch (EAccessDenied e) {
+            System.err.println("EAccessDenied: " + e.getMessage());
+        } catch (EAPIError eapiError) {
+            System.err.println("EAPIError: " + eapiError.getMessage());
+        }
+
+```
+
+### Historics: 3.0.0+
+
+```java
+
+DataSiftConfig config = new DataSiftConfig("zcourts", "44067e0ff342b76b52b36a63eea8e21a");
+DataSiftClient datasift = new DataSiftClient(config);
+Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");
+
+S3 s3 = PushConnectors
+        .s3()
+        .accessKey("s3-access-key")
+        .secretKey("s3-access-key")
+        .bucket("apitests")
+        .directory("java-client")
+        .acl("private")
+        .deliveryFrequency(0)
+        .maxSize(10485760)
+        .filePrefix("DataSiftJava-");
+
+DateTime fiveHrsAgo = DateTime.now().minusHours(5);
+DateTime fourHrsAgo = fiveHrsAgo.plusHours(1);
+String name = "My awesome Historics";
+//prepare our query
+PreparedHistoricsQuery query = datasift.historics().prepare(stream.hash(), fiveHrsAgo, fourHrsAgo, name).sync();
+//have to create a push subscription to the newly create historics before starting
+datasift.push().create(s3, stream, "Subscription name").sync();
+DataSiftResult historics = datasift.historics().start(query).sync();
+
+//stop a query
+datasift.historics().stop(query, "some reason").sync();
+//delete a query
+datasift.historics().delete(query).sync();
+//get a single historics query
+datasift.historics().get(query.getId()).sync();
+//get your list of historics
+datasift.historics().list().sync();
+
+
+```
+
 Historics preview
 ---
 
 * datasift.__preview()__.create(...)
 * datasift.__preview()__.get(...)
+
+
+### Push: <3.0.0
+
+__not implemented__
+
+
+### Push: 3.0.0+
+
+```java
+
+DataSiftConfig config = new DataSiftConfig("username", "api-key");
+
+final DataSiftClient datasift = new DataSiftClient(config);
+Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");
+DateTime fiveHrsAgo = DateTime.now().minusHours(5);
+HistoricsPreview preview = datasift.preview().create(fiveHrsAgo, stream,
+        new String[]{ "interaction.author.link,targetVol,hour;interaction.type,freqDist,10" }).sync();
+//can also later get the preview data
+datasift.preview().get(preview);
+//or
+datasift.preview().get(preview.id());
+
+
+```
 
 Managed sources
 ---
@@ -397,3 +547,37 @@ Managed sources
 * datasift.__source()__.get(...)
 * datasift.__source()__.stop(...)
 * datasift.__source()__.start(...)
+
+### Managed sources: <3.0.0
+
+__not implemented__
+
+### Managed sources: 3.0.0+
+
+
+```java
+
+//Instagram, GooglePlus and Yammer also available
+FacebookPage source = new FacebookPage(config);
+String fbToken = "facebook-long-lived-access-token";
+
+source.addOAutToken(fbToken, "name", 1381406400);
+//username or id is valid
+source.addPage("theguardian", "https://www.facebook.com/theguardian", "a name for this");
+//or use the ID of the facebook page
+//source.addPage("10513336322", "https://www.facebook.com/theguardian", "a name for this");
+
+//enable options using
+source.enableComments(true)
+        .enableLikes(true)
+        .enablePostsByOthers(true);
+//or all at once
+source.setParams(true, true, true);
+ManagedSource managedSource = datasift.managedSource().create("My managed source", source).sync();
+if (managedSource.isSuccessful()) {
+    //and now we can do filtering on this page e.g.
+    Stream stream = datasift.core().compile(String.format("interaction.content contains \"news\" AND source.id == \"%s\"",managedSource.getId())).sync();
+    System.out.println(managedSource);
+}
+
+```

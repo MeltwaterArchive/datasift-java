@@ -28,7 +28,7 @@ import java.util.Map;
 public class DataSiftPush extends DataSiftApiClient {
     public final String VALIDATE = "push/validate", CREATE = "push/create", PAUSE = "push/pause",
             RESUME = "push/resume", UPDATE = "push/update", STOP = "push/stop", DELETE = "push/delete",
-            LOG = "push/log", GET = "push/get", PULL = "push/pull";
+            LOG = "push/log", GET = "push/list", PULL = "push/pull";
 
     public DataSiftPush(DataSiftConfig config) {
         super(config);
@@ -140,7 +140,7 @@ public class DataSiftPush extends DataSiftApiClient {
      * Retrieve one or more interactions from a Push queue
      *
      * @param id     the push subscription ID
-     * @param size   max number of interactions to get
+     * @param size   max number of interactions to list
      * @param cursor a pointer into the push
      * @return a set of interactions pulled from the specified push queue
      */

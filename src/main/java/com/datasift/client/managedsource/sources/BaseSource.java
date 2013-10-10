@@ -10,8 +10,6 @@ import org.cliffc.high_scale_lib.NonBlockingHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Set;
 
@@ -85,33 +83,27 @@ public abstract class BaseSource<T extends DataSource<T>> implements DataSource<
         return set;
     }
 
-    public String getURLEncodedParameters() {
+    public String getParametersAsJSON() {
         try {
-            return URLEncoder.encode(DataSiftClient.MAPPER.writeValueAsString(parameters), config.urlEncodingFormat());
-        } catch (UnsupportedEncodingException e) {
-            log.warn("Failed to encode parameters", e);
+            return DataSiftClient.MAPPER.writeValueAsString(parameters);
         } catch (JsonProcessingException e) {
             log.warn("Failed to encode parameters", e);
         }
         return null;
     }
 
-    public String getURLEncodedResources() {
+    public String getResourcesAsJSON() {
         try {
-            return URLEncoder.encode(DataSiftClient.MAPPER.writeValueAsString(resources), config.urlEncodingFormat());
-        } catch (UnsupportedEncodingException e) {
-            log.warn("Failed to encode parameters", e);
+            return DataSiftClient.MAPPER.writeValueAsString(resources);
         } catch (JsonProcessingException e) {
             log.warn("Failed to encode parameters", e);
         }
         return null;
     }
 
-    public String getURLEncodedAuth() {
+    public String getAuthAsJSON() {
         try {
-            return URLEncoder.encode(DataSiftClient.MAPPER.writeValueAsString(auth), config.urlEncodingFormat());
-        } catch (UnsupportedEncodingException e) {
-            log.warn("Failed to encode parameters", e);
+            return DataSiftClient.MAPPER.writeValueAsString(auth);
         } catch (JsonProcessingException e) {
             log.warn("Failed to encode parameters", e);
         }

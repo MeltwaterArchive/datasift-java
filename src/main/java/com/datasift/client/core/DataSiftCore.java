@@ -45,7 +45,7 @@ public class DataSiftCore extends DataSiftApiClient {
      * @param csdl the CSDL to compile
      * @return a stream object representing the DataSift compiled CSDL, use {@link com.datasift.client.core
      *         .Stream#hash()}
-     *         to get the hash for the compiled CSDL
+     *         to list the hash for the compiled CSDL
      */
     public FutureData<Stream> compile(String csdl) {
         FutureData<Stream> future = new FutureData<Stream>();

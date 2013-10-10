@@ -20,10 +20,14 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 public class DataSiftHistorics extends DataSiftApiClient {
     public final String PREPARE = "historics/prepare", START = "historics/start", STOP = "historics/stop",
             UPDATE = "historics/update", STATUS = "historics/status", DELETE = "historics/delete",
-            GET = "historics/get";
+            GET = "historics/list";
 
     public DataSiftHistorics(DataSiftConfig config) {
         super(config);
+    }
+
+    public FutureData<DataSiftResult> start(PreparedHistoricsQuery query) {
+        return start(FutureData.wrap(query));
     }
 
     /**
@@ -184,7 +188,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
     /**
      * Get detailed information about a historics query
      *
-     * @param id           the id of the historics to get
+     * @param id           the id of the historics to list
      * @param withEstimate if true then an estimated completion time is include in the response
      * @return a historics query
      */
@@ -201,15 +205,27 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return future;
     }
 
+    public FutureData<HistoricsQueryList> list() {
+        return list(100, 1, true);
+    }
+
+    public FutureData<HistoricsQueryList> list(int max, int page) {
+        return list(max, page, true);
+    }
+
+    public FutureData<HistoricsQueryList> list(int page) {
+        return list(100, page, true);
+    }
+
     /**
      * Retrieve a list of {@link HistoricsQuery} objects
      *
-     * @param max          max number of objects to get
+     * @param max          max number of objects to list
      * @param page         a page number
      * @param withEstimate if true, include an estimated completion time
      * @return an iterable list of {@link HistoricsQuery}s
      */
-    public FutureData<HistoricsQueryList> get(int max, int page, boolean withEstimate) {
+    public FutureData<HistoricsQueryList> list(int max, int page, boolean withEstimate) {
         FutureData<HistoricsQueryList> future = new FutureData<HistoricsQueryList>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsQueryList())))

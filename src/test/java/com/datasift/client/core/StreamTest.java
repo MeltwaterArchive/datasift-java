@@ -12,7 +12,7 @@ public class StreamTest {
     public void testFromString() throws Exception {
         String val = "1233dfsc334rf34f243";
         Stream stream = Stream.fromString(val);
-        assertEquals("Stream.get not producing correct hash value", val, stream.hash());
+        assertEquals("Stream.list not producing correct hash value", val, stream.hash());
     }
 
     @Test
@@ -20,6 +20,6 @@ public class StreamTest {
         String val = "1233dfsc334rf34f243";
         Stream stream1 = Stream.fromString(val);
         Stream stream2 = Stream.fromString(val);
-        assertEquals("Stream.get not producing correct hash value", stream1.hash(), stream2.hash());
+        assertEquals("Stream.list not producing correct hash value", stream1.hash(), stream2.hash());
     }
 }
