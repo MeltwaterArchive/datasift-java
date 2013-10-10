@@ -199,6 +199,120 @@ Balance balance = datasift.core().balance().sync();
 
 Live Streams
 ---
+
+### Streaming: <3.0.0
+
+```java
+
+try {
+    // Authenticate
+    System.out.println("Creating user...");
+    _user = new User(Config.username, Config.api_key);
+
+    // Get the hash list from the parameters
+    System.out.println("Building hash list...");
+
+    // Create the consumer
+    System.out.println("Getting the consumer...");
+    StreamConsumer consumer = StreamConsumer.factory(_user, StreamConsumer.TYPE_WS, this);
+
+    // Subscribe
+    for (String hash : hashes) {
+        boolean tryagain = true;
+        while (tryagain) {
+            try {
+                consumer.subscribe(hash);
+                System.out.println("Subscribing to \"" + hash + "\"...");
+                tryagain = false;
+                Thread.sleep(100);
+            } catch (EAPIError e) {
+                if (!e.getMessage().contains("not connected")) {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    // And start consuming
+    System.out.println("Consuming...");
+    System.out.println("--");
+    consumer.consume();
+} catch (EInvalidData e) {
+    System.out.print("InvalidData: ");
+    System.out.println(e.getMessage());
+} catch (ECompileFailed e) {
+    System.out.print("CompileFailed: ");
+    System.out.println(e.getMessage());
+} catch (EAccessDenied e) {
+    System.out.print("AccessDenied: ");
+    System.out.println(e.getMessage());
+} catch (EAPIError e) {
+    System.out.print("APIError: ");
+    System.out.println(e.getMessage());
+} catch (InterruptedException e) {
+    System.out.print("InterruptedException: ");
+    System.out.println(e.getMessage());
+}
+
+```
+
+### Streaming: 3.0.0+
+
+
+```java
+
+    public static void main(String... args) throws InterruptedException {
+        DataSiftConfig config = new DataSiftConfig("username", "api-key");
+        final DataSiftClient datasift = new DataSiftClient(config);
+
+        Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");
+
+        //handle exceptions that can't necessarily be linked to a specific stream
+        datasift.liveStream().onError(new ErrorHandler());
+
+        //handle delete message
+        datasift.liveStream().onStreamEvent(new DeleteHandler());
+
+        //process interactions
+        datasift.liveStream().subscribe(new Subscription(stream));
+        //process interactions for another stream
+        datasift.liveStream().subscribe(new Subscription(Stream.fromString("another-stream-hash")));
+
+        //at some point later if you want unsubscribe
+        datasift.liveStream().unsubscribe(stream);
+    }
+
+    public static class Subscription extends StreamSubscription {
+        public Subscription(Stream stream) {
+            super(stream);
+        }
+
+        public void onDataSiftLogMessage(DataSiftMessage di) {
+            //di.isWarning() is also available
+            System.out.println((di.isError() ? "Error" : di.isInfo() ? "Info" : "Warning") + ":\n" + di);
+        }
+
+        public void onMessage(Interaction i) {
+            System.out.println("INTERACTION:\n" + i);
+        }
+    }
+
+    public static class DeleteHandler extends StreamEventListener {
+        public void onDelete(DeletedInteraction di) {
+            //go off and delete the interaction if you have it stored. This is a strict requirement!
+            System.out.println("DELETED:\n " + di);
+        }
+    }
+
+    public static class ErrorHandler extends ErrorListener {
+        public void exceptionCaught(Throwable t) {
+            t.printStackTrace();
+            //do something useful...
+        }
+    }
+
+```
+
 You can use the live streams API to consume a stream in real time by using something similar to:
 
 ```java

@@ -10,12 +10,6 @@ import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
 import com.datasift.client.core.Validation;
-import com.datasift.client.stream.DataSiftMessage;
-import com.datasift.client.stream.DeletedInteraction;
-import com.datasift.client.stream.ErrorListener;
-import com.datasift.client.stream.Interaction;
-import com.datasift.client.stream.StreamEventListener;
-import com.datasift.client.stream.StreamSubscription;
 
 public class CoreApi {
     private CoreApi() {
@@ -85,28 +79,5 @@ public class CoreApi {
         }
         System.out.println(datasift.core().balance().sync());
         System.out.println(datasift.core().usage().sync());
-
-        datasift.liveStream().onError(new ErrorListener() {
-            public void exceptionCaught(Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
-        datasift.liveStream().onStreamEvent(new StreamEventListener() {
-            public void onDelete(DeletedInteraction di) {
-                System.out.println("DELETED:\n " + di);
-            }
-        });
-
-        datasift.liveStream().subscribe(new StreamSubscription(stream) {
-            public void onDataSiftLogMessage(DataSiftMessage di) {
-                //di.isWarning() is also available
-                System.out.println((di.isError() ? "Error" : di.isInfo() ? "Info" : "Warning") + ":\n" + di);
-            }
-
-            public void onMessage(Interaction i) {
-                System.out.println("INTERACTION:\n" + i);
-            }
-        });
     }
 }
