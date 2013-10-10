@@ -37,15 +37,52 @@ There has been a ticket open to have the client in maven for a very long time, f
 Code: Basics
 ===
 
+__Note that the examples in this migration guide use .sync() to present a synchronous comparison of the old and new client, however by default v3+ is asynchronous.__
 Code examples are available in [src/main/java/com/datasift/client/examples](src/main/java/com/datasift/client/examples).
 
-You begin by providing a configuration object to the DataSift client. From there the client instance gives you access to the rest of the DataSift API. This is organized in a similar way to the [DataSift REST API documentation](http://dev.datasift.com/docs/rest-api) except where it didn't make sense to do so.
+In prior versions of the client you would begin with this:
+
+```java
+
+User user = new User(Config.username, Config.api_key);
+
+```
+In version 3+ you begin by providing a configuration object to the DataSift client. From there the client instance gives you access to the rest of the DataSift API. This is organized in a similar way to the [DataSift REST API documentation](http://dev.datasift.com/docs/rest-api) except where it didn't make sense to do so.
 
 ```java
 
 DataSiftConfig config = new DataSiftConfig("username", "api-key");
 
 DataSiftClient datasift = new DataSiftClient(config);
+
+```
+
+### Meet DataSiftResult
+
+All API response objects extend DataSiftResult. This base class comes with a few useful methods that is generally useful to know about any request/response for example.
+
+```java
+
+DataSiftResult result = datasift.core().compile(csdl).sync();
+//is successful returns true if a response hasn't explicitly been marked as failed,
+//there is a valid response, no exceptions are set and the response status is between 200 - 399
+if (result.isSuccessful()) {
+    //if true an exception may have caused the request to fail, inspect the cause if available
+    if (result.failureCause() != null) { //may not be an exception
+        result.failureCause().printStackTrace();
+    }
+    return;
+}
+//is true if isSuccessful() == true and the response status is not 401
+result.isAuthorizationSuccesful();
+//allows access to the response object which you can get the request and JSON string response from
+result.getResponse();
+//gets the rate limit DataSift returned with the response, use it to keep track of usage
+result.rateLimit();
+//returns the cost of executing the request which produced this result
+result.rateLimitCost();
+//what's left of your rate limit quota
+result.rateLimitRemaining();
 
 ```
 
@@ -59,6 +96,106 @@ Core
 * datasift.__core()__.usage(...)
 * datasift.__core()__.dpu(...)
 * datasift.__core()__.balance(...)
+
+###  Validate: <3.0.0
+
+```java
+
+Definition def = user.createDefinition(csdl);
+try{
+def.compile();
+
+}catch(EInvalidData e){
+    //try to determine what went wrong here...
+}
+
+```
+
+###  Validate: 3.0.0+
+
+```java
+
+//synchronously validate a CSDL
+Validation validation = datasift.core().validate(csdl).sync();
+if (validation.isValid()) {
+    //CSDL is valid...
+}
+
+```
+
+### Compile: <3.0.0
+
+
+```java
+
+Definition def = user.createDefinition(csdl);
+def.compile();
+
+```
+
+### Compile: 3.0.0+
+
+```java
+
+//notice .sync(), this makes the compile operation block until the HTTP request is complete
+Stream stream = datasift.core().compile(csdl).sync();
+
+//alternatively will return immediately and allows you to be notified when the result is available if you subscribe to onData(...)
+FutureData<Stream> stream = datasift.core().compile(csdl);
+//as in
+stream.onData(new FutureResponse<Stream>() {
+    public void apply(Stream data) {
+        System.out.println(data);
+    }
+});
+
+```
+
+###  Usage: <3.0.0
+
+```java
+
+User user = new User(Config.username, Config.api_key);
+user.getUsage();
+
+```
+
+###  Usage: 3.0.0+
+
+```java
+
+datasift.core().usage().sync();
+
+```
+
+###  DPU: <3.0.0
+
+```java
+
+Definition def = user.createDefinition(...);
+def.getDPUBreakdown();
+
+```
+###  DPU: 3.0.0+
+
+```java
+
+Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");
+Dpu dpu = datasift.core().dpu(stream).sync();
+
+```
+
+###  Balance: <3.0.0
+
+__no implemented__
+
+###  Balance: 3.0.0+
+
+```java
+
+Balance balance = datasift.core().balance().sync();
+
+```
 
 Live Streams
 ---

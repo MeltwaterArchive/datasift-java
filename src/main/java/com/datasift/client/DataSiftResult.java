@@ -22,7 +22,7 @@ public class DataSiftResult {
      * @return true if this API result was successful.
      */
     public boolean isSuccessful() {
-        return !hasFailed()
+        return !failed
                 && response != null
                 && error == null
                 && response.status() > 199
@@ -43,13 +43,6 @@ public class DataSiftResult {
     }
 
     /**
-     * @return true if the request for this response has failed for some reason
-     */
-    public boolean hasFailed() {
-        return failed;
-    }
-
-    /**
      * @return If the request has failed, this returns the reason for the failure
      *         May* be null
      */
@@ -61,7 +54,7 @@ public class DataSiftResult {
      * @return True if the response status is anything but a 401 Unauthorized
      */
     public boolean isAuthorizationSuccesful() {
-        return !hasFailed() && response.status() != 401;
+        return isSuccessful() && response.status() != 401;
     }
 
     /**

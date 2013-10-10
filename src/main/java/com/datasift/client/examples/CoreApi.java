@@ -2,10 +2,13 @@ package com.datasift.client.examples;
 
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
 import com.datasift.client.FutureResponse;
+import com.datasift.client.core.Balance;
 import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
+import com.datasift.client.core.Usage;
 import com.datasift.client.core.Validation;
 import com.datasift.client.stream.DataSiftMessage;
 import com.datasift.client.stream.DeletedInteraction;
@@ -27,9 +30,37 @@ public class CoreApi {
         String csdl = "interaction.content contains \"some string\"";
         //both sync and async processing are supported by calling "sync" on any FutureDate object
 
+        //all response objects extend DataSiftResult which present these utility methods
+        DataSiftResult result = datasift.core().compile(csdl).sync();
+        //is successful returns true if a response hasn't explicitly been marked as failed,
+        //there is a valid response, no exceptions are set and the response status is between 200 - 399
+        if (result.isSuccessful()) {
+            //if true an exception may have caused the request to fail, inspect the cause if available
+            if (result.failureCause() != null) { //may not be an exception
+                result.failureCause().printStackTrace();
+            }
+            return;
+        }
+        //is true if isSuccessful() == true and the response status is not 401
+        result.isAuthorizationSuccesful();
+        //allows access to the response object which you can get the request and JSON string response from
+        result.getResponse();
+        //gets the rate limit DataSift returned with the response, use it to keep track of usage
+        result.rateLimit();
+        //returns the cost of executing the request which produced this result
+        result.rateLimitCost();
+        //what's left of your rate limit quota
+        result.rateLimitRemaining();
+
+        Usage usage = datasift.core().usage().sync();
+
+        Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");
+        Dpu dpu = datasift.core().dpu(stream).sync();
+
+        Balance balance = datasift.core().balance().sync();
         //synchronously validate a CSDL
         Validation validation = datasift.core().validate(csdl).sync();
-        if (validation.hasFailed()) {
+        if (!validation.isSuccessful()) {
             //if true an exception may have caused the request to fail, inspect the cause if available
             if (validation.failureCause() != null) { //may not be an exception
                 validation.failureCause().printStackTrace();
@@ -39,8 +70,13 @@ public class CoreApi {
         System.out.println(validation);
         if (validation.isSuccessful()) {
             //we now know it's valid so asynchronously compile the CSDL and obtain a stream
-            FutureData<Stream> stream = datasift.core().compile(csdl);
-            FutureData<Dpu> dpus = datasift.core().dpu(stream);
+            FutureData<Stream> compiledStream = datasift.core().compile(csdl);
+            compiledStream.onData(new FutureResponse<Stream>() {
+                public void apply(Stream data) {
+                    System.out.println(data);
+                }
+            });
+            FutureData<Dpu> dpus = datasift.core().dpu(compiledStream);
             dpus.onData(new FutureResponse<Dpu>() {
                 public void apply(Dpu data) {
                     System.out.println(data);
@@ -61,8 +97,6 @@ public class CoreApi {
                 System.out.println("DELETED:\n " + di);
             }
         });
-
-        Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");
 
         datasift.liveStream().subscribe(new StreamSubscription(stream) {
             public void onDataSiftLogMessage(DataSiftMessage di) {
