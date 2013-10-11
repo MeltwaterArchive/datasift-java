@@ -1,8 +1,8 @@
 DataSift API
 ============
 
-This is the official Java library for accessing DataSift. See the tests and examples folder for some simple usage.
-If you used a 2.x.x or lower version of the library then we have written a migration guide to help the transition.
+This is the new Java library for accessing DataSift. See the tests and examples folder for some simple usage.
+This version of the library is currently in alpha. It is incompatible with older versions. If you used a 2.x.x or lower version of the library then we have written a migration guide to help the transition.
 See [MIGRATING_TO_V-3.0.0.md](MIGRATING_TO_V-3.0.0.md)
 
 Requirements
