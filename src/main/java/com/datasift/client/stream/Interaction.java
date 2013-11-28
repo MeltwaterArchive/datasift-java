@@ -3,7 +3,7 @@ package com.datasift.client.stream;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * @author Courtney Robinson <courtney@crlog.info>
+ * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Interaction {
     private final JsonNode data;
