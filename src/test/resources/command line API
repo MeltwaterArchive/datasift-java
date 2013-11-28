@@ -1,0 +1,19 @@
+# DataSift clients, command line API specification
+
+-a
+--auth username:api_key
+-e
+--endpoint [core|push|historics|preview|sources]
+-c
+--command [endpoint specific subcommand e.g. compile for -e core]
+-p
+--param [command specific param e.g. id 12345]
+
+# Response
+The client is to print a JSON object with the response in the format
+
+{
+ "status_code" : 200,
+ "headers" : {"X-rate-limit": 10000},
+ "body" : {}
+}
