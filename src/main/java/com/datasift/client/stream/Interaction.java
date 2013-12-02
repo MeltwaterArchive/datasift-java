@@ -32,7 +32,7 @@ public class Interaction {
      * </pre>
      *
      * @param str a JSON dot notation string
-     * @return null if a value doesn't exist for tht key or the value
+     * @return null if a value doesn't exist for that key or the value
      */
     public JsonNode get(String str) {
         String[] parts = str.split("\\.");
