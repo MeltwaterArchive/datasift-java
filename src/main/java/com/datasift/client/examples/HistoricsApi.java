@@ -32,7 +32,7 @@ public class HistoricsApi {
         //prepare our query
         PreparedHistoricsQuery query = datasift.historics().prepare(stream.hash(), fiveHrsAgo, fourHrsAgo, name).sync();
         //have to create a push subscription to the newly create historics before starting
-        datasift.push().create(s3, stream, "Subscription name").sync();
+        datasift.push().create(s3, FutureData.wrap(query), "Subscription name").sync();
         DataSiftResult historics = datasift.historics().start(query).sync();
 
         //stop a query
