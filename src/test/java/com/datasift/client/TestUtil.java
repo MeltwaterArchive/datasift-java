@@ -136,7 +136,7 @@ public class TestUtil {
 
     public Stream createStream() throws InterruptedException {
         //create a stream to use
-        return datasift.core().compile(csdlValid).sync();
+        return datasift.compile(csdlValid).sync();
     }
 
 }

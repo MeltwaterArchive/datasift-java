@@ -30,7 +30,7 @@ public class ManagedSourcesApi {
         ManagedSource managedSource = datasift.managedSource().create("My managed source", source).sync();
         if (managedSource.isSuccessful()) {
             //and now we can do filtering on this page e.g.
-            Stream stream = datasift.core()
+            Stream stream = datasift
                     .compile(String.format("interaction.content contains \"news\" AND source.id == \"%s\"",
                             managedSource.getId())).sync();
 

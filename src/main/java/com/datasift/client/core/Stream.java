@@ -17,7 +17,7 @@ public class Stream extends DataSiftResult {
     @JsonProperty
     protected String hash;
 
-    protected Stream() {
+    public Stream() {
     }
 
     /**

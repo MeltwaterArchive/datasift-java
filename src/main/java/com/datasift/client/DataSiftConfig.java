@@ -10,9 +10,6 @@ import java.net.URISyntaxException;
 public class DataSiftConfig {
     private static final String illConfigured = "(%s) is null, this is an ill-configured object and all " +
             "API requests using it will fail";
-    //TODO, add proxy support for version 3.1.0
-    protected String proxyHost;
-    protected int proxyPort;
     protected String username, apiKey;
     protected boolean sslEnabled = true;
     protected String host = "api.datasift.com";
@@ -61,11 +58,38 @@ public class DataSiftConfig {
     }
 
     /**
+     * Sets a host and port for a proxy that all requests should be sent to
+     *
+     * @param host proxy host
+     * @param port proxy port
+     * @return this
+     */
+    public DataSiftConfig proxy(String host, int port) {
+        http.proxy(host, port);
+        return this;
+    }
+
+    /**
+     * @param username the username the proxy requires
+     * @param password the password the proxy requires
+     * @return this
+     */
+    public DataSiftConfig proxy(String host, int port, String username, String password) {
+        http.proxy(host, port, username, password);
+        return this;
+    }
+
+    /**
      * @return The HTTP protocol prefix to use.
      *         If SSL is enabled this will be "https://" if not it'll be "http://"
      */
     public String protocol() {
         return sslEnabled ? "https://" : "http://";
+    }
+
+    public DataSiftConfig host(String host) {
+        this.host = host;
+        return this;
     }
 
     /**

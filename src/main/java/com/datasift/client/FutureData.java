@@ -75,17 +75,20 @@ public class FutureData<T> {
     /**
      * Forces the client to wait until a response is received before returning
      *
-     * @return a result instance
-     * @throws InterruptedException if an interrupt is thrown it is possible that a response isn't available yet
-     *                              the user must check to ensure null isn't returned
+     * @return a result instance - if an interrupt exception is thrown it is possible that a response isn't available yet
+     *         the user must check to ensure null isn't returned
      */
-    public T sync() throws InterruptedException {
+    public T sync() {
         //if data is present there's no need to block
         if (data != null) {
             return data;
         }
         synchronized (this) {
-            wait();
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                return data;
+            }
         }
         return data;
     }

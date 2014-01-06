@@ -25,11 +25,6 @@ public class DataSiftClientTest extends TestUtil {
     }
 
     @Test
-    public void testCore() throws Exception {
-        assertNotNull("datasift.core() should never be null", datasift.core());
-    }
-
-    @Test
     public void testPreview() throws Exception {
         assertNotNull("datasift.preview() should never be null", datasift.preview());
     }

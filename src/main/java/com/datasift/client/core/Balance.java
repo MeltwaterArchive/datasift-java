@@ -12,7 +12,7 @@ public class Balance extends DataSiftResult {
     @JsonProperty
     protected BalanceData balance;
 
-    protected Balance() {
+    public Balance() {
     }
 
     /**

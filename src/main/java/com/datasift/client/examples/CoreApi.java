@@ -1,15 +1,7 @@
 package com.datasift.client.examples;
 
-import com.datasift.client.DataSiftClient;
-import com.datasift.client.DataSiftConfig;
-import com.datasift.client.DataSiftResult;
-import com.datasift.client.FutureData;
-import com.datasift.client.FutureResponse;
-import com.datasift.client.core.Balance;
-import com.datasift.client.core.Dpu;
-import com.datasift.client.core.Stream;
-import com.datasift.client.core.Usage;
-import com.datasift.client.core.Validation;
+import com.datasift.client.*;
+import com.datasift.client.core.*;
 
 public class CoreApi {
     private CoreApi() {
@@ -25,7 +17,7 @@ public class CoreApi {
         //both sync and async processing are supported by calling "sync" on any FutureDate object
 
         //all response objects extend DataSiftResult which present these utility methods
-        DataSiftResult result = datasift.core().compile(csdl).sync();
+        DataSiftResult result = datasift.compile(csdl).sync();
         //is successful returns true if a response hasn't explicitly been marked as failed,
         //there is a valid response, no exceptions are set and the response status is between 200 - 399
         if (result.isSuccessful()) {
@@ -46,14 +38,14 @@ public class CoreApi {
         //what's left of your rate limit quota
         result.rateLimitRemaining();
 
-        Usage usage = datasift.core().usage().sync();
+        Usage usage = datasift.usage().sync();
 
         Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");
-        Dpu dpu = datasift.core().dpu(stream).sync();
+        Dpu dpu = datasift.dpu(stream).sync();
 
-        Balance balance = datasift.core().balance().sync();
+        Balance balance = datasift.balance().sync();
         //synchronously validate a CSDL
-        Validation validation = datasift.core().validate(csdl).sync();
+        Validation validation = datasift.validate(csdl).sync();
         if (!validation.isSuccessful()) {
             //if true an exception may have caused the request to fail, inspect the cause if available
             if (validation.failureCause() != null) { //may not be an exception
@@ -64,20 +56,20 @@ public class CoreApi {
         System.out.println(validation);
         if (validation.isSuccessful()) {
             //we now know it's valid so asynchronously compile the CSDL and obtain a stream
-            FutureData<Stream> compiledStream = datasift.core().compile(csdl);
+            FutureData<Stream> compiledStream = datasift.compile(csdl);
             compiledStream.onData(new FutureResponse<Stream>() {
                 public void apply(Stream data) {
                     System.out.println(data);
                 }
             });
-            FutureData<Dpu> dpus = datasift.core().dpu(compiledStream);
+            FutureData<Dpu> dpus = datasift.dpu(compiledStream);
             dpus.onData(new FutureResponse<Dpu>() {
                 public void apply(Dpu data) {
                     System.out.println(data);
                 }
             });
         }
-        System.out.println(datasift.core().balance().sync());
-        System.out.println(datasift.core().usage().sync());
+        System.out.println(datasift.balance().sync());
+        System.out.println(datasift.usage().sync());
     }
 }

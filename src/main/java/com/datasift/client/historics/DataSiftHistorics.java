@@ -1,10 +1,6 @@
 package com.datasift.client.historics;
 
-import com.datasift.client.DataSiftApiClient;
-import com.datasift.client.DataSiftConfig;
-import com.datasift.client.DataSiftResult;
-import com.datasift.client.FutureData;
-import com.datasift.client.FutureResponse;
+import com.datasift.client.*;
 import io.higgs.http.client.POST;
 import io.higgs.http.client.future.PageReader;
 import org.joda.time.DateTime;
@@ -40,7 +36,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         if (query == null) {
             throw new IllegalArgumentException("A valid PreparedHistoricsQuery is required");
         }
-        final FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        final FutureData<DataSiftResult> future = new FutureData<>();
         DataSiftResult h = new DataSiftResult();
 
         FutureResponse<PreparedHistoricsQuery> r = new FutureResponse<PreparedHistoricsQuery>() {
@@ -90,13 +86,13 @@ public class DataSiftHistorics extends DataSiftApiClient {
      *
      * @param id     the historics ID
      * @param reason an optional ID
-     * @return
+     * @return the results of calling the stop API
      */
     public FutureData<DataSiftResult> stop(String id, String reason) {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("A valid ID is required to stop a Historics query");
         }
-        FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult())))
                 .form("id", id);
@@ -124,7 +120,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("A valid ID is required to delete a Historics query");
         }
-        FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult())))
                 .form("id", id);
@@ -143,17 +139,13 @@ public class DataSiftHistorics extends DataSiftApiClient {
         if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
             throw new IllegalArgumentException("A valid ID AND name is required to update a Historics query");
         }
-        FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(UPDATE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult())))
                 .form("id", id)
                 .form("name", name);
         applyConfig(request).execute();
         return future;
-    }
-
-    public FutureData<HistoricsStatus> status(DateTime start, DateTime end) {
-        return status(start, end, null);
     }
 
     /**
@@ -165,7 +157,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
      * @return a report of the current status/availability of data for the given time period
      */
     public FutureData<HistoricsStatus> status(DateTime start, DateTime end, String... sources) {
-        FutureData<HistoricsStatus> future = new FutureData<HistoricsStatus>();
+        FutureData<HistoricsStatus> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STATUS));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsStatus())))
                 .form("start", MILLISECONDS.toSeconds(start.getMillis()))
@@ -196,7 +188,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("ID is required get a historics query");
         }
-        FutureData<HistoricsQuery> future = new FutureData<HistoricsQuery>();
+        FutureData<HistoricsQuery> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsQuery())))
                 .form("id", id)
@@ -226,7 +218,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
      * @return an iterable list of {@link HistoricsQuery}s
      */
     public FutureData<HistoricsQueryList> list(int max, int page, boolean withEstimate) {
-        FutureData<HistoricsQueryList> future = new FutureData<HistoricsQueryList>();
+        FutureData<HistoricsQueryList> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsQueryList())))
                 .form("with_estimate", withEstimate ? 1 : 0);
@@ -278,7 +270,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
 
     public FutureData<PreparedHistoricsQuery> prepare(String hash, long start, long end, String name, int sample,
                                                       String... sources) {
-        FutureData<PreparedHistoricsQuery> future = new FutureData<PreparedHistoricsQuery>();
+        FutureData<PreparedHistoricsQuery> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(PREPARE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PreparedHistoricsQuery())))
                 .form("hash", hash)
@@ -289,7 +281,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
             request.form("sample", sample);
         }
         if (sources == null || sources.length == 0) {
-            sources = new String[]{ "twitter" };
+            sources = new String[]{"twitter"};
         }
         StringBuilder b = new StringBuilder();
         for (String source : sources) {
