@@ -7,9 +7,18 @@ import java.util.Map;
 /**
  */
 public class Parser {
+    protected Parser() {
+    }
+
     public static CliArguments parse(String[] args, List<CliSwitch> switches) {
         CliArguments res = new CliArguments(switches);
         String currentSwitch = null, name = null, value = null;
+
+        if (args.length == 0) {
+            System.out.println("There are no arguments passed.");
+            return null;
+        }
+
         for (String arg : args) {
             if (arg.indexOf('-') == 0) {
                 //if current switch isn't null stop accumulating params and reset for the next switch
@@ -32,15 +41,59 @@ public class Parser {
         }
         //last param wouldn't have been added
         res.put(currentSwitch, name, value);
+        for (CliSwitch s : switches) {
+            if (s.isRequired()) {
+                if (res.get(s.shortForm) == null) {
+                    System.out.println(s.longForm +" - "+
+                            (s.message == null || s.message.isEmpty() ? " is a required parameter" : s.message));
+                    System.exit(0);
+                }
+            }
+
+            if (s.hasDefault() && res.get(s.shortForm) == null) {
+                res.put(s.shortForm, s.defaultName, s.defaultValue);
+            }
+        }
         return res;
     }
 
     public static class CliSwitch {
+        private final String message;
+        private final boolean required;
         protected String shortForm, longForm;
+        private String defaultValue;
+        private String defaultName;
 
         public CliSwitch(String shortForm, String longForm) {
+            this(shortForm, longForm, false, "");
+        }
+
+        public CliSwitch(String shortForm, String longForm, boolean required, String message) {
             this.shortForm = shortForm;
             this.longForm = longForm;
+            this.required = required;
+            this.message = message;
+        }
+
+        public CliSwitch(String shortForm, String longForm, boolean required) {
+            this(shortForm, longForm, required, "");
+        }
+
+        public boolean isRequired() {
+            return required;
+        }
+
+        public void setDefault(String defaultName) {
+            setDefault(defaultName, null);
+        }
+
+        public void setDefault(String defaultName, String defaultVal) {
+            this.defaultName = defaultName;
+            this.defaultValue = defaultVal;
+        }
+
+        public boolean hasDefault() {
+            return this.defaultValue != null || this.defaultName != null;
         }
     }
 
@@ -55,7 +108,8 @@ public class Parser {
         public void put(String currentSwitch, String name, String value) {
             if (currentSwitch.indexOf("--") == 0) {
                 currentSwitch = currentSwitch.substring(2);
-            } else {
+            }
+            if (currentSwitch.indexOf("-") == 0) {
                 currentSwitch = currentSwitch.substring(1);
             }
             Object val = res.get(currentSwitch);
@@ -86,7 +140,7 @@ public class Parser {
          *
          * @param arg the param to get
          * @return a set of options or null if no params were passed for the arg
-         *         or null if the argument doesn't have a mapping
+         * or null if the argument doesn't have a mapping
          */
         public HashMap<String, String> map(String arg) {
             try {

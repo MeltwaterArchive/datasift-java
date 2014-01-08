@@ -1,7 +1,15 @@
 package com.datasift.client.examples;
 
-import com.datasift.client.*;
-import com.datasift.client.core.*;
+import com.datasift.client.DataSiftClient;
+import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftResult;
+import com.datasift.client.FutureData;
+import com.datasift.client.FutureResponse;
+import com.datasift.client.core.Balance;
+import com.datasift.client.core.Dpu;
+import com.datasift.client.core.Stream;
+import com.datasift.client.core.Usage;
+import com.datasift.client.core.Validation;
 
 public class CoreApi {
     private CoreApi() {
@@ -10,7 +18,7 @@ public class CoreApi {
     public static void main(String... args) throws InterruptedException {
         DataSiftConfig config = new DataSiftConfig("username", "api-key");
         //or
-        config = new DataSiftConfig().auth("zcourts", "44067e0ff342b76b52b36a63eea8e21a");
+        config = new DataSiftConfig().auth("aszachewicz", "7aba32dc48b2f42f3867cef33b6f7c61");
 
         final DataSiftClient datasift = new DataSiftClient(config);
         String csdl = "interaction.content contains \"some string\"";
@@ -20,7 +28,7 @@ public class CoreApi {
         DataSiftResult result = datasift.compile(csdl).sync();
         //is successful returns true if a response hasn't explicitly been marked as failed,
         //there is a valid response, no exceptions are set and the response status is between 200 - 399
-        if (result.isSuccessful()) {
+        if (!result.isSuccessful()) {
             //if true an exception may have caused the request to fail, inspect the cause if available
             if (result.failureCause() != null) { //may not be an exception
                 result.failureCause().printStackTrace();

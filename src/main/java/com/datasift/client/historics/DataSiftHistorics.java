@@ -1,6 +1,10 @@
 package com.datasift.client.historics;
 
-import com.datasift.client.*;
+import com.datasift.client.DataSiftApiClient;
+import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftResult;
+import com.datasift.client.FutureData;
+import com.datasift.client.FutureResponse;
 import io.higgs.http.client.POST;
 import io.higgs.http.client.future.PageReader;
 import org.joda.time.DateTime;

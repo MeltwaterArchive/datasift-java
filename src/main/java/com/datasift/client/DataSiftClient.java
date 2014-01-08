@@ -1,6 +1,10 @@
 package com.datasift.client;
 
-import com.datasift.client.core.*;
+import com.datasift.client.core.Balance;
+import com.datasift.client.core.Dpu;
+import com.datasift.client.core.Stream;
+import com.datasift.client.core.Usage;
+import com.datasift.client.core.Validation;
 import com.datasift.client.historics.DataSiftHistorics;
 import com.datasift.client.managedsource.DataSiftManagedSource;
 import com.datasift.client.preview.DataSiftPreview;
