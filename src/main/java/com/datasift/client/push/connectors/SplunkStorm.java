@@ -65,6 +65,14 @@ public class SplunkStorm extends BaseConnector<SplunkStorm> {
         /**
          * Each interaction is sent separately and has an extra timestamp property and no meta data.
          */
-        JSON_NEW_LINE_TIMESTAMP
+        JSON_NEW_LINE_TIMESTAMP;
+
+        public static SplunkStormFormat fromStr(String str) {
+            try {
+                return SplunkStormFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return SplunkStormFormat.valueOf(str);
+            }
+        }
     }
 }

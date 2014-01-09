@@ -69,6 +69,14 @@ public class SplunkStormRest extends BaseConnector<SplunkStormRest> {
         /**
          * Each interaction is sent separately and has an extra timestamp property and no meta data.
          */
-        JSON_NEW_LINE_TIMESTAMP
+        JSON_NEW_LINE_TIMESTAMP;
+
+        public static SplunkStormRestFormat fromStr(String str) {
+            try {
+                return SplunkStormRestFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return SplunkStormRestFormat.valueOf(str);
+            }
+        }
     }
 }

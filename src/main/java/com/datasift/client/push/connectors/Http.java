@@ -221,7 +221,15 @@ public class Http extends BaseConnector<Http> {
     public static enum HttpFormat {
         JSON_META,
         JSON_ARRAY,
-        JSON_NEW_LINE
+        JSON_NEW_LINE;
+
+        public static HttpFormat fromStr(String str) {
+            try {
+                return HttpFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return HttpFormat.valueOf(str);
+            }
+        }
     }
 
     public static class AuthType {

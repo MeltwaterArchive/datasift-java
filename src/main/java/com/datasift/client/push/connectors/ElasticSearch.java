@@ -96,6 +96,14 @@ public class ElasticSearch extends BaseConnector<ElasticSearch> {
         /**
          * The payload is a full interaction with augmentations.
          */
-        FULL_INTERACTION_META
+        FULL_INTERACTION_META;
+
+        public static ElasticSearchFormat fromStr(String str) {
+            try {
+                return ElasticSearchFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return ElasticSearchFormat.valueOf(str);
+            }
+        }
     }
 }

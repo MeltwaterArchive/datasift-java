@@ -95,6 +95,14 @@ public class Redis extends BaseConnector<Redis> {
         /**
          * The payload is a full interaction with augmentations.
          */
-        JSON_INTERACTION_META
+        JSON_INTERACTION_META;
+
+        public static RedisFormat fromStr(String str) {
+            try {
+                return RedisFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return RedisFormat.valueOf(str);
+            }
+        }
     }
 }

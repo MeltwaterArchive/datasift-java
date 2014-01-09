@@ -43,8 +43,8 @@ public class Parser {
         res.put(currentSwitch, name, value);
         for (CliSwitch s : switches) {
             if (s.isRequired()) {
-                if (res.get(s.shortForm) == null) {
-                    System.out.println(s.longForm +" - "+
+                if (res.get(s.shortForm) == null && res.map(s.shortForm) == null) {
+                    System.out.println(s.longForm + " - " +
                             (s.message == null || s.message.isEmpty() ? " is a required parameter" : s.message));
                     System.exit(0);
                 }
@@ -140,7 +140,7 @@ public class Parser {
          *
          * @param arg the param to get
          * @return a set of options or null if no params were passed for the arg
-         * or null if the argument doesn't have a mapping
+         *         or null if the argument doesn't have a mapping
          */
         public HashMap<String, String> map(String arg) {
             try {

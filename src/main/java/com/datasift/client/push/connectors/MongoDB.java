@@ -123,6 +123,14 @@ public class MongoDB extends BaseConnector<MongoDB> {
         /**
          * Each payload is a full interaction with augmentations and a MongoDB-specific date representation.
          */
-        FULL_INTERACTION_META_DATE
+        FULL_INTERACTION_META_DATE;
+
+        public static MongoDBFormat fromStr(String str) {
+            try {
+                return MongoDBFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return MongoDBFormat.valueOf(str);
+            }
+        }
     }
 }

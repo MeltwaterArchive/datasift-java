@@ -186,6 +186,14 @@ public class SFTP extends BaseConnector<SFTP> {
     public static enum SFTPFormat {
         JSON_META,
         JSON_ARRAY,
-        JSON_NEW_LINE
+        JSON_NEW_LINE;
+
+        public static SFTPFormat fromStr(String str) {
+            try {
+                return SFTPFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return SFTPFormat.valueOf(str);
+            }
+        }
     }
 }

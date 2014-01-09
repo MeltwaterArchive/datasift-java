@@ -137,6 +137,14 @@ public class CouchDB extends BaseConnector<CouchDB> {
         /**
          * The payload is a full interaction with augmentations.
          */
-        FULL_INTERACTION_META
+        FULL_INTERACTION_META;
+
+        public static CouchDBFormat fromStr(String str) {
+            try {
+                return CouchDBFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return CouchDBFormat.valueOf(str);
+            }
+        }
     }
 }

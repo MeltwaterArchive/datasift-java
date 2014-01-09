@@ -185,6 +185,14 @@ public class FTP extends BaseConnector<FTP> {
     public static enum FTPFormat {
         JSON_META,
         JSON_ARRAY,
-        JSON_NEW_LINE
+        JSON_NEW_LINE;
+
+        public static FTPFormat fromStr(String str) {
+            try {
+                return FTPFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return FTPFormat.valueOf(str);
+            }
+        }
     }
 }

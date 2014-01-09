@@ -148,6 +148,14 @@ public class S3 extends BaseConnector<S3> {
         /**
          * The payload is NOT a full JSON document. Each interaction is flattened and separated by a line break.
          */
-        JSON_NEW_LINE
+        JSON_NEW_LINE;
+
+        public static S3OutputFormat fromStr(String str) {
+            try {
+                return S3OutputFormat.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return S3OutputFormat.valueOf(str);
+            }
+        }
     }
 }

@@ -31,7 +31,19 @@ public class Usage extends DataSiftResult {
         return streams;
     }
 
-    public static enum Period { DAY, HOUR, CURRENT }
+    public static enum Period {
+        DAY,
+        HOUR,
+        CURRENT;
+
+        public static Period fromStr(String str) {
+            try {
+                return Period.valueOf(str.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                return Period.valueOf(str);
+            }
+        }
+    }
 
     public static class UsageStream {
         @JsonProperty

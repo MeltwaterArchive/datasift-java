@@ -53,29 +53,30 @@ public class Interface {
         switches.add(new CliSwitch("p", "param"));
         CliArguments parsedArgs = Parser.parse(args, switches);
 
-        String[] auth = parsedArgs.get("a").split(":");
-        if (auth.length != 2) {
-            System.out.println("Auth must be in the form username:api_key");
+        Map<String, String> auth = parsedArgs.map("a");
+        if (auth == null || auth.size() == 0) {
+            System.out.println("Auth must be provided in the form '-a[uth] username api_key'");
             System.exit(0);
         }
 
-        DataSiftConfig config = new DataSiftConfig(auth[0], auth[1]);
+        Map.Entry<String, String> authVals = auth.entrySet().iterator().next();
+        DataSiftConfig config = new DataSiftConfig(authVals.getKey(), authVals.getValue());
         DataSiftClient dataSift = new DataSiftClient(config);
-        switch (parsedArgs.get("c")) {
+        switch (parsedArgs.get("e")) {
             case "core":
-                executeCore(dataSift, parsedArgs.get("e"), parsedArgs.map("p"));
+                executeCore(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                 break;
             case "push":
-                executePush(dataSift, parsedArgs.get("e"), parsedArgs.map("p"));
+                executePush(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                 break;
             case "historics":
-                executeHistorics(dataSift, parsedArgs.get("e"), parsedArgs.map("p"));
+                executeHistorics(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                 break;
             case "preview":
-                executePreview(dataSift, parsedArgs.get("e"), parsedArgs.map("p"));
+                executePreview(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                 break;
             case "sources":
-                executeSources(dataSift, parsedArgs.get("e"), parsedArgs.map("p"));
+                executeSources(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                 break;
 
         }
@@ -96,7 +97,7 @@ public class Interface {
                 if (period == null) {
                     printResponse(dataSift.usage().sync());
                 } else {
-                    printResponse(dataSift.usage(Usage.Period.valueOf(period)).sync());
+                    printResponse(dataSift.usage(Usage.Period.fromStr(period)).sync());
                 }
                 break;
             case "dpu":
@@ -188,7 +189,7 @@ public class Interface {
                 CouchDB couchDB = PushConnectors.couchDB();
                 couchDB.auth(params.get("auth.username"), params.get("auth.password"));
                 couchDB.dbName(params.get("db_name"));
-                couchDB.format(CouchDB.CouchDBFormat.valueOf(params.get("format")));
+                couchDB.format(CouchDB.CouchDBFormat.fromStr(params.get("format")));
                 try {
                     URI uri = new URI(params.get("url"));
                     couchDB.url(uri.getHost(), uri.getPort());
@@ -212,7 +213,7 @@ public class Interface {
 
             case "elasticsearch":
                 ElasticSearch elasticSearch = PushConnectors.elasticSearch();
-                elasticSearch.format(ElasticSearch.ElasticSearchFormat.valueOf(params.get("format")));
+                elasticSearch.format(ElasticSearch.ElasticSearchFormat.fromStr(params.get("format")));
                 elasticSearch.index(params.get("index"));
                 elasticSearch.type(params.get("type"));
                 try {
@@ -241,7 +242,7 @@ public class Interface {
                 }
                 ftp.directory(params.get("directory"));
                 ftp.filePrefix(params.get("file_prefix"));
-                ftp.format(FTP.FTPFormat.valueOf(params.get("format")));
+                ftp.format(FTP.FTPFormat.fromStr(params.get("format")));
                 ftp.markInProgress(Boolean.parseBoolean(params.get("mark_in_progress")));
                 try {
                     ftp.maxSize(Integer.parseInt(params.get("max_size")));
@@ -261,14 +262,14 @@ public class Interface {
                 }
                 http.auth(params.get("auth.username"), params.get("auth.password"));
                 if (params.get("auth.username") != null) {
-                http.authType(new Http.AuthType(params.get("value")));
+                    http.authType(new Http.AuthType(params.get("value")));
                 }
                 try {
                     http.deliveryFrequency(Integer.parseInt(params.get("delivery_frequency")));
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
                 }
-                http.format(Http.HttpFormat.valueOf("format"));
+                http.format(Http.HttpFormat.fromStr("format"));
                 http.method(HttpMethod.valueOf("method"));
                 http.url(params.get("url"));
                 http.useGzip(Boolean.parseBoolean(params.get("use_gzip")));
@@ -282,7 +283,7 @@ public class Interface {
                 mongoDB.auth(params.get("auth.username"), params.get("auth.password"));
                 mongoDB.collectionName(params.get("collection_name"));
                 mongoDB.dbName(params.get("db_name"));
-                mongoDB.format(MongoDB.MongoDBFormat.valueOf("format"));
+                mongoDB.format(MongoDB.MongoDBFormat.fromStr("format"));
                 try {
                     URI uri = new URI(params.get("url"));
                     mongoDB.url(uri.getHost(), uri.getPort());
@@ -302,7 +303,7 @@ public class Interface {
                 }
                 redis.host(params.get("host"));
                 redis.database(params.get("database"));
-                redis.format(Redis.RedisFormat.valueOf("format"));
+                redis.format(Redis.RedisFormat.fromStr("format"));
                 redis.list(params.get("list"));
                 redis.password(params.get("auth.password"));
 
@@ -322,7 +323,7 @@ public class Interface {
                 }
                 s3.directory(params.get("directory"));
                 s3.filePrefix(params.get("file_prefix"));
-                s3.format(S3.S3OutputFormat.valueOf("format"));
+                s3.format(S3.S3OutputFormat.fromStr("format"));
                 try {
                     s3.maxSize(Integer.parseInt(params.get("max_size")));
                 } catch (NumberFormatException nfe) {
@@ -348,7 +349,7 @@ public class Interface {
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
                 }
-                sftp.format(SFTP.SFTPFormat.valueOf("format"));
+                sftp.format(SFTP.SFTPFormat.fromStr("format"));
                 sftp.markInProgress(Boolean.parseBoolean(params.get("mark_in_progress")));
                 try {
                     URI uri = new URI(params.get("url"));
@@ -364,7 +365,7 @@ public class Interface {
                 SplunkStormRest splunkStormRest = PushConnectors.splunkStormRest();
                 splunkStormRest.accessToken(params.get("auth.access_token"));
                 splunkStormRest.apiHostname(params.get("api_hostname"));
-                splunkStormRest.format(SplunkStormRest.SplunkStormRestFormat.valueOf("format"));
+                splunkStormRest.format(SplunkStormRest.SplunkStormRestFormat.fromStr("format"));
                 splunkStormRest.projectId(params.get("project_id"));
 
                 connector = splunkStormRest;
@@ -378,7 +379,7 @@ public class Interface {
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
-                splunkStorm.format(SplunkStorm.SplunkStormFormat.valueOf(params.get("format")));
+                splunkStorm.format(SplunkStorm.SplunkStormFormat.fromStr(params.get("format")));
 
                 connector = splunkStorm;
                 break;
