@@ -20,9 +20,9 @@ public abstract class BaseSource<T extends DataSource<T>> implements DataSource<
     protected final ManagedDataSourceType<T> type;
     protected DataSiftConfig config;
     protected Logger log = LoggerFactory.getLogger(getClass());
-    protected Map<String, Object> parameters = new NonBlockingHashMap<String, Object>();
-    protected Set<ResourceParams> resources = new NonBlockingHashSet<ResourceParams>();
-    protected Set<AuthParams> auth = new NonBlockingHashSet<AuthParams>();
+    protected Map<String, Object> parameters = new NonBlockingHashMap<>();
+    protected Set<ResourceParams> resources = new NonBlockingHashSet<>();
+    protected Set<AuthParams> auth = new NonBlockingHashSet<>();
 
     public BaseSource(DataSiftConfig config, ManagedDataSourceType<T> type) {
         if (type == null) {
