@@ -58,8 +58,12 @@ public class OutputType<T extends PushConnector> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         OutputType that = (OutputType) o;
         return !(value != null ? !value.equals(that.value) : that.value != null);
     }

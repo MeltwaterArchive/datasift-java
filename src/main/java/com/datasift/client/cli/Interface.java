@@ -33,10 +33,10 @@ public class Interface {
     public static void main(String[] args) {
         List<CliSwitch> switches = new ArrayList<>();
         switches.add(new CliSwitch("a", "auth", true, "Auth is required in the form username:api_key"));
-        switches.add(new CliSwitch("e", "endpoint", true));
-        CliSwitch command = new CliSwitch("c", "command");
-        command.setDefault("core");
-        switches.add(command);
+        switches.add(new CliSwitch("c", "command", true));
+        CliSwitch endpoint = new CliSwitch("e", "endpoint");
+        endpoint.setDefault("core");
+        switches.add(endpoint);
         switches.add(new CliSwitch("p", "param"));
         CliArguments parsedArgs = Parser.parse(args, switches);
 
@@ -65,7 +65,6 @@ public class Interface {
             case "sources":
                 executeSources(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                 break;
-
         }
 
         HttpRequestBuilder.shutdown();
@@ -129,7 +128,8 @@ public class Interface {
                 printResponse(dataSift.push().validate(connector).sync());
                 break;
             case "create":
-                printResponse(dataSift.push().create(connector, Stream.fromString(params.get("hash")), params.get("name")).sync());
+                printResponse(dataSift.push().create(connector, Stream.fromString(params.get("hash")),
+                        params.get("name")).sync());
                 break;
             case "pause":
                 printResponse(dataSift.push().pause(params.get("id")).sync());
@@ -158,7 +158,8 @@ public class Interface {
                 break;
             case "pull":
                 try {
-                    printResponse(dataSift.push().pull(params.get("id"), Integer.parseInt(params.get("size")), params.get("page")).sync());
+                    printResponse(dataSift.push().pull(params.get("id"), Integer.parseInt(params.get("size")),
+                            params.get("page")).sync());
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
                 }
@@ -169,7 +170,8 @@ public class Interface {
     private static void executeHistorics(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
         switch (endpoint) {
             case "prepare":
-                printResponse(dataSift.historics().prepare(params.get("hash"), DateTime.parse(params.get("start")), DateTime.parse(params.get("end")), params.get("name")).sync());
+                printResponse(dataSift.historics().prepare(params.get("hash"), DateTime.parse(params.get("start")),
+                        DateTime.parse(params.get("end")), params.get("name")).sync());
                 break;
             case "start":
                 printResponse(dataSift.historics().start(params.get("id")).sync());
@@ -178,7 +180,8 @@ public class Interface {
                 printResponse(dataSift.historics().stop(params.get("id"), params.get("reason")).sync());
                 break;
             case "status":
-                printResponse(dataSift.historics().status(new DateTime(Long.parseLong(params.get("start"))), new DateTime(Long.parseLong(params.get("end")))).sync());
+                printResponse(dataSift.historics().status(new DateTime(Long.parseLong(params.get("start"))),
+                        new DateTime(Long.parseLong(params.get("end")))).sync());
                 break;
             case "update":
                 printResponse(dataSift.historics().update(params.get("id"), params.get("name")).sync());
@@ -195,7 +198,8 @@ public class Interface {
     private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
         switch (endpoint) {
             case "create":
-                printResponse(dataSift.preview().create(new DateTime(Long.parseLong(params.get("start"))), Stream.fromString(params.get("hash")), params.get("params").split(",")).sync());
+                printResponse(dataSift.preview().create(new DateTime(Long.parseLong(params.get("start"))),
+                        Stream.fromString(params.get("hash")), params.get("params").split(",")).sync());
                 break;
             case "get":
                 printResponse(dataSift.preview().get(params.get("id")).sync());
@@ -206,9 +210,9 @@ public class Interface {
     private static void executeSources(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
         switch (endpoint) {
             case "create":
-                DataSource
+                //DataSource
                 //new DateTime(Long.parseLong(params.get("start")))
-                printResponse(dataSift.managedSource().create(params.get("name"),  ).sync());
+                //printResponse(dataSift.managedSource().create(params.get("name"),  ).sync());
                 break;
             case "update":
                 //printResponse(dataSift.managedSource().update(params.get("name"), ).sync());
@@ -228,7 +232,6 @@ public class Interface {
             case "start":
                 printResponse(dataSift.managedSource().start(params.get("id")).sync());
                 break;
-
         }
     }
 }
