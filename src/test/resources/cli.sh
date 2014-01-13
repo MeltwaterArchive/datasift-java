@@ -40,7 +40,7 @@ datasift -e sources -c get -p source_type instagram -p page 2
 datasift -e sources -c get -p source_id $src
 datasift -e sources -c log -p source_id $src -p page 2 -p per_page 1
 datasift -e sources -c delete -p source_id $src
-
+c
 # Historics Preview (dummy values, all of these cause errors)
 datasift -e preview -c create -p stream 42 -p start 124 -p parameters '["target","analysis"]' -p sources '["twitter"]' -p end 1325549800
 datasift -e preview -c get -p preview_id 42

@@ -16,10 +16,7 @@ import io.higgs.http.client.HttpRequestBuilder;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.datasift.client.cli.Parser.CliArguments;
 import static com.datasift.client.cli.Parser.CliSwitch;
@@ -70,12 +67,27 @@ public class Interface {
         HttpRequestBuilder.shutdown();
     }
 
-    private static void executeCore(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+    private static void require(String[] args, Map<String, String> params) {
+        List<String> missing = new ArrayList<>();
+        for (String arg : args) {
+            if (!params.containsKey(arg)) {
+                missing.add(arg);
+            }
+        }
+        if (missing.size() > 0) {
+            System.out.println("The following arguments are required : " + Arrays.toString(missing.toArray()));
+            System.exit(0);
+        }
+    }
+
+    private static void executeCore(DataSiftClient dataSift, String endpoint, Map<String, String> params) {
         switch (endpoint) {
             case "validate":
+                require(new String[]{"csdl"}, params);
                 printResponse(dataSift.validate(params.get("csdl")).sync());
                 break;
             case "compile":
+                require(new String[]{"csdl"}, params);
                 printResponse(dataSift.compile(params.get("csdl")).sync());
                 break;
             case "usage":
@@ -87,6 +99,7 @@ public class Interface {
                 }
                 break;
             case "dpu":
+                require(new String[]{"hash"}, params);
                 printResponse(dataSift.dpu(Stream.fromString(params.get("hash"))).sync());
                 break;
             case "balance":
