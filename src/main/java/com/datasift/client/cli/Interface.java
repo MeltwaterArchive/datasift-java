@@ -16,7 +16,11 @@ import io.higgs.http.client.HttpRequestBuilder;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.datasift.client.cli.Parser.CliArguments;
 import static com.datasift.client.cli.Parser.CliSwitch;

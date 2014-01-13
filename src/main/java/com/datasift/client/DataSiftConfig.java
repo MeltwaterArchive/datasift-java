@@ -24,6 +24,7 @@ public class DataSiftConfig {
     protected HttpRequestBuilder http = HttpRequestBuilder.instance();
     private String versionPrefix = "v1.1";
     private String urlEncodingFormat = "ISO-8859-1";
+    private int port = 80;
 
     public DataSiftConfig() {
         http.userAgent("Mozilla/5.0 (compatible; Java Client/3.0.0; +https://github.com/datasift/datasift-java)");
@@ -81,7 +82,7 @@ public class DataSiftConfig {
 
     /**
      * @return The HTTP protocol prefix to use.
-     *         If SSL is enabled this will be "https://" if not it'll be "http://"
+     * If SSL is enabled this will be "https://" if not it'll be "http://"
      */
     public String protocol() {
         return sslEnabled ? "https://" : "http://";
@@ -103,7 +104,11 @@ public class DataSiftConfig {
      * @return The port on which connections should be made
      */
     public int port() {
-        return sslEnabled ? 443 : 80;
+        return port;
+    }
+
+    public void port(int p) {
+        port = p;
     }
 
     /**
@@ -178,6 +183,7 @@ public class DataSiftConfig {
 
     public void setSslEnabled(boolean sslEnabled) {
         this.sslEnabled = sslEnabled;
+        port = this.sslEnabled ? 443 : 80;
     }
 
     public String authAsHeader() {

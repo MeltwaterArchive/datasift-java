@@ -1,16 +1,17 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
 DU=${1:-$DU}
 DK=${2:-$DK}
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 datasift() {
   java -classpath "./*:./lib/*:./lib/log4j.properties" com.datasift.client.cli.Interface -a $DU $DK "$@"
 }
 
-cp ./log4j.properties ../../../lib
-cd ../../..
+cp $DIR/log4j.properties $DIR/../../../lib
+cd $DIR/../../..
 mvn package -DskipTests
 cd target
 
