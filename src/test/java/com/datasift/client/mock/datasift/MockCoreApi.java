@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @method("/v1.1")
 public class MockCoreApi {
-
+    HashMap<String, String> headers = new HashMap<>();
     @method("compile")
     public String compile() {
         return "";
@@ -24,9 +24,14 @@ public class MockCoreApi {
 
     @method("validate")
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> validate(@valid @FormParam("csdl") String csdl, ValidationResult res) {
+    public Map<String, Object> validate(@valid @FormParam("csdl") String csdl,
+                                        ValidationResult res,
+                                        HttpResponse response) {
         if(!res.isValid()){
             throw new WebApplicationException(HttpResponseStatus.BAD_REQUEST);
+        }
+        for(Map.Entry<String,String> v : headers.entrySet()){
+            response.headers().add(v.getKey(),v.getValue());
         }
         System.out.println("Yeahhhh!");
         Map<String,Object> map = new HashMap<>();
@@ -50,4 +55,7 @@ public class MockCoreApi {
         return "";
     }
 
+    public void setHeaders(HashMap<String, String> headers) {
+        this.headers = headers;
+    }
 }
