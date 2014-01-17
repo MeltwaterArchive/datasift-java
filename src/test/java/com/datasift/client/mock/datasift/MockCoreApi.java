@@ -1,5 +1,7 @@
 package com.datasift.client.mock.datasift;
 
+import com.datasift.client.core.Balance;
+import com.datasift.client.core.Usage;
 import io.higgs.core.method;
 import io.higgs.http.server.HttpResponse;
 import io.higgs.http.server.WebApplicationException;
@@ -17,11 +19,17 @@ import java.util.Objects;
 
 @method("/v1.1")
 public class MockCoreApi {
-    HashMap<String, String> headers = new HashMap<>();
+    Map<String, String> headers = new HashMap<>();
     private float dpu = -1f;
     private DateTime createdAt = DateTime.now();
     private String compileHash;
     private String expectedCsdl;
+    private DateTime start, end;
+    private Usage.UsageStream streams;
+    private double credit = -1f;
+    private String plan = "";
+    private double remaining_dpus = -1f;
+
 
     @method("compile")
     public Map<String, Object> compile(@FormParam("csdl") String csdl, HttpResponse response) {
@@ -37,18 +45,31 @@ public class MockCoreApi {
     }
 
     @method("usage")
-    public String usage() {
-        return "";
+    public Map<String, Object> usage() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("start", start);
+        map.put("end", end);
+        map.put("streams", streams);
+        return map;
     }
 
     @method("dpu")
-    public String dpu() {
-        return "";
+    public Map<String, Object> dpu() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("dpu", dpu);
+        return map;
     }
 
     @method("balance")
-    public String balance() {
-        return "";
+    public Map<String, Balance.BalanceData> balance() {
+        Map<String, Balance.BalanceData> map = new HashMap<>();
+        Balance.BalanceData balanceData = new Balance.BalanceData();
+        balanceData.setCredit(credit);
+        balanceData.setPlan(plan);
+        balanceData.setRemainingDpus(remaining_dpus);
+
+        map.put("balance", balanceData);
+        return map;
     }
 
     public void setDpu(float dpu) {
@@ -67,8 +88,20 @@ public class MockCoreApi {
         this.expectedCsdl = expectedCsdl;
     }
 
-    public void setHeaders(HashMap<String, String> headers) {
+    public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
+    }
+
+    public void setStart(DateTime start) {
+        this.start = start;
+    }
+
+    public void setEnd(DateTime end) {
+        this.end = end;
+    }
+
+    public void setStreams(Usage.UsageStream streams) {
+        this.streams = streams;
     }
 
     private Map<String, Object> compileOrValidate(String csdl, HttpResponse response) {
@@ -88,4 +121,15 @@ public class MockCoreApi {
         return map;
     }
 
+    public void setCredit(double credit) {
+        this.credit = credit;
+    }
+
+    public void setPlan(String plan) {
+        this.plan = plan;
+    }
+
+    public void setRemaining_dpus(double remaining_dpus) {
+        this.remaining_dpus = remaining_dpus;
+    }
 }

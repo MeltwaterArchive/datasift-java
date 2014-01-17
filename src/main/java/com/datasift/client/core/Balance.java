@@ -67,5 +67,17 @@ public class Balance extends DataSiftResult {
         double remainingDpus;
         @JsonProperty
         double credit;
+
+        public void setPlan(String plan) {
+            this.plan = plan;
+        }
+
+        public void setRemainingDpus(double remainingDpus) {
+            this.remainingDpus = remainingDpus;
+        }
+
+        public void setCredit(double credit) {
+            this.credit = credit;
+        }
     }
 }

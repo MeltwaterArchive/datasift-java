@@ -2,7 +2,9 @@ package com.datasift.client.core;
 
 import com.datasift.client.DataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.DateTime;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -10,24 +12,24 @@ import java.util.Map;
  */
 public class Usage extends DataSiftResult {
     @JsonProperty
-    private String start;
+    private Date start;
     @JsonProperty
-    private String end;
+    private Date end;
     @JsonProperty
-    private Map<String, UsageStream> streams;
+    private UsageStream streams;
 
-    public String getStart() {
-        return start;
+    public DateTime getStart() {
+        return new DateTime(start);
     }
 
-    public String getEnd() {
-        return end;
+    public DateTime getEnd() {
+        return new DateTime(end);
     }
 
     /**
      * @return A map whose keys are stream hashes and values are a break down of the license usages
      */
-    public Map<String, UsageStream> getStreams() {
+    public UsageStream getStreams() {
         return streams;
     }
 
@@ -57,6 +59,14 @@ public class Usage extends DataSiftResult {
 
         public int getSeconds() {
             return seconds;
+        }
+
+        public void setLicenses(Map<String, Integer> licenses) {
+            this.licenses = licenses;
+        }
+
+        public void setSeconds(int seconds) {
+            this.seconds = seconds;
         }
     }
 }
