@@ -1,8 +1,10 @@
 package com.datasift.client.mock.datasift;
 
 import com.datasift.client.historics.HistoricsQuery;
+import com.datasift.client.historics.PreparedHistoricsQuery;
 import io.higgs.core.method;
 import org.joda.time.DateTime;
+import org.junit.After;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +18,9 @@ import java.util.Map;
 public class MockHistoricsApi {
     Map<String, String> headers = new HashMap<>();
     private String id;
-    private float dpus;
-    private DateTime start;
-    private DateTime end;
+    private double dpus;
+    private long start;
+    private long end;
     private int status;
     private int versions;
     private int links;
@@ -29,6 +31,10 @@ public class MockHistoricsApi {
     private float sample;
     private String sources;
     private List<HistoricsQuery.Chunk> chunks;
+    private Map<String, Object> streams = new HashMap<>();
+    private String hash = "";
+    private String reason = "";
+    private PreparedHistoricsQuery.Availability availability;
 
 
     @method("prepare")
@@ -103,4 +109,75 @@ public class MockHistoricsApi {
     }
 
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setDpus(double dpus) {
+        this.dpus = dpus;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
+    }
+
+    public void setEnd(long end) {
+        this.end = end;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public void setVersions(int versions) {
+        this.versions = versions;
+    }
+
+    public void setLinks(int links) {
+        this.links = links;
+    }
+
+    public void setDefinition_id(String definition_id) {
+        this.definition_id = definition_id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCreated_at(float created_at) {
+        this.created_at = created_at;
+    }
+
+    public void setProgress(float progress) {
+        this.progress = progress;
+    }
+
+    public void setSample(float sample) {
+        this.sample = sample;
+    }
+
+    public void setSources(String sources) {
+        this.sources = sources;
+    }
+
+    public void setChunks(List<HistoricsQuery.Chunk> chunks) {
+        this.chunks = chunks;
+    }
+
+    public void setStreams(Map<String, Object> streams) {
+        this.streams = streams;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public void setAvailability(PreparedHistoricsQuery.Availability availability) {
+        this.availability = availability;
+    }
 }

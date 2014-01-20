@@ -9,13 +9,17 @@ import com.datasift.client.mock.datasift.MockHistoricsApi;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,20 +32,20 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
     private Map<String, String> headers = new HashMap<>();
     private Map<String, Object> streams = new HashMap<>();
     private MockHistoricsApi m = new MockHistoricsApi();
-    private String hash;
-    private DateTime start;
-    private DateTime end;
-    private String name;
-    private String id;
-    private String reason;
-    private String sources;
-    private PreparedHistoricsQuery.Availability availability;
-    private float dpus;
-    private String definition_id;
-    private float created_at;
-    private String status;
-    private float progress;
-    private float sample;
+    private String hash = "";
+    private long start = DateTime.now().plusHours(1).getMillis();
+    private long end = DateTime.now().plusDays(1).getMillis();
+    private String name = new BigInteger(130, new Random()).toString(32);
+    private String id = new BigInteger(130, new Random()).toString(32);
+    private String reason = new BigInteger(130, new Random()).toString(32);
+    private String sources = new BigInteger(130, new Random()).toString(32);
+    private PreparedHistoricsQuery.Availability availability; //TODO initialize availablity
+    private double dpus = Float.valueOf(String.valueOf(Math.random()));
+    private String definition_id = new BigInteger(130, new Random()).toString(32);
+    private float created_at = DateTime.now().getMillis();
+    private String status = new BigInteger(130, new Random()).toString(32);
+    private float progress = Float.valueOf(String.valueOf(Math.random()));
+    private float sample = Float.valueOf(String.valueOf(Math.random()));
     private List<HistoricsQuery.Chunk> chunks;
 
 
@@ -67,6 +71,13 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
             }
         });
 
+        m.setDpus(dpus);
+        m.setAvailability(availability);
+        m.setId(id);
+        m.setStart(start);
+        m.setEnd(end);
+        m.setSources(sources);
+
     }
 
     @Test
@@ -83,8 +94,7 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
     public void testIfUserCanStartExistingPlaybackQuery() {
         DataSiftResult start_query = datasift.historics().start(id).sync();
         assertTrue(start_query.isSuccessful());
-
-    }
+   }
 
     @Test
     public void testIfUserCanStopExistingPlaybackQuery() {
@@ -94,7 +104,7 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanCheckIntervalStatus() {
-        HistoricsStatus status = datasift.historics().status(start, end, sources).sync();
+        HistoricsStatus status = datasift.historics().status(new DateTime(start), new DateTime(end), sources).sync();
         assertTrue(status.isSuccessful());
 
         assertEquals(status.getStart(), start);
@@ -130,6 +140,11 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
         assertEquals(get.getSources(), sources);
         assertEquals(get.getSample(), sample);
         assertEquals(get.getChunks(), chunks);
+    }
+
+    @After
+    public void after() {
+        server.stop();
     }
 
 }

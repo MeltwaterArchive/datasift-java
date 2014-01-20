@@ -20,7 +20,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 public class DataSiftHistorics extends DataSiftApiClient {
     public final String PREPARE = "historics/prepare", START = "historics/start", STOP = "historics/stop",
             UPDATE = "historics/update", STATUS = "historics/status", DELETE = "historics/delete",
-            GET = "historics/list";
+            GET = "historics/get";
 
     public DataSiftHistorics(DataSiftConfig config) {
         super(config);

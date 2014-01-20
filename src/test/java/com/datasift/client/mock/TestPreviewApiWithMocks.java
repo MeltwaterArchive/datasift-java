@@ -28,7 +28,7 @@ public class TestPreviewApiWithMocks extends IntegrationTestBase {
     private Map<String, String> headers = new HashMap<>();
     private Map<String, Object> streams = new HashMap<>();
     private MockPreviewApi m = new MockPreviewApi();
-    private DateTime now;
+    private DateTime now = DateTime.now();
     private String[] params;
     private Stream stream;
     private HistoricsPreview id;
@@ -54,6 +54,8 @@ public class TestPreviewApiWithMocks extends IntegrationTestBase {
                 return MockPreviewApi.class.isAssignableFrom(aClass);
             }
         });
+
+        stream = createStream();
     }
 
 

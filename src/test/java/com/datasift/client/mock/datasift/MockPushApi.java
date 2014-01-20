@@ -7,13 +7,19 @@ import com.datasift.client.push.PushLogMessages;
 import com.datasift.client.push.Status;
 import com.datasift.client.push.connectors.Prepared;
 import com.datasift.client.push.connectors.PushConnector;
+import com.datasift.client.push.connectors.S3;
 import com.datasift.client.stream.Interaction;
 import io.higgs.core.method;
+import io.higgs.http.server.params.FormParams;
+import io.higgs.http.server.resource.GET;
+import io.higgs.http.server.resource.POST;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by agnieszka on 15/01/2014.
@@ -23,42 +29,42 @@ import java.util.Random;
 public class MockPushApi {
 
     Map<String, String> headers = new HashMap<>();
-    private String cursor = "";
+    protected String cursor = "";
     Stream stream = null;
-    private OutputType<PushConnector> output_type;
-    private float created_at;
-    private String user_id = "";
-    private String hash = "";
-    private String hash_type = "";
-    private PushConnector output_params;
-    private OutputType type;
-    private Prepared region;
-    private Status status;
-    private float last_request;
-    private float last_success;
-    private float remaining_bytes;
-    private boolean lost_data;
-    private float start;
-    private float end;
-    private String error;
-    private Response response;
-    private Throwable failure_cause;
-    private boolean success;
-    private int count;
-    private List<PushLogMessages.PushLogMessage> log_messages;
-    private List<Interaction> interactions;
-    private PushConnector connector = null;
-    private String id = "";
-    private String name = "";
-    private int page;
-    private int size;
+    protected String output_type;
+    protected long created_at;
+    protected String user_id = "";
+    protected String hash = "";
+    protected String hash_type = "";
+    protected PushConnector output_params;
+    protected Status status;
+    protected long last_request;
+    protected long last_success;
+    protected long remaining_bytes;
+    protected boolean lost_data;
+    protected long start;
+    protected long end;
+    protected String error;
+    protected Response response;
+    protected boolean success;
+    protected int count;
+    protected List<PushLogMessages.PushLogMessage> log_messages;
+    protected List<Interaction> interactions;
+    protected String id = "";
+    protected String name = "";
+    protected Map<String, String> s3Params;
 
 
     @method("/validate")
-    public Map<String, Object> validate() {
+    public Map<String, Object> validate(FormParams params) {
+        for(Map.Entry<String, String> e : s3Params.entrySet()){
+            Object expected = params.get(e.getKey());
+            assertNotNull(expected);
+            assertEquals(expected,e.getValue());
+        }
         Map<String, Object> map = new HashMap<>();
-        map.put("error", error);
-        map.put("response", response);
+        map.put("success", success);
+        map.put("message", "Validated successfully");
 
         return map;
     }
@@ -66,90 +72,39 @@ public class MockPushApi {
     @method("/create")
     public Map<String, Object> create() {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("name", name);
-        map.put("output_type", output_type);
-        map.put("created_at", created_at);
-        map.put("user_id", user_id);
-        map.put("hash", hash);
-        map.put("hash_type", hash_type);
-        map.put("output_params", output_params);
-        map.put("status", status);
-        map.put("last_request", last_request);
-        map.put("last_success", last_success);
-        map.put("remaining_bytes", remaining_bytes);
-        map.put("lost_data", lost_data);
-        map.put("start", start);
-        map.put("end", end);
+        getSubscription(map);
         return map;
     }
 
     @method("/pause")
     public Map<String, Object> pause() {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("name", name);
-        map.put("output_type", output_type);
-        map.put("created_at", created_at);
-        map.put("user_id", user_id);
-        map.put("hash", hash);
-        map.put("hash_type", hash_type);
-        map.put("output_params", output_params);
-        map.put("status", status);
-        map.put("last_request", last_request);
-        map.put("last_success", last_success);
-        map.put("remaining_bytes", remaining_bytes);
-        map.put("lost_data", lost_data);
-        map.put("start", start);
-        map.put("end", end);
+        getSubscription(map);
         return map;
     }
 
     @method("/resume")
     public Map<String, Object> resume() {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("name", name);
-        map.put("output_type", output_type);
-        map.put("created_at", created_at);
-        map.put("user_id", user_id);
-        map.put("hash", hash);
-        map.put("hash_type", hash_type);
-        map.put("output_params", output_params);
-        map.put("status", status);
-        map.put("last_request", last_request);
-        map.put("last_success", last_success);
-        map.put("remaining_bytes", remaining_bytes);
-        map.put("lost_data", lost_data);
-        map.put("start", start);
-        map.put("end", end);
+        getSubscription(map);
         return map;
     }
 
     @method("/update")
     public Map<String, Object> update() {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("name", name);
-        map.put("output_type", output_type);
-        map.put("created_at", created_at);
-        map.put("user_id", user_id);
-        map.put("hash", hash);
-        map.put("hash_type", hash_type);
-        map.put("output_params", output_params);
-        map.put("status", status);
-        map.put("last_request", last_request);
-        map.put("last_success", last_success);
-        map.put("remaining_bytes", remaining_bytes);
-        map.put("lost_data", lost_data);
-        map.put("start", start);
-        map.put("end", end);
+        getSubscription(map);
         return map;
     }
 
     @method("/stop")
     public Map<String, Object> stop() {
         Map<String, Object> map = new HashMap<>();
+        getSubscription(map);
+        return map;
+    }
+
+    protected void getSubscription(Map<String, Object> map) {
         map.put("id", id);
         map.put("name", name);
         map.put("output_type", output_type);
@@ -165,15 +120,12 @@ public class MockPushApi {
         map.put("lost_data", lost_data);
         map.put("start", start);
         map.put("end", end);
-        return map;
     }
 
     @method("/delete")
     public Map<String, Object> delete() {
         Map<String, Object> map = new HashMap<>();
-        map.put("error", error);
-        map.put("response", response);
-
+        getSubscription(map);
         return map;
     }
 
@@ -186,25 +138,11 @@ public class MockPushApi {
         return map;
     }
 
+    @POST
     @method("/get")
     public Map<String, Object> get() {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("name", name);
-        map.put("output_type", output_type);
-        map.put("created_at", created_at);
-        map.put("user_id", user_id);
-        map.put("hash", hash);
-        map.put("hash_type", hash_type);
-        map.put("output_params", output_params);
-        map.put("status", status);
-        map.put("last_request", last_request);
-        map.put("last_success", last_success);
-        map.put("remaining_bytes", remaining_bytes);
-        map.put("lost_data", lost_data);
-        map.put("start", start);
-        map.put("end", end);
-
+        getSubscription(map);
         return map;
     }
 
@@ -224,11 +162,11 @@ public class MockPushApi {
         this.stream = stream;
     }
 
-    public void setOutput_type(OutputType<PushConnector> output_type) {
+    public void setOutput_type(String output_type) {
         this.output_type = output_type;
     }
 
-    public void setCreated_at(float created_at) {
+    public void setCreated_at(long created_at) {
         this.created_at = created_at;
     }
 
@@ -248,27 +186,19 @@ public class MockPushApi {
         this.output_params = output_params;
     }
 
-    public void setType(OutputType type) {
-        this.type = type;
-    }
-
-    public void setRegion(Prepared region) {
-        this.region = region;
-    }
-
     public void setStatus(Status status) {
         this.status = status;
     }
 
-    public void setLast_request(float last_request) {
+    public void setLast_request(long last_request) {
         this.last_request = last_request;
     }
 
-    public void setLast_success(float last_success) {
+    public void setLast_success(long last_success) {
         this.last_success = last_success;
     }
 
-    public void setRemaining_bytes(float remaining_bytes) {
+    public void setRemaining_bytes(long remaining_bytes) {
         this.remaining_bytes = remaining_bytes;
     }
 
@@ -276,11 +206,11 @@ public class MockPushApi {
         this.lost_data = lost_data;
     }
 
-    public void setStart(float start) {
+    public void setStart(long start) {
         this.start = start;
     }
 
-    public void setEnd(float end) {
+    public void setEnd(long end) {
         this.end = end;
     }
 
@@ -290,10 +220,6 @@ public class MockPushApi {
 
     public void setResponse(Response response) {
         this.response = response;
-    }
-
-    public void setFailure_cause(Throwable failure_cause) {
-        this.failure_cause = failure_cause;
     }
 
     public void setSuccess(boolean success) {
@@ -312,10 +238,6 @@ public class MockPushApi {
         this.interactions = interactions;
     }
 
-    public void setConnector(PushConnector connector) {
-        this.connector = connector;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -324,15 +246,11 @@ public class MockPushApi {
         this.name = name;
     }
 
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
+    }
+
+    public void setS3Params(Map<String, String> s3Params) {
+        this.s3Params = s3Params;
     }
 }

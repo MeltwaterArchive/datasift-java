@@ -1,6 +1,9 @@
 package com.datasift.client.mock.datasift;
 
+import com.datasift.client.core.Stream;
+import com.datasift.client.preview.HistoricsPreview;
 import io.higgs.core.method;
+import org.joda.time.DateTime;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +15,10 @@ import java.util.Map;
 @method("/v1.1/sources")
 public class MockPreviewApi {
     Map<String, String> headers = new HashMap<>();
+    private DateTime now;
+    private String[] params;
+    private Stream stream;
+    private HistoricsPreview id;
 
     @method("create")
     public Map<String, Object> create() {

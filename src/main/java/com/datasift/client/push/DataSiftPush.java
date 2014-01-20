@@ -28,7 +28,7 @@ import java.util.Map;
 public class DataSiftPush extends DataSiftApiClient {
     public final String VALIDATE = "push/validate", CREATE = "push/create", PAUSE = "push/pause",
             RESUME = "push/resume", UPDATE = "push/update", STOP = "push/stop", DELETE = "push/delete",
-            LOG = "push/log", GET = "push/list", PULL = "push/pull";
+            LOG = "push/log", GET = "push/get", PULL = "pull";
 
     public DataSiftPush(DataSiftConfig config) {
         super(config);
@@ -234,6 +234,7 @@ public class DataSiftPush extends DataSiftApiClient {
         FutureData<PushSubscription> future = new FutureData<PushSubscription>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())));
+        request.form("id", id);
         applyConfig(request).execute();
         return future;
     }
