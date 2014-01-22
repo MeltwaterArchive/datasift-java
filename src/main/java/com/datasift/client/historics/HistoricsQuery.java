@@ -123,16 +123,36 @@ public class HistoricsQuery extends DataSiftResult {
             return progress;
         }
 
-        public DateTime getStartTime() {
-            return new DateTime(TimeUnit.SECONDS.toMillis(startTime));
+        public void setStatus(String status) {
+            this.status = status;
         }
 
-        public DateTime getEndTime() {
-            return new DateTime(TimeUnit.SECONDS.toMillis(endTime));
+        public void setProgress(double progress) {
+            this.progress = progress;
         }
 
-        public DateTime getEstimatedCompletion() {
-            return new DateTime(TimeUnit.SECONDS.toMillis(estimatedCompletion));
+        public void setStartTime(long startTime) {
+            this.startTime = startTime;
+        }
+
+        public void setEndTime(long endTime) {
+            this.endTime = endTime;
+        }
+
+        public void setEstimatedCompletion(long estimatedCompletion) {
+            this.estimatedCompletion = estimatedCompletion;
+        }
+
+        public long getEndTime() {
+            return endTime;
+        }
+
+        public long getEstimatedCompletion() {
+            return estimatedCompletion;
+        }
+
+        public long getStartTime() {
+            return startTime;
         }
     }
 }

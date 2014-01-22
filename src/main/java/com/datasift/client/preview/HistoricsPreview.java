@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class HistoricsPreview extends DataSiftResult {
     @JsonProperty("created_at")
-    protected Date createdAt;
+    protected DateTime createdAt;
     @JsonProperty
     protected String id;
 
@@ -37,7 +37,6 @@ public class HistoricsPreview extends DataSiftResult {
         return new DateTime(createdAt);
     }
 
-    @JsonProperty
     public String id() {
         return id;
     }

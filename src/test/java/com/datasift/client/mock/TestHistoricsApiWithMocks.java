@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,21 +32,29 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
     private Map<String, String> headers = new HashMap<>();
     private Map<String, Object> streams = new HashMap<>();
     private MockHistoricsApi m = new MockHistoricsApi();
-    private String hash = "";
-    private long start = DateTime.now().plusHours(1).getMillis();
-    private long end = DateTime.now().plusDays(1).getMillis();
+    private String hash = new BigInteger(130, new Random()).toString(32);
+    private DateTime start = DateTime.now().plusHours(1);
+    private DateTime end = DateTime.now().plusDays(1);
     private String name = new BigInteger(130, new Random()).toString(32);
     private String id = new BigInteger(130, new Random()).toString(32);
     private String reason = new BigInteger(130, new Random()).toString(32);
-    private String sources = new BigInteger(130, new Random()).toString(32);
-    private PreparedHistoricsQuery.Availability availability; //TODO initialize availablity
     private double dpus = Float.valueOf(String.valueOf(Math.random()));
     private String definition_id = new BigInteger(130, new Random()).toString(32);
-    private float created_at = DateTime.now().getMillis();
-    private String status = new BigInteger(130, new Random()).toString(32);
-    private float progress = Float.valueOf(String.valueOf(Math.random()));
-    private float sample = Float.valueOf(String.valueOf(Math.random()));
-    private List<HistoricsQuery.Chunk> chunks;
+    private long created_at = DateTime.now().getMillis();
+    private double progress = new Random().nextDouble();
+    private double sample = new Random().nextDouble();
+    private List<HistoricsQuery.Chunk> chunks = new ArrayList<>();
+    private Map<String, PreparedHistoricsQuery.Source> sources = new HashMap<>();
+    private Map<String, PreparedHistoricsQuery.Availability> availability;
+    private long status = new Random().nextLong();
+    private List<Integer> versions = new ArrayList<>();
+    private Map<String, Integer> augmentations = new HashMap<>();
+    private String source = new BigInteger(130, new Random()).toString(32);
+    private List<String> feed = new ArrayList<>();
+    private long estimatedCompletion = DateTime.now().getMillis();
+    private String status_g = new BigInteger(130, new Random()).toString(32);
+    private ArrayList source_g = new ArrayList();
+    private String src_name = new BigInteger(130, new Random()).toString(32);
 
 
     @Before
@@ -72,12 +80,22 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
         });
 
         m.setDpus(dpus);
-        m.setAvailability(availability);
         m.setId(id);
         m.setStart(start);
         m.setEnd(end);
-        m.setSources(sources);
-
+        m.setStatus_g(status_g);
+        m.setVersions(versions);
+        m.setDefinition_id(definition_id);
+        m.setName(name);
+        m.setCreated_at(created_at);
+        m.setProgress(progress);
+        m.setFeed(feed);
+        m.setSample(sample);
+        m.setEstimatedCompletion(estimatedCompletion);
+        m.setStatus(status);
+        m.setAugmentations(augmentations);
+        m.setSource(source_g);
+        m.setSrc_name(src_name);
     }
 
     @Test
@@ -85,9 +103,14 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
         PreparedHistoricsQuery prepare = datasift.historics().prepare(hash, start, end, name).sync();
         assertTrue(prepare.isSuccessful());
 
-        assertEquals(prepare.getAvailability(), availability);
         assertEquals(prepare.getDpus(), dpus, 0.00000001);
         assertEquals(prepare.getId(), id);
+
+        assertEquals(prepare.getAvailability().getEnd(), end.getMillis());
+        assertEquals(prepare.getAvailability().getStart(), start.getMillis());
+        assertEquals(prepare.getAvailability().getSources().get(src_name).getAugmentations(), augmentations);
+        assertEquals(prepare.getAvailability().getSources().get(src_name).getStatus(), status);
+        assertEquals(prepare.getAvailability().getSources().get(src_name).getVersions(), versions);
     }
 
     @Test
@@ -104,11 +127,11 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanCheckIntervalStatus() {
-        HistoricsStatus status = datasift.historics().status(new DateTime(start), new DateTime(end), sources).sync();
+        HistoricsStatus status = datasift.historics().status(start, end, source).sync();
         assertTrue(status.isSuccessful());
 
-        assertEquals(status.getStart(), start);
-        assertEquals(status.getEnd(), end);
+        assertEquals(status.getStart(), start.getMillis());
+        assertEquals(status.getEnd(), end.getMillis());
         assertEquals(status.getSources(), sources);
     }
 
@@ -132,14 +155,20 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
         assertEquals(get.getId(), id);
         assertEquals(get.getDefinitationId(), definition_id);
         assertEquals(get.getName(), name);
-        assertEquals(get.getStart(), start);
-        assertEquals(get.getEnd(), end);
+        assertEquals(get.getStart(), start.getMillis());
+        assertEquals(get.getEnd(), end.getMillis());
         assertEquals(get.getCreatedAt(), created_at);
-        assertEquals(get.getStatus(), status);
-        assertEquals(get.getProgress(), progress);
-        assertEquals(get.getSources(), sources);
-        assertEquals(get.getSample(), sample);
-        assertEquals(get.getChunks(), chunks);
+        assertEquals(get.getStatus(), status_g);
+        assertEquals(get.getProgress(), progress, 0.00000001);
+        assertEquals(get.getFeed(), feed);
+        assertEquals(get.getSources(), source_g);
+        assertEquals(get.getSample(), sample, 0.00000001);
+        assertEquals(get.getChunks().get(0).getEstimatedCompletion(), estimatedCompletion);
+        assertEquals(get.getChunks().get(0).getEndTime(), end.getMillis());
+        assertEquals(get.getChunks().get(0).getStartTime(), start.getMillis());
+        assertEquals(get.getChunks().get(0).getProgress(), progress, 0.00000001);
+        assertEquals(get.getChunks().get(0).getStatus(), status_g);
+
     }
 
     @After

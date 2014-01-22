@@ -2,29 +2,16 @@ package com.datasift.client.mock;
 
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.IntegrationTestBase;
-import com.datasift.client.Response;
 import com.datasift.client.core.Stream;
 import com.datasift.client.mock.datasift.MockPullApi;
 import com.datasift.client.mock.datasift.MockPushApi;
-import com.datasift.client.push.OutputType;
-import com.datasift.client.push.PulledInteractions;
 import com.datasift.client.push.PushConnectors;
 import com.datasift.client.push.PushLogMessages;
 import com.datasift.client.push.PushSubscription;
 import com.datasift.client.push.PushValidation;
-import com.datasift.client.push.Status;
-import com.datasift.client.push.connectors.FTP;
-import com.datasift.client.push.connectors.Prepared;
-import com.datasift.client.push.connectors.PushConnector;
 import com.datasift.client.push.connectors.S3;
-import com.datasift.client.stream.Interaction;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
-import io.higgs.http.client.HttpRequestBuilder;
-import io.higgs.http.client.Request;
-import io.higgs.http.client.future.PageReader;
-import io.higgs.http.client.future.Reader;
-import org.cliffc.high_scale_lib.NonBlockingHashSet;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -32,9 +19,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.URI;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -68,10 +53,10 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
     private boolean success = true;
     private int count = new Random().nextInt();
 
-    private  String s3Key = "some-random-string",s3Secret="another-random-string",s3Buck = "s3bucket",s3Dir = "s3Dir",s3Acl="s3acl",s3Prefix="prefix";
-    private int s3Frequency = 1234567,s3MaxSize = 3423535;
-    private  S3 s3;
-    private String hash_type="stream";
+    private String s3Key = "some-random-string", s3Secret = "another-random-string", s3Buck = "s3bucket", s3Dir = "s3Dir", s3Acl = "s3acl", s3Prefix = "prefix";
+    private int s3Frequency = 1234567, s3MaxSize = 3423535;
+    private S3 s3;
+    private String hash_type = "stream";
     private MockPullApi pull = new MockPullApi();
 
     @Before
@@ -105,7 +90,7 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
             }
         });
 
-       s3 = PushConnectors
+        s3 = PushConnectors
                 .s3()
                 .accessKey(s3Key)
                 .secretKey(s3Secret)
@@ -117,7 +102,7 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
                 .filePrefix(s3Prefix);
         m.setS3Params(s3.parameters().verifyAndGet());
         //
-       // m.setConnector(s3);
+        // m.setConnector(s3);
         m.setCount(count);
         m.setCreated_at(created_at);
         m.setCursor(cursor);
@@ -129,14 +114,14 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
         m.setLast_success(last_success);
         m.setLost_data(lost_data);
         m.setName(name);
-       // m.setPage(page);
+        // m.setPage(page);
         m.setRemaining_bytes(remaining_bytes);
         m.setLost_data(lost_data);
-       // m.setSize(size);
+        // m.setSize(size);
         m.setStart(start);
         m.setStream(stream);
         m.setSuccess(success);
-       // m.setType(output_type);
+        // m.setType(output_type);
         m.setOutput_type(output_type);
         m.setUser_id(user_id);
         m.setHash_type(hash_type);
@@ -280,13 +265,13 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
 
     }
 
-/*
-    @Test
-    public void testIfUserCanCPullInteractions() {
-        PulledInteractions pull_interactions = datasift.push().pull(id, size, cursor).sync();
-        assertTrue(pull_interactions.isSuccessful());
-    }
-*/
+    /*
+        @Test
+        public void testIfUserCanCPullInteractions() {
+            PulledInteractions pull_interactions = datasift.push().pull(id, size, cursor).sync();
+            assertTrue(pull_interactions.isSuccessful());
+        }
+    */
     @After
     public void after() {
         server.stop();

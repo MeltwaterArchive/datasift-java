@@ -65,6 +65,18 @@ public class PreparedHistoricsQuery extends DataSiftResult {
             return end;
         }
 
+        public void setStart(long start) {
+            this.start = start;
+        }
+
+        public void setEnd(long end) {
+            this.end = end;
+        }
+
+        public void setSources(Map<String, Source> sources) {
+            this.sources = sources;
+        }
+
         public Map<String, Source> getSources() {
             return sources;
         }
@@ -89,5 +101,20 @@ public class PreparedHistoricsQuery extends DataSiftResult {
         public Map<String, Integer> getAugmentations() {
             return augmentations;
         }
+
+        public void setStatus(long status) {
+            this.status = status;
+        }
+
+        public void setVersions(List<Integer> versions) {
+            this.versions = versions;
+        }
+
+        public void setAugmentations(Map<String, Integer> augmentations) {
+            this.augmentations = augmentations;
+        }
+
+
+
     }
 }
