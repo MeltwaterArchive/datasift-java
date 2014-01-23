@@ -8,6 +8,7 @@ import com.datasift.client.preview.HistoricsPreviewData;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -117,9 +118,16 @@ public class TestPreviewApiWithMocks extends IntegrationTestBase {
         assertEquals(get.getParameters(), parameters);
         assertEquals(get.getHash(), hash);
 
-        assertEquals(get.getData().get(0).getAnalysis(), analysis);
-        assertEquals(get.getData().get(0).getOutput(), output);
-        assertEquals(get.getData().get(0).getTarget(), target);
-        assertEquals(get.getData().get(0).getThreshold(), threshold);
+        for (HistoricsPreviewData.DataEntry data : get.getData()) {
+            assertEquals(data.getAnalysis(), analysis);
+            assertEquals(data.getOutput(), output);
+            assertEquals(data.getTarget(), target);
+            assertEquals(data.getThreshold(), threshold);
+        }
+    }
+
+    @After
+    public void after() {
+        server.stop();
     }
 }

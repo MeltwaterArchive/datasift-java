@@ -1,25 +1,16 @@
 package com.datasift.client.mock.datasift;
 
 import com.datasift.client.managedsource.ManagedSource;
-import com.datasift.client.managedsource.ManagedSourceLog;
-import com.datasift.client.managedsource.sources.DataSource;
-import com.datasift.client.managedsource.sources.FacebookPage;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.higgs.core.method;
-import io.higgs.http.server.HttpResponse;
-import io.higgs.http.server.params.FormParam;
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by agnieszka on 17/01/2014.
@@ -36,23 +27,32 @@ public class MockManagedSourcesApi {
     private Map<String, Object> auth = new HashMap<>();
     private Set resource_set = new HashSet();
     private Map<String, Object> resource = new HashMap<>();
-    private DateTime created_at = DateTime.now();
-    private int count = new Random().nextInt();
-    private int page = new Random().nextInt();
-    private int pages = new Random().nextInt();
-    private int per_page = new Random().nextInt();
-    private List<ManagedSourceLog.LogMessage> entries;
+    private DateTime created_at;
+    private int count;
+    private int page;
+    private int pages;
+    private int per_page;
+    private List entries = new ArrayList();
     protected String sourceType;
     protected Set<ManagedSource.ResourceParams> resources = new NonBlockingHashSet<ManagedSource.ResourceParams>();
     protected long createdAt;
     private String identityId;
     private String sourceId;
     private String status;
+    private long event_time;
+    private boolean success;
+    private String message;
 
 
     @method("create")
     public Map<String, Object> create() {
         Map<String, Object> map = new HashMap<>();
+        setManagedSource(map);
+
+        return map;
+    }
+
+    private void setManagedSource(Map<String, Object> map) {
         map.put("name", name);
         map.put("source_type", sourceType);
         map.put("parameters", parameters);
@@ -70,21 +70,20 @@ public class MockManagedSourcesApi {
         map.put("created_at", created_at);
         map.put("id", id);
         map.put("status", status);
-
-        return map;
     }
+
 
     @method("update")
     public Map<String, Object> update() {
         Map<String, Object> map = new HashMap<>();
-
+        setManagedSource(map);
         return map;
     }
 
     @method("delete")
     public Map<String, Object> delete() {
         Map<String, Object> map = new HashMap<>();
-
+        setManagedSource(map);
         return map;
     }
 
@@ -92,20 +91,32 @@ public class MockManagedSourcesApi {
     public Map<String, Object> log() {
         Map<String, Object> map = new HashMap<>();
 
+        Map<String, Object> entry = new HashMap<>();
+        entry.put("id", id);
+        entry.put("event_time", event_time);
+        entry.put("success", success);
+        entry.put("message", message);
+        entries.add(entry);
+
+        map.put("log_entries", entries);
+        map.put("count", count);
+        map.put("page", page);
+        map.put("pages", pages);
+        map.put("per_page", per_page);
         return map;
     }
 
     @method("get")
     public Map<String, Object> get() {
         Map<String, Object> map = new HashMap<>();
-
+        setManagedSource(map);
         return map;
     }
 
     @method("stop")
     public Map<String, Object> stop() {
         Map<String, Object> map = new HashMap<>();
-
+        setManagedSource(map);
 
 
         return map;
@@ -179,10 +190,6 @@ public class MockManagedSourcesApi {
         this.per_page = per_page;
     }
 
-    public void setEntries(List<ManagedSourceLog.LogMessage> entries) {
-        this.entries = entries;
-    }
-
     public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
     }
@@ -205,5 +212,21 @@ public class MockManagedSourcesApi {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setEntries(List entries) {
+        this.entries = entries;
+    }
+
+    public void setEvent_time(long event_time) {
+        this.event_time = event_time;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

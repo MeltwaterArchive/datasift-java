@@ -10,6 +10,7 @@ import com.datasift.client.mock.datasift.MockManagedSourcesApi;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,6 +53,9 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
     private String identityId = new BigInteger(130, new Random()).toString(32);
     private String sourceId = new BigInteger(130, new Random()).toString(32);
     private String status = new BigInteger(130, new Random()).toString(32);
+    private String message;
+    private long event_time;
+    private boolean success;
 
     @Before
     public void setup() throws IOException, IllegalAccessException, Exception {
@@ -92,6 +96,9 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
         m.setParameters(parameters);
         m.setSourceType(source_type);
         m.setId(id);
+        m.setEvent_time(event_time);
+        m.setSuccess(success);
+        m.setMessage(message);
 
     }
 
@@ -104,17 +111,18 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
         assertEquals(create.getSourceType(), source_type);
         assertEquals(create.getParameters(), parameters);
 
-//        auth.put("identity_id", identityId);
-//        auth.put("source_id", sourceId);
-//        auth.put("status", status);
-//        auth_set.add(auth);
-        assertEquals(create.getAuth(), auth); //TODO
-//
-//        resource.put("identity_id", identityId);
-//        resource.put("source_id", sourceId);
-//        resource.put("status", status);
-//        resource_set.add(resource);
-        assertEquals(create.getResources(), resource_set);
+        Set<ManagedSource.AuthParams> auth_array = create.getAuth();
+        for (ManagedSource.AuthParams p : auth_array) {
+            assertEquals(p.identityId(), identityId);
+            assertEquals(p.status(), status);
+            assertEquals(p.sourceId(), sourceId);
+        }
+        Set<ManagedSource.ResourceParams> res_set = create.getResources();
+        for (ManagedSource.ResourceParams r : res_set) {
+            assertEquals(r.identityId(), identityId);
+            assertEquals(r.sourceId(), sourceId);
+            assertEquals(r.status(), status);
+        }
         assertEquals(create.getCreatedAt(), created_at);
         assertEquals(create.getId(), id);
     }
@@ -127,8 +135,18 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
         assertEquals(update.getName(), name);
         assertEquals(update.getSourceType(), source_type);
         assertEquals(update.getParameters(), parameters);
-        assertEquals(update.getAuth(), auth);
-        assertEquals(update.getResources(), resource);
+        Set<ManagedSource.AuthParams> auth_array = update.getAuth();
+        for (ManagedSource.AuthParams p : auth_array) {
+            assertEquals(p.identityId(), identityId);
+            assertEquals(p.status(), status);
+            assertEquals(p.sourceId(), sourceId);
+        }
+        Set<ManagedSource.ResourceParams> res_set = update.getResources();
+        for (ManagedSource.ResourceParams r : res_set) {
+            assertEquals(r.identityId(), identityId);
+            assertEquals(r.sourceId(), sourceId);
+            assertEquals(r.status(), status);
+        }
         assertEquals(update.getCreatedAt(), created_at);
         assertEquals(update.getId(), id);
     }
@@ -136,6 +154,24 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
     @Test
     public void testIfUserCanDeleteManagedSource() {
         ManagedSource delete = datasift.managedSource().update(name, source, m_id).sync();
+        assertEquals(delete.getName(), name);
+        assertEquals(delete.getSourceType(), source_type);
+        assertEquals(delete.getParameters(), parameters);
+        Set<ManagedSource.AuthParams> auth_array = delete.getAuth();
+        for (ManagedSource.AuthParams p : auth_array) {
+            assertEquals(p.identityId(), identityId);
+            assertEquals(p.status(), status);
+            assertEquals(p.sourceId(), sourceId);
+        }
+        Set<ManagedSource.ResourceParams> res_set = delete.getResources();
+        for (ManagedSource.ResourceParams r : res_set) {
+            assertEquals(r.identityId(), identityId);
+            assertEquals(r.sourceId(), sourceId);
+            assertEquals(r.status(), status);
+        }
+        assertEquals(delete.getCreatedAt(), created_at);
+        assertEquals(delete.getId(), id);
+
         assertTrue(delete.isSuccessful());
     }
 
@@ -148,7 +184,12 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
         assertEquals(logging_source.getPage(), page);
         assertEquals(logging_source.getPages(), pages);
         assertEquals(logging_source.getPerPage(), per_page);
-        assertEquals(logging_source.getEntries(), entries);
+        for (ManagedSourceLog.LogMessage l : logging_source.getEntries()) {
+            assertEquals(l.getMessage(), message);
+            assertEquals(l.getEventTime(), event_time);
+            assertEquals(l.isSuccessful(), success);
+            assertEquals(l.getId(), id);
+        }
     }
 
     @Test
@@ -159,8 +200,18 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
         assertEquals(get.getName(), name);
         assertEquals(get.getSourceType(), source_type);
         assertEquals(get.getParameters(), parameters);
-        assertEquals(get.getAuth(), auth);
-        assertEquals(get.getResources(), resource);
+        Set<ManagedSource.AuthParams> auth_array = get.getAuth();
+        for (ManagedSource.AuthParams p : auth_array) {
+            assertEquals(p.identityId(), identityId);
+            assertEquals(p.status(), status);
+            assertEquals(p.sourceId(), sourceId);
+        }
+        Set<ManagedSource.ResourceParams> res_set = get.getResources();
+        for (ManagedSource.ResourceParams r : res_set) {
+            assertEquals(r.identityId(), identityId);
+            assertEquals(r.sourceId(), sourceId);
+            assertEquals(r.status(), status);
+        }
         assertEquals(get.getCreatedAt(), created_at);
         assertEquals(get.getId(), id);
     }
@@ -173,7 +224,18 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
         assertEquals(stop.getName(), name);
         assertEquals(stop.getSourceType(), source_type);
         assertEquals(stop.getParameters(), parameters);
-        assertEquals(stop.getResources(), resource);
+        Set<ManagedSource.AuthParams> auth_array = stop.getAuth();
+        for (ManagedSource.AuthParams p : auth_array) {
+            assertEquals(p.identityId(), identityId);
+            assertEquals(p.status(), status);
+            assertEquals(p.sourceId(), sourceId);
+        }
+        Set<ManagedSource.ResourceParams> res_set = stop.getResources();
+        for (ManagedSource.ResourceParams r : res_set) {
+            assertEquals(r.identityId(), identityId);
+            assertEquals(r.sourceId(), sourceId);
+            assertEquals(r.status(), status);
+        }
         assertEquals(stop.getId(), id);
     }
 
@@ -182,5 +244,10 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
         DataSiftResult start = datasift.managedSource().start(id).sync();
         assertTrue(start.isSuccessful());
 
+    }
+
+    @After
+    public void after() {
+        server.stop();
     }
 }

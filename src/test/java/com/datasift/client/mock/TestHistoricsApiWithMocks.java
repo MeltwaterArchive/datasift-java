@@ -117,7 +117,7 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
     public void testIfUserCanStartExistingPlaybackQuery() {
         DataSiftResult start_query = datasift.historics().start(id).sync();
         assertTrue(start_query.isSuccessful());
-   }
+    }
 
     @Test
     public void testIfUserCanStopExistingPlaybackQuery() {
@@ -163,12 +163,13 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
         assertEquals(get.getFeed(), feed);
         assertEquals(get.getSources(), source_g);
         assertEquals(get.getSample(), sample, 0.00000001);
-        assertEquals(get.getChunks().get(0).getEstimatedCompletion(), estimatedCompletion);
-        assertEquals(get.getChunks().get(0).getEndTime(), end.getMillis());
-        assertEquals(get.getChunks().get(0).getStartTime(), start.getMillis());
-        assertEquals(get.getChunks().get(0).getProgress(), progress, 0.00000001);
-        assertEquals(get.getChunks().get(0).getStatus(), status_g);
-
+        for (HistoricsQuery.Chunk chunk : get.getChunks()) {
+            assertEquals(chunk.getEstimatedCompletion(), estimatedCompletion);
+            assertEquals(chunk.getEndTime(), end.getMillis());
+            assertEquals(chunk.getStartTime(), start.getMillis());
+            assertEquals(chunk.getProgress(), progress, 0.00000001);
+            assertEquals(chunk.getStatus(), status_g);
+        }
     }
 
     @After

@@ -101,8 +101,6 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
                 .maxSize(s3MaxSize)
                 .filePrefix(s3Prefix);
         m.setS3Params(s3.parameters().verifyAndGet());
-        //
-        // m.setConnector(s3);
         m.setCount(count);
         m.setCreated_at(created_at);
         m.setCursor(cursor);

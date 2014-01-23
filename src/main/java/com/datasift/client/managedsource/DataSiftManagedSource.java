@@ -18,7 +18,7 @@ import java.net.URI;
  */
 public class DataSiftManagedSource extends DataSiftApiClient {
     public static final String CREATE = "source/create", UPDATE = "source/update", START = "source/start",
-            STOP = "source/stop", DELETE = "source/delete", GET = "source/list";
+            STOP = "source/stop", DELETE = "source/delete", GET = "source/get", LOG = "source/log";
 
     public DataSiftManagedSource(DataSiftConfig config) {
         super(config);
@@ -197,7 +197,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         if (perPage > 0) {
             b.put("per_page", perPage);
         }
-        URI uri = b.forURL(config.newAPIEndpointURI(GET));
+        URI uri = b.forURL(config.newAPIEndpointURI(LOG));
         Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new ManagedSourceLog())));
         applyConfig(request).execute();
         return future;

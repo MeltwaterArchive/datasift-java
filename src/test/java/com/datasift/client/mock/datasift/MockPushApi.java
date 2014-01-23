@@ -2,16 +2,12 @@ package com.datasift.client.mock.datasift;
 
 import com.datasift.client.Response;
 import com.datasift.client.core.Stream;
-import com.datasift.client.push.OutputType;
 import com.datasift.client.push.PushLogMessages;
 import com.datasift.client.push.Status;
-import com.datasift.client.push.connectors.Prepared;
 import com.datasift.client.push.connectors.PushConnector;
-import com.datasift.client.push.connectors.S3;
 import com.datasift.client.stream.Interaction;
 import io.higgs.core.method;
 import io.higgs.http.server.params.FormParams;
-import io.higgs.http.server.resource.GET;
 import io.higgs.http.server.resource.POST;
 
 import java.util.HashMap;
@@ -57,10 +53,10 @@ public class MockPushApi {
 
     @method("/validate")
     public Map<String, Object> validate(FormParams params) {
-        for(Map.Entry<String, String> e : s3Params.entrySet()){
+        for (Map.Entry<String, String> e : s3Params.entrySet()) {
             Object expected = params.get(e.getKey());
             assertNotNull(expected);
-            assertEquals(expected,e.getValue());
+            assertEquals(expected, e.getValue());
         }
         Map<String, Object> map = new HashMap<>();
         map.put("success", success);
