@@ -31,14 +31,14 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
     private MockCoreApi m = new MockCoreApi();
     private String csdl = "";
     private String hash = "";
-    private float dpu = 0;
+    private double dpu = new Random().nextDouble();
     private DateTime createdAt = DateTime.now(), start = DateTime.now().plusHours(1), end = DateTime.now().plusDays(1);
     private int secs = new Random().nextInt();
     private Map<String, Object> detail = new HashMap<>();
     private int count = new Random().nextInt();
-    private double credit = -1f;
+    private double credit = new Random().nextDouble();
     private String plan = "";
-    private double remaining_dpus = -1f;
+    private double remaining_dpus = new Random().nextDouble();
 
 
     @Before

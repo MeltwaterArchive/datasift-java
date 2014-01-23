@@ -17,15 +17,15 @@ import java.util.Map;
 @method("/v1.1")
 public class MockCoreApi {
     Map<String, String> headers = new HashMap<>();
-    private float dpu = -1f;
+    private double dpu = -1f;
     private DateTime createdAt = DateTime.now();
     private String compileHash;
     private String expectedCsdl;
     private DateTime start, end;
     private Usage.UsageStream streams;
-    private double credit = -1f;
+    private double credit = -1d;
     private String plan = "";
-    private double remaining_dpus = -1f;
+    private double remaining_dpus = -1d;
 
 
     @method("compile")
@@ -69,7 +69,7 @@ public class MockCoreApi {
         return map;
     }
 
-    public void setDpu(float dpu) {
+    public void setDpu(double dpu) {
         this.dpu = dpu;
     }
 
