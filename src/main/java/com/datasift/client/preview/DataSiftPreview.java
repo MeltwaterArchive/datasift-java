@@ -65,7 +65,7 @@ public class DataSiftPreview extends DataSiftApiClient {
         }
         FutureData<HistoricsPreview> future = new FutureData<HistoricsPreview>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(CREATE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsPreview())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsPreview(), config)))
                 .form("start", start)
                 .form("hash", stream.hash());
         StringBuilder b = new StringBuilder();
@@ -96,7 +96,7 @@ public class DataSiftPreview extends DataSiftApiClient {
         }
         FutureData<HistoricsPreviewData> future = new FutureData<HistoricsPreviewData>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsPreviewData())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsPreviewData(), config)))
                 .form("id", preview.id());
         applyConfig(request).execute();
         return future;

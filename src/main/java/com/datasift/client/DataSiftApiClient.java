@@ -1,5 +1,8 @@
 package com.datasift.client;
 
+import com.datasift.client.examples.JsonParsingException;
+import com.datasift.client.exceptions.AuthException;
+import com.datasift.client.exceptions.DataSiftException;
 import io.higgs.core.func.Function2;
 import io.higgs.http.client.Request;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -33,7 +36,7 @@ public class DataSiftApiClient {
     }
 
     protected <T extends DataSiftResult> Function2<String, io.higgs.http.client.Response> newRequestCallback(
-            final FutureData<T> future, final T instance) {
+            final FutureData<T> future, final T instance, final DataSiftConfig config) {
         return new Function2<String, io.higgs.http.client.Response>() {
             public void apply(String s, io.higgs.http.client.Response response) {
                 T result = instance;
@@ -43,14 +46,23 @@ public class DataSiftApiClient {
                     result.successful();
                 } else if (response.hasFailed()) {
                     result.failed(response.failureCause());
+                    if (config.isAllowedToRaiseExceptions()) {
+                        throw new DataSiftException("API request failed", response.failureCause(), response);
+                    }
                 } else {
                     try {
                         result = (T) DataSiftClient.MAPPER.readValue(s, instance.getClass());
                     } catch (IOException e) {
                         result.failed(e);
+                        if (config.isAllowedToRaiseExceptions()) {
+                            throw new JsonParsingException("Unable to decode JSON from DataSift response", e, response);
+                        }
                     }
                 }
                 result.setResponse(new com.datasift.client.Response(s, response));
+                if (config.isAllowedToRaiseExceptions()) {
+                    throw new AuthException("Please provide a valid username and API key", response);
+                }
                 future.received(result);
             }
         };

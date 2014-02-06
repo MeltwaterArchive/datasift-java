@@ -44,9 +44,9 @@ public class DataSiftPush extends DataSiftApiClient {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("A push subscription ID is required");
         }
-        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -62,9 +62,9 @@ public class DataSiftPush extends DataSiftApiClient {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("A push subscription ID is required");
         }
-        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(RESUME));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -80,9 +80,9 @@ public class DataSiftPush extends DataSiftApiClient {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("A push subscription ID is required");
         }
-        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -98,9 +98,9 @@ public class DataSiftPush extends DataSiftApiClient {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("A push subscription ID is required");
         }
-        FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -122,9 +122,9 @@ public class DataSiftPush extends DataSiftApiClient {
         if (id == null || id.isEmpty() || connector == null) {
             throw new IllegalArgumentException("A push subscription ID and output parameters is required");
         }
-        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(UPDATE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
         for (Map.Entry<String, String> e : connector.parameters().verifyAndGet().entrySet()) {
             request.form(e.getKey(), e.getValue());
@@ -148,7 +148,7 @@ public class DataSiftPush extends DataSiftApiClient {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("A push subscription ID is required");
         }
-        final FutureData<PulledInteractions> future = new FutureData<PulledInteractions>();
+        final FutureData<PulledInteractions> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(PULL));
         POST request = config.http().POST(uri, new PageReader(new Function2<String, Response>() {
             public void apply(String s, Response response) {
@@ -200,9 +200,9 @@ public class DataSiftPush extends DataSiftApiClient {
      * @return a set of log messages
      */
     public FutureData<PushLogMessages> log(String id, int page, int perPage, String orderBy, String orderDirection) {
-        FutureData<PushLogMessages> future = new FutureData<PushLogMessages>();
+        FutureData<PushLogMessages> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(LOG));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages())));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages(), config)));
         if (id != null && !id.isEmpty()) {
             request.form("id", id);
         }
@@ -231,9 +231,9 @@ public class DataSiftPush extends DataSiftApiClient {
             throw new IllegalArgumentException("A subscription ID is required");
         }
 
-        FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription())));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)));
         request.form("id", id);
         applyConfig(request).execute();
         return future;
@@ -252,9 +252,9 @@ public class DataSiftPush extends DataSiftApiClient {
      */
     public FutureData<PushCollection> get(Stream hash, int page, int perPage, String orderBy,
                                           String orderDirection, boolean includeFinished) {
-        FutureData<PushCollection> future = new FutureData<PushCollection>();
+        FutureData<PushCollection> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushCollection())));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushCollection(), config)));
         request.form("hash", hash.hash()).form("include_finished", includeFinished ? 1 : 0);
         if (page > 0) {
             request.form("page", page);
@@ -285,9 +285,9 @@ public class DataSiftPush extends DataSiftApiClient {
      */
     public FutureData<PushCollection> get(HistoricsQuery historics, int page, int perPage, String orderBy,
                                           String orderDirection, boolean includeFinished) {
-        FutureData<PushCollection> future = new FutureData<PushCollection>();
+        FutureData<PushCollection> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushCollection())));
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushCollection(), config)));
         request.form("historics_id", historics.getId()).form("include_finished", includeFinished ? 1 : 0);
         if (page > 0) {
             request.form("page", page);
@@ -311,9 +311,9 @@ public class DataSiftPush extends DataSiftApiClient {
      * @return the results of the validation
      */
     public <T extends PushConnector> FutureData<PushValidation> validate(T connector) {
-        FutureData<PushValidation> future = new FutureData<PushValidation>();
+        FutureData<PushValidation> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(VALIDATE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushValidation())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushValidation(), config)))
                 .form("output_type", connector.type().value());
         for (Map.Entry<String, String> e : connector.parameters().verifyAndGet().entrySet()) {
             request.form(e.getKey(), e.getValue());
@@ -385,7 +385,6 @@ public class DataSiftPush extends DataSiftApiClient {
      *                      must be less than end
      * @param end           optional unix timestamp, ignored if < 1 - marks end time for a subscription,
      *                      must be greater than start
-     * @param <T>
      * @return the subscription that will be created
      */
     public <T extends PushConnector> FutureData<PushSubscription> create(final T connector,
@@ -405,7 +404,7 @@ public class DataSiftPush extends DataSiftApiClient {
         if (end > 0 && !(end > start)) {
             throw new IllegalArgumentException("If end is specified it must be greater than the start");
         }
-        final FutureData<PushSubscription> future = new FutureData<PushSubscription>();
+        final FutureData<PushSubscription> future = new FutureData<>();
         final PushSubscription subscription = new PushSubscription();
         //we need to unwrap the future data object, either historics or stream
         if (historics != null) {
@@ -437,7 +436,7 @@ public class DataSiftPush extends DataSiftApiClient {
                                                               PreparedHistoricsQuery historics,
                                                               Stream stream) {
         URI uri = newParams().forURL(config.newAPIEndpointURI(CREATE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, subscription)))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, subscription, config)))
                 .form("output_type", connector.type().value())
                 .form("name", name);
 

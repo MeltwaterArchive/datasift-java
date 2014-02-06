@@ -53,9 +53,9 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         if (name == null || source == null) {
             throw new IllegalArgumentException("Name and a data source are both required");
         }
-        FutureData<ManagedSource> future = new FutureData<ManagedSource>();
+        FutureData<ManagedSource> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(id == null ? CREATE : UPDATE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)))
                 .form("source_type", source.type().value())
                 .form("name", name);
         if (source.hasParams()) {
@@ -87,12 +87,12 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         if (source == null) {
             throw new IllegalArgumentException("A data source is required");
         }
-        final FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        final FutureData<DataSiftResult> future = new FutureData<>();
         final DataSiftResult res = new DataSiftResult();
         unwrapFuture(source, future, res, new FutureResponse<ManagedSource>() {
             public void apply(ManagedSource data) {
                 URI uri = newParams().forURL(config.newAPIEndpointURI(START));
-                POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, data)))
+                POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, data, config)))
                         .form("id", data.getId());
                 applyConfig(request).execute();
             }
@@ -108,9 +108,9 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         if (id == null) {
             throw new IllegalArgumentException("A data source is required");
         }
-        FutureData<ManagedSource> future = new FutureData<ManagedSource>();
+        FutureData<ManagedSource> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -124,9 +124,9 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         if (id == null) {
             throw new IllegalArgumentException("A data source is required");
         }
-        FutureData<DataSiftResult> future = new FutureData<DataSiftResult>();
+        FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult())))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -148,7 +148,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
      * Get manage sources for the given type
      */
     public FutureData<ManagedSourceList> get(ManagedDataSourceType type, int page, int perPage) {
-        FutureData<ManagedSourceList> future = new FutureData<ManagedSourceList>();
+        FutureData<ManagedSourceList> future = new FutureData<>();
         ParamBuilder b = newParams();
         if (type != null) {
             b.put("source_type", type.value());
@@ -160,7 +160,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
             b.put("per_page", perPage);
         }
         URI uri = b.forURL(config.newAPIEndpointURI(GET));
-        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new ManagedSourceList())));
+        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new ManagedSourceList(), config)));
         applyConfig(request).execute();
         return future;
     }
@@ -170,9 +170,9 @@ public class DataSiftManagedSource extends DataSiftApiClient {
      * @return the managed source for the ID provided
      */
     public FutureData<ManagedSource> get(String id) {
-        FutureData<ManagedSource> future = new FutureData<ManagedSource>();
+        FutureData<ManagedSource> future = new FutureData<>();
         URI uri = newParams().put("id", id).forURL(config.newAPIEndpointURI(GET));
-        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new ManagedSource())));
+        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)));
         applyConfig(request).execute();
         return future;
     }
@@ -189,7 +189,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("A valid source ID is required");
         }
-        FutureData<ManagedSourceLog> future = new FutureData<ManagedSourceLog>();
+        FutureData<ManagedSourceLog> future = new FutureData<>();
         ParamBuilder b = newParams();
         if (page > 0) {
             b.put("page", page);
@@ -198,7 +198,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
             b.put("per_page", perPage);
         }
         URI uri = b.forURL(config.newAPIEndpointURI(LOG));
-        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new ManagedSourceLog())));
+        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new ManagedSourceLog(), config)));
         applyConfig(request).execute();
         return future;
     }
