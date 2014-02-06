@@ -6,9 +6,12 @@ import io.higgs.http.server.config.HttpConfig;
 import io.higgs.http.server.protocol.HttpProtocolConfiguration;
 
 import java.net.URL;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertNotNull;
 
 public class MockServer {
+    private MockServer() {
+    }
 
     public static HiggsServer startNewServer() {
         HttpProtocolConfiguration http = new HttpProtocolConfiguration();

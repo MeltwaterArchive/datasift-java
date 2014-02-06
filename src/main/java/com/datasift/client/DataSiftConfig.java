@@ -22,9 +22,10 @@ public class DataSiftConfig {
      * so it'll never be creating a whole new load of resources for each instance.
      */
     protected HttpRequestBuilder http = HttpRequestBuilder.instance();
-    private String versionPrefix = "v1.1";
-    private String urlEncodingFormat = "ISO-8859-1";
-    private int port = 80;
+    protected String versionPrefix = "v1.1";
+    protected String urlEncodingFormat = "ISO-8859-1";
+    protected int port = 80;
+    protected boolean raiseExceptionsOnError = true;
 
     public DataSiftConfig() {
         http.userAgent("Mozilla/5.0 (compatible; Java Client/3.0.0; +https://github.com/datasift/datasift-java)");
@@ -39,6 +40,20 @@ public class DataSiftConfig {
     public DataSiftConfig(String username, String apiKey) {
         this();
         auth(username, apiKey);
+    }
+
+    /**
+     * @return true if the client is suppose to raise exceptions rather than store them for the user to check for
+     */
+    public boolean isAllowedToRaiseExceptions() {
+        return raiseExceptionsOnError;
+    }
+
+    /**
+     * Sets whether the client will throw exceptions or store them for the user to check
+     */
+    public void isAllowedToRaiseExceptions(boolean b) {
+        raiseExceptionsOnError = b;
     }
 
     /**

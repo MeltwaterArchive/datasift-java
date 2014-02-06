@@ -56,7 +56,6 @@ public class TestHistoricsApiWithMocks extends IntegrationTestBase {
     private ArrayList source_g = new ArrayList();
     private String src_name = new BigInteger(130, new Random()).toString(32);
 
-
     @Before
     public void setup() throws IOException, IllegalAccessException, Exception {
         server = MockServer.startNewServer();

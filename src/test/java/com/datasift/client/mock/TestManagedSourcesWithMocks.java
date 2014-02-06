@@ -77,8 +77,6 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
             public boolean canCreateInstanceOf(Class<?> aClass) {
                 return MockManagedSourcesApi.class.isAssignableFrom(aClass);
             }
-
-
         });
 
         m.setName(name);
@@ -99,7 +97,6 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
         m.setEvent_time(event_time);
         m.setSuccess(success);
         m.setMessage(message);
-
     }
 
     @Test
@@ -243,7 +240,6 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
     public void testIfUserCanStartDataDelivery() {
         DataSiftResult start = datasift.managedSource().start(id).sync();
         assertTrue(start.isSuccessful());
-
     }
 
     @After

@@ -43,7 +43,6 @@ public class MockManagedSourcesApi {
     private boolean success;
     private String message;
 
-
     @method("create")
     public Map<String, Object> create() {
         Map<String, Object> map = new HashMap<>();
@@ -71,7 +70,6 @@ public class MockManagedSourcesApi {
         map.put("id", id);
         map.put("status", status);
     }
-
 
     @method("update")
     public Map<String, Object> update() {
@@ -117,8 +115,6 @@ public class MockManagedSourcesApi {
     public Map<String, Object> stop() {
         Map<String, Object> map = new HashMap<>();
         setManagedSource(map);
-
-
         return map;
     }
 
@@ -148,7 +144,6 @@ public class MockManagedSourcesApi {
     public void setM_id(ManagedSource m_id) {
         this.m_id = m_id;
     }
-
 
     public void setParameters(Map<String, Object> parameters) {
         this.parameters = parameters;

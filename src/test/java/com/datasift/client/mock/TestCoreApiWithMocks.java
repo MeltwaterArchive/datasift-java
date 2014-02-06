@@ -40,7 +40,6 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
     private String plan = "";
     private double remaining_dpus = new Random().nextDouble();
 
-
     @Before
     public void setup() throws IOException, IllegalAccessException, Exception {
         server = MockServer.startNewServer();
@@ -71,7 +70,6 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
         streams.put("seconds", secs);
         streams.put("licenses", new HashMap<String, Integer>());
 
-
         m.setExpectedCsdl(csdl);
         m.setDpu(dpu);
         m.setCreatedAt(createdAt);
@@ -83,7 +81,6 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
         m.setCredit(credit);
         m.setPlan(plan);
         m.setRemaining_dpus(remaining_dpus);
-
 
         Usage.UsageStream usageStream = new Usage.UsageStream();
         usageStream.setLicenses(new HashMap<String, Integer>());
@@ -160,8 +157,6 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
         assertTrue(dpu.isSuccessful());
 
         assertEquals(dpu.getDpu(), this.dpu, 0.00000001);
-
-
     }
 
     @Test
@@ -172,7 +167,6 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
         assertEquals(balance.credit(), credit, 0.00000001);
         assertEquals(balance.pricePlan(), plan);
         assertEquals(balance.remainingDpus(), remaining_dpus, 0.00000001);
-
     }
 
     @After

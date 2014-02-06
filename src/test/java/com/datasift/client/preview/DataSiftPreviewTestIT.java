@@ -16,7 +16,7 @@ public class DataSiftPreviewTestIT extends TestUtil {
     public void testCreate() throws Exception {
         Stream stream = createStream();
         preview = datasift.preview().create(DateTime.now().minusHours(3), DateTime.now().minusHours(2), stream,
-                new String[]{ "interaction.author.link,targetVol,hour;interaction.type,freqDist,10" }).sync();
+                new String[]{"interaction.author.link,targetVol,hour;interaction.type,freqDist,10"}).sync();
         successful(preview);
     }
 

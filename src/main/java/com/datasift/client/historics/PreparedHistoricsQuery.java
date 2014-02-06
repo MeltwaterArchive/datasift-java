@@ -113,8 +113,5 @@ public class PreparedHistoricsQuery extends DataSiftResult {
         public void setAugmentations(Map<String, Integer> augmentations) {
             this.augmentations = augmentations;
         }
-
-
-
     }
 }

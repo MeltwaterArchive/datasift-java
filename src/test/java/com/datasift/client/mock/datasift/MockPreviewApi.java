@@ -32,7 +32,6 @@ public class MockPreviewApi {
     private String parameters;
     private String hash;
     private Map<String, Object> data = new HashMap<>();
-
     private String target;
     private String analysis;
     private Map<String, Long> output = new HashMap<>();
@@ -72,7 +71,6 @@ public class MockPreviewApi {
 
         return map;
     }
-
 
     public void setHeaders(Map<String, String> headers) {
         this.headers = headers;

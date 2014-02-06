@@ -27,7 +27,6 @@ public class MockCoreApi {
     private String plan = "";
     private double remaining_dpus = -1d;
 
-
     @method("compile")
     public Map<String, Object> compile(@FormParam("csdl") String csdl, HttpResponse response) {
         Map<String, Object> data = compileOrValidate(csdl, response);

@@ -26,7 +26,7 @@ public class MockPushApi {
 
     Map<String, String> headers = new HashMap<>();
     protected String cursor = "";
-    Stream stream = null;
+    Stream stream;
     protected String output_type;
     protected long created_at;
     protected String user_id = "";
@@ -49,7 +49,6 @@ public class MockPushApi {
     protected String id = "";
     protected String name = "";
     protected Map<String, String> s3Params;
-
 
     @method("/validate")
     public Map<String, Object> validate(FormParams params) {

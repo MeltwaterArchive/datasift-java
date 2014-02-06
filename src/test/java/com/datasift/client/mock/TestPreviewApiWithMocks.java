@@ -90,7 +90,6 @@ public class TestPreviewApiWithMocks extends IntegrationTestBase {
         m.setThreshold(threshold);
     }
 
-
     @Test
     public void testIfUserCanCreateHistoricsPreview() {
         HistoricsPreview create = datasift.preview().create(now, stream, params).sync();

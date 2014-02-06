@@ -41,7 +41,6 @@ public class MockHistoricsApi {
     private long estimatedCompletion;
     private String src_name;
 
-
     @method("prepare")
     public Map<String, Object> prepare() {
         Map<String, Object> map = new HashMap<>();
@@ -128,7 +127,6 @@ public class MockHistoricsApi {
     public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
     }
-
 
     public void setId(String id) {
         this.id = id;

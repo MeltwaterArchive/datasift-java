@@ -47,13 +47,14 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
     private long last_request = new Random().nextLong();
     private long last_success = new Random().nextLong();
     private long remaining_bytes = new Random().nextLong();
-    private boolean lost_data = false;
+    private boolean lost_data;
     private long start = DateTime.now().getMillis();
     private long end = DateTime.now().getMillis();
     private boolean success = true;
     private int count = new Random().nextInt();
 
-    private String s3Key = "some-random-string", s3Secret = "another-random-string", s3Buck = "s3bucket", s3Dir = "s3Dir", s3Acl = "s3acl", s3Prefix = "prefix";
+    private String s3Key = "some-random-string", s3Secret = "another-random-string", s3Buck = "s3bucket",
+            s3Dir = "s3Dir", s3Acl = "s3acl", s3Prefix = "prefix";
     private int s3Frequency = 1234567, s3MaxSize = 3423535;
     private S3 s3;
     private String hash_type = "stream";
@@ -260,7 +261,6 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
         assertEquals(get_details.isLostData(), lost_data);
         assertEquals(get_details.getStart(), start);
         assertEquals(get_details.getEnd(), end);
-
     }
 
     /*
@@ -274,6 +274,4 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
     public void after() {
         server.stop();
     }
-
-
 }
