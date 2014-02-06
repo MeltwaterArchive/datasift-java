@@ -46,7 +46,8 @@ public class DataSiftPush extends DataSiftApiClient {
         }
         FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(PAUSE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -64,7 +65,8 @@ public class DataSiftPush extends DataSiftApiClient {
         }
         FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(RESUME));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -82,7 +84,8 @@ public class DataSiftPush extends DataSiftApiClient {
         }
         FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -124,7 +127,8 @@ public class DataSiftPush extends DataSiftApiClient {
         }
         FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(UPDATE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
         for (Map.Entry<String, String> e : connector.parameters().verifyAndGet().entrySet()) {
             request.form(e.getKey(), e.getValue());
@@ -202,7 +206,8 @@ public class DataSiftPush extends DataSiftApiClient {
     public FutureData<PushLogMessages> log(String id, int page, int perPage, String orderBy, String orderDirection) {
         FutureData<PushLogMessages> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(LOG));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages(), config)));
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushLogMessages(), config)));
         if (id != null && !id.isEmpty()) {
             request.form("id", id);
         }
@@ -233,7 +238,8 @@ public class DataSiftPush extends DataSiftApiClient {
 
         FutureData<PushSubscription> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)));
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)));
         request.form("id", id);
         applyConfig(request).execute();
         return future;
@@ -254,7 +260,8 @@ public class DataSiftPush extends DataSiftApiClient {
                                           String orderDirection, boolean includeFinished) {
         FutureData<PushCollection> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushCollection(), config)));
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushCollection(), config)));
         request.form("hash", hash.hash()).form("include_finished", includeFinished ? 1 : 0);
         if (page > 0) {
             request.form("page", page);
@@ -287,7 +294,8 @@ public class DataSiftPush extends DataSiftApiClient {
                                           String orderDirection, boolean includeFinished) {
         FutureData<PushCollection> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PushCollection(), config)));
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushCollection(), config)));
         request.form("historics_id", historics.getId()).form("include_finished", includeFinished ? 1 : 0);
         if (page > 0) {
             request.form("page", page);

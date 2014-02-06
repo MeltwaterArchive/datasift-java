@@ -60,7 +60,7 @@ public class DataSiftApiClient {
                     }
                 }
                 result.setResponse(new com.datasift.client.Response(s, response));
-                if (config.isAllowedToRaiseExceptions()) {
+                if (config.isAllowedToRaiseExceptions() && response.getStatus().code() == 401) {
                     throw new AuthException("Please provide a valid username and API key", response);
                 }
                 future.received(result);

@@ -2,7 +2,6 @@ package com.datasift.client.examples;
 
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
-import com.datasift.client.DataSiftResult;
 import com.datasift.client.core.Stream;
 import com.datasift.client.stream.DataSiftMessage;
 import com.datasift.client.stream.DeletedInteraction;
@@ -11,14 +10,16 @@ import com.datasift.client.stream.Interaction;
 import com.datasift.client.stream.StreamEventListener;
 import com.datasift.client.stream.StreamSubscription;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class LiveStream {
     private LiveStream() {
     }
 
     public static void main(String... args) throws InterruptedException {
-        DataSiftConfig config = new DataSiftConfig("aszachewicz", "7aba32dc48b2f42f3867cef33b6f7c61");
+        DataSiftConfig config = new DataSiftConfig("zcourts", "130894088ba71db4e793585e40528bc1");
         final DataSiftClient datasift = new DataSiftClient(config);
-        Stream result = datasift.compile("interaction.content contains \"java\"").sync();
+        Stream result = datasift.compile("interaction.content contains \"music\"").sync();
         //handle exceptions that can't necessarily be linked to a specific stream
         datasift.liveStream().onError(new ErrorHandler());
 
@@ -35,6 +36,8 @@ public class LiveStream {
     }
 
     public static class Subscription extends StreamSubscription {
+        AtomicLong count = new AtomicLong();
+
         public Subscription(Stream stream) {
             super(stream);
         }
@@ -45,7 +48,9 @@ public class LiveStream {
         }
 
         public void onMessage(Interaction i) {
-            System.out.println("INTERACTION:\n" + i);
+            if (count.incrementAndGet() % 1000 == 0) {
+                System.out.println(count.get() + " <> INTERACTION:\n" + i);
+            }
         }
     }
 

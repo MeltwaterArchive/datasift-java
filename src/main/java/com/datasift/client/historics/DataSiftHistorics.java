@@ -163,7 +163,8 @@ public class DataSiftHistorics extends DataSiftApiClient {
     public FutureData<HistoricsStatus> status(DateTime start, DateTime end, String... sources) {
         FutureData<HistoricsStatus> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STATUS));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsStatus(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new HistoricsStatus(), config)))
                 .form("start", MILLISECONDS.toSeconds(start.getMillis()))
                 .form("end", MILLISECONDS.toSeconds(end.getMillis()));
         if (sources != null && sources.length > 0) {
@@ -224,7 +225,8 @@ public class DataSiftHistorics extends DataSiftApiClient {
     public FutureData<HistoricsQueryList> list(int max, int page, boolean withEstimate) {
         FutureData<HistoricsQueryList> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsQueryList(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new HistoricsQueryList(), config)))
                 .form("with_estimate", withEstimate ? 1 : 0);
         if (max > 0) {
             request.form("max", max);
@@ -276,7 +278,8 @@ public class DataSiftHistorics extends DataSiftApiClient {
                                                       String... sources) {
         FutureData<PreparedHistoricsQuery> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(PREPARE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new PreparedHistoricsQuery(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PreparedHistoricsQuery(), config)))
                 .form("hash", hash)
                 .form("start", start)
                 .form("end", end)

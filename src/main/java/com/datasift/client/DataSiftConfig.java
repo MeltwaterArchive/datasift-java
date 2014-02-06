@@ -26,6 +26,7 @@ public class DataSiftConfig {
     protected String urlEncodingFormat = "ISO-8859-1";
     protected int port = 80;
     protected boolean raiseExceptionsOnError = true;
+    private boolean autoReconnect = true;
 
     public DataSiftConfig() {
         http.userAgent("Mozilla/5.0 (compatible; Java Client/3.0.0; +https://github.com/datasift/datasift-java)");
@@ -226,5 +227,18 @@ public class DataSiftConfig {
     public DataSiftConfig urlEncodingFormat(String format) {
         urlEncodingFormat = format;
         return this;
+    }
+
+    public boolean isAutoReconnect() {
+        return autoReconnect;
+    }
+
+    /**
+     * Sets whether streams are automatically reconnected when a websocket connection is closed
+     *
+     * @param autoReconnect true or false, defaults to true
+     */
+    public void setAutoReconnect(boolean autoReconnect) {
+        this.autoReconnect = autoReconnect;
     }
 }

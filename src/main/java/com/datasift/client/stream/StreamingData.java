@@ -29,11 +29,12 @@ public class StreamingData {
     protected URI endpoint;
     protected WebSocketStream liveStream;
     protected DataSiftConfig config;
-    protected Map<Stream, StreamSubscription> subscriptions = new NonBlockingHashMap<Stream, StreamSubscription>();
+    protected Map<Stream, StreamSubscription> subscriptions = new NonBlockingHashMap<>();
     protected ErrorListener errorListener;
     protected StreamEventListener streamEventListener;
     protected boolean connected;
-    protected Set<StreamSubscription> unsentSubscriptions = new NonBlockingHashSet<StreamSubscription>();
+    protected Set<StreamSubscription> unsentSubscriptions = new NonBlockingHashSet<>();
+    protected short MAX_TIMEOUT = 320, currentTimeout = 1;
 
     static {
         //DS produces some fairly big websocket frames. usually 1 or 2 MB max but set to 20 to be sure
@@ -88,6 +89,18 @@ public class StreamingData {
                 public void apply(ChannelHandlerContext frame) {
                     streamEventListener.streamClosed();
                     connected = false;
+                    if (config.isAutoReconnect() && currentTimeout < MAX_TIMEOUT) {
+                        try {
+                            Thread.sleep(currentTimeout *= 2);
+                        } catch (InterruptedException ignored) {
+                            log.info("Sleep interrupted, reconnecting");
+                        }
+                        liveStream = null;
+                        connect();
+                        //re-subscribe
+                        unsentSubscriptions.addAll(subscriptions.values());
+                        pushUnsentSubscriptions();
+                    }
                 }
             }, WebSocketEvent.DISCONNECT);
 
@@ -95,6 +108,7 @@ public class StreamingData {
                 public void apply(ChannelHandlerContext frame) {
                     streamEventListener.streamOpened();
                     connected = true;
+                    currentTimeout = 1;
                     pushUnsentSubscriptions();
                 }
             }, WebSocketEvent.CONNECT);
@@ -128,7 +142,7 @@ public class StreamingData {
         }
     }
 
-    private void fireError(Throwable e) {
+    protected void fireError(Throwable e) {
         if (e == null) {
             throw new IllegalArgumentException("Error can't be null!");
         }
@@ -142,7 +156,6 @@ public class StreamingData {
      * the error  just once
      *
      * @param listener an error callback
-     * @return
      */
     public StreamingData onError(ErrorListener listener) {
         this.errorListener = listener;
@@ -196,6 +209,7 @@ public class StreamingData {
         }
         connect();
         liveStream.emit(" { \"action\" : \"unsubscribe\" , \"hash\": \"" + stream.hash() + "\"}");
+        subscriptions.remove(stream);
         return this;
     }
 }

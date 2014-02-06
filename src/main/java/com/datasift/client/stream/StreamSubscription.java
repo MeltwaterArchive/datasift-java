@@ -31,4 +31,27 @@ public abstract class StreamSubscription {
 
     public void onClose() {
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        StreamSubscription that = (StreamSubscription) o;
+
+        if (stream != null ? !stream.equals(that.stream) : that.stream != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return stream != null ? stream.hashCode() : 0;
+    }
 }
