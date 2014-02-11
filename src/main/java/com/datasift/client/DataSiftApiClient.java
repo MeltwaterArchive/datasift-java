@@ -25,6 +25,7 @@ public class DataSiftApiClient {
 
     public Request applyConfig(Request request) {
         request.header("Authorization", config.authAsHeader());
+        request.withSSLProtocols(config.sslProtocols());
         return request;
     }
 

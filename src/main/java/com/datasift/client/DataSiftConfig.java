@@ -4,12 +4,16 @@ import io.higgs.http.client.HttpRequestBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  */
 public class DataSiftConfig {
     private static final String illConfigured = "(%s) is null, this is an ill-configured object and all " +
             "API requests using it will fail";
+    protected boolean compatibleSSLProtocolsFound;
+    protected List<String> sslProtocols = new ArrayList<>();
     protected String username, apiKey;
     protected boolean sslEnabled = true;
     protected String host = "api.datasift.com";
@@ -25,11 +29,20 @@ public class DataSiftConfig {
     protected String versionPrefix = "v1.1";
     protected String urlEncodingFormat = "ISO-8859-1";
     protected int port = 80;
+    protected boolean manualPort;
     protected boolean raiseExceptionsOnError = true;
     private boolean autoReconnect = true;
 
     public DataSiftConfig() {
         http.userAgent("Mozilla/5.0 (compatible; Java Client/3.0.0; +https://github.com/datasift/datasift-java)");
+
+        if (HttpRequestBuilder.isSupportedSSLProtocol("SSLv3")) {
+            sslProtocols.add("SSLv3");
+        }
+        if (HttpRequestBuilder.isSupportedSSLProtocol("TLSv1")) {
+            sslProtocols.add("TLSv1");
+        }
+        compatibleSSLProtocolsFound = sslProtocols.size() > 0;
     }
 
     /**
@@ -120,10 +133,11 @@ public class DataSiftConfig {
      * @return The port on which connections should be made
      */
     public int port() {
-        return port;
+        return manualPort ? port : sslEnabled ? 443 : 80;
     }
 
     public void port(int p) {
+        manualPort = true;
         port = p;
     }
 
@@ -240,5 +254,21 @@ public class DataSiftConfig {
      */
     public void setAutoReconnect(boolean autoReconnect) {
         this.autoReconnect = autoReconnect;
+    }
+
+    /**
+     * Gets an array of compatible SSL protocols found on this JVM
+     *
+     * @return an array of SSL protocols or NULL if none are available
+     */
+    public String[] sslProtocols() {
+        return compatibleSSLProtocolsFound() ? sslProtocols.toArray(new String[sslProtocols.size()]) : null;
+    }
+
+    /**
+     * @return true if at least one compatible secure protocol is available
+     */
+    public boolean compatibleSSLProtocolsFound() {
+        return compatibleSSLProtocolsFound;
     }
 }
