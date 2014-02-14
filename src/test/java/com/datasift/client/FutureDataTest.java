@@ -16,7 +16,7 @@ public class FutureDataTest {
     }
 
     @Test
-    public void testReceived() throws Exception {
+    public void testReceivedIsSetInFutureData() throws Exception {
         FutureData<DataSiftResult> res = new FutureData<DataSiftResult>();
         assertNull("Data can't be present before received is invoked", res.data);
         DataSiftResult result = new DataSiftResult();
@@ -26,7 +26,7 @@ public class FutureDataTest {
     }
 
     @Test(expected = CallbackEx.class)
-    public void testOnData() throws Exception {
+    public void testOnDataIsInvokedOnReceive() throws Exception {
         FutureData<DataSiftResult> res = new FutureData<DataSiftResult>();
         res.onData(new FutureResponse<DataSiftResult>() {
             public void apply(DataSiftResult data) {

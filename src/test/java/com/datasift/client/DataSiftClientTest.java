@@ -10,37 +10,37 @@ import static org.junit.Assert.assertNotNull;
 public class DataSiftClientTest extends TestUtil {
 
     @Test(expected = IllegalArgumentException.class)
-    public void testClientConstructor() throws Exception {
+    public void testClientConstructorDoesntAcceptNullConfig() throws Exception {
         new DataSiftClient(null);
     }
 
     @Test
-    public void testHistorics() throws Exception {
+    public void testHistoricsisNeverNull() throws Exception {
         assertNotNull("datasift.historics() should never be null", datasift.historics());
     }
 
     @Test
-    public void testManagedSource() throws Exception {
+    public void testManagedSourceisNeverNull() throws Exception {
         assertNotNull("datasift.managedSource() should never be null", datasift.managedSource());
     }
 
     @Test
-    public void testPreview() throws Exception {
+    public void testPreviewisNeverNull() throws Exception {
         assertNotNull("datasift.preview() should never be null", datasift.preview());
     }
 
     @Test
-    public void testPush() throws Exception {
+    public void testPushisNeverNull() throws Exception {
         assertNotNull("datasift.push() should never be null", datasift.push());
     }
 
     @Test
-    public void testConfig() throws Exception {
+    public void testConfigisNeverNull() throws Exception {
         assertNotNull("datasift.config() should never be null", datasift.config());
     }
 
     @Test
-    public void testLiveStream() throws Exception {
+    public void testLiveStreamisNeverNull() throws Exception {
         assertNotNull("datasift.liveStream() should never be null", datasift.liveStream());
     }
 }

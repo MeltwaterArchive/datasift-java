@@ -25,20 +25,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestCoreApiWithMocks extends IntegrationTestBase {
-    private HiggsServer server;
-    private Map<String, String> headers = new HashMap<>();
-    private Map<String, Object> streams = new HashMap<>();
-    private MockCoreApi m = new MockCoreApi();
-    private String csdl = "";
-    private String hash = "";
-    private double dpu = new Random().nextDouble();
-    private DateTime createdAt = DateTime.now(), start = DateTime.now().plusHours(1), end = DateTime.now().plusDays(1);
-    private int secs = new Random().nextInt();
-    private Map<String, Object> detail = new HashMap<>();
-    private int count = new Random().nextInt();
-    private double credit = new Random().nextDouble();
-    private String plan = "";
-    private double remaining_dpus = new Random().nextDouble();
+    protected HiggsServer server;
+    protected Map<String, String> headers = new HashMap<>();
+    protected Map<String, Object> streams = new HashMap<>();
+    protected MockCoreApi m = new MockCoreApi();
+    protected String csdl = "";
+    protected String hash = "";
+    protected double dpu = new Random().nextDouble();
+    protected DateTime createdAt = DateTime.now(),
+            start = DateTime.now().plusHours(1),
+            end = DateTime.now().plusDays(1);
+    protected int secs = new Random().nextInt();
+    protected double credit = new Random().nextDouble();
+    protected String plan = "";
+    protected double remaining_dpus = new Random().nextDouble();
 
     @Before
     public void setup() throws IOException, IllegalAccessException, Exception {
