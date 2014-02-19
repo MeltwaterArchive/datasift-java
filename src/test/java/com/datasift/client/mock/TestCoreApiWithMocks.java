@@ -149,6 +149,35 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
     }
 
     @Test
+    public void testIfUsageParamIsSentForAnHour() {
+        m.setExpectedPeriod(Usage.Period.HOUR);
+        Usage usage = datasift.usage(Usage.Period.HOUR).sync();
+        //just need to check if successful if it isn't the server returns 401
+        assertTrue(usage.isSuccessful());
+    }
+
+    @Test
+    public void testIfUsageParamIsSentForADay() {
+        m.setExpectedPeriod(Usage.Period.DAY);
+        Usage usage = datasift.usage(Usage.Period.DAY).sync();
+        assertTrue(usage.isSuccessful());
+    }
+
+    @Test
+    public void testIfUsageParamIsSentForCurrent() {
+        m.setExpectedPeriod(Usage.Period.CURRENT);
+        Usage usage = datasift.usage(Usage.Period.CURRENT).sync();
+        assertTrue(usage.isSuccessful());
+    }
+
+    @Test
+    public void testIfWeCanGetStreamUsage(){
+
+        //m.setExpectedStreamData();
+
+    }
+
+    @Test
     public void testIfUserCanCalculateDpuCost() {
 
         Stream stream = Stream.fromString("13e9347e7da32f19fcdb08e297019d2e");

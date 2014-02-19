@@ -6,6 +6,7 @@ import io.higgs.core.method;
 import io.higgs.http.server.HttpResponse;
 import io.higgs.http.server.WebApplicationException;
 import io.higgs.http.server.params.FormParam;
+import io.higgs.http.server.params.QueryParam;
 import io.higgs.http.server.resource.MediaType;
 import io.higgs.http.server.resource.Produces;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -26,6 +27,7 @@ public class MockCoreApi {
     private double credit = -1d;
     private String plan = "";
     private double remaining_dpus = -1d;
+    private Usage.Period expectedPeriod;
 
     @method("compile")
     public Map<String, Object> compile(@FormParam("csdl") String csdl, HttpResponse response) {
@@ -41,7 +43,12 @@ public class MockCoreApi {
     }
 
     @method("usage")
-    public Map<String, Object> usage() {
+    public Map<String, Object> usage(@QueryParam("period") String period) {
+        if (expectedPeriod != null) {
+            if (!expectedPeriod.toString().equalsIgnoreCase(period)) {
+                throw new WebApplicationException(HttpResponseStatus.BAD_REQUEST);
+            }
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("start", start);
         map.put("end", end);
@@ -127,5 +134,9 @@ public class MockCoreApi {
 
     public void setRemaining_dpus(double remaining_dpus) {
         this.remaining_dpus = remaining_dpus;
+    }
+
+    public void setExpectedPeriod(Usage.Period expectedPeriod) {
+        this.expectedPeriod = expectedPeriod;
     }
 }

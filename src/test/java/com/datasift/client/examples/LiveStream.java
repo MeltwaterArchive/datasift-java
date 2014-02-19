@@ -17,7 +17,7 @@ public class LiveStream {
     }
 
     public static void main(String... args) throws InterruptedException {
-        DataSiftConfig config = new DataSiftConfig("zcourts", "130894088ba71db4e793585e40528bc1");
+        DataSiftConfig config = new DataSiftConfig("zcourts", "53088551484f2303b62c2600bbf68cb0");
         final DataSiftClient datasift = new DataSiftClient(config);
         Stream result = datasift.compile("interaction.content contains \"music\"").sync();
         //handle exceptions that can't necessarily be linked to a specific stream
@@ -30,6 +30,7 @@ public class LiveStream {
         datasift.liveStream().subscribe(new Subscription(Stream.fromString(result.hash())));
         //process interactions for another stream
         datasift.liveStream().subscribe(new Subscription(Stream.fromString("another-stream-hash")));
+        datasift.liveStream().subscribe(new Subscription(Stream.fromString(result.hash())));
 
         //at some point later if you want unsubscribe
         datasift.liveStream().unsubscribe(Stream.fromString(result.hash()));
