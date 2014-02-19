@@ -1,4 +1,4 @@
-package com.datasift.client.examples;
+package com.datasift.client.exceptions;
 
 import com.datasift.client.exceptions.DataSiftException;
 import io.higgs.http.client.Response;

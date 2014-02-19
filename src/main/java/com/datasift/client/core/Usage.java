@@ -12,11 +12,11 @@ import java.util.Map;
  */
 public class Usage extends DataSiftResult {
     @JsonProperty
-    private Date start;
+    protected Date start;
     @JsonProperty
-    private Date end;
+    protected Date end;
     @JsonProperty
-    private UsageStream streams;
+    protected UsageStream streams;
 
     public DateTime getStart() {
         return new DateTime(start);

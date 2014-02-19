@@ -1,8 +1,8 @@
 package com.datasift.client;
 
-import com.datasift.client.examples.JsonParsingException;
 import com.datasift.client.exceptions.AuthException;
 import com.datasift.client.exceptions.DataSiftException;
+import com.datasift.client.exceptions.JsonParsingException;
 import io.higgs.core.func.Function2;
 import io.higgs.http.client.Request;
 import io.netty.handler.codec.http.HttpResponseStatus;
