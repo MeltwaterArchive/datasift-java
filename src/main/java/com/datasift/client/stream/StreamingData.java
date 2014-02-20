@@ -54,7 +54,8 @@ public class StreamingData implements WebSocketEventListener {
                     long now = DateTime.now().getMillis();
                     for (StreamingData data : streams) {
                         if (data.lastSeen != null) {
-                            if (now - data.lastSeen.getMillis() >= TimeUnit.SECONDS.toMillis(CONNECTION_TIMEOUT_LIMIT)) {
+                            if (now - data.lastSeen.getMillis() >=
+                                    TimeUnit.SECONDS.toMillis(CONNECTION_TIMEOUT_LIMIT)) {
                                 data.closeAndReconnect();
                             }
                         }
@@ -83,7 +84,6 @@ public class StreamingData implements WebSocketEventListener {
         this.config = config;
         streams.add(this);
     }
-
 
     @Override
     public synchronized void onConnect(ChannelHandlerContext ctx) {

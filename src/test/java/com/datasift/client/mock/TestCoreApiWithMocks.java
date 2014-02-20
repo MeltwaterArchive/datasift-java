@@ -171,10 +171,8 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
     }
 
     @Test
-    public void testIfWeCanGetStreamUsage(){
-
+    public void testIfWeCanGetStreamUsage() {
         //m.setExpectedStreamData();
-
     }
 
     @Test
