@@ -34,7 +34,7 @@ public class DataSiftConfig {
     private boolean autoReconnect = true;
 
     public DataSiftConfig() {
-        http.userAgent("Mozilla/5.0 (compatible; Java Client/3.0.0; +https://github.com/datasift/datasift-java)");
+        http.userAgent("DataSift/" + versionPrefix + " Java/v3.0.0");
 
         if (HttpRequestBuilder.isSupportedSSLProtocol("SSLv3")) {
             sslProtocols.add("SSLv3");

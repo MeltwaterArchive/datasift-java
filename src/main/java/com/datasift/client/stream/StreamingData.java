@@ -40,13 +40,36 @@ public class StreamingData implements WebSocketEventListener {
     protected Set<StreamSubscription> unsentSubscriptions = new NonBlockingHashSet<>();
     protected short MAX_TIMEOUT = 320, currentTimeout = 1;
     protected DateTime lastSeen;
+    protected static Set<StreamingData> streams = new NonBlockingHashSet<>();
+    public static boolean detectDeadConnection = true;
+    public static int CONNECTION_TIMEOUT_LIMIT = 65;
+    public static int CONNECTION_TIMEOUT = 65;
 
     static {
         //DS produces some fairly big websocket frames. usually 1 or 2 MB max but set to 20 to be sure
         WebSocketClient.maxFramePayloadLength = 20971520; //20 MB
+        new Thread(new Runnable() {
+            public void run() {
+                while (detectDeadConnection) {
+                    long now = DateTime.now().getMillis();
+                    for (StreamingData data : streams) {
+                        if (data.lastSeen != null) {
+                            if (now - data.lastSeen.getMillis() >= TimeUnit.SECONDS.toMillis(CONNECTION_TIMEOUT_LIMIT)) {
+                                data.closeAndReconnect();
+                            }
+                        }
+                    }
+                    try {
+                        Thread.sleep(TimeUnit.SECONDS.toMillis(CONNECTION_TIMEOUT));
+                    } catch (InterruptedException e) {
+                        LoggerFactory.getLogger(getClass()).info("Interrupted while waiting to check conn");
+                    }
+                }
+            }
+        }).start();
     }
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     public StreamingData(DataSiftConfig config) {
         try {
@@ -58,6 +81,7 @@ public class StreamingData implements WebSocketEventListener {
             log.error("Unable to create endpoint URL", e);
         }
         this.config = config;
+        streams.add(this);
     }
 
 
@@ -70,6 +94,10 @@ public class StreamingData implements WebSocketEventListener {
 
     @Override
     public synchronized void onClose(ChannelHandlerContext ctx, CloseWebSocketFrame frame) {
+        closeAndReconnect();
+    }
+
+    private void closeAndReconnect() {
         streamEventListener.streamClosed();
         synchronized (StreamingData.this) {
             connected = false;
