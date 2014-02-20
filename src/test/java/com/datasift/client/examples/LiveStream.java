@@ -17,7 +17,7 @@ public class LiveStream {
     }
 
     public static void main(String... args) throws InterruptedException {
-        DataSiftConfig config = new DataSiftConfig("zcourts", "53088551484f2303b62c2600bbf68cb0");
+        DataSiftConfig config = new DataSiftConfig("zcourts", "bb6e6438565dc5c3bc4d3a9d2540134d");
         final DataSiftClient datasift = new DataSiftClient(config);
         Stream result = datasift.compile("interaction.content contains \"music\"").sync();
         //handle exceptions that can't necessarily be linked to a specific stream

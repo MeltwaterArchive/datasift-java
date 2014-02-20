@@ -3,16 +3,19 @@ package com.datasift.client.stream;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.core.Stream;
-import io.higgs.core.func.Function1;
 import io.higgs.ws.client.WebSocketClient;
-import io.higgs.ws.client.WebSocketEvent;
+import io.higgs.ws.client.WebSocketEventListener;
 import io.higgs.ws.client.WebSocketMessage;
 import io.higgs.ws.client.WebSocketStream;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,11 +24,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class StreamingData {
+public class StreamingData implements WebSocketEventListener {
     protected URI endpoint;
     protected WebSocketStream liveStream;
     protected DataSiftConfig config;
@@ -35,6 +39,7 @@ public class StreamingData {
     protected boolean connected;
     protected Set<StreamSubscription> unsentSubscriptions = new NonBlockingHashSet<>();
     protected short MAX_TIMEOUT = 320, currentTimeout = 1;
+    protected DateTime lastSeen;
 
     static {
         //DS produces some fairly big websocket frames. usually 1 or 2 MB max but set to 20 to be sure
@@ -45,7 +50,9 @@ public class StreamingData {
 
     public StreamingData(DataSiftConfig config) {
         try {
-            endpoint = new URI(String.format("ws://websocket.datasift.com:80/multi?username=%s&api_key=%s",
+            endpoint = new URI(String.format(
+                    (config.isSslEnabled() ? "wss" : "ws") +
+                            "://websocket.datasift.com:" + config.port() + "/multi?username=%s&api_key=%s",
                     config.getUsername(), config.getApiKey()));
         } catch (URISyntaxException e) {
             log.error("Unable to create endpoint URL", e);
@@ -53,65 +60,74 @@ public class StreamingData {
         this.config = config;
     }
 
-    protected void connect() {
+
+    @Override
+    public synchronized void onConnect(ChannelHandlerContext ctx) {
+        streamEventListener.streamOpened();
+        connected = true;
+        pushUnsentSubscriptions();
+    }
+
+    @Override
+    public synchronized void onClose(ChannelHandlerContext ctx, CloseWebSocketFrame frame) {
+        streamEventListener.streamClosed();
+        synchronized (StreamingData.this) {
+            connected = false;
+        }
+        if (config.isAutoReconnect() &&
+                TimeUnit.SECONDS.toMillis(currentTimeout) <= TimeUnit.SECONDS.toMillis(MAX_TIMEOUT)) {
+            currentTimeout *= 2;
+        }
+        try {
+            Thread.sleep(TimeUnit.SECONDS.toMillis(currentTimeout));
+        } catch (InterruptedException ignored) {
+            log.info("Sleep interrupted, reconnecting");
+        }
+        liveStream = null;
+        //re-subscribe
+        unsentSubscriptions.addAll(subscriptions.values());
+        connect();
+    }
+
+    @Override
+    public void onPing(ChannelHandlerContext ctx, PingWebSocketFrame frame) {
+        //only on ping or message should we reset the timeout
+        currentTimeout = 1;
+        lastSeen = DateTime.now();
+    }
+
+    @Override
+    public void onMessage(ChannelHandlerContext ctx, WebSocketMessage msg) {
+        currentTimeout = 1;
+        lastSeen = DateTime.now();
+        try {
+            MultiStreamInteraction mi =
+                    DataSiftClient.MAPPER.readValue(msg.data(), MultiStreamInteraction.class);
+            if (mi.isDataSiftMessage()) {
+                fireMessage(new DataSiftMessage(mi));
+            } else {
+                if (mi.getData().get("deleted") != null) {
+                    streamEventListener.onDelete(new DeletedInteraction(mi));
+                } else {
+                    fireInteraction(mi.getHash(), new Interaction(mi.getData()));
+                }
+            }
+        } catch (IOException e) {
+            fireError(e);  //unlikely but possible
+        }
+    }
+
+    @Override
+    public void onError(ChannelHandlerContext ctx, Throwable cause, FullHttpResponse response) {
+        if (cause != null) {
+            fireError(cause);
+        }
+    }
+
+    protected synchronized void connect() {
         if (liveStream == null) {
-            liveStream = WebSocketClient.connect(endpoint);
-
-            liveStream.events().on(new Function1<WebSocketMessage>() {
-                public void apply(WebSocketMessage frame) {
-                    try {
-                        MultiStreamInteraction mi =
-                                DataSiftClient.MAPPER.readValue(frame.data(), MultiStreamInteraction.class);
-                        if (mi.isDataSiftMessage()) {
-                            fireMessage(new DataSiftMessage(mi));
-                        } else {
-                            if (mi.getData().get("deleted") != null) {
-                                streamEventListener.onDelete(new DeletedInteraction(mi));
-                            } else {
-                                fireInteraction(mi.getHash(), new Interaction(mi.getData()));
-                            }
-                        }
-                    } catch (IOException e) {
-                        fireError(e);  //unlikely but possible
-                    }
-                }
-            }, WebSocketEvent.MESSAGE);
-
-            liveStream.events().on(new Function1<Throwable>() {
-                public void apply(Throwable t) {
-                    if (t != null) {
-                        fireError(t);
-                    }
-                }
-            }, WebSocketEvent.ERROR);
-
-            liveStream.events().on(new Function1<ChannelHandlerContext>() {
-                public void apply(ChannelHandlerContext frame) {
-                    streamEventListener.streamClosed();
-                    connected = false;
-                    if (config.isAutoReconnect() && currentTimeout < MAX_TIMEOUT) {
-                        try {
-                            Thread.sleep(currentTimeout *= 2);
-                        } catch (InterruptedException ignored) {
-                            log.info("Sleep interrupted, reconnecting");
-                        }
-                        liveStream = null;
-                        connect();
-                        //re-subscribe
-                        unsentSubscriptions.addAll(subscriptions.values());
-                        pushUnsentSubscriptions();
-                    }
-                }
-            }, WebSocketEvent.DISCONNECT);
-
-            liveStream.events().on(new Function1<ChannelHandlerContext>() {
-                public void apply(ChannelHandlerContext frame) {
-                    streamEventListener.streamOpened();
-                    connected = true;
-                    currentTimeout = 1;
-                    pushUnsentSubscriptions();
-                }
-            }, WebSocketEvent.CONNECT);
+            liveStream = WebSocketClient.connect(endpoint, false, config.sslProtocols());
+            liveStream.subscribe(this);
         }
     }
 
@@ -185,8 +201,14 @@ public class StreamingData {
 
     protected void pushUnsentSubscriptions() {
         for (final StreamSubscription subscription : unsentSubscriptions) {
+            if (!connected || liveStream.channel() == null || !liveStream.channel().isActive()) {
+                synchronized (this) {
+                    connected = false;
+                }
+                break;
+            }
             subscriptions.put(subscription.stream(), subscription);
-            liveStream.emit("{\"action\":\"subscribe\",\"hash\":\"" + subscription.stream().hash() + "\"}")
+            liveStream.send("{\"action\":\"subscribe\",\"hash\":\"" + subscription.stream().hash() + "\"}")
                     .addListener(new GenericFutureListener<Future<Void>>() {
                         public void operationComplete(Future<Void> future) throws Exception {
                             if (future.isSuccess()) {
@@ -198,6 +220,9 @@ public class StreamingData {
                         }
                     });
         }
+        if (!connected) {
+            connect();
+        }
     }
 
     public StreamingData unsubscribe(Stream stream) {
@@ -208,7 +233,7 @@ public class StreamingData {
             throw new IllegalArgumentException("Invalid stream subscription request, no hash available");
         }
         connect();
-        liveStream.emit(" { \"action\" : \"unsubscribe\" , \"hash\": \"" + stream.hash() + "\"}");
+        liveStream.send(" { \"action\" : \"unsubscribe\" , \"hash\": \"" + stream.hash() + "\"}");
         subscriptions.remove(stream);
         return this;
     }
