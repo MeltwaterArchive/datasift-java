@@ -140,6 +140,10 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
+    public FutureData<PulledInteractions> pull(PushSubscription id) {
+        return pull(id, 0, null);
+    }
+
     /**
      * Retrieve one or more interactions from a Push queue
      *
@@ -148,8 +152,8 @@ public class DataSiftPush extends DataSiftApiClient {
      * @param cursor a pointer into the push
      * @return a set of interactions pulled from the specified push queue
      */
-    public FutureData<PulledInteractions> pull(String id, int size, String cursor) {
-        if (id == null || id.isEmpty()) {
+    public FutureData<PulledInteractions> pull(PushSubscription id, int size, String cursor) {
+        if (id == null || id.getId() == null || id.getId().isEmpty()) {
             throw new IllegalArgumentException("A push subscription ID is required");
         }
         final FutureData<PulledInteractions> future = new FutureData<>();
@@ -374,6 +378,83 @@ public class DataSiftPush extends DataSiftApiClient {
                                                                          final long start,
                                                                          final long end) {
         return create(connector, null, FutureData.wrap(stream), name, initialStatus, start, end);
+    }
+
+    /**
+     * Create a push subscription to be consumed via {@link #pull(PushSubscription, int, String)} using a live stream
+     *
+     * @param historics     the historic query which will be consumed via pull
+     * @param name          a name for the subscription
+     * @param initialStatus the initial status of the subscription
+     * @param start         an option timestamp of when to start the subscription
+     * @param end           an optional timestamp of when to stop
+     * @return this
+     */
+    public FutureData<PushSubscription> createPull(PreparedHistoricsQuery historics, String name, Status initialStatus,
+                                                   long start, long end) {
+        return createPull(historics, null, name, initialStatus, start, end);
+    }
+
+    public FutureData<PushSubscription> createPull(PreparedHistoricsQuery historics, String name) {
+        return createPull(historics, null, name, null, 0, 0);
+    }
+
+    /**
+     * Create a push subscription to be consumed via {@link #pull(PushSubscription, int, String)} using a live stream
+     *
+     * @param stream        the stream which will be consumed via pull
+     * @param name          a name for the subscription
+     * @param initialStatus the initial status of the subscription
+     * @param start         an option timestamp of when to start the subscription
+     * @param end           an optional timestamp of when to stop
+     * @return this
+     */
+    public FutureData<PushSubscription> createPull(Stream stream, String name, Status initialStatus,
+                                                   long start, long end) {
+        return createPull(null, stream, name, initialStatus, start, end);
+    }
+
+    public FutureData<PushSubscription> createPull(Stream stream, String name) {
+        return createPull(null, stream, name, null, 0, 0);
+    }
+
+    public FutureData<PushSubscription> createPull(PreparedHistoricsQuery historics, Stream stream,
+                                                   String name,
+                                                   Status initialStatus,
+                                                   long start,
+                                                   long end) {
+        final FutureData<PushSubscription> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(CREATE));
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
+                .form("output_type", "pull")
+                .form("output_params.acl","private")
+                .form("name", name);
+
+        if (historics != null && stream != null) {
+            throw new IllegalStateException("Historics and Stream cannot both be specified");
+        }
+        if ((historics == null && stream == null)) {
+            throw new IllegalArgumentException("At least one of Historics OR Stream must be specified");
+        }
+
+        if (historics != null) {
+            request.form("historics_id", historics.getId());
+        }
+        if (stream != null) {
+            request.form("hash", stream.hash());
+        }
+        if (initialStatus != null) {
+            request.form("initial_status", initialStatus.val());
+        }
+        if (start > 0) {
+            request.form("start", start);
+        }
+        if (end > 0) {
+            request.form("end", end);
+        }
+        applyConfig(request).execute();
+        return future;
     }
 
     /**

@@ -64,6 +64,9 @@ public class DataSiftApiClient {
                 if (config.isAllowedToRaiseExceptions() && response.getStatus().code() == 401) {
                     throw new AuthException("Please provide a valid username and API key", response);
                 }
+                if (config.isAllowedToRaiseExceptions() && !result.isSuccessful()) {
+                    throw new DataSiftException(result.getError(), result.failureCause());
+                }
                 future.received(result);
             }
         };

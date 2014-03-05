@@ -101,4 +101,19 @@ public class PushSubscription extends DataSiftResult {
     public long getEnd() {
         return end;
     }
+
+    /**
+     * Create a {@link PushSubscription} instance containing only an id
+     *
+     * @param str the ID obtained from DataSift for creating a push subscription
+     * @return an instance which can be used by the client
+     */
+    public static PushSubscription fromString(String str) {
+        if (str == null || str.isEmpty()) {
+            throw new IllegalArgumentException("Cannot create a stream from an empty or null string");
+        }
+        PushSubscription stream = new PushSubscription();
+        stream.id = str;
+        return stream;
+    }
 }

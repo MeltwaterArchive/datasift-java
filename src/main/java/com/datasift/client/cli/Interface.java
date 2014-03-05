@@ -5,8 +5,8 @@ import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
-import com.datasift.client.managedsource.sources.DataSource;
 import com.datasift.client.push.OutputType;
+import com.datasift.client.push.PushSubscription;
 import com.datasift.client.push.connectors.BaseConnector;
 import com.datasift.client.push.connectors.PushConnector;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -175,7 +175,8 @@ public class Interface {
                 break;
             case "pull":
                 try {
-                    printResponse(dataSift.push().pull(params.get("id"), Integer.parseInt(params.get("size")),
+                    printResponse(dataSift.push().pull(PushSubscription.fromString(params.get("id")),
+                            Integer.parseInt(params.get("size")),
                             params.get("page")).sync());
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();

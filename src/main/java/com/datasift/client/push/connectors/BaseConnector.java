@@ -116,6 +116,16 @@ public class BaseConnector<T extends PushConnector<T>> implements PushConnector<
         return thisRef;
     }
 
+    /**
+     * Check if a param has already been set with the given name
+     *
+     * @param paramName the name to check for
+     * @return true if it has, false otherwise
+     */
+    protected boolean exists(String paramName) {
+        return params.has(PREFIX + paramName);
+    }
+
     @Override
     public Prepared parameters() {
         return params;
