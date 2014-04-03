@@ -127,7 +127,8 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         }
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;

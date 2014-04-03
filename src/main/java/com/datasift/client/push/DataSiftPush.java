@@ -105,7 +105,8 @@ public class DataSiftPush extends DataSiftApiClient {
         }
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -470,7 +471,7 @@ public class DataSiftPush extends DataSiftApiClient {
         if (historics != null && stream != null) {
             throw new IllegalStateException("Historics and Stream cannot both be specified");
         }
-        if ((historics == null && stream == null)) {
+        if (historics == null && stream == null) {
             throw new IllegalArgumentException("At least one of Historics OR Stream must be specified");
         }
 

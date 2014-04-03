@@ -73,7 +73,8 @@ public class DataSiftHistorics extends DataSiftApiClient {
         }
         FutureData<DataSiftResult> future = f != null ? f : new FutureData<DataSiftResult>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(START));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -99,7 +100,8 @@ public class DataSiftHistorics extends DataSiftApiClient {
         }
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id);
         if (reason != null) {
             request.form("reason", reason);
@@ -127,7 +129,8 @@ public class DataSiftHistorics extends DataSiftApiClient {
         }
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -146,7 +149,8 @@ public class DataSiftHistorics extends DataSiftApiClient {
         }
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(UPDATE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id)
                 .form("name", name);
         applyConfig(request).execute();

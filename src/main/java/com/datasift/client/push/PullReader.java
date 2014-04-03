@@ -146,7 +146,8 @@ public class PullReader extends Reader<String> {
     protected void processData() {
         checkHeaders();
         if (backOff == 0 && //if we got a 503,500 or 204 back off will not be 0
-                status != 204 && // if status isn't a 204 and we're not backing off then we're in an invalid state if the rest holds true
+                //if status isn't a 204 and we're not backing off then we're in an invalid state if the rest holds true
+                status != 204 &&
                 headersSet && (format == null || format.isEmpty())) {
             throw new IllegalDataSiftPullFormat("The DataSift API failed to provide the format of the data. " +
                     "Please raise the issue with support", response);
@@ -156,7 +157,8 @@ public class PullReader extends Reader<String> {
             switch (format) {
                 case FORMAT_NEW_LINE:
                     if (done) {
-                        //chunked responses will cause new line to break early so only do it when he entire response is received
+                        //chunked responses will cause new line to break
+                        // early so only do it when he entire response is received
                         readLineByLine();
                     }
                     break;
@@ -170,7 +172,6 @@ public class PullReader extends Reader<String> {
                     throw new IllegalDataSiftPullFormat("DataSift format '" + format + "' is not supported", response);
             }
         }
-
     }
 
     protected void send(Interaction interaction) {

@@ -28,8 +28,8 @@ public interface DataSiftResult {
     boolean isAuthorizationSuccesful();
 
     /**
-     * @return How much the rate limit is on this account {@link com.datasift.client.DataSiftClient#DEFAULT_NUM} if the information
-     *         was not returned
+     * @return How much the rate limit is on this account {@link com.datasift.client.DataSiftClient#DEFAULT_NUM}
+     * if the information was not returned
      */
     int rateLimit();
 
