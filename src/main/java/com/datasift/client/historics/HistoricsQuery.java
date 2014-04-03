@@ -1,17 +1,15 @@
 package com.datasift.client.historics;
 
-import com.datasift.client.DataSiftResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class HistoricsQuery extends DataSiftResult {
+public class HistoricsQuery extends BaseDataSiftResult {
     @JsonProperty
     private String id;
     @JsonProperty("definition_id")

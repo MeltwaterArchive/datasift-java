@@ -49,7 +49,7 @@ public class OutputType<T extends PushConnector> {
     }
 
     public static <T extends PushConnector> OutputType<T> fromString(String type) {
-        return new OutputType<T>(type);
+        return new OutputType<>(type);
     }
 
     public String value() {

@@ -1,6 +1,6 @@
 package com.datasift.client.preview;
 
-import com.datasift.client.DataSiftResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class HistoricsPreviewData extends DataSiftResult {
+public class HistoricsPreviewData extends BaseDataSiftResult {
     @JsonProperty
     protected String id;
     @JsonProperty

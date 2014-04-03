@@ -17,7 +17,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 import io.higgs.http.client.HttpRequestBuilder;
 import io.higgs.http.client.POST;
 import io.higgs.http.client.Request;
-import io.higgs.http.client.future.PageReader;
+import io.higgs.http.client.readers.PageReader;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;

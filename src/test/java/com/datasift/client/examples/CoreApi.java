@@ -10,6 +10,7 @@ import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
 import com.datasift.client.core.Validation;
+import io.higgs.http.client.HttpRequestBuilder;
 
 public class CoreApi {
     private CoreApi() {
@@ -18,12 +19,14 @@ public class CoreApi {
     public static void main(String... args) throws InterruptedException {
         DataSiftConfig config = new DataSiftConfig("username", "api-key");
         //or
-        config = new DataSiftConfig().auth("aszachewicz", "7aba32dc48b2f42f3867cef33b6f7c61");
-
+        config = new DataSiftConfig().auth("zcourts", "43aedc2c7e292016df949c972afe29be");
+        config.setSslEnabled(false);
         final DataSiftClient datasift = new DataSiftClient(config);
-        String csdl = "interaction.content contains \"some string\"";
+        String csdl = "interaction.content contains \"music\"";
         //both sync and async processing are supported by calling "sync" on any FutureDate object
 
+//        Usage u = datasift.usage().sync();
+//        System.out.println(u);
         //all response objects extend DataSiftResult which present these utility methods
         DataSiftResult result = datasift.compile(csdl).sync();
         //is successful returns true if a response hasn't explicitly been marked as failed,

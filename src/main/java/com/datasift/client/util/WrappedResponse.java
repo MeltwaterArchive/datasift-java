@@ -2,7 +2,7 @@ package com.datasift.client.util;
 
 import com.datasift.client.Response;
 import io.higgs.http.client.HttpRequestBuilder;
-import io.higgs.http.client.future.PageReader;
+import io.higgs.http.client.readers.PageReader;
 
 import java.net.URI;
 import java.net.URISyntaxException;

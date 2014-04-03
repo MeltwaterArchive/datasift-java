@@ -5,7 +5,7 @@ import com.datasift.client.DataSiftConfig;
 import com.datasift.client.FutureData;
 import com.datasift.client.core.Stream;
 import io.higgs.http.client.POST;
-import io.higgs.http.client.future.PageReader;
+import io.higgs.http.client.readers.PageReader;
 import org.joda.time.DateTime;
 
 import java.net.URI;
