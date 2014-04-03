@@ -1,26 +1,28 @@
 package com.datasift.client.push;
 
+import com.datasift.client.BaseDataSiftResult;
 import com.datasift.client.DataSiftApiClient;
-import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
 import com.datasift.client.FutureResponse;
 import com.datasift.client.core.Stream;
+import com.datasift.client.exceptions.AuthException;
+import com.datasift.client.exceptions.DataSiftException;
 import com.datasift.client.historics.HistoricsQuery;
 import com.datasift.client.historics.PreparedHistoricsQuery;
 import com.datasift.client.push.connectors.PushConnector;
-import com.datasift.client.stream.Interaction;
-import com.fasterxml.jackson.databind.JavaType;
-import io.higgs.core.func.Function2;
+import com.datasift.client.push.pull.LastInteraction;
+import com.datasift.client.push.pull.PullJsonType;
+import io.higgs.http.client.HttpRequestBuilder;
 import io.higgs.http.client.POST;
-import io.higgs.http.client.Response;
-import io.higgs.http.client.future.PageReader;
+import io.higgs.http.client.readers.PageReader;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import org.joda.time.DateTime;
 
-import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Courtney Robinson <courtney@crlog.info>
@@ -103,7 +105,7 @@ public class DataSiftPush extends DataSiftApiClient {
         }
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
-        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new DataSiftResult(), config)))
+        POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id);
         applyConfig(request).execute();
         return future;
@@ -152,37 +154,69 @@ public class DataSiftPush extends DataSiftApiClient {
      * @param cursor a pointer into the push
      * @return a set of interactions pulled from the specified push queue
      */
-    public FutureData<PulledInteractions> pull(PushSubscription id, int size, String cursor) {
+    public FutureData<PulledInteractions> pull(final PushSubscription id, final int size, final String cursor) {
         if (id == null || id.getId() == null || id.getId().isEmpty()) {
             throw new IllegalArgumentException("A push subscription ID is required");
         }
         final FutureData<PulledInteractions> future = new FutureData<>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(PULL));
-        POST request = config.http().POST(uri, new PageReader(new Function2<String, Response>() {
-            public void apply(String s, Response response) {
-                if (!response.hasFailed()) {
-                    JavaType type = DataSiftClient.MAPPER.getTypeFactory()
-                            .constructCollectionType(List.class, Interaction.class);
-                    try {
-                        List<Interaction> interactions = DataSiftClient.MAPPER.readValue(s, type);
-                        PulledInteractions pi = new PulledInteractions();
-                        pi.data(interactions);
-                        future.received(pi);
-                    } catch (IOException e) {
-                        fail(s, response, e);
-                    }
-                } else {
-                    fail(s, response, null);
+        final URI uri = newParams().forURL(config.newAPIEndpointURI(PULL));
+        final PulledInteractions interactions = new PulledInteractions();
+        final PullReader reader = new PullReader(interactions) {
+            @Override
+            public void onStatus(HttpResponseStatus status) {
+                super.onStatus(status);
+                if (response.hasFailed()) {
+                    throw new DataSiftException("Failed to pull interactions", response.failureCause());
+                }
+                if (status.code() == 401) {
+                    throw new AuthException("Please provide a valid username and API key", response);
                 }
             }
 
-            private void fail(String s, Response response, Throwable e) {
-                PulledInteractions pi = new PulledInteractions();
-                pi.failed(e != null ? e : response.failureCause());
-                pi.setResponse(new com.datasift.client.Response(s, response));
-                future.received(pi);
+            @Override
+            public void done() {
+                super.done();
+                final PullReader internalReader = this;
+                if (status == 204 && successiveNoContent >= 5) {
+                    //if we've tried to fetch and gotten no content 5 times successively then it's time to see if
+                    //the subscription is finishing/finished or waiting to start
+                    PushSubscription subscription = get(id.getId()).sync();
+                    if (subscription.status() != null) {
+                        Status s = subscription.status();
+                        if (s.isWaitingForStart()) {
+                            //if the subscription hasn't started yet then figure out when it should start and
+                            //set a back off of that many seconds
+                            backOff = new Long(subscription.getStart() - DateTime.now().getMillis()).intValue();
+                        } else if (s.isFailed() || s.isFinished()) {
+                            //cause client to know we've stopped without calling get themselves
+                            interactions.add(LastInteraction.INSTANCE);
+                            interactions.stopPulling();
+                        }
+                    }
+                }
+                if ((status == 204 && interactions.isPulling()) ||
+                        interactions.isPulling() && nextCursor != null && !nextCursor.isEmpty()) {
+                    HttpRequestBuilder.group().schedule(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendPullRequest(id, size, nextCursor, uri, internalReader);
+                        }
+                        //wait for at least the back off period,
+                        //if we're not backing off this is 0 so it runs immediately
+                    }, backOff, TimeUnit.SECONDS);
+                }
+                //reader is re-used so reset states
+                reset();
             }
-        })).form("id", id);
+        };
+        sendPullRequest(id, size, cursor, uri, reader);
+        //unlike other response types we can provide the object before the request completes
+        future.received(interactions);
+        return future;
+    }
+
+    protected void sendPullRequest(PushSubscription id, int size, String cursor, URI uri, PullReader reader) {
+        POST request = config.http().POST(uri, reader).form("id", id.getId());
         if (cursor != null && !cursor.isEmpty()) {
             request.form("cursor", cursor);
         }
@@ -190,7 +224,6 @@ public class DataSiftPush extends DataSiftApiClient {
             request.form("size", size);
         }
         applyConfig(request).execute();
-        return future;
     }
 
     public FutureData<PushLogMessages> log(String id, int page) {
@@ -390,13 +423,14 @@ public class DataSiftPush extends DataSiftApiClient {
      * @param end           an optional timestamp of when to stop
      * @return this
      */
-    public FutureData<PushSubscription> createPull(PreparedHistoricsQuery historics, String name, Status initialStatus,
-                                                   long start, long end) {
-        return createPull(historics, null, name, initialStatus, start, end);
+    public FutureData<PushSubscription> createPull(PullJsonType jsonMeta, PreparedHistoricsQuery historics, String name,
+                                                   Status initialStatus, long start, long end) {
+        return createPull(jsonMeta, historics, null, name, initialStatus, start, end);
     }
 
-    public FutureData<PushSubscription> createPull(PreparedHistoricsQuery historics, String name) {
-        return createPull(historics, null, name, null, 0, 0);
+    public FutureData<PushSubscription> createPull(PullJsonType jsonMeta, PreparedHistoricsQuery historics,
+                                                   String name) {
+        return createPull(jsonMeta, historics, null, name, null, 0, 0);
     }
 
     /**
@@ -409,16 +443,16 @@ public class DataSiftPush extends DataSiftApiClient {
      * @param end           an optional timestamp of when to stop
      * @return this
      */
-    public FutureData<PushSubscription> createPull(Stream stream, String name, Status initialStatus,
-                                                   long start, long end) {
-        return createPull(null, stream, name, initialStatus, start, end);
+    public FutureData<PushSubscription> createPull(PullJsonType jsonMeta, Stream stream, String name,
+                                                   Status initialStatus, long start, long end) {
+        return createPull(jsonMeta, null, stream, name, initialStatus, start, end);
     }
 
-    public FutureData<PushSubscription> createPull(Stream stream, String name) {
-        return createPull(null, stream, name, null, 0, 0);
+    public FutureData<PushSubscription> createPull(PullJsonType jsonMeta, Stream stream, String name) {
+        return createPull(jsonMeta, null, stream, name, null, 0, 0);
     }
 
-    public FutureData<PushSubscription> createPull(PreparedHistoricsQuery historics, Stream stream,
+    public FutureData<PushSubscription> createPull(PullJsonType type, PreparedHistoricsQuery historics, Stream stream,
                                                    String name,
                                                    Status initialStatus,
                                                    long start,
@@ -428,9 +462,11 @@ public class DataSiftPush extends DataSiftApiClient {
         POST request = config.http()
                 .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("output_type", "pull")
-                .form("output_params.acl","private")
+                .form("output_params.acl", "private")
                 .form("name", name);
-
+        if (type != null) {
+            request.form("output_params.format", type.asString());
+        }
         if (historics != null && stream != null) {
             throw new IllegalStateException("Historics and Stream cannot both be specified");
         }

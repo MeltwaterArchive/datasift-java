@@ -1,29 +1,46 @@
 package com.datasift.client.push;
 
-import com.datasift.client.DataSiftResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.datasift.client.stream.Interaction;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class PulledInteractions extends DataSiftResult {
-    @JsonProperty
-    private List<Interaction> interactions = new ArrayList<Interaction>();
+public class PulledInteractions extends BaseDataSiftResult implements Iterable<Interaction> {
 
-    public void data(List<Interaction> interactions) {
-        if (interactions != null) {
-            this.interactions.addAll(interactions);
-        }
+    protected boolean pulling = true;
+    protected LinkedBlockingQueue<Interaction> queue = new LinkedBlockingQueue<>();
+
+    public void setPulling(boolean pulling) {
+        this.pulling = pulling;
     }
 
-    /**
-     * @return A list of interactions that were pulled in this result, will never return null but  the list may be empty
-     */
-    public List<Interaction> getInteractions() {
-        return interactions;
+    public void stopPulling() {
+        setPulling(false);
+    }
+
+    public boolean isPulling() {
+        return pulling;
+    }
+
+    public Interaction take() throws InterruptedException {
+        return queue.take();
+    }
+
+    public Interaction take(long upto, TimeUnit unit) throws InterruptedException {
+        return queue.poll(upto, unit);
+    }
+
+    @Override
+    public Iterator<Interaction> iterator() {
+        return queue.iterator();
+    }
+
+    protected void add(Interaction interaction) {
+        queue.add(interaction);
     }
 }

@@ -5,6 +5,10 @@ import io.higgs.http.client.Response;
 public class DataSiftException extends RuntimeException {
     protected Response response;
 
+    public DataSiftException(String msg) {
+        super(msg);
+    }
+
     public DataSiftException(String msg, Throwable cause) {
         super(msg, cause);
     }
