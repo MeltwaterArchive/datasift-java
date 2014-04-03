@@ -1,17 +1,14 @@
 package com.datasift.client.core;
 
-import com.datasift.client.DataSiftResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.joda.time.DateTime;
-
-import java.util.Date;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class Validation extends DataSiftResult {
+public class Validation extends BaseDataSiftResult {
     @JsonProperty("created_at")
-    protected Date createdAt;
+    protected String createdAt;
     @JsonProperty
     protected float dpu;
 
@@ -25,8 +22,8 @@ public class Validation extends DataSiftResult {
         return response.status() == 200;
     }
 
-    public DateTime getCreatedAt() {
-        return new DateTime(createdAt);
+    public String getCreatedAt() {
+        return createdAt;
     }
 
     public float getDpu() {

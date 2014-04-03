@@ -1,29 +1,27 @@
 package com.datasift.client.core;
 
-import com.datasift.client.DataSiftResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.joda.time.DateTime;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class Usage extends DataSiftResult {
+public class Usage extends BaseDataSiftResult {
     @JsonProperty
-    protected Date start;
+    protected String start;
     @JsonProperty
-    protected Date end;
+    protected String end;
     @JsonProperty
     protected UsageStream streams;
 
-    public DateTime getStart() {
-        return new DateTime(start);
+    public String getStart() {
+        return start;
     }
 
-    public DateTime getEnd() {
-        return new DateTime(end);
+    public String getEnd() {
+        return end;
     }
 
     /**

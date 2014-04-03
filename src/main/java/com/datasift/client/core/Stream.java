@@ -1,17 +1,14 @@
 package com.datasift.client.core;
 
-import com.datasift.client.DataSiftResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.joda.time.DateTime;
-
-import java.util.Date;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class Stream extends DataSiftResult {
+public class Stream extends BaseDataSiftResult {
     @JsonProperty("created_at")
-    protected Date createdAt;
+    protected String createdAt;
     @JsonProperty
     protected float dpu;
     @JsonProperty
@@ -35,8 +32,8 @@ public class Stream extends DataSiftResult {
         return stream;
     }
 
-    public DateTime getCreatedAt() {
-        return new DateTime(createdAt);
+    public String getCreatedAt() {
+        return createdAt;
     }
 
     public float getDpu() {
