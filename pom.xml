@@ -9,7 +9,7 @@
     <groupId>com.datasift.client</groupId>
     <artifactId>datasift-java</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.0-Beta3</version>
+    <version>3.0.0-Beta3.1</version>
     <name>DataSift Java Client library</name>
     <description>A client library for interacting with the DataSift API on the JVM.</description>
 
