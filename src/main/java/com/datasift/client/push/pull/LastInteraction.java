@@ -1,5 +1,6 @@
 package com.datasift.client.push.pull;
 
+import com.datasift.client.DataSiftClient;
 import com.datasift.client.stream.Interaction;
 
 /**
@@ -9,6 +10,6 @@ public class LastInteraction extends Interaction {
     public static Interaction INSTANCE = new LastInteraction();
 
     protected LastInteraction() {
-        super(null);
+        super(DataSiftClient.MAPPER.createObjectNode());
     }
 }
