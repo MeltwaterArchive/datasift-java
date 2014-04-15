@@ -42,7 +42,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
             throw new IllegalArgumentException("A valid PreparedHistoricsQuery is required");
         }
         final FutureData<DataSiftResult> future = new FutureData<>();
-        DataSiftResult h = new BaseDataSiftResult(), config;
+        DataSiftResult h = new BaseDataSiftResult();
 
         FutureResponse<PreparedHistoricsQuery> r = new FutureResponse<PreparedHistoricsQuery>() {
             public void apply(PreparedHistoricsQuery data) {
@@ -76,7 +76,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         POST request = config.http()
                 .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -106,7 +106,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         if (reason != null) {
             request.form("reason", reason);
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -132,7 +132,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         POST request = config.http()
                 .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -153,7 +153,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
                 .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id)
                 .form("name", name);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -179,7 +179,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
             }
             request.form("sources", b.toString().substring(0, b.length() - 1));
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -203,7 +203,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new HistoricsQuery(), config)))
                 .form("id", id)
                 .form("with_estimate", withEstimate ? 1 : 0);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -239,7 +239,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         if (page > 0) {
             request.form("page", page);
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -300,7 +300,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
             b.append(source).append(",");
         }
         request.form("sources", b.toString().substring(0, b.length() - 1));
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 }

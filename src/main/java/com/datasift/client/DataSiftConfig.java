@@ -30,7 +30,6 @@ public class DataSiftConfig {
     protected String urlEncodingFormat = "ISO-8859-1";
     protected int port = 80;
     protected boolean manualPort;
-    protected boolean raiseExceptionsOnError = true;
     private boolean autoReconnect = true;
 
     public DataSiftConfig() {
@@ -54,20 +53,6 @@ public class DataSiftConfig {
     public DataSiftConfig(String username, String apiKey) {
         this();
         auth(username, apiKey);
-    }
-
-    /**
-     * @return true if the client is suppose to raise exceptions rather than store them for the user to check for
-     */
-    public boolean isAllowedToRaiseExceptions() {
-        return raiseExceptionsOnError;
-    }
-
-    /**
-     * Sets whether the client will throw exceptions or store them for the user to check
-     */
-    public void isAllowedToRaiseExceptions(boolean b) {
-        raiseExceptionsOnError = b;
     }
 
     /**

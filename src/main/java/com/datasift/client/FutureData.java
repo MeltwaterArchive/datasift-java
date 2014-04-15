@@ -1,5 +1,6 @@
 package com.datasift.client;
 
+import com.datasift.client.exceptions.DataSiftException;
 import com.datasift.client.util.WrappedResponse;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
 
@@ -9,6 +10,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashSet;
 public class FutureData<T> {
     protected NonBlockingHashSet<FutureResponse<T>> listeners = new NonBlockingHashSet<FutureResponse<T>>();
     protected T data;
+    protected Throwable interruptCause;
 
     /**
      * Wraps any object in a {@link FutureData} instance
@@ -76,7 +78,7 @@ public class FutureData<T> {
      * Forces the client to wait until a response is received before returning
      *
      * @return a result instance - if an interrupt exception is thrown it is possible that a response isn't available
-     *         yet the user must check to ensure null isn't returned
+     * yet the user must check to ensure null isn't returned
      */
     public T sync() {
         //if data is present there's no need to block
@@ -87,9 +89,20 @@ public class FutureData<T> {
             try {
                 wait();
             } catch (InterruptedException e) {
+                if (interruptCause != null) {
+                    if (interruptCause instanceof DataSiftException) {
+                        throw (DataSiftException) interruptCause;
+                    } else {
+                        throw new DataSiftException("Interrupted while waiting for response", interruptCause);
+                    }
+                }
                 return data;
             }
         }
         return data;
+    }
+
+    public void interuptCause(Throwable cause) {
+        this.interruptCause = cause;
     }
 }

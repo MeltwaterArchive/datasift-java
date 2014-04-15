@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import io.higgs.core.reflect.dependency.DependencyProvider;
 import io.higgs.http.client.HttpRequestBuilder;
 import io.higgs.http.client.POST;
 import io.higgs.http.client.Request;
@@ -57,6 +58,7 @@ public class DataSiftClient extends DataSiftApiClient {
         this.preview = new DataSiftPreview(config);
         this.push = new DataSiftPush(config);
         this.liveStream = new StreamingData(config);
+        DependencyProvider.global().add(config);
     }
 
     protected void configureMapper() {
@@ -120,7 +122,7 @@ public class DataSiftClient extends DataSiftApiClient {
         URI uri = newParams().forURL(config.newAPIEndpointURI(VALIDATE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new Validation(), config)))
                 .form("csdl", csdl);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -137,7 +139,7 @@ public class DataSiftClient extends DataSiftApiClient {
         URI uri = newParams().forURL(config.newAPIEndpointURI(COMPILE));
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new Stream(), config)))
                 .form("csdl", csdl);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -148,7 +150,7 @@ public class DataSiftClient extends DataSiftApiClient {
         FutureData<Balance> future = new FutureData<Balance>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(BALANCE));
         Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new Balance(), config)));
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -168,7 +170,7 @@ public class DataSiftClient extends DataSiftApiClient {
             public void apply(Stream stream) {
                 URI uri = newParams().put("hash", stream.hash()).forURL(config.newAPIEndpointURI(DPU));
                 Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, dpu, config)));
-                applyConfig(request).execute();
+                performRequest(future, request);
             }
         };
         unwrapFuture(streamFuture, future, dpu, response);
@@ -199,7 +201,7 @@ public class DataSiftClient extends DataSiftApiClient {
         }
         URI uri = newParams().put("period", period).forURL(config.newAPIEndpointURI(USAGE));
         Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new Usage(), config)));
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 

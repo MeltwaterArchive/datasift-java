@@ -51,7 +51,7 @@ public class DataSiftPush extends DataSiftApiClient {
         POST request = config.http()
                 .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -70,7 +70,7 @@ public class DataSiftPush extends DataSiftApiClient {
         POST request = config.http()
                 .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -89,7 +89,7 @@ public class DataSiftPush extends DataSiftApiClient {
         POST request = config.http()
                 .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)))
                 .form("id", id);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -108,7 +108,7 @@ public class DataSiftPush extends DataSiftApiClient {
         POST request = config.http()
                 .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .form("id", id);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -139,7 +139,7 @@ public class DataSiftPush extends DataSiftApiClient {
         if (name != null && !name.isEmpty()) {
             request.form("name", name);
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -200,7 +200,7 @@ public class DataSiftPush extends DataSiftApiClient {
                     HttpRequestBuilder.group().schedule(new Runnable() {
                         @Override
                         public void run() {
-                            sendPullRequest(id, size, nextCursor, uri, internalReader);
+                            sendPullRequest(future, id, size, nextCursor, uri, internalReader);
                         }
                         //wait for at least the back off period,
                         //if we're not backing off this is 0 so it runs immediately
@@ -210,13 +210,14 @@ public class DataSiftPush extends DataSiftApiClient {
                 reset();
             }
         };
-        sendPullRequest(id, size, cursor, uri, reader);
+        sendPullRequest(future, id, size, cursor, uri, reader);
         //unlike other response types we can provide the object before the request completes
         future.received(interactions);
         return future;
     }
 
-    protected void sendPullRequest(PushSubscription id, int size, String cursor, URI uri, PullReader reader) {
+    protected void sendPullRequest(FutureData<PulledInteractions> future, PushSubscription id, int size, String cursor,
+                                   URI uri, PullReader reader) {
         POST request = config.http().POST(uri, reader).form("id", id.getId());
         if (cursor != null && !cursor.isEmpty()) {
             request.form("cursor", cursor);
@@ -224,7 +225,7 @@ public class DataSiftPush extends DataSiftApiClient {
         if (size > 0) {
             request.form("size", size);
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
     }
 
     public FutureData<PushLogMessages> log(String id, int page) {
@@ -261,7 +262,7 @@ public class DataSiftPush extends DataSiftApiClient {
         if (orderDirection != null && !orderDirection.isEmpty()) {
             request.form("order_dir", orderDirection);
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -279,7 +280,7 @@ public class DataSiftPush extends DataSiftApiClient {
         POST request = config.http()
                 .POST(uri, new PageReader(newRequestCallback(future, new PushSubscription(), config)));
         request.form("id", id);
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -313,7 +314,7 @@ public class DataSiftPush extends DataSiftApiClient {
         if (orderDirection != null && !orderDirection.isEmpty()) {
             request.form("order_dir", orderDirection);
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -347,7 +348,7 @@ public class DataSiftPush extends DataSiftApiClient {
         if (orderDirection != null && !orderDirection.isEmpty()) {
             request.form("order_dir", orderDirection);
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -364,7 +365,7 @@ public class DataSiftPush extends DataSiftApiClient {
         for (Map.Entry<String, String> e : connector.parameters().verifyAndGet().entrySet()) {
             request.form(e.getKey(), e.getValue());
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -490,7 +491,7 @@ public class DataSiftPush extends DataSiftApiClient {
         if (end > 0) {
             request.form("end", end);
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
         return future;
     }
 
@@ -584,6 +585,6 @@ public class DataSiftPush extends DataSiftApiClient {
         if (end > 0) {
             request.form("end", end);
         }
-        applyConfig(request).execute();
+        performRequest(future, request);
     }
 }

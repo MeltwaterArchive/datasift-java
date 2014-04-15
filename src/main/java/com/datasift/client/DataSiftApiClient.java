@@ -6,6 +6,8 @@ import com.datasift.client.exceptions.JsonParsingException;
 import io.higgs.core.func.Function2;
 import io.higgs.http.client.Request;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 import java.io.IOException;
 
@@ -18,15 +20,9 @@ public class DataSiftApiClient {
 
     public DataSiftApiClient(DataSiftConfig config) {
         if (config == null) {
-            throw new IllegalArgumentException("Config cannot be nulll");
+            throw new IllegalArgumentException("Config cannot be null");
         }
         this.config = config;
-    }
-
-    public Request applyConfig(Request request) {
-        request.header("Authorization", config.authAsHeader());
-        request.withSSLProtocols(config.sslProtocols());
-        return request;
     }
 
     /**
@@ -47,24 +43,20 @@ public class DataSiftApiClient {
                     result.successful();
                 } else if (response.hasFailed()) {
                     result.failed(response.failureCause());
-                    if (config.isAllowedToRaiseExceptions()) {
-                        throw new DataSiftException("API request failed", response.failureCause(), response);
-                    }
+                    throw new DataSiftException("API request failed", response.failureCause(), response);
                 } else {
                     try {
                         result = (T) DataSiftClient.MAPPER.readValue(s, instance.getClass());
                     } catch (IOException e) {
                         result.failed(e);
-                        if (config.isAllowedToRaiseExceptions()) {
-                            throw new JsonParsingException("Unable to decode JSON from DataSift response", e, response);
-                        }
+                        throw new JsonParsingException("Unable to decode JSON from DataSift response", e, response);
                     }
                 }
                 result.setResponse(new com.datasift.client.Response(s, response));
-                if (config.isAllowedToRaiseExceptions() && response.getStatus().code() == 401) {
+                if (response.getStatus().code() == 401) {
                     throw new AuthException("Please provide a valid username and API key", response);
                 }
-                if (config.isAllowedToRaiseExceptions() && !result.isSuccessful()) {
+                if (!result.isSuccessful()) {
                     throw new DataSiftException(result.getError(), result.failureCause());
                 }
                 future.received(result);
@@ -101,6 +93,22 @@ public class DataSiftApiClient {
                 } else {
                     expectedInstance.setResponse(stream.getResponse());
                     futureReturnedToUser.received(expectedInstance);
+                }
+            }
+        });
+    }
+
+    protected <T extends DataSiftResult> void performRequest(final FutureData<T> response, Request request) {
+        final Thread thread = Thread.currentThread();
+        request.header("Authorization", config.authAsHeader());
+        request.withSSLProtocols(config.sslProtocols());
+        io.higgs.http.client.FutureResponse execution = request.execute();
+        execution.addListener(new GenericFutureListener<Future<? super io.higgs.http.client.Response>>() {
+            @Override
+            public void operationComplete(Future<? super io.higgs.http.client.Response> future) throws Exception {
+                if (!future.isSuccess()) {
+                    response.interuptCause(future.cause());
+                    thread.interrupt();
                 }
             }
         });

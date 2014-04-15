@@ -1,5 +1,8 @@
 package com.datasift.client;
 
+import com.datasift.client.core.Validation;
+import com.datasift.client.exceptions.DataSiftException;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -42,5 +45,14 @@ public class DataSiftClientTest extends TestUtil {
     @Test
     public void testLiveStreamisNeverNull() throws Exception {
         assertNotNull("datasift.liveStream() should never be null", datasift.liveStream());
+    }
+
+    @Test(expected = DataSiftException.class)
+    public void testInvalidCSDL() {
+        final DataSiftConfig config = new DataSiftConfig("zcourts", "this-is-wrong");
+        final DataSiftClient client = new DataSiftClient(config);
+        final String csdl = "twitter.media exists";
+        final Validation validation = client.validate(csdl).sync();
+        Assert.assertFalse(validation.isValid());
     }
 }
