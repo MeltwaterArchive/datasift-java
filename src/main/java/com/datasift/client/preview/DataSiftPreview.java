@@ -77,7 +77,7 @@ public class DataSiftPreview extends DataSiftApiClient {
         if (end > 0) {
             request.form("end", end);
         }
-        performRequest(future,request);
+        performRequest(future, request);
         return future;
     }
 
@@ -100,7 +100,7 @@ public class DataSiftPreview extends DataSiftApiClient {
         POST request = config.http()
                 .POST(uri, new PageReader(newRequestCallback(future, new HistoricsPreviewData(), config)))
                 .form("id", preview.id());
-        performRequest(future,request);
+        performRequest(future, request);
         return future;
     }
 }
