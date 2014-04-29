@@ -163,6 +163,8 @@ public class DataSiftPush extends DataSiftApiClient {
         final URI uri = newParams().forURL(config.newAPIEndpointURI(PULL));
         final PulledInteractions interactions = new PulledInteractions();
         final PullReader reader = new PullReader(interactions) {
+            private boolean failed;
+
             @Override
             public void onStatus(HttpResponseStatus status) {
                 super.onStatus(status);
@@ -177,6 +179,12 @@ public class DataSiftPush extends DataSiftApiClient {
             @Override
             public void done() {
                 super.done();
+                if (failed && status == 204) {
+                    //if failed and we got a 204 that means there's no longer any data in the buffer to pull
+                    //so nothing below applies and we just need to stop polling
+                    stopPullingAndInsertLastInteraction();
+                    return;
+                }
                 final PullReader internalReader = this;
                 if (status == 204 && successiveNoContent >= 5) {
                     //if we've tried to fetch and gotten no content 5 times successively then it's time to see if
@@ -189,26 +197,47 @@ public class DataSiftPush extends DataSiftApiClient {
                             //set a back off of that many seconds
                             backOff = new Long(subscription.getStart() -
                                     TimeUnit.MILLISECONDS.toSeconds(DateTime.now().getMillis())).intValue();
-                        } else if (s.isFailed() || s.isFinished()) {
+                        } else if (s.isFinished()) {
                             //cause client to know we've stopped without calling get themselves
-                            interactions.add(LastInteraction.INSTANCE);
-                            interactions.stopPulling();
+                            stopPullingAndInsertLastInteraction();
                         }
                     }
                 }
                 if ((status == 204 && interactions.isPulling()) ||
                         interactions.isPulling() && nextCursor != null && !nextCursor.isEmpty()) {
-                    HttpRequestBuilder.group().schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            sendPullRequest(future, id, size, nextCursor, uri, internalReader);
-                        }
-                        //wait for at least the back off period,
-                        //if we're not backing off this is 0 so it runs immediately
-                    }, backOff, TimeUnit.SECONDS);
+                    schedulePoll(internalReader);
+                } else {
+                    //if for whatever reason we're about to stop, get the subscription first and make sure
+                    // it is finished, under no circumstance should we stop pulling until the status goes to finished
+                    // or we've failed and there's no data left in the buffer
+                    PushSubscription subscription = get(id.getId()).sync();
+                    //if the subscription has failed, there may be data buffered that was gathered before the
+                    //failure was encountered, in which case we should pull out that data until we get a 204
+                    failed = subscription.status().isFailed();
+                    if (subscription.status().isFinished()) {
+                        stopPullingAndInsertLastInteraction();
+                    } else {
+                        schedulePoll(internalReader);
+                    }
                 }
                 //reader is re-used so reset states
                 reset();
+            }
+
+            protected void stopPullingAndInsertLastInteraction() {
+                interactions.add(LastInteraction.INSTANCE);
+                interactions.stopPulling();
+            }
+
+            protected void schedulePoll(final PullReader internalReader) {
+                HttpRequestBuilder.group().schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendPullRequest(future, id, size, nextCursor, uri, internalReader);
+                    }
+                    //wait for at least the back off period,
+                    //if we're not backing off this is 0 so it runs immediately
+                }, backOff, TimeUnit.SECONDS);
             }
         };
         sendPullRequest(future, id, size, cursor, uri, reader);
