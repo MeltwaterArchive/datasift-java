@@ -12,8 +12,7 @@ public enum PullJsonType {
     /**
      * Produce JSON of interaction objects
      */
-    //todo API bug preventing support of array output format
-    //JSON_ARRAY,
+    JSON_ARRAY,
     /**
      * Produce JSON objects where "interactions" is a JSON array and one of several fields
      */
