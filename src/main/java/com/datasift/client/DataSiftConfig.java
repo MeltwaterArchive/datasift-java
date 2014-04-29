@@ -26,7 +26,7 @@ public class DataSiftConfig {
      * so it'll never be creating a whole new load of resources for each instance.
      */
     protected HttpRequestBuilder http = HttpRequestBuilder.instance();
-    protected String versionPrefix = "v1";
+    protected String versionPrefix = "v1.1";
     protected String urlEncodingFormat = "ISO-8859-1";
     protected int port = 80;
     protected boolean manualPort;
