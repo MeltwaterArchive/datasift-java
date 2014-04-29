@@ -187,7 +187,8 @@ public class DataSiftPush extends DataSiftApiClient {
                         if (s.isWaitingForStart()) {
                             //if the subscription hasn't started yet then figure out when it should start and
                             //set a back off of that many seconds
-                            backOff = new Long(subscription.getStart() - DateTime.now().getMillis()).intValue();
+                            backOff = new Long(subscription.getStart() -
+                                    TimeUnit.MILLISECONDS.toSeconds(DateTime.now().getMillis())).intValue();
                         } else if (s.isFailed() || s.isFinished()) {
                             //cause client to know we've stopped without calling get themselves
                             interactions.add(LastInteraction.INSTANCE);
