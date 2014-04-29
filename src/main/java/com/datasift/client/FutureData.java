@@ -95,7 +95,10 @@ public class FutureData<T> {
                 // wait();
                 block.clear();
                 block.take();
-            } catch (InterruptedException ignore) {
+            } catch (InterruptedException e) {
+                if (interruptCause == null) {
+                    interruptCause = e;
+                }
             }
             if (interruptCause != null) {
                 if (interruptCause instanceof DataSiftException) {
