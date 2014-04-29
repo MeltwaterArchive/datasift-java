@@ -182,6 +182,9 @@ public class PullReader extends Reader<String> {
         //until we support JSON stream processing only do this when the entire response is read
         if (done) {
             String data = getDataAsString();
+            if (data == null || data.isEmpty()) {
+                return;
+            }
             try {
                 ObjectNode meta = (ObjectNode) DataSiftClient.MAPPER.readTree(data);
                 ArrayNode interactions = (ArrayNode) meta.get("interactions");
@@ -199,6 +202,9 @@ public class PullReader extends Reader<String> {
         //until we support JSON stream processing only do this when the entire response is read
         if (done) {
             String data = getDataAsString();
+            if (data == null || data.isEmpty()) {
+                return;
+            }
             try {
                 ArrayNode interactions = (ArrayNode) DataSiftClient.MAPPER.readTree(data);
                 for (JsonNode interaction : interactions) {
