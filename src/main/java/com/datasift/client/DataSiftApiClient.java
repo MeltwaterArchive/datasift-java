@@ -99,7 +99,7 @@ public class DataSiftApiClient {
     }
 
     protected <T extends DataSiftResult> void performRequest(final FutureData<T> response, Request request) {
-        final Thread thread = Thread.currentThread();
+        //final Thread thread = Thread.currentThread();
         request.header("Authorization", config.authAsHeader());
         request.withSSLProtocols(config.sslProtocols());
         io.higgs.http.client.FutureResponse execution = request.execute();
@@ -108,7 +108,8 @@ public class DataSiftApiClient {
             public void operationComplete(Future<? super io.higgs.http.client.Response> future) throws Exception {
                 if (!future.isSuccess()) {
                     response.interuptCause(future.cause());
-                    thread.interrupt();
+                    //thread.interrupt();
+                    response.doNotify();
                 }
             }
         });

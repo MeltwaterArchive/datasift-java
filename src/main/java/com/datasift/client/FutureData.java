@@ -4,6 +4,9 @@ import com.datasift.client.exceptions.DataSiftException;
 import com.datasift.client.util.WrappedResponse;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
@@ -11,6 +14,7 @@ public class FutureData<T> {
     protected NonBlockingHashSet<FutureResponse<T>> listeners = new NonBlockingHashSet<FutureResponse<T>>();
     protected T data;
     protected Throwable interruptCause;
+    protected final BlockingQueue<Object> block = new LinkedBlockingDeque<>();
 
     /**
      * Wraps any object in a {@link FutureData} instance
@@ -69,9 +73,10 @@ public class FutureData<T> {
     }
 
     protected void doNotify() {
-        synchronized (this) {
-            notify();
-        }
+        //synchronized (this) {
+        //notify();
+        //}
+        block.add(new Object());
     }
 
     /**
@@ -87,19 +92,20 @@ public class FutureData<T> {
         }
         synchronized (this) {
             try {
-                wait();
-            } catch (InterruptedException e) {
-                if (interruptCause != null) {
-                    if (interruptCause instanceof DataSiftException) {
-                        throw (DataSiftException) interruptCause;
-                    } else {
-                        throw new DataSiftException("Interrupted while waiting for response", interruptCause);
-                    }
-                }
-                return data;
+                // wait();
+                block.clear();
+                block.take();
+            } catch (InterruptedException ignore) {
             }
+            if (interruptCause != null) {
+                if (interruptCause instanceof DataSiftException) {
+                    throw (DataSiftException) interruptCause;
+                } else {
+                    throw new DataSiftException("Interrupted while waiting for response", interruptCause);
+                }
+            }
+            return data;
         }
-        return data;
     }
 
     public void interuptCause(Throwable cause) {
