@@ -37,7 +37,7 @@ public class Interaction {
     public JsonNode get(String str) {
         String[] parts = str.split("\\.");
         JsonNode retval = data.get(parts[0]);
-        for (int i = 1; i < parts.length - 1; i++) {
+        for (int i = 1; i <= parts.length - 1; i++) {
             if (retval == null) {
                 return null;
             } else {
