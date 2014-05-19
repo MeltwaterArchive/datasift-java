@@ -52,17 +52,21 @@ public class SFTP extends BaseConnector<SFTP> {
     /**
      * The minimum number of seconds you want DataSift to wait before sending data again:
      * <p/>
+     * 10 (10 seconds)
+     * <p/>
+     * 30 (30 seconds)
+     * <p/>
      * 60 (1 minute)
+     * <p/>
+     * 120 (2 minutes)
      * <p/>
      * 300 (5 minutes)
      * <p/>
-     * 900 (15 minutes)
-     * <p/>
      * In reality, a stream might not have data available after the wait. Typically this happens in streams that have
      * very tight filtering constraints, so the wait time might be longer than you specify. If your system is capable
-     * of handling large amounts of incoming data, you can turn on continuous delivery:
+     * of handling large amounts of incoming data, we recommend you use continuous delivery:
      * <p/>
-     * 0  (continuous delivery)
+     * 0 (continuous delivery)
      *
      * @return this
      */
@@ -72,22 +76,17 @@ public class SFTP extends BaseConnector<SFTP> {
 
     /**
      * The maximum amount of data that DataSift will send in a single batch:
-     * <p/>
      * 102400 (100KB)
-     * <p/>
      * 256000 (250KB)
-     * <p/>
      * 512000 (500KB)
-     * <p/>
      * 1048576 (1MB)
-     * <p/>
      * 2097152 (2MB)
-     * <p/>
      * 5242880 (5MB)
-     * <p/>
      * 10485760 (10MB)
-     * <p/>
      * 20971520 (20MB)
+     * 52428800 (50MB)
+     * 104857600 (100MB)
+     * 209715200 (200MB)
      *
      * @return this
      */

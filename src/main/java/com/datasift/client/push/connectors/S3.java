@@ -58,15 +58,14 @@ public class S3 extends BaseConnector<S3> {
 
     /**
      * The minimum number of seconds you want DataSift to wait before sending data again:
+     * 0 (continuous delivery)
      * 10 (10 seconds)
      * 30 (30 seconds)
      * 60 (1 minute)
      * 300 (5 minutes)
-     * 900 (15 minutes)
      * In reality, a stream might not have data available after the wait. Typically this happens in streams that have
-     * very tight filtering constraints, so the wait time might be longer than you specify. If your system is capable
-     * of handling large amounts of incoming data, you can turn on continuous delivery:
-     * 0  (continuous delivery)
+     * very tight filtering constraints, so the wait time might be longer than you specify. Amazon's S3 is capable
+     * of handling large amounts of incoming data, so we recommend you use continuous delivery.
      *
      * @param frequency an int representative of what is desribed above
      * @return this
@@ -85,6 +84,9 @@ public class S3 extends BaseConnector<S3> {
      * 5242880 (5MB)
      * 10485760 (10MB)
      * 20971520 (20MB)
+     * 52428800 (50MB)
+     * 104857600 (100MB)
+     * 209715200 (200MB)
      *
      * @param maxSize max size as described
      * @return this

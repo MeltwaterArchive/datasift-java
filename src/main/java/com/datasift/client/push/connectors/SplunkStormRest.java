@@ -3,7 +3,7 @@ package com.datasift.client.push.connectors;
 import com.datasift.client.push.OutputType;
 
 /**
- * <a href="http://dev.datasift.com/docs/push/connectors/couchdb">Official docs</a>
+ * <a href="http://dev.datasift.com/docs/push/connectors/splunk-storm-rest">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
