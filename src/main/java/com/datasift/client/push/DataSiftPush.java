@@ -315,6 +315,39 @@ public class DataSiftPush extends DataSiftApiClient {
     }
 
     /**
+     * Get all push subscriptions belonging to this user
+     *
+     * @param page            a page number
+     * @param perPage         the amount of items per page
+     * @param orderBy         the field name to order data by e.g. created_at
+     * @param orderDirection  an order, asc or desc
+     * @param includeFinished whether to included completed subscriptions or not
+     * @return an {@link Iterable}
+     */
+    public FutureData<PushCollection> get(int page, int perPage, String orderBy,
+                                          String orderDirection, boolean includeFinished) {
+        FutureData<PushCollection> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
+        POST request = config.http()
+                .POST(uri, new PageReader(newRequestCallback(future, new PushCollection(), config)));
+        request.form("include_finished", includeFinished ? 1 : 0);
+        if (page > 0) {
+            request.form("page", page);
+        }
+        if (perPage > 0) {
+            request.form("per_page", perPage);
+        }
+        if (orderBy != null && !orderBy.isEmpty()) {
+            request.form("order_by", orderBy);
+        }
+        if (orderDirection != null && !orderDirection.isEmpty()) {
+            request.form("order_dir", orderDirection);
+        }
+        performRequest(future, request);
+        return future;
+    }
+
+    /**
      * Get all push subscriptions for the given stream
      *
      * @param hash            the ID of the stream to fetch all associated push subscriptions for
