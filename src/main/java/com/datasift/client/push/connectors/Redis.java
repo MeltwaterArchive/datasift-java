@@ -84,7 +84,7 @@ public class Redis extends BaseConnector<Redis> {
      * @return this
      */
     public Redis password(String password) {
-        return setParam("password", password);
+        return setParam("auth.password", password);
     }
 
     public static enum RedisFormat {
