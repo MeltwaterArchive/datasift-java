@@ -38,7 +38,7 @@ Code: Basics
 ===
 
 __Note that the examples in this migration guide use .sync() to present a synchronous comparison of the old and new client, however by default v3+ is asynchronous.__
-Code examples are available in [src/main/java/com/datasift/client/examples](src/main/java/com/datasift/client/examples).
+Code examples are available in [src/main/java/com/datasift/client/examples](src/test/java/com/datasift/client/examples).
 
 In prior versions of the client you would begin with this:
 
