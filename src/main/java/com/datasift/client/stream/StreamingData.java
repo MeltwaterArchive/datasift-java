@@ -263,6 +263,11 @@ public class StreamingData implements WebSocketEventListener {
         connect();
         liveStream.send(" { \"action\" : \"unsubscribe\" , \"hash\": \"" + stream.hash() + "\"}");
         subscriptions.remove(stream);
+        for (StreamSubscription subscription : unsentSubscriptions) {
+            if (stream.isSameAs(subscription.stream())) {
+                unsentSubscriptions.remove(subscription);
+            }
+        }
         return this;
     }
 }
