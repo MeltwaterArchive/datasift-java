@@ -1,3 +1,13 @@
-de.roderick
-org.datasift
-org.json
+com.datasift.client
+com.datasift.client.cli
+com.datasift.client.core
+com.datasift.client.exceptions
+com.datasift.client.historics
+com.datasift.client.managedsource
+com.datasift.client.managedsource.sources
+com.datasift.client.preview
+com.datasift.client.push
+com.datasift.client.push.connectors
+com.datasift.client.push.pull
+com.datasift.client.stream
+com.datasift.client.util
