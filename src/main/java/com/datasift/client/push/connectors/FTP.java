@@ -181,6 +181,14 @@ public class FTP extends BaseConnector<FTP> {
         return setParam("mark_in_progress", String.valueOf(trueOrFalse));
     }
 
+    public FTP gzip() {
+        return compression("gzip");
+    }
+
+    public FTP compression(String format) {
+        return setParam("compression", format);
+    }
+
     public static enum FTPFormat {
         JSON_META,
         JSON_ARRAY,

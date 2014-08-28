@@ -176,9 +176,22 @@ public class Http extends BaseConnector<Http> {
      * Content-Encoding: gzip
      *
      * @return this
+     * @deprecated use {@link #gzip()} OR {@link #zlib()} instead
      */
     public Http useGzip(boolean trueOrFalse) {
         return setParam("use_gzip", String.valueOf(trueOrFalse));
+    }
+
+    public Http gzip() {
+        return compression("gzip");
+    }
+
+    public Http zlib() {
+        return compression("zlib");
+    }
+
+    public Http compression(String format) {
+        return setParam("compression", format);
     }
 
     /**

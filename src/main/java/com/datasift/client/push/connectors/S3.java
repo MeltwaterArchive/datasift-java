@@ -137,6 +137,15 @@ public class S3 extends BaseConnector<S3> {
         return setParam("acl", acl);
     }
 
+    public S3 gzip() {
+        return compression("gzip");
+    }
+
+    public S3 compression(String format) {
+        return setParam("compression", format);
+    }
+
+
     public static enum S3OutputFormat {
         /**
          * The current default format, where each payload contains a full JSON document. It contains metadata and an

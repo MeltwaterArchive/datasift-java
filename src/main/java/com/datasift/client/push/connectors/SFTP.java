@@ -147,6 +147,15 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("mark_in_progress", String.valueOf(trueOrFalse));
     }
 
+    public SFTP gzip() {
+        return compression("gzip");
+    }
+
+    public SFTP compression(String format) {
+        return setParam("compression", format);
+    }
+
+
     /**
      * The output format for your data:
      * <p/>
