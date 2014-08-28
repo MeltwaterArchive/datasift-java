@@ -155,7 +155,6 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("compression", format);
     }
 
-
     /**
      * The output format for your data:
      * <p/>
