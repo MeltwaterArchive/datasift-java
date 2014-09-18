@@ -26,12 +26,6 @@ public abstract class StreamSubscription {
 
     public abstract void onMessage(Interaction i);
 
-    public void onConnect() {
-    }
-
-    public void onClose() {
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

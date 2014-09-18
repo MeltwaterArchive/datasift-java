@@ -165,7 +165,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.datasift.client.stream.StreamingData</mainClass>
+                            <mainClass>com.datasift.client.stream.ConnectionManager</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
