@@ -1,6 +1,10 @@
 package com.datasift.client.dynamiclist;
 
-import com.datasift.client.*;
+import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.DataSiftApiClient;
+import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftResult;
+import com.datasift.client.FutureData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.higgs.http.client.Request;
@@ -93,9 +97,10 @@ public class DataSiftDynamicList extends DataSiftApiClient {
     /**
      * Check if one or more items exist in a dynamic list with the given id
      *
-     * @param list the list to check for items
+     * @param list  the list to check for items
      * @param items the list of items to check
-     * @param <T> the type of the items to check, may be either string or integer, and must match the type of the list
+     * @param <T>   the type of the items to check, may be either string or integer,
+     *              and must match the type of the list
      * @return this
      */
     public <T> FutureData<DataSiftResult> exists(DynamicList list, List<T> items) {
@@ -112,7 +117,7 @@ public class DataSiftDynamicList extends DataSiftApiClient {
                     .form("items", mapper.writeValueAsString(items));
             performRequest(future, request);
         } catch (JsonProcessingException e) {
-            failNotify(future,e);
+            failNotify(future, e);
         }
         return future;
     }
@@ -120,9 +125,9 @@ public class DataSiftDynamicList extends DataSiftApiClient {
     /**
      * Add one or more items to a dynamic list with the given id
      *
-     * @param list the list to add items to
+     * @param list  the list to add items to
      * @param items the list of items to add
-     * @param <T> the type of the items to add, may be either string or integer, and must match the type of the list
+     * @param <T>   the type of the items to add, may be either string or integer, and must match the type of the list
      * @return this
      */
     public <T> FutureData<DataSiftResult> add(DynamicList list, List<T> items) {
@@ -139,7 +144,7 @@ public class DataSiftDynamicList extends DataSiftApiClient {
                     .form("items", mapper.writeValueAsString(items));
             performRequest(future, request);
         } catch (JsonProcessingException e) {
-            failNotify(future,e);
+            failNotify(future, e);
         }
         return future;
     }
@@ -147,9 +152,10 @@ public class DataSiftDynamicList extends DataSiftApiClient {
     /**
      * Remove one or more items from a dynamic list with the given id
      *
-     * @param list the list to remove items from
+     * @param list  the list to remove items from
      * @param items the list of items to remove
-     * @param <T> the type of the items to remove, may be either string or integer, and must match the type of the list
+     * @param <T>   the type of the items to remove, may be either string or integer,
+     *              and must match the type of the list
      * @return this
      */
     public <T> FutureData<DataSiftResult> remove(DynamicList list, List<T> items) {
@@ -166,7 +172,7 @@ public class DataSiftDynamicList extends DataSiftApiClient {
                     .form("items", mapper.writeValueAsString(items));
             performRequest(future, request);
         } catch (JsonProcessingException e) {
-            failNotify(future,e);
+            failNotify(future, e);
         }
         return future;
     }

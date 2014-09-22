@@ -10,7 +10,9 @@ public class ReplaceList extends BaseDataSiftResult {
     @JsonProperty
     protected String id;
 
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
     public static ReplaceList fromString(String str) {
         if (str == null || str.isEmpty()) {

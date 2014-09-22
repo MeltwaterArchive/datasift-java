@@ -79,7 +79,7 @@ public class ConnectionManager {
     public ConnectionManager(DataSiftConfig config) {
         try {
             endpoint = new URI(String.format("%s://%s:%s/multi?username=%s&api_key=%s",
-                    (config.isSslEnabled() ? "wss" : "ws"), config.wsHost(),
+                    config.isSslEnabled() ? "wss" : "ws", config.wsHost(),
                     config.port(), config.getUsername(), config.getApiKey()));
         } catch (URISyntaxException e) {
             log.error("Unable to create endpoint URL", e);
@@ -95,7 +95,6 @@ public class ConnectionManager {
         }
         return null;
     }
-
 
     /**
      * Subscribes a callback to listen for exceptions that may occur during streaming.

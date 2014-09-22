@@ -35,7 +35,7 @@ class DataSiftConnection implements WebSocketEventListener {
     protected int maxAllowedSubscriptions;
     protected StreamEventListener streamEventListener;
     protected ErrorListener errorListener;
-    protected short MAX_TIMEOUT = 320, currentTimeout = 0;
+    protected short MAX_TIMEOUT = 320, currentTimeout;
     protected DateTime lastSeen;
     protected Map<Stream, StreamSubscription> subscriptions = new NonBlockingHashMap<>();
     protected final Set<StreamSubscription> unsentSubscriptions = new NonBlockingHashSet<>();
@@ -99,7 +99,6 @@ class DataSiftConnection implements WebSocketEventListener {
                     });
         }
     }
-
 
     protected void unsubscribe(final Stream stream) {
         connection.send(" { \"action\" : \"unsubscribe\" , \"hash\": \"" + stream.hash() + "\"}");

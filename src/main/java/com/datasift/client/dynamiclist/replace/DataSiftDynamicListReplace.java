@@ -1,6 +1,10 @@
 package com.datasift.client.dynamiclist.replace;
 
-import com.datasift.client.*;
+import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.DataSiftApiClient;
+import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftResult;
+import com.datasift.client.FutureData;
 import com.datasift.client.dynamiclist.DynamicList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,9 +47,9 @@ public class DataSiftDynamicListReplace extends DataSiftApiClient {
     /**
      * Add one or more items to a replace list with the given id
      *
-     * @param list the replace list which to add items to
+     * @param list  the replace list which to add items to
      * @param items the items to add to the replace list
-     * @param <T> the type of the items to add, must be either string or integer, and must match the type of the list
+     * @param <T>   the type of the items to add, must be either string or integer, and must match the type of the list
      * @return this
      */
     public <T> FutureData<DataSiftResult> add(ReplaceList list, List<T> items) {
@@ -62,7 +66,7 @@ public class DataSiftDynamicListReplace extends DataSiftApiClient {
                     .form("items", mapper.writeValueAsString(items));
             performRequest(future, request);
         } catch (JsonProcessingException e) {
-            failNotify(future,e);
+            failNotify(future, e);
         }
         return future;
     }

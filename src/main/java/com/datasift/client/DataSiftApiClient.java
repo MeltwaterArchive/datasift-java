@@ -106,14 +106,14 @@ public class DataSiftApiClient {
         execution.addListener(new GenericFutureListener<Future<? super io.higgs.http.client.Response>>() {
             @Override
             public void operationComplete(Future<? super io.higgs.http.client.Response> future) throws Exception {
-            if (!future.isSuccess()) {
-                failNotify(response,future.cause());
-            }
+                if (!future.isSuccess()) {
+                    failNotify(response, future.cause());
+                }
             }
         });
     }
 
-    protected <T extends DataSiftResult> void failNotify(final FutureData<T> response,Throwable cause) {
+    protected <T extends DataSiftResult> void failNotify(final FutureData<T> response, Throwable cause) {
         response.interuptCause(cause);
         //thread.interrupt();
         response.doNotify();
