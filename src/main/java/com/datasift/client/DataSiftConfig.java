@@ -17,6 +17,7 @@ public class DataSiftConfig {
     protected String username, apiKey;
     protected boolean sslEnabled = true;
     protected String host = "api.datasift.com";
+    protected String wsHost = "websocket.datasift.com";
     /**
      * This instance should be used as a base for configurations.
      * All new requests should use {@link io.higgs.http.client.HttpRequestBuilder#copy()}
@@ -112,6 +113,18 @@ public class DataSiftConfig {
      */
     public String host() {
         return host;
+    }
+
+    public DataSiftConfig wsHost(String host) {
+        this.wsHost = host;
+        return this;
+    }
+
+    /**
+     * @return The host name used to streaming
+     */
+    public String wsHost() {
+        return wsHost;
     }
 
     /**
