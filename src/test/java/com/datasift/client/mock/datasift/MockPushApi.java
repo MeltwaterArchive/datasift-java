@@ -6,10 +6,10 @@ import com.datasift.client.push.PushLogMessages;
 import com.datasift.client.push.Status;
 import com.datasift.client.push.connectors.PushConnector;
 import com.datasift.client.stream.Interaction;
-import io.higgs.core.method;
 import io.higgs.http.server.params.FormParams;
-import io.higgs.http.server.resource.POST;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by agnieszka on 15/01/2014.
  */
 
-@method("/v1.1/push")
+@Path("/v1.1/push")
 public class MockPushApi {
 
     Map<String, String> headers = new HashMap<>();
@@ -50,7 +50,7 @@ public class MockPushApi {
     protected String name = "";
     protected Map<String, String> s3Params;
 
-    @method("/validate")
+    @Path("/validate")
     public Map<String, Object> validate(FormParams params) {
         for (Map.Entry<String, String> e : s3Params.entrySet()) {
             Object expected = params.get(e.getKey());
@@ -64,35 +64,35 @@ public class MockPushApi {
         return map;
     }
 
-    @method("/create")
+    @Path("/create")
     public Map<String, Object> create() {
         Map<String, Object> map = new HashMap<>();
         getSubscription(map);
         return map;
     }
 
-    @method("/pause")
+    @Path("/pause")
     public Map<String, Object> pause() {
         Map<String, Object> map = new HashMap<>();
         getSubscription(map);
         return map;
     }
 
-    @method("/resume")
+    @Path("/resume")
     public Map<String, Object> resume() {
         Map<String, Object> map = new HashMap<>();
         getSubscription(map);
         return map;
     }
 
-    @method("/update")
+    @Path("/update")
     public Map<String, Object> update() {
         Map<String, Object> map = new HashMap<>();
         getSubscription(map);
         return map;
     }
 
-    @method("/stop")
+    @Path("/stop")
     public Map<String, Object> stop() {
         Map<String, Object> map = new HashMap<>();
         getSubscription(map);
@@ -117,14 +117,14 @@ public class MockPushApi {
         map.put("end", end);
     }
 
-    @method("/delete")
+    @Path("/delete")
     public Map<String, Object> delete() {
         Map<String, Object> map = new HashMap<>();
         getSubscription(map);
         return map;
     }
 
-    @method("/log")
+    @Path("/log")
     public Map<String, Object> log() {
         Map<String, Object> map = new HashMap<>();
         map.put("success", success);
@@ -134,14 +134,14 @@ public class MockPushApi {
     }
 
     @POST
-    @method("/get")
+    @Path("/get")
     public Map<String, Object> get() {
         Map<String, Object> map = new HashMap<>();
         getSubscription(map);
         return map;
     }
 
-    @method("../pull")
+    @Path("../pull")
     public Map<String, Object> pull() {
         Map<String, Object> map = new HashMap<>();
         map.put("interactions", interactions);

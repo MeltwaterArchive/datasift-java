@@ -1,9 +1,9 @@
 package com.datasift.client.mock.datasift;
 
 import com.datasift.client.core.Stream;
-import io.higgs.core.method;
 import org.joda.time.DateTime;
 
+import javax.ws.rs.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by agnieszka on 17/01/2014.
  */
 
-@method("/v1.1/preview")
+@Path("/v1.1/preview")
 public class MockPreviewApi {
     Map<String, String> headers = new HashMap<>();
     private DateTime createdAt;
@@ -37,7 +37,7 @@ public class MockPreviewApi {
     private Map<String, Long> output = new HashMap<>();
     private int threshold;
 
-    @method("create")
+    @Path("create")
     public Map<String, Object> create() {
         Map<String, Object> map = new HashMap<>();
         map.put("created_at", createdAt);
@@ -45,7 +45,7 @@ public class MockPreviewApi {
         return map;
     }
 
-    @method("get")
+    @Path("get")
     public Map<String, Object> get() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);

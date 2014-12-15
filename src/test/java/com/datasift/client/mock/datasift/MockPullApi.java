@@ -1,8 +1,8 @@
 package com.datasift.client.mock.datasift;
 
-import io.higgs.core.method;
 import io.higgs.http.server.params.FormParams;
 
+import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,10 +13,10 @@ import static org.junit.Assert.assertNotNull;
  * Created by agnieszka on 15/01/2014.
  */
 
-@method("/v1.1/pull")
+@Path("/v1.1/pull")
 public class MockPullApi extends MockPushApi {
 
-    @method
+    @Path("/")
     public Map<String, Object> pull(FormParams params) {
         for (Map.Entry<String, String> e : s3Params.entrySet()) {
             Object expected = params.get(e.getKey());

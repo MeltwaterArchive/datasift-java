@@ -67,6 +67,7 @@ public class TestUtil {
                 log.warn(String.format("Unknown setting. '%s' doesn't match a known setting,ignored", name));
             }
         }
+        config.host("127.0.0.1");
         config.urlEncodingFormat(settings.getUrlEncodeWith())
                 .auth(settings.getUsername(), settings.getApiKey());
         datasift = new DataSiftClient(config);

@@ -1,10 +1,10 @@
 package com.datasift.client.mock.datasift;
 
 import com.datasift.client.managedsource.ManagedSource;
-import io.higgs.core.method;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
 import org.joda.time.DateTime;
 
+import javax.ws.rs.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * Created by agnieszka on 17/01/2014.
  */
-@method("/v1.1/source")
+@Path("/v1.1/source")
 public class MockManagedSourcesApi {
     Map<String, String> headers = new HashMap<>();
     private Map<String, Object> streams = new HashMap<>();
@@ -43,7 +43,7 @@ public class MockManagedSourcesApi {
     private boolean success;
     private String message;
 
-    @method("create")
+    @Path("create")
     public Map<String, Object> create() {
         Map<String, Object> map = new HashMap<>();
         setManagedSource(map);
@@ -71,21 +71,21 @@ public class MockManagedSourcesApi {
         map.put("status", status);
     }
 
-    @method("update")
+    @Path("update")
     public Map<String, Object> update() {
         Map<String, Object> map = new HashMap<>();
         setManagedSource(map);
         return map;
     }
 
-    @method("delete")
+    @Path("delete")
     public Map<String, Object> delete() {
         Map<String, Object> map = new HashMap<>();
         setManagedSource(map);
         return map;
     }
 
-    @method("log")
+    @Path("log")
     public Map<String, Object> log() {
         Map<String, Object> map = new HashMap<>();
 
@@ -104,21 +104,21 @@ public class MockManagedSourcesApi {
         return map;
     }
 
-    @method("get")
+    @Path("get")
     public Map<String, Object> get() {
         Map<String, Object> map = new HashMap<>();
         setManagedSource(map);
         return map;
     }
 
-    @method("stop")
+    @Path("stop")
     public Map<String, Object> stop() {
         Map<String, Object> map = new HashMap<>();
         setManagedSource(map);
         return map;
     }
 
-    @method("start")
+    @Path("start")
     public Map<String, Object> start() {
         Map<String, Object> map = new HashMap<>();
 

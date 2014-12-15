@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
@@ -41,6 +42,7 @@
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <higgs.version>0.0.9-SNAPSHOT</higgs.version>
     </properties>
 
     <dependencies>
@@ -62,12 +64,12 @@
         <dependency>
             <groupId>io.higgs</groupId>
             <artifactId>http-client</artifactId>
-            <version>0.0.8-1</version>
+            <version>${higgs.version}</version>
         </dependency>
         <dependency>
             <groupId>io.higgs</groupId>
             <artifactId>ws-client</artifactId>
-            <version>0.0.8-1</version>
+            <version>${higgs.version}</version>
         </dependency>
         <!--json support-->
         <dependency>
@@ -109,11 +111,16 @@
         <dependency>
             <groupId>io.higgs</groupId>
             <artifactId>http-s3</artifactId>
-            <version>0.0.5</version>
+            <version>${higgs.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.higgs</groupId>
+            <artifactId>transformer-defaults</artifactId>
+            <version>${higgs.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

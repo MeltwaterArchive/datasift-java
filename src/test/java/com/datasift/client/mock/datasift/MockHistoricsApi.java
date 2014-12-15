@@ -2,9 +2,9 @@ package com.datasift.client.mock.datasift;
 
 import com.datasift.client.historics.HistoricsQuery;
 import com.datasift.client.historics.PreparedHistoricsQuery;
-import io.higgs.core.method;
 import org.joda.time.DateTime;
 
+import javax.ws.rs.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by agnieszka on 17/01/2014.
  */
 
-@method("/v1.1/historics")
+@Path("/v1.1/historics")
 public class MockHistoricsApi {
     Map<String, String> headers = new HashMap<>();
     private String id;
@@ -41,7 +41,7 @@ public class MockHistoricsApi {
     private long estimatedCompletion;
     private String src_name;
 
-    @method("prepare")
+    @Path("prepare")
     public Map<String, Object> prepare() {
         Map<String, Object> map = new HashMap<>();
         map.put("dpus", dpus);
@@ -58,21 +58,21 @@ public class MockHistoricsApi {
         return map;
     }
 
-    @method("start")
+    @Path("start")
     public Map<String, Object> start() {
         Map<String, Object> map = new HashMap<>();
 
         return map;
     }
 
-    @method("stop")
+    @Path("stop")
     public Map<String, Object> stop() {
         Map<String, Object> map = new HashMap<>();
 
         return map;
     }
 
-    @method("status")
+    @Path("status")
     public Map<String, Object> status() {
         Map<String, Object> map = new HashMap<>();
         map.put("start", start);
@@ -82,21 +82,21 @@ public class MockHistoricsApi {
         return map;
     }
 
-    @method("update")
+    @Path("update")
     public Map<String, Object> update() {
         Map<String, Object> map = new HashMap<>();
 
         return map;
     }
 
-    @method("delete")
+    @Path("delete")
     public Map<String, Object> delete() {
         Map<String, Object> map = new HashMap<>();
 
         return map;
     }
 
-    @method("get")
+    @Path("get")
     public Map<String, Object> get() {
         Map<String, Object> map = new HashMap<>();
 
