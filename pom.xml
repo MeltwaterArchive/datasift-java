@@ -42,7 +42,7 @@
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <higgs.version>0.0.9-SNAPSHOT</higgs.version>
+        <higgs.version>0.0.9</higgs.version>
     </properties>
 
     <dependencies>
