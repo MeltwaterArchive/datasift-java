@@ -51,7 +51,7 @@ public abstract class BaseSource<T extends DataSource<T>> implements DataSource<
         return parameters.size() > 0;
     }
 
-    protected T setParametersField(String name, Object value) {
+    public T setParametersField(String name, Object value) {
         if (name == null || name.isEmpty() || value == null) {
             throw new IllegalArgumentException("Both name and value are required");
         }

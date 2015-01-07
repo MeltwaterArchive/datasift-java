@@ -10,6 +10,7 @@ public class FacebookPage extends BaseSource<FacebookPage> {
 
     public FacebookPage(DataSiftConfig config) {
         super(config, ManagedDataSourceType.FACEBOOK_PAGE);
+        setParametersField("page_likes", true);
     }
 
     public FacebookPage setParams(boolean enableLikes, boolean enableComments, boolean enablePostsByOthers) {
@@ -25,6 +26,10 @@ public class FacebookPage extends BaseSource<FacebookPage> {
      */
     public FacebookPage enableLikes(boolean enabled) {
         return setParametersField("likes", enabled);
+    }
+
+    public FacebookPage enablePageLikes(boolean enabled) {
+        return setParametersField("page_likes", enabled);
     }
 
     /**
