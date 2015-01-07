@@ -77,7 +77,7 @@ class DataSiftConnection implements WebSocketEventListener {
 
     protected synchronized void pushUnsentSubscriptions() {
         for (final StreamSubscription subscription : unsentSubscriptions) {
-            if (!connection.channel().isActive()) {
+            if (connection == null || !connection.channel().isActive()) {
                 connect();
                 return;
             }
@@ -101,6 +101,10 @@ class DataSiftConnection implements WebSocketEventListener {
     }
 
     protected void unsubscribe(final Stream stream) {
+        if (connection == null) { //if true there's no need to unsubscribe
+            connect();
+            return;
+        }
         connection.send(" { \"action\" : \"unsubscribe\" , \"hash\": \"" + stream.hash() + "\"}");
         subscriptions.remove(stream);
         for (StreamSubscription subscription : unsentSubscriptions) {
