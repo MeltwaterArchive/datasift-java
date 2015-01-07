@@ -3,6 +3,8 @@ package com.datasift.client.managedsource.sources;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.managedsource.ManagedDataSourceType;
 
+import java.util.ArrayList;
+
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
@@ -45,7 +47,12 @@ public class GooglePlus extends BaseSource<GooglePlus> {
                 }
                 parameterSet.set("type", "people_updates");
                 parameterSet.set("user_id", userId);
-                parameterSet.set("event_types", "activities"); //activities is currently the only support event type
+                parameterSet.set("event_types", new ArrayList<String>() {
+                    {
+                        //activities is currently the only supported event type
+                        add("activities");
+                    }
+                });
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported type");
