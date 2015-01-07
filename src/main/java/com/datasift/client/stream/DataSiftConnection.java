@@ -3,12 +3,15 @@ package com.datasift.client.stream;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.core.Stream;
+import io.higgs.core.func.Function1;
 import io.higgs.ws.client.WebSocketClient;
 import io.higgs.ws.client.WebSocketEventListener;
 import io.higgs.ws.client.WebSocketMessage;
 import io.higgs.ws.client.WebSocketStream;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelOption;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
@@ -143,9 +146,9 @@ class DataSiftConnection implements WebSocketEventListener {
         }
     }
 
-    protected void connect() {
-        if (connection != null && connection.channel().isActive()) {
-            return;
+    protected boolean connect() {
+        if (connection != null && connection.channel() != null && connection.channel().isActive()) {
+            return false;
         }
         if (currentTimeout < 1) {
             currentTimeout = 1;
@@ -160,9 +163,31 @@ class DataSiftConnection implements WebSocketEventListener {
                 log.info("Sleep interrupted, reconnecting");
             }
         }
-        connection = WebSocketClient.connect(endpoint, false, config.sslProtocols());
-        connection.subscribe(this);
-        connection.connectFuture().syncUninterruptibly();
+        try {
+            connection = WebSocketClient.connect(endpoint(), false, config().sslProtocols(),
+                    new Function1<Bootstrap>() {
+                        @Override
+                        public void apply(Bootstrap bootstrap) {
+                            bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, config().connectTimeout());
+                        }
+                    });
+            connection.connectFuture().syncUninterruptibly();
+            connection.subscribe(this);
+            return true;
+        } catch (Exception cte) {
+            if (log != null) {
+                log.warn("Failed to connect to DataSift, if enabled, client will reconnect", cte);
+            }
+            return connect();
+        }
+    }
+
+    protected URI endpoint() {
+        return endpoint;
+    }
+
+    protected DataSiftConfig config() {
+        return config;
     }
 
     @Override

@@ -35,6 +35,7 @@ public class DataSiftConfig {
     protected int port = 80;
     protected boolean manualPort;
     private boolean autoReconnect = true;
+    protected int connectTimeout = 10000;
 
     public DataSiftConfig() {
         http.userAgent("DataSift/" + versionPrefix + " Java/" + getClientVersion());
@@ -271,6 +272,14 @@ public class DataSiftConfig {
      */
     public boolean compatibleSSLProtocolsFound() {
         return compatibleSSLProtocolsFound;
+    }
+
+    public int connectTimeout() {
+        return connectTimeout;
+    }
+
+    public void connectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
     }
 
     public String getClientVersion() {
