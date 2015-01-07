@@ -13,7 +13,7 @@ For
 License
 -------
 
-All code contained in this repository is Copyright 2011-2012 MediaSift Ltd.
+All code contained in this repository is Copyright 2011-2015 MediaSift Ltd.
 
 This code is released under the BSD license. Please see the LICENSE file for
 more details.
