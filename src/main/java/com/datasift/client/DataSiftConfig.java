@@ -2,10 +2,13 @@ package com.datasift.client;
 
 import io.higgs.http.client.HttpRequestBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  */
@@ -34,7 +37,7 @@ public class DataSiftConfig {
     private boolean autoReconnect = true;
 
     public DataSiftConfig() {
-        http.userAgent("DataSift/" + versionPrefix + " Java/v3.0.0");
+        http.userAgent("DataSift/" + versionPrefix + " Java/" + getClientVersion());
 
         if (HttpRequestBuilder.isSupportedSSLProtocol("SSLv3")) {
             sslProtocols.add("SSLv3");
@@ -268,5 +271,21 @@ public class DataSiftConfig {
      */
     public boolean compatibleSSLProtocolsFound() {
         return compatibleSSLProtocolsFound;
+    }
+
+    public String getClientVersion() {
+        String path = "/version.prop";
+        InputStream stream = getClass().getResourceAsStream(path);
+        if (stream == null) {
+            return "3.x";
+        }
+        Properties props = new Properties();
+        try {
+            props.load(stream);
+            stream.close();
+            return (String) props.get("version");
+        } catch (IOException e) {
+            return "3.x";
+        }
     }
 }
