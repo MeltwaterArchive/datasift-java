@@ -1,5 +1,6 @@
 package com.datasift.client;
 
+import com.datasift.client.analysis.DataSiftAnalysis;
 import com.datasift.client.core.Balance;
 import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
@@ -35,6 +36,7 @@ public class DataSiftClient extends DataSiftApiClient {
      */
     public static final int DEFAULT_NUM = Integer.MIN_VALUE;
     protected DataSiftConfig config;
+    protected DataSiftAnalysis analysis;
     protected DataSiftHistorics historics;
     protected DataSiftManagedSource source;
     protected DataSiftPreview preview;
