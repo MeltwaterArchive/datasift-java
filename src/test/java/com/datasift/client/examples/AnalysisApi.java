@@ -5,6 +5,7 @@ import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
 import com.datasift.client.analysis.AnalysisStreamStatus;
+import com.datasift.client.analysis.AnalysisTags;
 import com.datasift.client.analysis.AnalyzeQuery;
 import com.datasift.client.analysis.AnalyzeResult;
 import com.datasift.client.core.Stream;
@@ -26,6 +27,7 @@ public class AnalysisApi {
 
         // Compilation of CSDL
         Stream compiled = datasift.analysis().compile(csdl).sync();
+        System.out.println("Compiled object response: " + compiled.toString());
 
         // Starting a stream for analysis
         String name = "My analysis recording";
@@ -47,9 +49,15 @@ public class AnalysisApi {
 
         AnalyzeQuery query = new AnalyzeQuery(compiled.hash(), aggregatorParameters, "fb.content contains \"starbucks\"", 0, 100);
         AnalyzeResult result = datasift.analysis().analyze(query).sync();
+        System.out.println("Analyze result object response: " + result.toString());
 
         // Retrieve the analysis
-        AnalysisStreamStatus status = datasift.analysis().get(compiled.hash()).sync();
+        AnalysisStreamStatus streamStatus = datasift.analysis().get(compiled.hash()).sync();
+        System.out.println("Stream status returned: " + streamStatus.toString());
+
+        // Retrieve VEDO tags for filter
+        AnalysisTags tagsResult = datasift.analysis().tags(compiled.hash()).sync();
+        System.out.println("VEDO tags returned for filter: " + tagsResult.getTags().toString());
     }
 
     public static void main(String... args) throws InterruptedException {

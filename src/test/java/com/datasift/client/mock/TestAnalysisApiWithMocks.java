@@ -3,6 +3,7 @@ package com.datasift.client.mock;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.IntegrationTestBase;
 import com.datasift.client.analysis.AnalysisStreamStatus;
+import com.datasift.client.analysis.AnalysisTags;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Validation;
 import com.datasift.client.managedsource.ManagedSource;
@@ -47,6 +48,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
     private boolean reachedCapacity;
     private List<Integer> results = new ArrayList<>();
     protected String createdAt;
+    private ArrayList<String> tags = new ArrayList<String>();
 
     @Before
     public void setup() throws IOException, IllegalAccessException, Exception {
@@ -74,6 +76,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
         csdl = "(fb.content any \"coffee\" OR fb.hashtags in \"tea\") AND fb.language in \"en\"";
         hash = new BigInteger(130, random).toString(32);
         dpu = Float.valueOf(String.valueOf(Math.random()));
+        tags.add("tag1");
 
         m.setHash(hash);
         m.setStatus(status);
@@ -90,6 +93,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
         m.setParameters(parameters);
         m.setStatus(status);
         m.setResults(results);
+        m.setTags(tags);
     }
 
     @Test
@@ -128,7 +132,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanStopDataStream() {
-        ManagedSource stop = datasift.managedSource().stop(hash).sync();
+        DataSiftResult stop = datasift.managedSource().stop(hash).sync();
         assertTrue(stop.isSuccessful());
     }
 
@@ -136,6 +140,13 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
     public void testIfUserCanStartDataStream() {
         DataSiftResult start = datasift.analysis().start(hash).sync();
         assertTrue(start.isSuccessful());
+    }
+
+    @Test
+    public void testIfUserCanGetTags() {
+        AnalysisTags tagsResult = datasift.analysis().tags(hash).sync();
+        assertTrue(tagsResult.isSuccessful());
+        assertEquals(tagsResult.getTags(), this.tags);
     }
 
     @After

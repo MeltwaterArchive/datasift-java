@@ -19,6 +19,7 @@ public class MockAnalysisApi {
     private Map<String, Object> parameters;
     private List<Integer> results = new ArrayList<>();
     protected String createdAt;
+    private List<String> tags = new ArrayList<>();
 
     @Path("validate")
     public Map<String, Object> validate() {
@@ -83,6 +84,13 @@ public class MockAnalysisApi {
         map.put("reached_capacity", reachedCapacity);
     }
 
+    @Path("tags")
+    public List<String> tags() {
+        this.tags.add("tag1");
+        return tags;
+    }
+
+
     public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
     }
@@ -138,5 +146,7 @@ public class MockAnalysisApi {
     }
 
     public void setStatus(String status) { this.status = status; }
+
+    public void setTags(List<String> tags) { this.tags = tags; }
 
 }

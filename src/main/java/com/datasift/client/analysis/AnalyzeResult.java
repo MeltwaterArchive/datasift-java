@@ -15,8 +15,7 @@ public class AnalyzeResult extends BaseDataSiftResult {
     @JsonProperty
     protected List<BaseDataSiftResult> results;
 
-    public AnalyzeResult() {
-    }
+    public AnalyzeResult() { }
 
     public boolean getTruncated() { return this.truncated; }
 
