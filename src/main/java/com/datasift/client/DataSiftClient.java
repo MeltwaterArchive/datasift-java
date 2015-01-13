@@ -55,6 +55,7 @@ public class DataSiftClient extends DataSiftApiClient {
         super(config);
         configureMapper();
         this.config = config;
+        this.analysis = new DataSiftAnalysis(config);
         this.historics = new DataSiftHistorics(config);
         this.source = new DataSiftManagedSource(config);
         this.preview = new DataSiftPreview(config);
@@ -69,6 +70,14 @@ public class DataSiftClient extends DataSiftApiClient {
         MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         MAPPER.registerModule(new JodaModule());
     }
+
+    /**
+     * @return An object suitable for making requests to the DataSift Analysis API
+     */
+    public DataSiftAnalysis analysis() {
+        return analysis;
+    }
+
 
     /**
      * @return An object suitable for making requests to the DataSift Historics API

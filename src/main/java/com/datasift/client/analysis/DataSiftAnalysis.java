@@ -79,7 +79,7 @@ public class DataSiftAnalysis extends DataSiftApiClient {
         FutureData<DataSiftResult> future = f != null ? f : new FutureData<DataSiftResult>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(START));
         JSONRequest request = config.http()
-                .postJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+                .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .setData(hash);
         performRequest(future, request);
         return future;
@@ -107,37 +107,41 @@ public class DataSiftAnalysis extends DataSiftApiClient {
         FutureData<DataSiftResult> future = f != null ? f : new FutureData<DataSiftResult>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
         JSONRequest request = config.http()
-                .postJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+                .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
                 .setData(hash);
         performRequest(future, request);
         return future;
     }
 
     /**
-     * @param hash A stream hash
-     * @return the list of streams that are running or have run with stored data
+     * @return the status of all streams that are running or have run with stored data
      */
-    public FutureData<? extends BaseDataSiftResult> get(String hash) {
+    public FutureData<AnalysisStreamStatusList> get() {
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
+        FutureData<AnalysisStreamStatusList> future = new FutureData<>();
+        Request request = config.http().POST(uri, new PageReader(newRequestCallback(future, new AnalysisStreamStatusList(), config)));
+        performRequest(future, request);
+        return future;
+    }
 
-        if (hash == null) {
-            FutureData<AnalysisStreamStatus> future = new FutureData<>();
-            Request request = config.http().POST(uri, new PageReader(newRequestCallback(future, new AnalysisStreamStatus(), config)));
-            performRequest(future, request);
-            return future;
-        } else {
-            FutureData<AnalysisStreamStatusList> future = new FutureData<>();
-            JSONRequest request = config.http().postJSON(uri, new PageReader(newRequestCallback(future, new AnalysisStreamStatusList(), config)));
-            performRequest(future, request);
-            return future;
-        }
+    /**
+     * @param hash A stream hash
+     * @return the status of the requested stream
+     */
+    public FutureData<AnalysisStreamStatus> get(String hash) {
+        URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
+        FutureData<AnalysisStreamStatus> future = new FutureData<>();
+        JSONRequest request = config.http().postJSON(uri, new PageReader(newRequestCallback(future, new AnalysisStreamStatus(), config)))
+                .setData(hash);
+        performRequest(future, request);
+        return future;
     }
 
     /**
      * @param query analysis options for a stream
      * @return information on execution of a stream
      */
-    protected FutureData<AnalyzeResult> analyze(FutureData<AnalyzeQuery> query) {
+    public FutureData<AnalyzeResult> analyze(AnalyzeQuery query) {
         if (query == null) {
             throw new IllegalArgumentException("A valid analyze request body is required to analyze a stream");
         }

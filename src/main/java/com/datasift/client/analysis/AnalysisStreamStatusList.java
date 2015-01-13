@@ -23,4 +23,6 @@ public class AnalysisStreamStatusList extends BaseDataSiftResult {
         }
         this.count = count;
     }
+
+    public List<AnalysisStreamStatus> getData() { return this.data; }
 }

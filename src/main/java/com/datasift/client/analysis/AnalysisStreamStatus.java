@@ -16,10 +16,24 @@ public class AnalysisStreamStatus extends BaseDataSiftResult {
     @JsonProperty
     protected String status;
     @JsonProperty("remaining_capacity")
-    protected int remainingCapacity;
+    protected String remainingCapacity;
     @JsonProperty("reached_capacity")
     protected boolean reachedCapacity;
 
     public AnalysisStreamStatus() {
     }
+
+    public String getHash() { return this.hash; }
+
+    public int getStart() { return this.start; }
+
+    public int getEnd() { return this.end; }
+
+    public int getVolume() { return this.volume; }
+
+    public String getStatus() { return this.status; }
+
+    public String getRemainingCapacity() { return this.remainingCapacity; }
+
+    public boolean getReachedCapacity() { return this.reachedCapacity; }
 }

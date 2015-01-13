@@ -17,4 +17,12 @@ public class AnalyzeResult extends BaseDataSiftResult {
 
     public AnalyzeResult() {
     }
+
+    public boolean getTruncated() { return this.truncated; }
+
+    public int getInteractions() { return this.interactions; }
+
+    public int getUniqueAuthors() { return this.uniqueAuthors; }
+
+    public List<BaseDataSiftResult> getResults() { return this.results; }
 }
