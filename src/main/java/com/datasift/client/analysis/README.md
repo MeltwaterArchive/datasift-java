@@ -10,3 +10,4 @@ Makes requests to endpoints related to pylon analysis
 4. stop
 5. get
 6. analyze
+7. tags
