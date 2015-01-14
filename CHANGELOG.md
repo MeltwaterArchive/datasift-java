@@ -1,5 +1,11 @@
 Changelog
 ---------
+* v.3.1.2 Adds support for Pylon analysis (2015-01-14)
+
+* v.3.1.1 Fix to handle null connection on subscription (2014-10-08)
+
+* v.3.1.0 Added support for multiple connections, and introduced configurable web socket host (2014-09-22)
+
 * v.3.0.0 Complete upgrade, replacing old libraries, adding new features and addressing all previously known bugs.(2013-09-30)
 
 1. Adds Netty, Higgs.IO and Boundary's maintained copy of the High scale lib by Cliff Click
