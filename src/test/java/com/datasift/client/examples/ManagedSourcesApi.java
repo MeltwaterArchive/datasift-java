@@ -24,6 +24,7 @@ public class ManagedSourcesApi {
         //enable options using
         source.enableComments(true)
                 .enableLikes(true)
+                .enablePageLikes(false)
                 .enablePostsByOthers(true);
         //or all at once
         source.setParams(true, true, true);

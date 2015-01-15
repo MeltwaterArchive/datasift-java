@@ -2,20 +2,20 @@ package com.datasift.client.mock.datasift;
 
 import com.datasift.client.core.Balance;
 import com.datasift.client.core.Usage;
-import io.higgs.core.method;
 import io.higgs.http.server.HttpResponse;
-import io.higgs.http.server.WebApplicationException;
-import io.higgs.http.server.params.FormParam;
-import io.higgs.http.server.params.QueryParam;
 import io.higgs.http.server.resource.MediaType;
-import io.higgs.http.server.resource.Produces;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.joda.time.DateTime;
 
+import javax.ws.rs.FormParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import java.util.HashMap;
 import java.util.Map;
 
-@method("/v1.1")
+@Path("/v1.1")
 public class MockCoreApi {
     Map<String, String> headers = new HashMap<>();
     private double dpu = -1f;
@@ -29,24 +29,24 @@ public class MockCoreApi {
     private double remaining_dpus = -1d;
     private Usage.Period expectedPeriod;
 
-    @method("compile")
+    @Path("compile")
     public Map<String, Object> compile(@FormParam("csdl") String csdl, HttpResponse response) {
         Map<String, Object> data = compileOrValidate(csdl, response);
         data.put("hash", compileHash);
         return data;
     }
 
-    @method("validate")
+    @Path("validate")
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, Object> validate(@FormParam("csdl") String csdl, HttpResponse response) {
         return compileOrValidate(csdl, response);
     }
 
-    @method("usage")
+    @Path("usage")
     public Map<String, Object> usage(@QueryParam("period") String period) {
         if (expectedPeriod != null) {
             if (!expectedPeriod.toString().equalsIgnoreCase(period)) {
-                throw new WebApplicationException(HttpResponseStatus.BAD_REQUEST);
+                throw new WebApplicationException(HttpResponseStatus.BAD_REQUEST.code());
             }
         }
         Map<String, Object> map = new HashMap<>();
@@ -56,14 +56,14 @@ public class MockCoreApi {
         return map;
     }
 
-    @method("dpu")
+    @Path("dpu")
     public Map<String, Object> dpu() {
         Map<String, Object> map = new HashMap<>();
         map.put("dpu", dpu);
         return map;
     }
 
-    @method("balance")
+    @Path("balance")
     public Map<String, Balance.BalanceData> balance() {
         Map<String, Balance.BalanceData> map = new HashMap<>();
         Balance.BalanceData balanceData = new Balance.BalanceData();
@@ -109,7 +109,7 @@ public class MockCoreApi {
 
     private Map<String, Object> compileOrValidate(String csdl, HttpResponse response) {
         if (!expectedCsdl.equals(csdl)) {
-            throw new WebApplicationException(HttpResponseStatus.BAD_REQUEST);
+            throw new WebApplicationException(HttpResponseStatus.BAD_REQUEST.code());
         }
         return hashDpuAndCreatedAt(response);
     }

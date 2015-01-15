@@ -9,7 +9,7 @@ import com.datasift.client.historics.DataSiftHistorics;
 import com.datasift.client.managedsource.DataSiftManagedSource;
 import com.datasift.client.preview.DataSiftPreview;
 import com.datasift.client.push.DataSiftPush;
-import com.datasift.client.stream.StreamingData;
+import com.datasift.client.stream.ConnectionManager;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -39,7 +39,7 @@ public class DataSiftClient extends DataSiftApiClient {
     protected DataSiftManagedSource source;
     protected DataSiftPreview preview;
     protected DataSiftPush push;
-    protected StreamingData liveStream;
+    protected ConnectionManager liveStream;
     public final String VALIDATE = "validate", COMPILE = "compile", BALANCE = "balance", DPU = "dpu", USAGE = "usage";
 
     public DataSiftClient() {
@@ -57,7 +57,7 @@ public class DataSiftClient extends DataSiftApiClient {
         this.source = new DataSiftManagedSource(config);
         this.preview = new DataSiftPreview(config);
         this.push = new DataSiftPush(config);
-        this.liveStream = new StreamingData(config);
+        this.liveStream = new ConnectionManager(config);
         DependencyProvider.global().add(config);
     }
 
@@ -106,7 +106,7 @@ public class DataSiftClient extends DataSiftApiClient {
     /**
      * Access to the DataSift streaming API
      */
-    public StreamingData liveStream() {
+    public ConnectionManager liveStream() {
         return liveStream;
     }
 

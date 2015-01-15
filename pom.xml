@@ -8,7 +8,7 @@
     <groupId>com.datasift.client</groupId>
     <artifactId>datasift-java</artifactId>
     <packaging>jar</packaging>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.2.3-SNAPSHOT</version>
     <name>DataSift Java Client library</name>
     <description>A client library for interacting with the DataSift API on the JVM.</description>
 
@@ -41,6 +41,7 @@
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <higgs.version>0.0.11</higgs.version>
     </properties>
 
     <dependencies>
@@ -62,12 +63,12 @@
         <dependency>
             <groupId>io.higgs</groupId>
             <artifactId>http-client</artifactId>
-            <version>0.0.8-1</version>
+            <version>${higgs.version}</version>
         </dependency>
         <dependency>
             <groupId>io.higgs</groupId>
             <artifactId>ws-client</artifactId>
-            <version>0.0.8-1</version>
+            <version>${higgs.version}</version>
         </dependency>
         <!--json support-->
         <dependency>
@@ -101,13 +102,41 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.higgs</groupId>
             <artifactId>http-s3</artifactId>
-            <version>0.0.5</version>
+            <version>${higgs.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.higgs</groupId>
+            <artifactId>transformer-defaults</artifactId>
+            <version>${higgs.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/version.prop</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/version.prop</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -165,7 +194,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.datasift.client.stream.StreamingData</mainClass>
+                            <mainClass>com.datasift.client.stream.ConnectionManager</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
