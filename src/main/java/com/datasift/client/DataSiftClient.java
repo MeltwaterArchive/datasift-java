@@ -78,7 +78,6 @@ public class DataSiftClient extends DataSiftApiClient {
         return analysis;
     }
 
-
     /**
      * @return An object suitable for making requests to the DataSift Historics API
      */

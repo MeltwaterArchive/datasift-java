@@ -47,7 +47,11 @@ public class AnalysisApi {
         aggregatorParameters.put("analysis_type", "freqDist");
         aggregatorParameters.put("parameters", parameters);
 
-        AnalyzeQuery query = new AnalyzeQuery(compiled.hash(), aggregatorParameters, "fb.content contains \"starbucks\"", 0, 100);
+        AnalyzeQuery query = new AnalyzeQuery(
+                compiled.hash(),
+                aggregatorParameters,
+                "fb.content contains \"starbucks\"", 0, 100);
+
         AnalyzeResult result = datasift.analysis().analyze(query).sync();
         System.out.println("Analyze result object response: " + result.toString());
 

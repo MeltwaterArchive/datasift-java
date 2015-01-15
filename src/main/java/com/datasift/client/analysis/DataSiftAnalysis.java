@@ -20,7 +20,8 @@ import java.util.Map;
  * This class provides access to the DataSift Analysis API.
  */
 public class DataSiftAnalysis extends DataSiftApiClient {
-    public final String VALIDATE = "analysis/validate", COMPILE = "analysis/compile", START = "analysis/start", STOP = "analysis/stop", GET = "analysis/get", ANALYZE = "analysis/analyze", TAGS = "analysis/tags";
+    public final String VALIDATE = "analysis/validate", COMPILE = "analysis/compile", START = "analysis/start",
+            STOP = "analysis/stop", GET = "analysis/get", ANALYZE = "analysis/analyze", TAGS = "analysis/tags";
 
     public DataSiftAnalysis(DataSiftConfig config) {
         super(config);
@@ -36,7 +37,8 @@ public class DataSiftAnalysis extends DataSiftApiClient {
     public FutureData<Validation> validate(String csdl) {
         FutureData<Validation> future = new FutureData<Validation>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(VALIDATE));
-        JSONRequest request = config.http().postJSON(uri, new PageReader(newRequestCallback(future, new Validation(), config)))
+        JSONRequest request = config.http().postJSON(
+                uri, new PageReader(newRequestCallback(future, new Validation(), config)))
                 .addField("csdl", csdl);
         performRequest(future, request);
         return future;
@@ -53,7 +55,8 @@ public class DataSiftAnalysis extends DataSiftApiClient {
     public FutureData<Stream> compile(String csdl) {
         FutureData<Stream> future = new FutureData<Stream>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(COMPILE));
-        JSONRequest request = config.http().postJSON(uri, new PageReader(newRequestCallback(future, new Stream(), config)))
+        JSONRequest request = config.http().postJSON(
+                uri, new PageReader(newRequestCallback(future, new Stream(), config)))
                 .addField("csdl", csdl);
         performRequest(future, request);
         return future;
@@ -121,7 +124,8 @@ public class DataSiftAnalysis extends DataSiftApiClient {
     public FutureData<AnalysisStreamStatusList> get() {
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
         FutureData<AnalysisStreamStatusList> future = new FutureData<>();
-        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new AnalysisStreamStatusList(), config)));
+        Request request = config.http().GET(uri,
+                new PageReader(newRequestCallback(future, new AnalysisStreamStatusList(), config)));
         performRequest(future, request);
         return future;
     }
@@ -133,7 +137,8 @@ public class DataSiftAnalysis extends DataSiftApiClient {
     public FutureData<AnalysisStreamStatus> get(String hash) {
         URI uri = newParams().put("hash", hash).forURL(config.newAPIEndpointURI(GET));
         FutureData<AnalysisStreamStatus> future = new FutureData<>();
-        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new AnalysisStreamStatus(), config)));
+        Request request = config.http().GET(uri,
+                new PageReader(newRequestCallback(future, new AnalysisStreamStatus(), config)));
         performRequest(future, request);
         return future;
     }
@@ -166,7 +171,8 @@ public class DataSiftAnalysis extends DataSiftApiClient {
     public FutureData<AnalysisTags> tags(String hash) {
         URI uri = newParams().put("hash", hash).forURL(config.newAPIEndpointURI(TAGS));
         FutureData<AnalysisTags> future = new FutureData<>();
-        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new AnalysisTags(), config)));
+        Request request = config.http().GET(uri,
+                new PageReader(newRequestCallback(future, new AnalysisTags(), config)));
         performRequest(future, request);
         return future;
     }

@@ -17,7 +17,9 @@ public class AnalysisStreamStatusList extends BaseDataSiftResult {
     }
 
     @JsonCreator
-    public AnalysisStreamStatusList(@JsonProperty("data") List<AnalysisStreamStatus> data, @JsonProperty("count") int count) {
+    public AnalysisStreamStatusList(
+            @JsonProperty("data") List<AnalysisStreamStatus> data,
+            @JsonProperty ("count") int count) {
         if (data != null) {
             this.data.addAll(data);
         }

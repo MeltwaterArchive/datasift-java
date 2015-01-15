@@ -1,7 +1,10 @@
 package com.datasift.client.mock.datasift;
 
 import javax.ws.rs.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Path("/v1.1/analysis")
 public class MockAnalysisApi {
@@ -89,7 +92,6 @@ public class MockAnalysisApi {
         this.tags.add("tag1");
         return tags;
     }
-
 
     public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
