@@ -1,6 +1,6 @@
 Changelog
 ---------
-* v.3.1.2 Adds support for Pylon analysis (2015-01-14)
+* v.4.0.0 Adds support for Pylon analysis (2015-01-14)
 
 * v.3.1.1 Fix to handle null connection on subscription (2014-10-08)
 

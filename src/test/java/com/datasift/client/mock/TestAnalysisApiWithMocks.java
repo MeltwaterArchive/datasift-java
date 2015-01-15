@@ -1,5 +1,7 @@
 package com.datasift.client.mock;
 
+import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.IntegrationTestBase;
 import com.datasift.client.analysis.AnalysisStreamStatus;
@@ -12,6 +14,7 @@ import com.datasift.client.managedsource.sources.DataSource;
 import com.datasift.client.managedsource.sources.FacebookPage;
 import com.datasift.client.mock.datasift.MockAnalysisApi;
 import com.datasift.client.mock.datasift.MockManagedSourcesApi;
+import com.fasterxml.jackson.core.JsonParseException;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
 import org.joda.time.DateTime;

@@ -14,7 +14,7 @@ public class AnalysisTags extends BaseDataSiftResult {
     public AnalysisTags() { }
 
     @JsonCreator
-    public AnalysisTags(@JsonProperty List<String> tags) {
+    public AnalysisTags(List<String> tags) {
         if (tags != null) {
             this.tags.addAll(tags);
         }

@@ -37,7 +37,7 @@ public class DataSiftAnalysis extends DataSiftApiClient {
         FutureData<Validation> future = new FutureData<Validation>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(VALIDATE));
         JSONRequest request = config.http().postJSON(uri, new PageReader(newRequestCallback(future, new Validation(), config)))
-                .setData(csdl);
+                .addField("csdl", csdl);
         performRequest(future, request);
         return future;
     }
@@ -54,7 +54,7 @@ public class DataSiftAnalysis extends DataSiftApiClient {
         FutureData<Stream> future = new FutureData<Stream>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(COMPILE));
         JSONRequest request = config.http().postJSON(uri, new PageReader(newRequestCallback(future, new Stream(), config)))
-                .setData(csdl);
+                .addField("csdl", csdl);
         performRequest(future, request);
         return future;
     }
@@ -82,7 +82,7 @@ public class DataSiftAnalysis extends DataSiftApiClient {
         URI uri = newParams().forURL(config.newAPIEndpointURI(START));
         JSONRequest request = config.http()
                 .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
-                .setData(hash);
+                .addField("hash", hash);
         performRequest(future, request);
         return future;
     }
@@ -110,7 +110,7 @@ public class DataSiftAnalysis extends DataSiftApiClient {
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
         JSONRequest request = config.http()
                 .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
-                .setData(hash);
+                .addField("hash", hash);
         performRequest(future, request);
         return future;
     }
