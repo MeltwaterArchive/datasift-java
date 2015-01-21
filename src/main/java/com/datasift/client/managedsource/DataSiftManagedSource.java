@@ -1,25 +1,26 @@
 package com.datasift.client.managedsource;
 
-import com.datasift.client.BaseDataSiftResult;
-import com.datasift.client.DataSiftApiClient;
-import com.datasift.client.DataSiftConfig;
-import com.datasift.client.DataSiftResult;
-import com.datasift.client.FutureData;
-import com.datasift.client.FutureResponse;
-import com.datasift.client.ParamBuilder;
+import com.datasift.client.*;
+import com.datasift.client.managedsource.sources.BaseSource;
 import com.datasift.client.managedsource.sources.DataSource;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.higgs.http.client.POST;
 import io.higgs.http.client.Request;
 import io.higgs.http.client.readers.PageReader;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class DataSiftManagedSource extends DataSiftApiClient {
     public static final String CREATE = "source/create", UPDATE = "source/update", START = "source/start",
-            STOP = "source/stop", DELETE = "source/delete", GET = "source/get", LOG = "source/log";
+            STOP = "source/stop", DELETE = "source/delete", GET = "source/get", LOG = "source/log",
+            ADD_AUTH = "source/auth/add", REMOVE_AUTH = "source/auth/remove",
+            ADD_RESOURCE = "source/resource/add", REMOVE_RESOURCE = "source/resource/remove";
 
     public DataSiftManagedSource(DataSiftConfig config) {
         super(config);
@@ -34,6 +35,115 @@ public class DataSiftManagedSource extends DataSiftApiClient {
      */
     public <T extends DataSource> FutureData<ManagedSource> create(String name, T source) {
         return updateOrCreate(name, source, null);
+    }
+
+    public FutureData<ManagedSource> addAuth(String id, String... resources) {
+        return addAuth(id, true, resources);
+    }
+
+    /**
+     * Add one or more authentication credentials to a given managed source
+     *
+     * @param id        the ID of the source
+     * @param validate  if true each token is validated
+     * @param resources a set of tokens
+     * @return the source
+     */
+    public FutureData<ManagedSource> addAuth(String id, boolean validate, String... resources) {
+        if (id == null || resources == null || resources.length == 0) {
+            throw new IllegalArgumentException("ID and a resource is required");
+        }
+        FutureData<ManagedSource> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(ADD_AUTH));
+        try {
+            List<BaseSource.ResourceParams> list = new ArrayList<>();
+            for (String val : resources) {
+                BaseSource.ResourceParams params = new ManagedSource.ResourceParams();
+                params.set("value", val);
+                list.add(params);
+            }
+            POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)))
+                    .form("id", id)
+                    .form("auth", DataSiftClient.MAPPER.writeValueAsString(list))
+                    .form("validate", DataSiftClient.MAPPER.writeValueAsString(Arrays.asList(validate)));
+            performRequest(future, request);
+        } catch (JsonProcessingException jpe) {
+            future.interuptCause(jpe);
+            future.doNotify();
+        }
+        return future;
+    }
+
+    public FutureData<ManagedSource> removeAuth(String id, String... resources) {
+        if (id == null || resources == null || resources.length == 0) {
+            throw new IllegalArgumentException("ID and a resource is required");
+        }
+        FutureData<ManagedSource> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(REMOVE_AUTH));
+        try {
+            POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)))
+                    .form("id", id)
+                    .form("auth_ids", DataSiftClient.MAPPER.writeValueAsString(resources));
+            performRequest(future, request);
+        } catch (JsonProcessingException jpe) {
+            future.interuptCause(jpe);
+            future.doNotify();
+        }
+        return future;
+    }
+
+    /**
+     * Add a resource to a given managed source
+     *
+     * @param id        the ID of the source to add to
+     * @param validate  whether to validate the resources
+     * @param resources set of resources to add
+     * @return the managed source
+     */
+    public FutureData<ManagedSource> addResource(String id, boolean validate, BaseSource.ResourceParams... resources) {
+        if (id == null || resources == null || resources.length == 0) {
+            throw new IllegalArgumentException("ID and oen or more resources are required");
+        }
+        FutureData<ManagedSource> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(ADD_RESOURCE));
+        POST request = null;
+        try {
+            request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)))
+                    .form("id", id)
+                    .form("resources", DataSiftClient.MAPPER.writeValueAsString(resources))
+                    .form("validate", validate);
+        } catch (JsonProcessingException e) {
+            future.interuptCause(e);
+            future.doNotify();
+        }
+        performRequest(future, request);
+        return future;
+    }
+
+    /**
+     * Remove a set of resources from a managed source
+     *
+     * @param id        the ID of the managed source
+     * @param resources the resources to remove
+     * @return the managed source
+     */
+    public FutureData<ManagedSource> removeResource(String id, String... resources) {
+        if (id == null || resources == null || resources.length == 0) {
+            throw new IllegalArgumentException("ID and oen or more resources are required");
+        }
+        FutureData<ManagedSource> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(REMOVE_RESOURCE));
+        POST request = null;
+        try {
+            request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)))
+                    .form("id", id)
+                    .form("resource_ids", DataSiftClient.MAPPER.writeValueAsString(resources));
+        } catch (JsonProcessingException e) {
+            future.interuptCause(e);
+            future.doNotify();
+        }
+        performRequest(future, request);
+        return future;
     }
 
     /**

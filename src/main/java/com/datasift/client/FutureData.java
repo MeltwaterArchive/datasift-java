@@ -72,7 +72,7 @@ public class FutureData<T> {
         }
     }
 
-    protected void doNotify() {
+    public void doNotify() {
         //synchronized (this) {
         //notify();
         //}

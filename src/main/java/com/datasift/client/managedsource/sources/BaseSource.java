@@ -115,8 +115,10 @@ public abstract class BaseSource<T extends DataSource<T>> implements DataSource<
         private Map<String, Object> parameters = new NonBlockingHashMap<String, Object>();
         @JsonProperty
         private String name;
+        @JsonProperty("resource_id")
+        private String id;
 
-        protected ResourceParams() {
+        public ResourceParams() {
         }
 
         public Map<String, Object> getParameters() {
@@ -129,6 +131,14 @@ public abstract class BaseSource<T extends DataSource<T>> implements DataSource<
 
         public void name(String name) {
             this.name = name;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
     }
 
