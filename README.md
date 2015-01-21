@@ -5,6 +5,15 @@ This is the new Java library for accessing DataSift. See the tests and examples 
 This version of the library is currently in alpha. It is incompatible with older versions. If you used a 2.x.x or lower version of the library then we have written a migration guide to help the transition.
 See [MIGRATING_TO_V-3.0.0.md](MIGRATING_TO_V-3.0.0.md)
 
+Getting Started
+---------------
+
+**Read our [Java Getting Started Guide](http://dev.datasift.com/quickstart/java) to get started with the DataSift platform.** The guide will take you through creating a [DataSift](http://datasift.com) account, and activating data sources which you will need to do before using the DataSift API.
+
+Many of the examples and API endpoints used in this library require you have enabled certain data sources before you can receive any data (you should do this at [datasift.com/source](https://datasift.com/source)). Certain API features, such as [Historics](http://datasift.com/platform/historics/) and [Managed Sources](http://datasift.com/platform/datasources/) will require you have signed up to a monthly subscription before you can access them.
+
+If you are interested in using these features, or would like more information about DataSift, please [get in touch](http://datasift.com/contact-us/)!
+
 Requirements
 ------------
 
