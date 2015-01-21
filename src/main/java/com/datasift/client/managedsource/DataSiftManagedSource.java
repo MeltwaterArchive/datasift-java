@@ -69,7 +69,8 @@ public class DataSiftManagedSource extends DataSiftApiClient {
                 params.set("value", val);
                 list.add(params);
             }
-            POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)))
+            POST request = config.http().POST(uri, new PageReader(newRequestCallback(future,
+                    new ManagedSource(), config)))
                     .form("id", id)
                     .form("auth", DataSiftClient.MAPPER.writeValueAsString(list))
                     .form("validate", DataSiftClient.MAPPER.writeValueAsString(Arrays.asList(validate)));
@@ -88,7 +89,8 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         FutureData<ManagedSource> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(REMOVE_AUTH));
         try {
-            POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)))
+            POST request = config.http().POST(uri, new PageReader(newRequestCallback(future,
+                    new ManagedSource(), config)))
                     .form("id", id)
                     .form("auth_ids", DataSiftClient.MAPPER.writeValueAsString(resources));
             performRequest(future, request);
