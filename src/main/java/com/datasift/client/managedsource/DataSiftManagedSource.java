@@ -1,6 +1,13 @@
 package com.datasift.client.managedsource;
 
-import com.datasift.client.*;
+import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.DataSiftApiClient;
+import com.datasift.client.DataSiftClient;
+import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftResult;
+import com.datasift.client.FutureData;
+import com.datasift.client.FutureResponse;
+import com.datasift.client.ParamBuilder;
 import com.datasift.client.managedsource.sources.BaseSource;
 import com.datasift.client.managedsource.sources.DataSource;
 import com.fasterxml.jackson.core.JsonProcessingException;
