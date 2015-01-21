@@ -9,6 +9,7 @@ import com.datasift.client.managedsource.sources.FacebookPage;
 
 public class ManagedSourcesApi {
     private ManagedSourcesApi() throws InterruptedException {
+        DataSiftConfig config = new DataSiftConfig("username", "api-key");
 
         final DataSiftClient datasift = new DataSiftClient(config);
 
