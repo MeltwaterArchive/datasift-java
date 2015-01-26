@@ -2,9 +2,13 @@ package com.datasift.client.examples;
 
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
-import com.datasift.client.analysis.*;
-
-import java.util.Map;
+import com.datasift.client.analysis.AnalysisQueryParameters;
+import com.datasift.client.analysis.AnalysisStream;
+import com.datasift.client.analysis.AnalysisParametersData;
+import com.datasift.client.analysis.AnalyzeQuery;
+import com.datasift.client.analysis.AnalyzeResult;
+import com.datasift.client.analysis.AnalysisTags;
+import com.datasift.client.analysis.AnalysisStreamStatus;
 
 public class AnalysisApi {
     private AnalysisApi() throws InterruptedException {
