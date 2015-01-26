@@ -11,18 +11,18 @@ import java.util.Map;
 public class AnalyzeQuery extends BaseDataSiftResult {
     @JsonProperty
     protected String hash;
-    @JsonProperty("parameters")
-    protected Map<String, Object> aggregatorParameters = new NonBlockingHashMap<String, Object>();
+    @JsonProperty
+    protected AnalysisQueryParameters parameters;
     @JsonProperty
     protected String filter;
     @JsonProperty
-    protected int start;
+    protected Integer start;
     @JsonProperty
-    protected int end;
+    protected Integer end;
 
-    public AnalyzeQuery(String hash, Map<String, Object> parameters, String filter, int start, int end) {
+    public AnalyzeQuery(String hash, AnalysisQueryParameters parameters, String filter, Integer start, Integer end) {
         this.hash = hash;
-        this.aggregatorParameters = parameters;
+        this.parameters = parameters;
         this.filter = filter;
         this.start = start;
         this.end = end;
@@ -30,11 +30,11 @@ public class AnalyzeQuery extends BaseDataSiftResult {
 
     public String getHash() { return this.hash; }
 
-    public Map<String, Object> getAggregatorParameters() { return this.aggregatorParameters; }
+    public AnalysisQueryParameters getParameters() { return this.parameters; }
 
     public String getFilter() { return this.filter; }
 
-    public int getStart() { return this.start; }
+    public Integer getStart() { return this.start; }
 
-    public int getEnd() { return this.end; }
+    public Integer getEnd() { return this.end; }
 }

@@ -31,14 +31,14 @@ public class DataSiftAnalysis extends DataSiftApiClient {
      * Validate the given CSDL string
      *
      * @param csdl the CSDL to validate
-     * @return the results of the validation, use {@link com.datasift.client.core.Validation#isSuccessful()} to check if
-     * validation was successful or not
+     * @return the results of the validation, use {@link com.datasift.client.core.Validation#isValid()} to check if
+     * validation was successful
      */
-    public FutureData<Validation> validate(String csdl) {
-        FutureData<Validation> future = new FutureData<Validation>();
+    public FutureData<AnalysisValidation> validate(String csdl) {
+        FutureData<AnalysisValidation> future = new FutureData<AnalysisValidation>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(VALIDATE));
         JSONRequest request = config.http().postJSON(
-                uri, new PageReader(newRequestCallback(future, new Validation(), config)))
+                uri, new PageReader(newRequestCallback(future, new AnalysisValidation(), config)))
                 .addField("csdl", csdl);
         performRequest(future, request);
         return future;
@@ -52,11 +52,11 @@ public class DataSiftAnalysis extends DataSiftApiClient {
      * .Stream#hash()}
      * to list the hash for the compiled CSDL
      */
-    public FutureData<Stream> compile(String csdl) {
-        FutureData<Stream> future = new FutureData<Stream>();
+    public FutureData<AnalysisStream> compile(String csdl) {
+        FutureData<AnalysisStream> future = new FutureData<AnalysisStream>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(COMPILE));
         JSONRequest request = config.http().postJSON(
-                uri, new PageReader(newRequestCallback(future, new Stream(), config)))
+                uri, new PageReader(newRequestCallback(future, new AnalysisStream(), config)))
                 .addField("csdl", csdl);
         performRequest(future, request);
         return future;
@@ -74,42 +74,35 @@ public class DataSiftAnalysis extends DataSiftApiClient {
     }
 
     /**
-     * @param f start a stream
-     * @return this
+     * @param hash the stream hash
+     * @param name a name for the subscription
+     * @return a result which can be checked for success or failure, A status 204 indicates success,
+     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
-    protected FutureData<DataSiftResult> start(String hash, FutureData<DataSiftResult> f) {
+    protected FutureData<DataSiftResult> start(String hash, String name) {
         if (hash == null || hash.isEmpty()) {
             throw new IllegalArgumentException("A valid hash is required to start a stream");
         }
-        FutureData<DataSiftResult> future = f != null ? f : new FutureData<DataSiftResult>();
+        FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(START));
         JSONRequest request = config.http()
                 .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
-                .addField("hash", hash);
+                .addField("hash", hash)
+                .addField("name", name);
         performRequest(future, request);
         return future;
     }
 
     /**
-     * Stop the stream with the given hash
-     *
-     * @param hash the stream hash
+     * @param hash the hash for the stream to stop
      * @return a result which can be checked for success or failure, A status 204 indicates success,
      * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> stop(String hash) {
-        return stop(hash, null);
-    }
-
-    /**
-     * @param f start a stream
-     * @return this
-     */
-    protected FutureData<DataSiftResult> stop(String hash, FutureData<DataSiftResult> f) {
         if (hash == null || hash.isEmpty()) {
             throw new IllegalArgumentException("A valid hash is required to stop a stream");
         }
-        FutureData<DataSiftResult> future = f != null ? f : new FutureData<DataSiftResult>();
+        FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
         JSONRequest request = config.http()
                 .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))

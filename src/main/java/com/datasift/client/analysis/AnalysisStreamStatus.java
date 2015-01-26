@@ -14,9 +14,13 @@ public class AnalysisStreamStatus extends BaseDataSiftResult {
     @JsonProperty
     protected int volume;
     @JsonProperty
+    protected String name;
+    @JsonProperty
     protected String status;
-    @JsonProperty("remaining_capacity")
-    protected String remainingCapacity;
+    @JsonProperty("remaining_index_capacity")
+    protected int remainingIndexCapacity;
+    @JsonProperty("remaining_account_capacity")
+    protected int remainingAccountCapacity;
     @JsonProperty("reached_capacity")
     protected boolean reachedCapacity;
 
@@ -33,7 +37,9 @@ public class AnalysisStreamStatus extends BaseDataSiftResult {
 
     public String getStatus() { return this.status; }
 
-    public String getRemainingCapacity() { return this.remainingCapacity; }
+    public int getRemainingIndexCapacity() { return this.remainingIndexCapacity; }
+
+    public int getRemainingAccountCapacity() { return this.remainingAccountCapacity; }
 
     public boolean getReachedCapacity() { return this.reachedCapacity; }
 }

@@ -54,7 +54,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
     private String remainingCapacity;
     private boolean reachedCapacity;
     private List<Integer> results = new ArrayList<>();
-    protected String createdAt;
+    protected long createdAt;
     private ArrayList<String> tags = new ArrayList<String>();
 
     @Before

@@ -21,7 +21,7 @@ public class MockAnalysisApi {
     private boolean reachedCapacity;
     private Map<String, Object> parameters;
     private List<Integer> results = new ArrayList<>();
-    protected String createdAt;
+    protected long createdAt;
     private List<String> tags = new ArrayList<>();
 
     @Path("validate")
@@ -143,7 +143,7 @@ public class MockAnalysisApi {
         this.reachedCapacity = reachedCapacity;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
