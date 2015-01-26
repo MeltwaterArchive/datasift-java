@@ -4,8 +4,10 @@ import com.datasift.client.BaseDataSiftResult;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.IntegrationTestBase;
+import com.datasift.client.analysis.AnalysisStream;
 import com.datasift.client.analysis.AnalysisStreamStatus;
 import com.datasift.client.analysis.AnalysisTags;
+import com.datasift.client.analysis.AnalysisValidation;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Validation;
 import com.datasift.client.managedsource.ManagedSource;
@@ -46,12 +48,12 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
     private boolean success;
     protected String csdl = "";
     private double dpu = new Random().nextDouble();
-    private boolean truncated;
     private int interactions;
     private int uniqueAuthors;
     private int volume;
     private long start, end;
-    private String remainingCapacity;
+    private int remainingIndexCapacity;
+    private int remainingAccountCapacity;
     private boolean reachedCapacity;
     private List<Integer> results = new ArrayList<>();
     protected long createdAt;
@@ -91,9 +93,9 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
         m.setEnd(end);
         m.setInteractions(interactions);
         m.setReachedCapacity(reachedCapacity);
-        m.setRemainingCapacity(remainingCapacity);
+        m.setRemainingIndexCapacity(remainingIndexCapacity);
+        m.setRemainingAccountCapacity(remainingAccountCapacity);
         m.setStart(start);
-        m.setTruncated(truncated);
         m.setUniqueAuthors(uniqueAuthors);
         m.setVolume(volume);
         m.setCreatedAt(createdAt);
@@ -113,14 +115,15 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
         assertEquals(statusResult.getEnd(), end);
         assertEquals(statusResult.getVolume(), volume);
         assertEquals(statusResult.getReachedCapacity(), reachedCapacity);
-        assertEquals(statusResult.getRemainingCapacity(), remainingCapacity);
+        assertEquals(statusResult.getRemainingAccountCapacity(), remainingAccountCapacity);
+        assertEquals(statusResult.getRemainingIndexCapacity(), remainingIndexCapacity);
         assertEquals(statusResult.getStart(), start);
         assertEquals(statusResult.getStatus(), status);
     }
 
     @Test
     public void testIfUserCanValidateCSDL() {
-        Validation validationResult = datasift.analysis().validate(csdl).sync();
+        AnalysisValidation validationResult = datasift.analysis().validate(csdl).sync();
         assertTrue(validationResult.isSuccessful());
 
         assertEquals(validationResult.getDpu(), dpu, 0.1);
@@ -129,7 +132,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanCompileCSDL() {
-        Stream compilationResult = datasift.analysis().compile(csdl).sync();
+        AnalysisStream compilationResult = datasift.analysis().compile(csdl).sync();
         assertTrue(compilationResult.isSuccessful());
 
         assertEquals(compilationResult.getDpu(), dpu, 0.1);

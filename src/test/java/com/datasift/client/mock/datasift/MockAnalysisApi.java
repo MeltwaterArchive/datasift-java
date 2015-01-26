@@ -17,7 +17,8 @@ public class MockAnalysisApi {
     private int volume;
     private long start, end;
     private String status;
-    private String remainingCapacity;
+    private int remainingAccountCapacity;
+    private int remainingIndexCapacity;
     private boolean reachedCapacity;
     private Map<String, Object> parameters;
     private List<Integer> results = new ArrayList<>();
@@ -64,7 +65,6 @@ public class MockAnalysisApi {
     }
 
     private void setAnalysisResult(Map<String, Object> map) {
-        map.put("truncated", truncated);
         map.put("interactions", interactions);
         map.put("unique_authors", uniqueAuthors);
         map.put("results", results);
@@ -83,7 +83,8 @@ public class MockAnalysisApi {
         map.put("start", start);
         map.put("end", end);
         map.put("status", status);
-        map.put("remaining_capacity", remainingCapacity);
+        map.put("remaining_account_capacity", remainingAccountCapacity);
+        map.put("remaining_index_capacity", remainingIndexCapacity);
         map.put("reached_capacity", reachedCapacity);
     }
 
@@ -103,10 +104,6 @@ public class MockAnalysisApi {
 
     public void setDpu(double dpu) {
         this.dpu = dpu;
-    }
-
-    public void setTruncated(boolean truncated) {
-        this.truncated = truncated;
     }
 
     public void setInteractions(int interactions) {
@@ -135,8 +132,12 @@ public class MockAnalysisApi {
 
     public void setResults(List<Integer> results) { this.results = results; }
 
-    public void setRemainingCapacity(String remainingCapacity) {
-        this.remainingCapacity = remainingCapacity;
+    public void setRemainingAccountCapacity(int remainingCapacity) {
+        this.remainingAccountCapacity = remainingCapacity;
+    }
+
+    public void setRemainingIndexCapacity(int remainingCapacity) {
+        this.remainingIndexCapacity = remainingCapacity;
     }
 
     public void setReachedCapacity(boolean reachedCapacity) {
