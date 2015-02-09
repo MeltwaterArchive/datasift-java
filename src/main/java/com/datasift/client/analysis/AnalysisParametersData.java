@@ -12,6 +12,9 @@ public class AnalysisParametersData {
     @JsonProperty
     protected String target;
 
+    public AnalysisParametersData() {
+    }
+
     public AnalysisParametersData(String interval, Float span, Integer threshold, String target) {
         this.interval = interval;
         this.span = span;
@@ -19,11 +22,35 @@ public class AnalysisParametersData {
         this.target = target;
     }
 
-    public String getInterval() { return this.interval; }
+    public String getInterval() {
+        return this.interval;
+    }
 
-    public float getSpan() { return this.span; }
+    public float getSpan() {
+        return this.span;
+    }
 
-    public int getThreshold() { return this.threshold; }
+    public int getThreshold() {
+        return this.threshold;
+    }
 
-    public String getTarget() { return this.target; }
+    public String getTarget() {
+        return this.target;
+    }
+
+    public void setInterval(String interval) {
+        this.interval = interval;
+    }
+
+    public void setSpan(Float span) {
+        this.span = span;
+    }
+
+    public void setThreshold(Integer threshold) {
+        this.threshold = threshold;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
 }
