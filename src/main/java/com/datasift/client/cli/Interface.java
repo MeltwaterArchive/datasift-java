@@ -231,7 +231,7 @@ public class Interface {
                     }
                 }
                 AnalyzeQuery analysis = new AnalyzeQuery(params.get("hash"), map, params.get("filter"),
-                        Integer.parseInt("start"), Integer.parseInt("end"));
+                        Integer.parseInt(params.get("start")), Integer.parseInt(params.get("end")));
                 printResponse(dataSift.analysis().analyze(analysis).sync());
             case "compile":
                 printResponse(dataSift.analysis().compile(params.get("csdl")).sync());
