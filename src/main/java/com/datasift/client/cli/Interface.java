@@ -3,6 +3,7 @@ package com.datasift.client.cli;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
+import com.datasift.client.analysis.AnalyzeQuery;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
 import com.datasift.client.push.OutputType;
@@ -65,6 +66,9 @@ public class Interface {
                 break;
             case "sources":
                 executeSources(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                break;
+            case "analysis":
+                executeAnalysis(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                 break;
         }
 
@@ -210,6 +214,38 @@ public class Interface {
             case "get":
                 printResponse(dataSift.historics().get(params.get("id")).sync());
                 break;
+        }
+    }
+
+    private static void executeAnalysis(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+        switch (endpoint) {
+            case "analyze":
+                Map<String, Object> map = new HashMap<>();
+                String p = params.get("parameters");
+                if (p != null && !p.isEmpty()) {
+                    try {
+                        map = mapper.readValue(p, new TypeReference<Map<String, Object>>() {
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                AnalyzeQuery analysis = new AnalyzeQuery(params.get("hash"), map, params.get("filter"),
+                        Integer.parseInt("start"), Integer.parseInt("end"));
+                printResponse(dataSift.analysis().analyze(analysis).sync());
+            case "compile":
+                printResponse(dataSift.analysis().compile(params.get("csdl")).sync());
+            case "get":
+                String hash = params.get("hash");
+                printResponse(hash == null ? dataSift.analysis().get().sync() : dataSift.analysis().get(hash).sync());
+            case "start":
+                printResponse(dataSift.analysis().start(params.get("hash")).sync());
+            case "stop":
+                printResponse(dataSift.analysis().stop(params.get("hash")).sync());
+            case "tags":
+                printResponse(dataSift.analysis().tags(params.get("hash")).sync());
+            case "validate":
+                printResponse(dataSift.analysis().validate(params.get("csdl")).sync());
         }
     }
 
