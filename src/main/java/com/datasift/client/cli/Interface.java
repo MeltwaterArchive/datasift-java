@@ -221,6 +221,15 @@ public class Interface {
         switch (endpoint) {
             case "analyze":
                 Map<String, Object> map = new HashMap<>();
+                String p = params.get("parameters");
+                if (p != null && !p.isEmpty()) {
+                    try {
+                        map = mapper.readValue(p, new TypeReference<Map<String, Object>>() {
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 AnalyzeQuery analysis = new AnalyzeQuery(params.get("hash"), map, params.get("filter"),
                         Integer.parseInt("start"), Integer.parseInt("end"));
                 printResponse(dataSift.analysis().analyze(analysis).sync());
