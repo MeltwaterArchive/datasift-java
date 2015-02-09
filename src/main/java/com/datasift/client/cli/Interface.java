@@ -3,6 +3,7 @@ package com.datasift.client.cli;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
+import com.datasift.client.analysis.AnalysisQueryParameters;
 import com.datasift.client.analysis.AnalyzeQuery;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
@@ -220,12 +221,11 @@ public class Interface {
     private static void executeAnalysis(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
         switch (endpoint) {
             case "analyze":
-                Map<String, Object> map = new HashMap<>();
+                AnalysisQueryParameters map = null;
                 String p = params.get("parameters");
                 if (p != null && !p.isEmpty()) {
                     try {
-                        map = mapper.readValue(p, new TypeReference<Map<String, Object>>() {
-                        });
+                        map = mapper.readValue(p, AnalysisQueryParameters.class);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
