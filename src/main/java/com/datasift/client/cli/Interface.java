@@ -51,6 +51,7 @@ public class Interface {
 
         Map.Entry<String, String> authVals = auth.entrySet().iterator().next();
         DataSiftConfig config = new DataSiftConfig(authVals.getKey(), authVals.getValue());
+        config.host(parsedArgs.get("u"));
         DataSiftClient dataSift = new DataSiftClient(config);
         switch (parsedArgs.get("e")) {
             case "core":
