@@ -18,6 +18,8 @@ import io.higgs.http.client.HttpRequestBuilder;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ public class Interface {
     private Interface() {
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException {
         List<CliSwitch> switches = new ArrayList<>();
         switches.add(new CliSwitch("a", "auth", true, "Auth is required in the form username:api_key"));
         switches.add(new CliSwitch("c", "command", true));
@@ -51,7 +53,11 @@ public class Interface {
 
         Map.Entry<String, String> authVals = auth.entrySet().iterator().next();
         DataSiftConfig config = new DataSiftConfig(authVals.getKey(), authVals.getValue());
-        config.host(parsedArgs.get("u"));
+        if (parsedArgs.get("u") != null) {
+            URL url = new URL(parsedArgs.get("u"));
+            config.host(url.getHost());
+            config.port(url.getPort());
+        }
         DataSiftClient dataSift = new DataSiftClient(config);
         switch (parsedArgs.get("e")) {
             case "core":
