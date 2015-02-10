@@ -82,8 +82,8 @@ public class Interface {
                 executeAnalysis(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                 break;
         }
-
         HttpRequestBuilder.shutdown();
+        System.exit(0);
     }
 
     private static void require(String[] args, Map<String, String> params) {
