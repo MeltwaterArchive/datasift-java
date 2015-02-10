@@ -18,8 +18,8 @@ import io.higgs.http.client.HttpRequestBuilder;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class Interface {
     private Interface() {
     }
 
-    public static void main(String[] args) throws MalformedURLException {
+    public static void main(String[] args) throws URISyntaxException {
         List<CliSwitch> switches = new ArrayList<>();
         switches.add(new CliSwitch("a", "auth", true, "Auth is required in the form username:api_key"));
         switches.add(new CliSwitch("c", "command", true));
@@ -43,6 +43,7 @@ public class Interface {
         endpoint.setDefault("core");
         switches.add(endpoint);
         switches.add(new CliSwitch("p", "param"));
+        switches.add(new CliSwitch("u", "url"));
         CliArguments parsedArgs = Parser.parse(args, switches);
 
         Map<String, String> auth = parsedArgs.map("a");
@@ -53,8 +54,9 @@ public class Interface {
 
         Map.Entry<String, String> authVals = auth.entrySet().iterator().next();
         DataSiftConfig config = new DataSiftConfig(authVals.getKey(), authVals.getValue());
-        if (parsedArgs.get("u") != null) {
-            URL url = new URL(parsedArgs.get("u"));
+        String u = parsedArgs.get("u");
+        if (u != null) {
+            URI url = new URI(u.startsWith("http") ? u : "http://" + u);
             config.host(url.getHost());
             config.port(url.getPort());
         }
