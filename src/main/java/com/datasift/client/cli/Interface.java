@@ -59,6 +59,7 @@ public class Interface {
             URI url = new URI(u.startsWith("http") ? u : "http://" + u);
             config.host(url.getHost());
             config.port(url.getPort());
+            config.setSslEnabled(url.getScheme() != null && url.getScheme().equals("https"));
         }
         DataSiftClient dataSift = new DataSiftClient(config);
         switch (parsedArgs.get("e")) {
