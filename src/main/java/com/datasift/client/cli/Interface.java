@@ -243,19 +243,26 @@ public class Interface {
                 AnalyzeQuery analysis = new AnalyzeQuery(params.get("hash"), map, params.get("filter"),
                         Integer.parseInt(params.get("start")), Integer.parseInt(params.get("end")));
                 printResponse(dataSift.analysis().analyze(analysis).sync());
+                break;
             case "compile":
                 printResponse(dataSift.analysis().compile(params.get("csdl")).sync());
+                break;
             case "get":
                 String hash = params.get("hash");
                 printResponse(hash == null ? dataSift.analysis().get().sync() : dataSift.analysis().get(hash).sync());
+                break;
             case "start":
                 printResponse(dataSift.analysis().start(params.get("hash")).sync());
+                break;
             case "stop":
                 printResponse(dataSift.analysis().stop(params.get("hash")).sync());
+                break;
             case "tags":
                 printResponse(dataSift.analysis().tags(params.get("hash")).sync());
+                break;
             case "validate":
                 printResponse(dataSift.analysis().validate(params.get("csdl")).sync());
+                break;
         }
     }
 
