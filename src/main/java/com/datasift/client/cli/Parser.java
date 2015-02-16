@@ -122,8 +122,12 @@ public class Parser {
                 res.put(shortForm, val);
             }
             if (value == null) {
-                //if value is null then current switch accepts a single string argument
-                res.put(currentSwitch, name);
+                if (val instanceof Map) {
+                    ((HashMap<String, String>) val).put(name, value);
+                } else {
+                    //if value is null then current switch accepts a single string argument
+                    res.put(currentSwitch, name);
+                }
             } else {
                 if (val != null) {
                     //otherwise put name value as kv pair under the current switch
@@ -140,7 +144,7 @@ public class Parser {
          *
          * @param arg the param to get
          * @return a set of options or null if no params were passed for the arg
-         *         or null if the argument doesn't have a mapping
+         * or null if the argument doesn't have a mapping
          */
         public HashMap<String, String> map(String arg) {
             try {
