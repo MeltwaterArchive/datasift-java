@@ -134,7 +134,7 @@ public class Interface {
             headers.put(h.getKey(), h.getValue() == null || h.getValue().size() == 0 ? null : h.getValue().get(0));
         }
         Map<String, Object> response = new HashMap<>();
-        response.put("body", result.getResponse().data());
+        response.put("body", result);
         response.put("status", status);
         response.put("headers", headers);
         try {
