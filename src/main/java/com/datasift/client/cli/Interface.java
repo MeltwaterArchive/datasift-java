@@ -241,7 +241,8 @@ public class Interface {
                     }
                 }
                 AnalyzeQuery analysis = new AnalyzeQuery(params.get("hash"), map, params.get("filter"),
-                        Integer.parseInt(params.get("start")), Integer.parseInt(params.get("end")));
+                        params.get("start") == null ? null : Integer.parseInt(params.get("start")),
+                        params.get("end") == null ? null : Integer.parseInt(params.get("end")));
                 printResponse(dataSift.analysis().analyze(analysis).sync());
                 break;
             case "compile":
