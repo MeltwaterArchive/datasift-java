@@ -249,7 +249,7 @@ public class Interface {
                 printResponse(dataSift.analysis().compile(params.get("csdl")).sync());
                 break;
             case "get":
-                String hash = params.get("hash");
+                String hash = params == null ? null : params.get("hash");
                 printResponse(hash == null ? dataSift.analysis().get().sync() : dataSift.analysis().get(hash).sync());
                 break;
             case "start":
