@@ -6,9 +6,9 @@ public class AnalysisParametersData {
     @JsonProperty
     protected String interval;
     @JsonProperty
-    protected Float span;
+    protected float span;
     @JsonProperty
-    protected Integer threshold;
+    protected int threshold;
     @JsonProperty
     protected String target;
 
