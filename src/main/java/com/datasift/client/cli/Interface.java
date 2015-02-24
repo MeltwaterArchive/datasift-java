@@ -152,13 +152,14 @@ public class Interface {
             response.put("body", result);
             response.put("headers", headers);
             System.out.println(mapper.writeValueAsString(response));
+            System.exit(0);
         } catch (Exception ex) {
             BaseDataSiftResult res = new BaseDataSiftResult();
             res.failed(ex);
             System.out.println(mapper.writeValueAsString(res));
+            System.exit(0);
         } finally {
             HttpRequestBuilder.group().shutdownGracefully(0, 0, TimeUnit.MILLISECONDS);
-            System.exit(0);
         }
     }
 
