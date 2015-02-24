@@ -106,7 +106,8 @@ public class Interface {
         }
     }
 
-    private static void executeCore(DataSiftClient dataSift, String endpoint, Map<String, String> params) throws JsonProcessingException {
+    private static void executeCore(DataSiftClient dataSift, String endpoint, Map<String, String> params)
+            throws JsonProcessingException {
         switch (endpoint) {
             case "validate":
                 require(new String[]{"csdl"}, params);
@@ -147,7 +148,8 @@ public class Interface {
         System.out.println(mapper.writeValueAsString(response));
     }
 
-    private static void executePush(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
+    private static void executePush(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws JsonProcessingException {
         PushConnector connector = null;
         try {
             Map<String, Object> args = mapper.readValue(params.get("output_type"),
@@ -203,7 +205,8 @@ public class Interface {
         }
     }
 
-    private static void executeHistorics(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
+    private static void executeHistorics(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws JsonProcessingException {
         switch (endpoint) {
             case "prepare":
                 printResponse(dataSift.historics().prepare(params.get("hash"), DateTime.parse(params.get("start")),
@@ -231,7 +234,8 @@ public class Interface {
         }
     }
 
-    private static void executeAnalysis(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
+    private static void executeAnalysis(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws JsonProcessingException {
         switch (endpoint) {
             case "analyze":
                 AnalysisQueryParameters map = null;
@@ -270,7 +274,8 @@ public class Interface {
         }
     }
 
-    private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
+    private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws JsonProcessingException {
         switch (endpoint) {
             case "create":
                 printResponse(dataSift.preview().create(new DateTime(Long.parseLong(params.get("start"))),
@@ -282,7 +287,8 @@ public class Interface {
         }
     }
 
-    private static void executeSources(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
+    private static void executeSources(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws JsonProcessingException {
         switch (endpoint) {
             case "create":
                 //DataSource
