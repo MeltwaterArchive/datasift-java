@@ -136,20 +136,28 @@ public class Interface {
     }
 
     private static void printResponse(DataSiftResult result) throws JsonProcessingException {
-        Map<String, Object> response = new HashMap<>();
-        Map<String, String> headers = new HashMap<>();
-        if (result.getResponse() != null) {
-            for (Map.Entry<String, List<String>> h : result.getResponse().headers().entrySet()) {
-                headers.put(h.getKey(), h.getValue() == null || h.getValue().size() == 0 ? null : h.getValue().get(0));
+        try {
+            Map<String, Object> response = new HashMap<>();
+            Map<String, String> headers = new HashMap<>();
+            if (result.getResponse() != null) {
+                for (Map.Entry<String, List<String>> h : result.getResponse().headers().entrySet()) {
+                    headers.put(h.getKey(), h.getValue() == null || h.getValue().size() == 0 ? null : h.getValue().get(0));
+                }
+                int status = result.getResponse().status();
+                response.put("status", status);
+            } else {
+                response.put("error", "Invalid response, null");
             }
-            int status = result.getResponse().status();
-            response.put("status", status);
-        } else {
-            response.put("error", "Invalid response, null");
+            response.put("body", result);
+            response.put("headers", headers);
+            System.out.println(mapper.writeValueAsString(response));
+        } catch (Exception ex) {
+            BaseDataSiftResult res = new BaseDataSiftResult();
+            res.failed(ex);
+            System.out.println(mapper.writeValueAsString(res));
+        } finally {
+            HttpRequestBuilder.group().shutdownGracefully(0, 0, TimeUnit.MILLISECONDS);
         }
-        response.put("body", result);
-        response.put("headers", headers);
-        System.out.println(mapper.writeValueAsString(response));
     }
 
     private static void executePush(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
