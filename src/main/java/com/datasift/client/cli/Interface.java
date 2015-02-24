@@ -141,7 +141,8 @@ public class Interface {
             Map<String, String> headers = new HashMap<>();
             if (result.getResponse() != null) {
                 for (Map.Entry<String, List<String>> h : result.getResponse().headers().entrySet()) {
-                    headers.put(h.getKey(), h.getValue() == null || h.getValue().size() == 0 ? null : h.getValue().get(0));
+                    headers.put(h.getKey(), h.getValue() == null || h.getValue().size() == 0 ?
+                            null : h.getValue().get(0));
                 }
                 int status = result.getResponse().status();
                 response.put("status", status);
