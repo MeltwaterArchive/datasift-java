@@ -158,6 +158,7 @@ public class Interface {
             System.out.println(mapper.writeValueAsString(res));
         } finally {
             HttpRequestBuilder.group().shutdownGracefully(0, 0, TimeUnit.MILLISECONDS);
+            System.exit(0);
         }
     }
 
