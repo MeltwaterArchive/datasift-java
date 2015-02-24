@@ -136,14 +136,18 @@ public class Interface {
     }
 
     private static void printResponse(DataSiftResult result) throws JsonProcessingException {
-        int status = result.getResponse().status();
-        Map<String, String> headers = new HashMap<>();
-        for (Map.Entry<String, List<String>> h : result.getResponse().headers().entrySet()) {
-            headers.put(h.getKey(), h.getValue() == null || h.getValue().size() == 0 ? null : h.getValue().get(0));
-        }
         Map<String, Object> response = new HashMap<>();
+        Map<String, String> headers = new HashMap<>();
+        if (result.getResponse() != null) {
+            for (Map.Entry<String, List<String>> h : result.getResponse().headers().entrySet()) {
+                headers.put(h.getKey(), h.getValue() == null || h.getValue().size() == 0 ? null : h.getValue().get(0));
+            }
+            int status = result.getResponse().status();
+            response.put("status", status);
+        } else {
+            response.put("error", "Invalid response, null");
+        }
         response.put("body", result);
-        response.put("status", status);
         response.put("headers", headers);
         System.out.println(mapper.writeValueAsString(response));
     }
