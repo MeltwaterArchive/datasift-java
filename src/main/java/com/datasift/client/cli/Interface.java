@@ -149,17 +149,12 @@ public class Interface {
     }
 
     private static void executePush(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
-            throws JsonProcessingException {
-        PushConnector connector = null;
-        try {
-            Map<String, Object> args = mapper.readValue(params.get("output_type"),
-                    new TypeReference<HashMap<String, Object>>() {
-                    });
-            connector = BaseConnector.fromMap(new OutputType<>(params.get("output_type")), args);
-        } catch (IOException e) {
-            System.out.println("output_type must be a valid JSON object received : " + params.get("output_type"));
-            System.exit(0);
-        }
+            throws IOException {
+        PushConnector connector;
+        Map<String, Object> args = mapper.readValue(params.get("output_type"),
+                new TypeReference<HashMap<String, Object>>() {
+                });
+        connector = BaseConnector.fromMap(new OutputType<>(params.get("output_type")), args);
         switch (endpoint) {
             case "validate":
                 printResponse(dataSift.push().validate(connector).sync());
@@ -184,23 +179,15 @@ public class Interface {
                 printResponse(dataSift.push().delete(params.get("id")).sync());
                 break;
             case "log":
-                try {
-                    printResponse(dataSift.push().log(params.get("id"), Integer.parseInt(params.get("page"))).sync());
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
+                printResponse(dataSift.push().log(params.get("id"), Integer.parseInt(params.get("page"))).sync());
                 break;
             case "get":
                 printResponse(dataSift.push().get(params.get("id")).sync());
                 break;
             case "pull":
-                try {
-                    printResponse(dataSift.push().pull(PushSubscription.fromString(params.get("id")),
-                            Integer.parseInt(params.get("size")),
-                            params.get("page")).sync());
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
+                printResponse(dataSift.push().pull(PushSubscription.fromString(params.get("id")),
+                        Integer.parseInt(params.get("size")),
+                        params.get("page")).sync());
                 break;
         }
     }
@@ -235,17 +222,13 @@ public class Interface {
     }
 
     private static void executeAnalysis(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
-            throws JsonProcessingException {
+            throws IOException {
         switch (endpoint) {
             case "analyze":
                 AnalysisQueryParameters map = null;
                 String p = params.get("parameters");
                 if (p != null && !p.isEmpty()) {
-                    try {
-                        map = mapper.readValue(p, AnalysisQueryParameters.class);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    map = mapper.readValue(p, AnalysisQueryParameters.class);
                 }
                 AnalyzeQuery analysis = new AnalyzeQuery(params.get("hash"), map, params.get("filter"),
                         params.get("start") == null ? null : Integer.parseInt(params.get("start")),
