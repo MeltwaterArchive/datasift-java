@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.datasift.client.cli.Parser.CliArguments;
 import static com.datasift.client.cli.Parser.CliSwitch;
@@ -35,7 +36,7 @@ public class Interface {
     private Interface() {
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JsonProcessingException {
         try {
             List<CliSwitch> switches = new ArrayList<>();
             switches.add(new CliSwitch("a", "auth", true, "Auth is required in the form username:api_key"));
@@ -83,12 +84,12 @@ public class Interface {
                     executeAnalysis(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                     break;
             }
-            HttpRequestBuilder.shutdown();
-            System.exit(0);
         } catch (Exception ex) {
             BaseDataSiftResult res = new BaseDataSiftResult();
             res.failed(ex);
             printResponse(res);
+        } finally {
+            HttpRequestBuilder.group().shutdownGracefully(0, 0, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -105,7 +106,7 @@ public class Interface {
         }
     }
 
-    private static void executeCore(DataSiftClient dataSift, String endpoint, Map<String, String> params) {
+    private static void executeCore(DataSiftClient dataSift, String endpoint, Map<String, String> params) throws JsonProcessingException {
         switch (endpoint) {
             case "validate":
                 require(new String[]{"csdl"}, params);
@@ -133,7 +134,7 @@ public class Interface {
         }
     }
 
-    private static void printResponse(DataSiftResult result) {
+    private static void printResponse(DataSiftResult result) throws JsonProcessingException {
         int status = result.getResponse().status();
         Map<String, String> headers = new HashMap<>();
         for (Map.Entry<String, List<String>> h : result.getResponse().headers().entrySet()) {
@@ -143,14 +144,10 @@ public class Interface {
         response.put("body", result);
         response.put("status", status);
         response.put("headers", headers);
-        try {
-            System.out.println(mapper.writeValueAsString(response));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        System.out.println(mapper.writeValueAsString(response));
     }
 
-    private static void executePush(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+    private static void executePush(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
         PushConnector connector = null;
         try {
             Map<String, Object> args = mapper.readValue(params.get("output_type"),
@@ -206,7 +203,7 @@ public class Interface {
         }
     }
 
-    private static void executeHistorics(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+    private static void executeHistorics(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
         switch (endpoint) {
             case "prepare":
                 printResponse(dataSift.historics().prepare(params.get("hash"), DateTime.parse(params.get("start")),
@@ -234,7 +231,7 @@ public class Interface {
         }
     }
 
-    private static void executeAnalysis(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+    private static void executeAnalysis(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
         switch (endpoint) {
             case "analyze":
                 AnalysisQueryParameters map = null;
@@ -273,7 +270,7 @@ public class Interface {
         }
     }
 
-    private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+    private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
         switch (endpoint) {
             case "create":
                 printResponse(dataSift.preview().create(new DateTime(Long.parseLong(params.get("start"))),
@@ -285,7 +282,7 @@ public class Interface {
         }
     }
 
-    private static void executeSources(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+    private static void executeSources(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) throws JsonProcessingException {
         switch (endpoint) {
             case "create":
                 //DataSource
