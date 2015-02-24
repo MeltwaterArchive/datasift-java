@@ -1,5 +1,6 @@
 package com.datasift.client.cli;
 
+import com.datasift.client.BaseDataSiftResult;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
@@ -19,7 +20,6 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,55 +35,61 @@ public class Interface {
     private Interface() {
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        List<CliSwitch> switches = new ArrayList<>();
-        switches.add(new CliSwitch("a", "auth", true, "Auth is required in the form username:api_key"));
-        switches.add(new CliSwitch("c", "command", true));
-        CliSwitch endpoint = new CliSwitch("e", "endpoint");
-        endpoint.setDefault("core");
-        switches.add(endpoint);
-        switches.add(new CliSwitch("p", "param"));
-        switches.add(new CliSwitch("u", "url"));
-        CliArguments parsedArgs = Parser.parse(args, switches);
+    public static void main(String[] args) {
+        try {
+            List<CliSwitch> switches = new ArrayList<>();
+            switches.add(new CliSwitch("a", "auth", true, "Auth is required in the form username:api_key"));
+            switches.add(new CliSwitch("c", "command", true));
+            CliSwitch endpoint = new CliSwitch("e", "endpoint");
+            endpoint.setDefault("core");
+            switches.add(endpoint);
+            switches.add(new CliSwitch("p", "param"));
+            switches.add(new CliSwitch("u", "url"));
+            CliArguments parsedArgs = Parser.parse(args, switches);
 
-        Map<String, String> auth = parsedArgs.map("a");
-        if (auth == null || auth.size() == 0) {
-            System.out.println("Auth must be provided in the form '-a[uth] username api_key'");
+            Map<String, String> auth = parsedArgs.map("a");
+            if (auth == null || auth.size() == 0) {
+                System.out.println("Auth must be provided in the form '-a[uth] username api_key'");
+                System.exit(0);
+            }
+
+            Map.Entry<String, String> authVals = auth.entrySet().iterator().next();
+            DataSiftConfig config = new DataSiftConfig(authVals.getKey(), authVals.getValue());
+            String u = parsedArgs.get("u");
+            if (u != null) {
+                URI url = new URI(u.startsWith("http") ? u : "http://" + u);
+                config.host(url.getHost());
+                config.port(url.getPort());
+                config.setSslEnabled(url.getScheme() != null && url.getScheme().equals("https"));
+            }
+            DataSiftClient dataSift = new DataSiftClient(config);
+            switch (parsedArgs.get("e")) {
+                case "core":
+                    executeCore(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "push":
+                    executePush(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "historics":
+                    executeHistorics(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "preview":
+                    executePreview(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "sources":
+                    executeSources(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "analysis":
+                    executeAnalysis(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+            }
+            HttpRequestBuilder.shutdown();
             System.exit(0);
+        } catch (Exception ex) {
+            BaseDataSiftResult res = new BaseDataSiftResult();
+            res.failed(ex);
+            printResponse(res);
         }
-
-        Map.Entry<String, String> authVals = auth.entrySet().iterator().next();
-        DataSiftConfig config = new DataSiftConfig(authVals.getKey(), authVals.getValue());
-        String u = parsedArgs.get("u");
-        if (u != null) {
-            URI url = new URI(u.startsWith("http") ? u : "http://" + u);
-            config.host(url.getHost());
-            config.port(url.getPort());
-            config.setSslEnabled(url.getScheme() != null && url.getScheme().equals("https"));
-        }
-        DataSiftClient dataSift = new DataSiftClient(config);
-        switch (parsedArgs.get("e")) {
-            case "core":
-                executeCore(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-            case "push":
-                executePush(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-            case "historics":
-                executeHistorics(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-            case "preview":
-                executePreview(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-            case "sources":
-                executeSources(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-            case "analysis":
-                executeAnalysis(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-        }
-        HttpRequestBuilder.shutdown();
-        System.exit(0);
     }
 
     private static void require(String[] args, Map<String, String> params) {
