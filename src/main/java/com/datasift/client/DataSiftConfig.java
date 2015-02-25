@@ -46,6 +46,9 @@ public class DataSiftConfig {
         if (HttpRequestBuilder.isSupportedSSLProtocol("TLSv1")) {
             sslProtocols.add("TLSv1");
         }
+        if (HttpRequestBuilder.isSupportedSSLProtocol("TLSv1.2")) {
+            sslProtocols.add("TLSv1.2");
+        }
         compatibleSSLProtocolsFound = sslProtocols.size() > 0;
     }
 
