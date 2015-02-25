@@ -8,7 +8,7 @@
     <groupId>com.datasift.client</groupId>
     <artifactId>datasift-java</artifactId>
     <packaging>jar</packaging>
-    <version>3.2.3-SNAPSHOT</version>
+    <version>3.2.6-SNAPSHOT</version>
     <name>DataSift Java Client library</name>
     <description>A client library for interacting with the DataSift API on the JVM.</description>
 
@@ -41,7 +41,7 @@
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <higgs.version>0.0.11</higgs.version>
+        <higgs.version>0.0.13</higgs.version>
     </properties>
 
     <dependencies>

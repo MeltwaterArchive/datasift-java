@@ -4,6 +4,7 @@ import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.core.Stream;
 import com.datasift.client.managedsource.ManagedSource;
+import com.datasift.client.managedsource.sources.BaseSource;
 import com.datasift.client.managedsource.sources.FacebookPage;
 
 public class ManagedSourcesApi {
@@ -13,7 +14,7 @@ public class ManagedSourcesApi {
         final DataSiftClient datasift = new DataSiftClient(config);
 
         FacebookPage source = new FacebookPage(config);
-        String fbToken = "long-lived-facebook-api-token";
+        String fbToken = "some-facebook-token";
 
         source.addOAutToken(fbToken, "name", 1381406400);
         //username or id is valid
@@ -36,6 +37,16 @@ public class ManagedSourcesApi {
                             managedSource.getId())).sync();
 
             System.out.println(managedSource);
+
+            managedSource = datasift.managedSource().addAuth(managedSource.getId(), false, "a-new-token").sync();
+            managedSource = datasift.managedSource().removeAuth(managedSource.getId(), "a-new-token").sync();
+
+            BaseSource.ResourceParams resource = new BaseSource.ResourceParams();
+            resource.set("id", "bbcnews");
+            resource.set("param1", "value1");
+            managedSource = datasift.managedSource().addResource(managedSource.getId(), false, resource).sync();
+            String resourceId = managedSource.getResources().toArray(new BaseSource.ResourceParams[1])[0].getId();
+            datasift.managedSource().removeResource(managedSource.getId(), resourceId).sync();
         }
     }
 
