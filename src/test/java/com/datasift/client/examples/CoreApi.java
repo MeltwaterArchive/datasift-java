@@ -20,7 +20,7 @@ public class CoreApi {
         DataSiftConfig config = new DataSiftConfig("username", "api-key");
         //or
         config = new DataSiftConfig().auth("zcourts", "43aedc2c7e292016df949c972afe29be");
-        config.setSslEnabled(false);
+        config.setSslEnabled(true);
         final DataSiftClient datasift = new DataSiftClient(config);
         String csdl = "interaction.content contains \"music\"";
         //both sync and async processing are supported by calling "sync" on any FutureDate object
