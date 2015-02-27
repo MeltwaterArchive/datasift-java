@@ -23,11 +23,11 @@ public class AnalyzeResultEntryList {
         this.count = data.size();
     }
 
-    public List<AnalyzeResultEntry> getData() { 
+    public List<AnalyzeResultEntry> getData() {
         return this.data;
     }
-    
-    public int getCount() { 
+
+    public int getCount() {
         return this.count;
     }
 }

@@ -24,11 +24,11 @@ public class AnalysisStreamStatusList extends BaseDataSiftResult {
         this.count = data.size();
     }
 
-    public List<AnalysisStreamStatus> getData() { 
+    public List<AnalysisStreamStatus> getData() {
         return this.data;
     }
-    
-    public int getCount() { 
+
+    public int getCount() {
         return this.count;
     }
 }
