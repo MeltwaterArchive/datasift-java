@@ -16,14 +16,14 @@ public class AnalyzeResultEntryList {
     }
 
     @JsonCreator
-    public AnalyzeResultEntryList(
-            @JsonProperty("data") List<AnalyzeResultEntry> data,
-            @JsonProperty("count") int count) {
+    public AnalyzeResultEntryList(List<AnalyzeResultEntry> data) {
         if (data != null) {
             this.data.addAll(data);
         }
-        this.count = count;
+        this.count = data.size();
     }
 
     public List<AnalyzeResultEntry> getData() { return this.data; }
+    
+    public int getCount() { return this.count; }
 }
