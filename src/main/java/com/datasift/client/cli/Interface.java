@@ -248,26 +248,26 @@ public class Interface {
                 PylonQuery analysis = new PylonQuery(params.get("hash"), map, params.get("filter"),
                         params.get("start") == null ? null : Integer.parseInt(params.get("start")),
                         params.get("end") == null ? null : Integer.parseInt(params.get("end")));
-                printResponse(dataSift.analysis().analyze(analysis).sync());
+                printResponse(dataSift.pylon().analyze(analysis).sync());
                 break;
             case "compile":
-                printResponse(dataSift.analysis().compile(params.get("csdl")).sync());
+                printResponse(dataSift.pylon().compile(params.get("csdl")).sync());
                 break;
             case "get":
                 String hash = params == null ? null : params.get("hash");
-                printResponse(hash == null ? dataSift.analysis().get().sync() : dataSift.analysis().get(hash).sync());
+                printResponse(hash == null ? dataSift.pylon().get().sync() : dataSift.pylon().get(hash).sync());
                 break;
             case "start":
-                printResponse(dataSift.analysis().start(params.get("hash")).sync());
+                printResponse(dataSift.pylon().start(params.get("hash")).sync());
                 break;
             case "stop":
-                printResponse(dataSift.analysis().stop(params.get("hash")).sync());
+                printResponse(dataSift.pylon().stop(params.get("hash")).sync());
                 break;
             case "tags":
-                printResponse(dataSift.analysis().tags(params.get("hash")).sync());
+                printResponse(dataSift.pylon().tags(params.get("hash")).sync());
                 break;
             case "validate":
-                printResponse(dataSift.analysis().validate(params.get("csdl")).sync());
+                printResponse(dataSift.pylon().validate(params.get("csdl")).sync());
                 break;
         }
     }

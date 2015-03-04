@@ -1,6 +1,6 @@
 package com.datasift.client;
 
-import com.datasift.client.pylon.DataSiftAnalysis;
+import com.datasift.client.pylon.DataSiftPylon;
 import com.datasift.client.core.Balance;
 import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
@@ -36,7 +36,7 @@ public class DataSiftClient extends DataSiftApiClient {
      */
     public static final int DEFAULT_NUM = Integer.MIN_VALUE;
     protected DataSiftConfig config;
-    protected DataSiftAnalysis analysis;
+    protected DataSiftPylon pylon;
     protected DataSiftHistorics historics;
     protected DataSiftManagedSource source;
     protected DataSiftPreview preview;
@@ -55,7 +55,7 @@ public class DataSiftClient extends DataSiftApiClient {
         super(config);
         configureMapper();
         this.config = config;
-        this.analysis = new DataSiftAnalysis(config);
+        this.pylon = new DataSiftPylon(config);
         this.historics = new DataSiftHistorics(config);
         this.source = new DataSiftManagedSource(config);
         this.preview = new DataSiftPreview(config);
@@ -74,8 +74,8 @@ public class DataSiftClient extends DataSiftApiClient {
     /**
      * @return An object suitable for making requests to the DataSift Analysis API
      */
-    public DataSiftAnalysis analysis() {
-        return analysis;
+    public DataSiftPylon pylon() {
+        return pylon;
     }
 
     /**

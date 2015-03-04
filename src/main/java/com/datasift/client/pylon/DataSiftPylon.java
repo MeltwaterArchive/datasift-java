@@ -15,11 +15,11 @@ import java.net.URI;
 /**
  * This class provides access to the DataSift Analysis API.
  */
-public class DataSiftAnalysis extends DataSiftApiClient {
+public class DataSiftPylon extends DataSiftApiClient {
     public final String VALIDATE = "pylon/validate", COMPILE = "pylon/compile", START = "pylon/start",
             STOP = "pylon/stop", GET = "pylon/get", ANALYZE = "pylon/analyze", TAGS = "pylon/tags";
 
-    public DataSiftAnalysis(DataSiftConfig config) {
+    public DataSiftPylon(DataSiftConfig config) {
         super(config);
     }
 

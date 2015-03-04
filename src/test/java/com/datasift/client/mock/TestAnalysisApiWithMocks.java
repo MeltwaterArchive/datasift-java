@@ -96,7 +96,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanGetStreamStatus() {
-        PylonStreamStatus statusResult = datasift.analysis().get(hash).sync();
+        PylonStreamStatus statusResult = datasift.pylon().get(hash).sync();
         assertTrue(statusResult.isSuccessful());
 
         assertEquals(statusResult.getHash(), hash);
@@ -112,7 +112,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanValidateCSDL() {
-        PylonValidation validationResult = datasift.analysis().validate(csdl).sync();
+        PylonValidation validationResult = datasift.pylon().validate(csdl).sync();
         assertTrue(validationResult.isSuccessful());
 
         assertEquals(validationResult.getDpu(), dpu, 0.1);
@@ -121,7 +121,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanCompileCSDL() {
-        PylonStream compilationResult = datasift.analysis().compile(csdl).sync();
+        PylonStream compilationResult = datasift.pylon().compile(csdl).sync();
         assertTrue(compilationResult.isSuccessful());
 
         assertEquals(compilationResult.getDpu(), dpu, 0.1);
@@ -137,13 +137,13 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanStartDataStream() {
-        DataSiftResult start = datasift.analysis().start(hash).sync();
+        DataSiftResult start = datasift.pylon().start(hash).sync();
         assertTrue(start.isSuccessful());
     }
 
     @Test
     public void testIfUserCanGetTags() {
-        PylonTags tagsResult = datasift.analysis().tags(hash).sync();
+        PylonTags tagsResult = datasift.pylon().tags(hash).sync();
         assertTrue(tagsResult.isSuccessful());
         assertEquals(tagsResult.getTags(), this.tags);
     }
