@@ -4,8 +4,8 @@ import com.datasift.client.BaseDataSiftResult;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
-import com.datasift.client.analysis.AnalysisQueryParameters;
-import com.datasift.client.analysis.AnalyzeQuery;
+import com.datasift.client.pylon.PylonQueryParameters;
+import com.datasift.client.pylon.PylonQuery;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
 import com.datasift.client.push.OutputType;
@@ -80,7 +80,7 @@ public class Interface {
                 case "sources":
                     executeSources(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                     break;
-                case "analysis":
+                case "pylon":
                     executeAnalysis(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                     break;
             }
@@ -240,12 +240,12 @@ public class Interface {
             throws IOException {
         switch (endpoint) {
             case "analyze":
-                AnalysisQueryParameters map = null;
+                PylonQueryParameters map = null;
                 String p = params.get("parameters");
                 if (p != null && !p.isEmpty()) {
-                    map = mapper.readValue(p, AnalysisQueryParameters.class);
+                    map = mapper.readValue(p, PylonQueryParameters.class);
                 }
-                AnalyzeQuery analysis = new AnalyzeQuery(params.get("hash"), map, params.get("filter"),
+                PylonQuery analysis = new PylonQuery(params.get("hash"), map, params.get("filter"),
                         params.get("start") == null ? null : Integer.parseInt(params.get("start")),
                         params.get("end") == null ? null : Integer.parseInt(params.get("end")));
                 printResponse(dataSift.analysis().analyze(analysis).sync());

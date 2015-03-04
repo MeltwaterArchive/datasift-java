@@ -1,23 +1,21 @@
-package com.datasift.client.analysis;
+package com.datasift.client.pylon;
 
 import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
-public class AnalyzeResult extends BaseDataSiftResult {
+public class PylonResult extends BaseDataSiftResult {
     @JsonProperty
     protected int interactions;
     @JsonProperty("unique_authors")
     protected int uniqueAuthors;
     @JsonProperty
-    protected AnalyzeResultAnalysis analysis;
+    protected PylonResultAnalysis analysis;
 
-    public AnalyzeResult() { }
+    public PylonResult() { }
 
     public int getInteractions() { return this.interactions; }
 
     public int getUniqueAuthors() { return this.uniqueAuthors; }
 
-    public AnalyzeResultAnalysis getAnalysis() { return this.analysis; }
+    public PylonResultAnalysis getAnalysis() { return this.analysis; }
 }

@@ -1,6 +1,6 @@
 package com.datasift.client;
 
-import com.datasift.client.analysis.DataSiftAnalysis;
+import com.datasift.client.pylon.DataSiftAnalysis;
 import com.datasift.client.core.Balance;
 import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;

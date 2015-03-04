@@ -1,8 +1,8 @@
-package com.datasift.client.analysis;
+package com.datasift.client.pylon;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AnalysisParametersData {
+public class PylonParametersData {
     @JsonProperty
     protected String interval;
     @JsonProperty
@@ -12,10 +12,10 @@ public class AnalysisParametersData {
     @JsonProperty
     protected String target;
 
-    public AnalysisParametersData() {
+    public PylonParametersData() {
     }
 
-    public AnalysisParametersData(String interval, Float span, Integer threshold, String target) {
+    public PylonParametersData(String interval, Float span, Integer threshold, String target) {
         this.interval = interval;
         this.span = span;
         this.threshold = threshold;

@@ -1,15 +1,15 @@
-package com.datasift.client.analysis;
+package com.datasift.client.pylon;
 
 import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AnalysisValidation extends BaseDataSiftResult {
+public class PylonValidation extends BaseDataSiftResult {
     @JsonProperty("created_at")
     protected long createdAt;
     @JsonProperty
     protected float dpu;
 
-    public AnalysisValidation() {
+    public PylonValidation() {
     }
 
     /**

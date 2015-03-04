@@ -1,30 +1,29 @@
-package com.datasift.client.analysis;
+package com.datasift.client.pylon;
 
-import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnalysisStreamStatusList extends BaseDataSiftResult {
+public class PylonResultEntryList {
     @JsonProperty
-    protected final List<AnalysisStreamStatus> data = new ArrayList<AnalysisStreamStatus>();
+    protected final List<PylonResultEntry> data = new ArrayList<PylonResultEntry>();
     private final int count;
 
-    public AnalysisStreamStatusList() {
+    public PylonResultEntryList() {
         count = 0;
     }
 
     @JsonCreator
-    public AnalysisStreamStatusList(List<AnalysisStreamStatus> data) {
+    public PylonResultEntryList(List<PylonResultEntry> data) {
         if (data != null) {
             this.data.addAll(data);
         }
         this.count = data.size();
     }
 
-    public List<AnalysisStreamStatus> getData() {
+    public List<PylonResultEntry> getData() {
         return this.data;
     }
 

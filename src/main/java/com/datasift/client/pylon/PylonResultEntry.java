@@ -1,8 +1,8 @@
-package com.datasift.client.analysis;
+package com.datasift.client.pylon;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AnalyzeResultEntry {
+public class PylonResultEntry {
     @JsonProperty
     protected String key;
     @JsonProperty

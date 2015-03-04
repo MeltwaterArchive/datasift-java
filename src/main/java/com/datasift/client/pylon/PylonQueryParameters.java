@@ -1,17 +1,17 @@
-package com.datasift.client.analysis;
+package com.datasift.client.pylon;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AnalysisQueryParameters {
+public class PylonQueryParameters {
     @JsonProperty("analysis_type")
     protected String analysisType;
     @JsonProperty
-    protected AnalysisParametersData parameters;
+    protected PylonParametersData parameters;
 
-    public AnalysisQueryParameters() {
+    public PylonQueryParameters() {
     }
 
-    public AnalysisQueryParameters(String analysisType, AnalysisParametersData parameters) {
+    public PylonQueryParameters(String analysisType, PylonParametersData parameters) {
         this.analysisType = analysisType;
         this.parameters = parameters;
     }
@@ -20,7 +20,7 @@ public class AnalysisQueryParameters {
         return this.analysisType;
     }
 
-    public AnalysisParametersData getParameters() {
+    public PylonParametersData getParameters() {
         return this.parameters;
     }
 
@@ -28,7 +28,7 @@ public class AnalysisQueryParameters {
         this.analysisType = analysisType;
     }
 
-    public void setParameters(AnalysisParametersData parameters) {
+    public void setParameters(PylonParametersData parameters) {
         this.parameters = parameters;
     }
 }

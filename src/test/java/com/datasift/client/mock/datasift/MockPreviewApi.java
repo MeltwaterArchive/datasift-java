@@ -62,7 +62,7 @@ public class MockPreviewApi {
         map.put("hash", hash);
 
         data.put("target", target);
-        data.put("analysis", analysis);
+        data.put("pylon", analysis);
         data.put("output", output);
         data.put("threshold", threshold);
         List list = new ArrayList();

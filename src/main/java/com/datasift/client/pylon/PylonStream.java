@@ -1,9 +1,9 @@
-package com.datasift.client.analysis;
+package com.datasift.client.pylon;
 
 import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AnalysisStream extends BaseDataSiftResult {
+public class PylonStream extends BaseDataSiftResult {
     @JsonProperty("created_at")
     protected long createdAt;
     @JsonProperty
@@ -11,7 +11,7 @@ public class AnalysisStream extends BaseDataSiftResult {
     @JsonProperty
     protected String hash;
 
-    public AnalysisStream() {
+    public PylonStream() {
     }
 
     /**
@@ -20,11 +20,11 @@ public class AnalysisStream extends BaseDataSiftResult {
      * @param str the hash obtained from DataSift for a stream
      * @return an instance which can be used by the client
      */
-    public static AnalysisStream fromString(String str) {
+    public static PylonStream fromString(String str) {
         if (str == null || str.isEmpty()) {
             throw new IllegalArgumentException("Cannot create a stream from an empty or null string");
         }
-        AnalysisStream stream = new AnalysisStream();
+        PylonStream stream = new PylonStream();
         stream.hash = str;
         return stream;
     }
@@ -51,7 +51,7 @@ public class AnalysisStream extends BaseDataSiftResult {
             return false;
         }
 
-        AnalysisStream stream = (AnalysisStream) o;
+        PylonStream stream = (PylonStream) o;
 
         if (Float.compare(stream.dpu, dpu) != 0) {
             return false;
@@ -78,7 +78,7 @@ public class AnalysisStream extends BaseDataSiftResult {
         return this.hash.equals(hash);
     }
 
-    public boolean isSameAs(AnalysisStream hash) {
+    public boolean isSameAs(PylonStream hash) {
         return this.hash.equals(hash.hash);
     }
 }

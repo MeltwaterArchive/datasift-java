@@ -1,27 +1,23 @@
-package com.datasift.client.analysis;
+package com.datasift.client.pylon;
 
 import com.datasift.client.BaseDataSiftResult;
 import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
-import com.datasift.client.core.Stream;
-import com.datasift.client.core.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.higgs.http.client.Request;
 import io.higgs.http.client.JSONRequest;
 import io.higgs.http.client.readers.PageReader;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * This class provides access to the DataSift Analysis API.
  */
 public class DataSiftAnalysis extends DataSiftApiClient {
-    public final String VALIDATE = "analysis/validate", COMPILE = "analysis/compile", START = "analysis/start",
-            STOP = "analysis/stop", GET = "analysis/get", ANALYZE = "analysis/analyze", TAGS = "analysis/tags";
+    public final String VALIDATE = "pylon/validate", COMPILE = "pylon/compile", START = "pylon/start",
+            STOP = "pylon/stop", GET = "pylon/get", ANALYZE = "pylon/analyze", TAGS = "pylon/tags";
 
     public DataSiftAnalysis(DataSiftConfig config) {
         super(config);
@@ -34,11 +30,11 @@ public class DataSiftAnalysis extends DataSiftApiClient {
      * @return the results of the validation, use {@link com.datasift.client.core.Validation#isValid()} to check if
      * validation was successful
      */
-    public FutureData<AnalysisValidation> validate(String csdl) {
-        FutureData<AnalysisValidation> future = new FutureData<AnalysisValidation>();
+    public FutureData<PylonValidation> validate(String csdl) {
+        FutureData<PylonValidation> future = new FutureData<PylonValidation>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(VALIDATE));
         JSONRequest request = config.http().postJSON(
-                uri, new PageReader(newRequestCallback(future, new AnalysisValidation(), config)))
+                uri, new PageReader(newRequestCallback(future, new PylonValidation(), config)))
                 .addField("csdl", csdl);
         performRequest(future, request);
         return future;
@@ -52,11 +48,11 @@ public class DataSiftAnalysis extends DataSiftApiClient {
      * .Stream#hash()}
      * to list the hash for the compiled CSDL
      */
-    public FutureData<AnalysisStream> compile(String csdl) {
-        FutureData<AnalysisStream> future = new FutureData<AnalysisStream>();
+    public FutureData<PylonStream> compile(String csdl) {
+        FutureData<PylonStream> future = new FutureData<PylonStream>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(COMPILE));
         JSONRequest request = config.http().postJSON(
-                uri, new PageReader(newRequestCallback(future, new AnalysisStream(), config)))
+                uri, new PageReader(newRequestCallback(future, new PylonStream(), config)))
                 .addField("csdl", csdl);
         performRequest(future, request);
         return future;
@@ -114,11 +110,11 @@ public class DataSiftAnalysis extends DataSiftApiClient {
     /**
      * @return the status of all streams that are running or have run with stored data
      */
-    public FutureData<AnalysisStreamStatusList> get() {
+    public FutureData<PylonStreamStatusList> get() {
         URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
-        FutureData<AnalysisStreamStatusList> future = new FutureData<>();
+        FutureData<PylonStreamStatusList> future = new FutureData<>();
         Request request = config.http().GET(uri,
-                new PageReader(newRequestCallback(future, new AnalysisStreamStatusList(), config)));
+                new PageReader(newRequestCallback(future, new PylonStreamStatusList(), config)));
         performRequest(future, request);
         return future;
     }
@@ -127,28 +123,28 @@ public class DataSiftAnalysis extends DataSiftApiClient {
      * @param hash A stream hash
      * @return the status of the requested stream
      */
-    public FutureData<AnalysisStreamStatus> get(String hash) {
+    public FutureData<PylonStreamStatus> get(String hash) {
         URI uri = newParams().put("hash", hash).forURL(config.newAPIEndpointURI(GET));
-        FutureData<AnalysisStreamStatus> future = new FutureData<>();
+        FutureData<PylonStreamStatus> future = new FutureData<>();
         Request request = config.http().GET(uri,
-                new PageReader(newRequestCallback(future, new AnalysisStreamStatus(), config)));
+                new PageReader(newRequestCallback(future, new PylonStreamStatus(), config)));
         performRequest(future, request);
         return future;
     }
 
     /**
-     * @param query analysis options for a stream
+     * @param query pylon options for a stream
      * @return information on execution of a stream
      */
-    public FutureData<AnalyzeResult> analyze(AnalyzeQuery query) {
+    public FutureData<PylonResult> analyze(PylonQuery query) {
         if (query == null) {
             throw new IllegalArgumentException("A valid analyze request body is required to analyze a stream");
         }
-        FutureData<AnalyzeResult> future = new FutureData<AnalyzeResult>();
+        FutureData<PylonResult> future = new FutureData<PylonResult>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(ANALYZE));
         try {
             JSONRequest result = config.http()
-                    .postJSON(uri, new PageReader(newRequestCallback(future, new AnalyzeResult(), config)))
+                    .postJSON(uri, new PageReader(newRequestCallback(future, new PylonResult(), config)))
                     .setData(query);
             performRequest(future, result);
         } catch (JsonProcessingException ex) {
@@ -161,11 +157,11 @@ public class DataSiftAnalysis extends DataSiftApiClient {
      * @param hash A filter hash
      * @return vedo tags for the given filter
      */
-    public FutureData<AnalysisTags> tags(String hash) {
+    public FutureData<PylonTags> tags(String hash) {
         URI uri = newParams().put("hash", hash).forURL(config.newAPIEndpointURI(TAGS));
-        FutureData<AnalysisTags> future = new FutureData<>();
+        FutureData<PylonTags> future = new FutureData<>();
         Request request = config.http().GET(uri,
-                new PageReader(newRequestCallback(future, new AnalysisTags(), config)));
+                new PageReader(newRequestCallback(future, new PylonTags(), config)));
         performRequest(future, request);
         return future;
     }

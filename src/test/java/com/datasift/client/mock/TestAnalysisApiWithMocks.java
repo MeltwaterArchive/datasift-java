@@ -1,25 +1,14 @@
 package com.datasift.client.mock;
 
-import com.datasift.client.BaseDataSiftResult;
-import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.IntegrationTestBase;
-import com.datasift.client.analysis.AnalysisStream;
-import com.datasift.client.analysis.AnalysisStreamStatus;
-import com.datasift.client.analysis.AnalysisTags;
-import com.datasift.client.analysis.AnalysisValidation;
-import com.datasift.client.core.Stream;
-import com.datasift.client.core.Validation;
-import com.datasift.client.managedsource.ManagedSource;
-import com.datasift.client.managedsource.ManagedSourceLog;
-import com.datasift.client.managedsource.sources.DataSource;
-import com.datasift.client.managedsource.sources.FacebookPage;
+import com.datasift.client.pylon.PylonStream;
+import com.datasift.client.pylon.PylonStreamStatus;
+import com.datasift.client.pylon.PylonTags;
+import com.datasift.client.pylon.PylonValidation;
 import com.datasift.client.mock.datasift.MockAnalysisApi;
-import com.datasift.client.mock.datasift.MockManagedSourcesApi;
-import com.fasterxml.jackson.core.JsonParseException;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -107,7 +96,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanGetStreamStatus() {
-        AnalysisStreamStatus statusResult = datasift.analysis().get(hash).sync();
+        PylonStreamStatus statusResult = datasift.analysis().get(hash).sync();
         assertTrue(statusResult.isSuccessful());
 
         assertEquals(statusResult.getHash(), hash);
@@ -123,7 +112,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanValidateCSDL() {
-        AnalysisValidation validationResult = datasift.analysis().validate(csdl).sync();
+        PylonValidation validationResult = datasift.analysis().validate(csdl).sync();
         assertTrue(validationResult.isSuccessful());
 
         assertEquals(validationResult.getDpu(), dpu, 0.1);
@@ -132,7 +121,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanCompileCSDL() {
-        AnalysisStream compilationResult = datasift.analysis().compile(csdl).sync();
+        PylonStream compilationResult = datasift.analysis().compile(csdl).sync();
         assertTrue(compilationResult.isSuccessful());
 
         assertEquals(compilationResult.getDpu(), dpu, 0.1);
@@ -154,7 +143,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanGetTags() {
-        AnalysisTags tagsResult = datasift.analysis().tags(hash).sync();
+        PylonTags tagsResult = datasift.analysis().tags(hash).sync();
         assertTrue(tagsResult.isSuccessful());
         assertEquals(tagsResult.getTags(), this.tags);
     }
