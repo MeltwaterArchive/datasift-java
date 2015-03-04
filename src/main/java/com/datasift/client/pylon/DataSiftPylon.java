@@ -75,7 +75,7 @@ public class DataSiftPylon extends DataSiftApiClient {
      * @return a result which can be checked for success or failure, A status 204 indicates success,
      * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
-    protected FutureData<DataSiftResult> start(String hash, String name) {
+    public FutureData<DataSiftResult> start(String hash, String name) {
         if (hash == null || hash.isEmpty()) {
             throw new IllegalArgumentException("A valid hash is required to start a stream");
         }
