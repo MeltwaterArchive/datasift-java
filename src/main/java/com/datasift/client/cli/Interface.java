@@ -60,7 +60,7 @@ public class Interface {
             if (u != null) {
                 URI url = new URI(u.startsWith("http") ? u : "http://" + u);
                 config.host(url.getHost());
-                config.port(url.getPort());
+                config.port(url.getPort() > -1 ? url.getPort() : 80);
                 config.setSslEnabled(url.getScheme() != null && url.getScheme().equals("https"));
             }
             DataSiftClient dataSift = new DataSiftClient(config);
