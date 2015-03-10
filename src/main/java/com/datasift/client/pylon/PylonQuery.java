@@ -13,10 +13,10 @@ public class PylonQuery extends BaseDataSiftResult {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String filter;
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected Integer start;
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected Integer end;
 
     public PylonQuery() { }
