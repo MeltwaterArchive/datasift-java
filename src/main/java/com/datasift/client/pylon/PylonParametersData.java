@@ -1,6 +1,5 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.cli.Interface;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
