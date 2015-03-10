@@ -18,8 +18,8 @@ public class PylonParametersData {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String target;
 
-    public PylonParametersData() {}
-    
+    public PylonParametersData() { }
+
     public PylonParametersData(String interval, Float span, Integer threshold, String target) {
         this.interval = interval;
         this.span = span;
