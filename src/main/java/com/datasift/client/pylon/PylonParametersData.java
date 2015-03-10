@@ -26,7 +26,7 @@ public class PylonParametersData {
         this.threshold = threshold;
         this.target = target;
     }
-    
+
     public String getInterval() {
         return this.interval;
     }
