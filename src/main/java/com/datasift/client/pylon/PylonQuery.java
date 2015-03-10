@@ -19,6 +19,8 @@ public class PylonQuery extends BaseDataSiftResult {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected Integer end;
     
+    public PylonQuery() {}
+    
     public PylonQuery(String hash, PylonQueryParameters parameters, String filter, Integer start, Integer end) {
         this.hash = hash;
         this.parameters = parameters;

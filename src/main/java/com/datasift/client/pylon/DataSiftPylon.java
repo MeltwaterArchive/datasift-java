@@ -146,6 +146,7 @@ public class DataSiftPylon extends DataSiftApiClient {
             JSONRequest result = config.http()
                     .postJSON(uri, new PageReader(newRequestCallback(future, new PylonResult(), config)))
                     .setData(query);
+            config.
             performRequest(future, result);
         } catch (JsonProcessingException ex) {
             throw new IllegalArgumentException("Valid JSON is required to analyze a stream");
