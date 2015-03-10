@@ -8,17 +8,14 @@ public class PylonParametersData {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String interval;
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    protected float span;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    protected Float span;
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    protected int threshold;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    protected Integer threshold;
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String target;
-
-    public PylonParametersData() {
-    }
 
     public PylonParametersData(String interval, Float span, Integer threshold, String target) {
         this.interval = interval;
@@ -27,15 +24,11 @@ public class PylonParametersData {
         this.target = target;
     }
 
-    public String getInterval() {
-        return this.interval;
-    }
-
-    public float getSpan() {
+    public Float getSpan() {
         return this.span;
     }
 
-    public int getThreshold() {
+    public Integer getThreshold() {
         return this.threshold;
     }
 
