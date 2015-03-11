@@ -25,8 +25,8 @@ public class PylonQuery extends BaseDataSiftResult {
         this.hash = hash;
         this.parameters = parameters;
         this.filter = filter;
-        this.start = start;
-        this.end = end;
+        if (start != null) { this.start = start; }
+        if (end != null) { this.end = end; }
     }
 
     public PylonQuery(String hash, PylonQueryParameters parameters, String filter) {
