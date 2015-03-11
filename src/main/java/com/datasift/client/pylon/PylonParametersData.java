@@ -14,7 +14,7 @@ public class PylonParametersData {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected int threshold;
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String target;
 
     public PylonParametersData() { }
