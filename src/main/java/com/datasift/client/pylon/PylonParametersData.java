@@ -8,13 +8,13 @@ public class PylonParametersData {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String interval;
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    protected Float span;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    protected float span;
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    protected Integer threshold;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    protected int threshold;
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected String target;
 
     public PylonParametersData() { }
