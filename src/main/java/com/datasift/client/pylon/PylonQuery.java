@@ -43,7 +43,7 @@ public class PylonQuery extends BaseDataSiftResult {
 
     public String getFilter() { return this.filter; }
 
-    public Integer getStart() { return this.start; }
+    public int getStart() { return this.start; }
 
-    public Integer getEnd() { return this.end; }
+    public int getEnd() { return this.end; }
 }

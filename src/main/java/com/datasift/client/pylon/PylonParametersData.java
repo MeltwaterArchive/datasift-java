@@ -26,11 +26,11 @@ public class PylonParametersData {
         if (threshold != null) { this.threshold = threshold; }
     }
 
-    public Float getSpan() {
+    public float getSpan() {
         return this.span;
     }
 
-    public Integer getThreshold() {
+    public int getThreshold() {
         return this.threshold;
     }
 
