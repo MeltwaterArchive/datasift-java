@@ -21,9 +21,9 @@ public class PylonParametersData {
 
     public PylonParametersData(String interval, Float span, Integer threshold, String target) {
         this.interval = interval;
-        this.span = span;
-        this.threshold = threshold;
         this.target = target;
+        if (span != null) this.span = span;
+        if (threshold != null) this.threshold = threshold;
     }
 
     public Float getSpan() {
