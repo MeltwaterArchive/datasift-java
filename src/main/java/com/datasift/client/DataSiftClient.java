@@ -1,10 +1,7 @@
 package com.datasift.client;
 
-import com.datasift.client.core.Balance;
-import com.datasift.client.core.Dpu;
-import com.datasift.client.core.Stream;
-import com.datasift.client.core.Usage;
-import com.datasift.client.core.Validation;
+import com.datasift.client.accounts.DataSiftAccount;
+import com.datasift.client.core.*;
 import com.datasift.client.historics.DataSiftHistorics;
 import com.datasift.client.managedsource.DataSiftManagedSource;
 import com.datasift.client.preview.DataSiftPreview;
@@ -40,6 +37,7 @@ public class DataSiftClient extends DataSiftApiClient {
     protected DataSiftPreview preview;
     protected DataSiftPush push;
     protected ConnectionManager liveStream;
+    protected DataSiftAccount account;
     public final String VALIDATE = "validate", COMPILE = "compile", BALANCE = "balance", DPU = "dpu", USAGE = "usage";
 
     public DataSiftClient() {
@@ -58,6 +56,7 @@ public class DataSiftClient extends DataSiftApiClient {
         this.preview = new DataSiftPreview(config);
         this.push = new DataSiftPush(config);
         this.liveStream = new ConnectionManager(config);
+        this.account = new DataSiftAccount(config);
         DependencyProvider.global().add(config);
     }
 
@@ -66,6 +65,10 @@ public class DataSiftClient extends DataSiftApiClient {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         MAPPER.registerModule(new JodaModule());
+    }
+
+    public DataSiftAccount account() {
+        return account;
     }
 
     /**
