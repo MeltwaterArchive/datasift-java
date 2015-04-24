@@ -216,7 +216,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param token    token
      * @return created Token
      */
-    public FutureData<Token> create(String identity, String service, String token) {
+    public FutureData<Token> createToken(String identity, String service, String token) {
         if (service == null || service.isEmpty()) {
             throw new IllegalArgumentException("A service is required");
         }
@@ -244,7 +244,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param service  service to delete the token from
      * @return Success of deletion
      */
-    public FutureData<DataSiftResult> delete(String identity, String service) {
+    public FutureData<DataSiftResult> deleteToken(String identity, String service) {
         if (identity == null) {
             throw new IllegalArgumentException("An identity is required");
         }
@@ -267,7 +267,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param token new token value
      * @return the updated Token
      */
-    public FutureData<Token> update(String identity, String service, String token) {
+    public FutureData<Token> updateToken(String identity, String service, String token) {
         FutureData<Token> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/token/" + service ));
         try {
