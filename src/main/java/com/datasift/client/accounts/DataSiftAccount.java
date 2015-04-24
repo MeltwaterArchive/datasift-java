@@ -1,9 +1,7 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.DataSiftApiClient;
-import com.datasift.client.DataSiftConfig;
-import com.datasift.client.FutureData;
-import com.datasift.client.ParamBuilder;
+import com.datasift.client.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.higgs.http.client.POST;
 import io.higgs.http.client.Request;
 import io.higgs.http.client.readers.PageReader;
@@ -35,10 +33,14 @@ public class DataSiftAccount extends DataSiftApiClient {
         String activeStr = active ? "active" : "disabled";
         FutureData<Identity> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY));
-        POST request = config.http()
-                .POST(uri, new PageReader(newRequestCallback(future, new Identity(), config)))
-                .form("label", label).form("active", activeStr).form("master", master);
-        performRequest(future, request);
+        try {
+            Request request = config.http()
+                    .postJSON(uri, new PageReader(newRequestCallback(future, new Identity(), config)))
+                    .setData(new NewIdentity(label, activeStr, master));
+            performRequest(future, request);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return future;
     }
 
@@ -90,13 +92,27 @@ public class DataSiftAccount extends DataSiftApiClient {
      */
     public FutureData<Identity> get(String id) {
         FutureData<Identity> future = new FutureData<>();
-        URI uri = newParams().put("id", id).forURL(config.newAPIEndpointURI(IDENTITY));
+        URI uri = newParams().put("id", id).forURL(config.newAPIEndpointURI(IDENTITY+"/"+id));
         Request request = config.http().
                 GET(uri, new PageReader(newRequestCallback(future, new Identity(), config)));
         performRequest(future, request);
         return future;
     }
 
-
+    /**
+     * @param id the ID of the identity to delete
+     * @return this
+     */
+    public FutureData<DataSiftResult> delete(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("An identity is required");
+        }
+        FutureData<DataSiftResult> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY+"/"+id));
+        Request request = config.http()
+                .DELETE(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)));
+        performRequest(future, request);
+        return future;
+    }
 
 }
