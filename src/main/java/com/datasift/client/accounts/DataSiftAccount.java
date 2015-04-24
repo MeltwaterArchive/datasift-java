@@ -158,7 +158,7 @@ public class DataSiftAccount extends DataSiftApiClient {
 
     // Token functions
     public FutureData<IdentityList> listTokens(String identity) {
-        return listTokens(identity, 0,0);
+        return listTokens(identity, 0, 0);
     }
 
     public FutureData<IdentityList> listTokens(String identity, int page) {
@@ -169,8 +169,8 @@ public class DataSiftAccount extends DataSiftApiClient {
      * List tokens associated with an identity
      *
      * @param identity which identity you want to list the tokens of
-     * @param page    page number (can be 0)
-     * @param perPage items per page (can be 0)
+     * @param page     page number (can be 0)
+     * @param perPage  items per page (can be 0)
      * @return List of identities
      */
     public FutureData<IdentityList> listTokens(String identity, int page, int perPage) {
@@ -185,9 +185,25 @@ public class DataSiftAccount extends DataSiftApiClient {
         if (perPage > 0) {
             b.put("per_page", perPage);
         }
-        URI uri = b.forURL(config.newAPIEndpointURI(IDENTITY+"/"+identity+"/token"));
+        URI uri = b.forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/token"));
         Request request = config.http().
                 GET(uri, new PageReader(newRequestCallback(future, new IdentityList(), config)));
+        performRequest(future, request);
+        return future;
+    }
+
+    /**
+     * Fetch a token using it's ID and it's Identity's ID
+     *
+     * @param identity the ID of the identity to query
+     * @param tokenid  the ID of the token to fetch
+     * @return the identity for the ID provided
+     */
+    public FutureData<Token> get(String identity, String tokenid) {
+        FutureData<Token> future = new FutureData<>();
+        URI uri = newParams().put("id", identity).forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/" + tokenid));
+        Request request = config.http().
+                GET(uri, new PageReader(newRequestCallback(future, new Token(), config)));
         performRequest(future, request);
         return future;
     }
