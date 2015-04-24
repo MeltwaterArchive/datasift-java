@@ -3,7 +3,9 @@ package com.datasift.client.accounts;
 import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.FutureData;
+import com.datasift.client.ParamBuilder;
 import io.higgs.http.client.POST;
+import io.higgs.http.client.Request;
 import io.higgs.http.client.readers.PageReader;
 
 import java.net.URI;
@@ -39,5 +41,49 @@ public class DataSiftAccount extends DataSiftApiClient {
         performRequest(future, request);
         return future;
     }
+
+    public FutureData<IdentityList> list() {
+        return list(null, 0, 0);
+    }
+
+    public FutureData<IdentityList> list(String label) {
+        return list(label, 0, 0);
+    }
+
+    public FutureData<IdentityList> list(int page) {
+        return list(null, page, 0);
+    }
+
+    public FutureData<IdentityList> list(String label, int page) {
+        return list(label, page, 0);
+    }
+
+    public FutureData<IdentityList> list(int page, int perPage) {
+        return list(null, page, perPage);
+    }
+
+    /**
+     * List identities with a given label and page details
+     */
+    public FutureData<IdentityList> list(String label, int page, int perPage) {
+        FutureData<IdentityList> future = new FutureData<>();
+        ParamBuilder b = newParams();
+        if (label != null) {
+            b.put("label", label);
+        }
+        if (page > 0) {
+            b.put("page", page);
+        }
+        if (perPage > 0) {
+            b.put("per_page", perPage);
+        }
+        URI uri = b.forURL(config.newAPIEndpointURI(IDENTITY));
+        Request request = config.http().
+                GET(uri, new PageReader(newRequestCallback(future, new IdentityList(), config)));
+        performRequest(future, request);
+        return future;
+    }
+
+    
 
 }
