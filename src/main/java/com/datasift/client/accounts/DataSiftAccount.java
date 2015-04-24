@@ -157,11 +157,11 @@ public class DataSiftAccount extends DataSiftApiClient {
     }
 
     // Token functions
-    public FutureData<IdentityList> listTokens(String identity) {
+    public FutureData<TokenList> listTokens(String identity) {
         return listTokens(identity, 0, 0);
     }
 
-    public FutureData<IdentityList> listTokens(String identity, int page) {
+    public FutureData<TokenList> listTokens(String identity, int page) {
         return listTokens(identity, page, 0);
     }
 
@@ -173,11 +173,11 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param perPage  items per page (can be 0)
      * @return List of identities
      */
-    public FutureData<IdentityList> listTokens(String identity, int page, int perPage) {
+    public FutureData<TokenList> listTokens(String identity, int page, int perPage) {
         if (identity == null) {
             throw new IllegalArgumentException("An identity is required");
         }
-        FutureData<IdentityList> future = new FutureData<>();
+        FutureData<TokenList> future = new FutureData<>();
         ParamBuilder b = newParams();
         if (page > 0) {
             b.put("page", page);
@@ -187,7 +187,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         }
         URI uri = b.forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/token"));
         Request request = config.http().
-                GET(uri, new PageReader(newRequestCallback(future, new IdentityList(), config)));
+                GET(uri, new PageReader(newRequestCallback(future, new TokenList(), config)));
         performRequest(future, request);
         return future;
     }
