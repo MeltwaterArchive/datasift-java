@@ -26,9 +26,10 @@ public class DataSiftAccount extends DataSiftApiClient {
         return create(label, active, false);
     }
 
-    /***
+    /**
      * Create a new Identity
-     * @param label text label to tag the identity with
+     *
+     * @param label  text label to tag the identity with
      * @param active whether the identity is active
      * @param master if the identity is a master identity
      * @return newly created Identity
@@ -51,10 +52,11 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /***
+    /**
      * Update an existing identity with values
-     * @param id target to update
-     * @param label new label (may be null otherwise)
+     *
+     * @param id     target to update
+     * @param label  new label (may be null otherwise)
      * @param active new activity (may be null otherwise)
      * @param master new master (may be null otherwise)
      * @return the new updated Identity
@@ -62,7 +64,7 @@ public class DataSiftAccount extends DataSiftApiClient {
     public FutureData<Identity> update(String id, String label, boolean active, boolean master) {
         String activeStr = active ? "active" : "disabled";
         FutureData<Identity> future = new FutureData<>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY+"/"+id));
+        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + id));
         try {
             Request request = config.http()
                     .putJSON(uri, new PageReader(newRequestCallback(future, new Identity(), config)))
@@ -94,10 +96,11 @@ public class DataSiftAccount extends DataSiftApiClient {
         return list(null, page, perPage);
     }
 
-    /***
+    /**
      * List identities with a given label and page details
-     * @param label which label you'd like to list (can be null)
-     * @param page page number (can be 0)
+     *
+     * @param label   which label you'd like to list (can be null)
+     * @param page    page number (can be 0)
      * @param perPage items per page (can be 0)
      * @return List of identities
      */
@@ -120,22 +123,24 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /***
+    /**
      * Fetch an Identity using it's ID
+     *
      * @param id the ID of the identity to fetch
-       @return the identity for the ID provided
+     * @return the identity for the ID provided
      */
     public FutureData<Identity> get(String id) {
         FutureData<Identity> future = new FutureData<>();
-        URI uri = newParams().put("id", id).forURL(config.newAPIEndpointURI(IDENTITY+"/"+id));
+        URI uri = newParams().put("id", id).forURL(config.newAPIEndpointURI(IDENTITY + "/" + id));
         Request request = config.http().
                 GET(uri, new PageReader(newRequestCallback(future, new Identity(), config)));
         performRequest(future, request);
         return future;
     }
 
-    /***
+    /**
      * Delete an Identity using it's ID
+     *
      * @param id the ID of the identity to delete
      * @return success or failure
      */
@@ -144,12 +149,47 @@ public class DataSiftAccount extends DataSiftApiClient {
             throw new IllegalArgumentException("An identity is required");
         }
         FutureData<DataSiftResult> future = new FutureData<>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY+"/"+id));
+        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + id));
         Request request = config.http()
                 .DELETE(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)));
         performRequest(future, request);
         return future;
     }
 
+    // Token functions
+    public FutureData<IdentityList> listTokens(String identity) {
+        return listTokens(identity, 0,0);
+    }
+
+    public FutureData<IdentityList> listTokens(String identity, int page) {
+        return listTokens(identity, page, 0);
+    }
+
+    /**
+     * List tokens associated with an identity
+     *
+     * @param identity which identity you want to list the tokens of
+     * @param page    page number (can be 0)
+     * @param perPage items per page (can be 0)
+     * @return List of identities
+     */
+    public FutureData<IdentityList> listTokens(String identity, int page, int perPage) {
+        if (identity == null) {
+            throw new IllegalArgumentException("An identity is required");
+        }
+        FutureData<IdentityList> future = new FutureData<>();
+        ParamBuilder b = newParams();
+        if (page > 0) {
+            b.put("page", page);
+        }
+        if (perPage > 0) {
+            b.put("per_page", perPage);
+        }
+        URI uri = b.forURL(config.newAPIEndpointURI(IDENTITY+"/"+identity+"/token"));
+        Request request = config.http().
+                GET(uri, new PageReader(newRequestCallback(future, new IdentityList(), config)));
+        performRequest(future, request);
+        return future;
+    }
 
 }
