@@ -26,6 +26,13 @@ public class DataSiftAccount extends DataSiftApiClient {
         return create(label, active, false);
     }
 
+    /***
+     * Create a new Identity
+     * @param label text label to tag the identity with
+     * @param active whether the identity is active
+     * @param master if the identity is a master identity
+     * @return newly created Identity
+     */
     public FutureData<Identity> create(String label, boolean active, boolean master) {
         if (label == null || label.isEmpty()) {
             throw new IllegalArgumentException("A label is required");
@@ -43,10 +50,6 @@ public class DataSiftAccount extends DataSiftApiClient {
         }
         return future;
     }
-
-
-
-    // update
 
     /***
      * Update an existing identity with values
@@ -71,8 +74,6 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    // list
-
     public FutureData<IdentityList> list() {
         return list(null, 0, 0);
     }
@@ -93,8 +94,12 @@ public class DataSiftAccount extends DataSiftApiClient {
         return list(null, page, perPage);
     }
 
-    /**
+    /***
      * List identities with a given label and page details
+     * @param label which label you'd like to list (can be null)
+     * @param page page number (can be 0)
+     * @param perPage items per page (can be 0)
+     * @return List of identities
      */
     public FutureData<IdentityList> list(String label, int page, int perPage) {
         FutureData<IdentityList> future = new FutureData<>();
@@ -115,7 +120,8 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /***
+     * Fetch an Identity using it's ID
      * @param id the ID of the identity to fetch
        @return the identity for the ID provided
      */
@@ -128,9 +134,10 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /***
+     * Delete an Identity using it's ID
      * @param id the ID of the identity to delete
-     * @return this
+     * @return success or failure
      */
     public FutureData<DataSiftResult> delete(String id) {
         if (id == null) {
