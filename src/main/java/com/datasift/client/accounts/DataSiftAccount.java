@@ -258,4 +258,26 @@ public class DataSiftAccount extends DataSiftApiClient {
         performRequest(future, request);
         return future;
     }
+
+
+    /**
+     * Update a token
+     * @param identity identity to update a token inside
+     * @param service service to update the token for
+     * @param token new token value
+     * @return the updated Token
+     */
+    public FutureData<Token> update(String identity, String service, String token) {
+        FutureData<Token> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/token/" + service ));
+        try {
+            Request request = config.http()
+                    .putJSON(uri, new PageReader(newRequestCallback(future, new Token(), config)))
+                    .setData(new NewTokenValue(token));
+            performRequest(future, request);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return future;
+    }
 }
