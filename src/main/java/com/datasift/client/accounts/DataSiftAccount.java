@@ -44,6 +44,35 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
+
+
+    // update
+
+    /***
+     * Update an existing identity with values
+     * @param id target to update
+     * @param label new label (may be null otherwise)
+     * @param active new activity (may be null otherwise)
+     * @param master new master (may be null otherwise)
+     * @return the new updated Identity
+     */
+    public FutureData<Identity> update(String id, String label, boolean active, boolean master) {
+        String activeStr = active ? "active" : "disabled";
+        FutureData<Identity> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY+"/"+id));
+        try {
+            Request request = config.http()
+                    .putJSON(uri, new PageReader(newRequestCallback(future, new Identity(), config)))
+                    .setData(new NewIdentity(label, activeStr, master));
+            performRequest(future, request);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return future;
+    }
+
+    // list
+
     public FutureData<IdentityList> list() {
         return list(null, 0, 0);
     }
@@ -114,5 +143,6 @@ public class DataSiftAccount extends DataSiftApiClient {
         performRequest(future, request);
         return future;
     }
+
 
 }
