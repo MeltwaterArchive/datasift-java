@@ -11,11 +11,15 @@ import java.util.concurrent.TimeUnit;
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class Identity extends BaseDataSiftResult {
+    @JsonProperty("id")
     protected String id;
     @JsonProperty("api_key")
     protected String apiKey;
+    @JsonProperty("label")
     protected String label;
+    @JsonProperty("status")
     protected IdentityStatus status;
+    @JsonProperty("master")
     protected boolean master;
     @JsonProperty("created_at")
     protected long createdAt;
@@ -80,4 +84,5 @@ public class Identity extends BaseDataSiftResult {
             return value;
         }
     }
+
 }

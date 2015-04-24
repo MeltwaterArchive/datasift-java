@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class IdentityList extends BaseDataSiftResult implements Iterable<Identity> {
     @JsonProperty
-    private final List<Identity> sources = new ArrayList<Identity>();
+    private final List<Identity> identities = new ArrayList<Identity>();
     @JsonProperty
     private int count;
     @JsonProperty
@@ -25,8 +25,8 @@ public class IdentityList extends BaseDataSiftResult implements Iterable<Identit
     /**
      * @return all the available identities. May be empty but will never be null
      */
-    public List<Identity> getSources() {
-        return sources;
+    public List<Identity> getIdentities() {
+        return identities;
     }
 
     public int getCount() {
@@ -47,6 +47,6 @@ public class IdentityList extends BaseDataSiftResult implements Iterable<Identit
 
     @Override
     public Iterator<Identity> iterator() {
-        return sources.iterator();
+        return identities.iterator();
     }
 }

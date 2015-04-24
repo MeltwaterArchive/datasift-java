@@ -84,6 +84,19 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    
+    /**
+     * @param id the ID of the identity to fetch
+       @return the identity for the ID provided
+     */
+    public FutureData<Identity> get(String id) {
+        FutureData<Identity> future = new FutureData<>();
+        URI uri = newParams().put("id", id).forURL(config.newAPIEndpointURI(IDENTITY));
+        Request request = config.http().
+                GET(uri, new PageReader(newRequestCallback(future, new Identity(), config)));
+        performRequest(future, request);
+        return future;
+    }
+
+
 
 }
