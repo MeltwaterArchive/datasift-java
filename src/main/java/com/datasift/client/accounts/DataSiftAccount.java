@@ -236,4 +236,26 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
+
+    /**
+     * Delete a service token
+     *
+     * @param identity identity to delete the token from
+     * @param service  service to delete the token from
+     * @return Success of deletion
+     */
+    public FutureData<DataSiftResult> delete(String identity, String service) {
+        if (identity == null) {
+            throw new IllegalArgumentException("An identity is required");
+        }
+        if (service == null) {
+            throw new IllegalArgumentException("A service is required");
+        }
+        FutureData<DataSiftResult> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/token/" + service));
+        Request request = config.http()
+                .DELETE(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)));
+        performRequest(future, request);
+        return future;
+    }
 }
