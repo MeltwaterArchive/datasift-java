@@ -58,10 +58,10 @@ public class Interface {
             DataSiftConfig config = new DataSiftConfig(authVals.getKey(), authVals.getValue());
             String u = parsedArgs.get("u");
             if (u != null) {
-                URI url = new URI(u.startsWith("http") ? u : "http://" + u);
+                URI url = new URI(!u.startsWith("http") && !u.startsWith("https") ? "http://" + u : u);
                 config.host(url.getHost());
-                config.port(url.getPort());
                 config.setSslEnabled(url.getScheme() != null && url.getScheme().equals("https"));
+                config.port(url.getPort() > -1 ? url.getPort() : config.isSslEnabled() ? 443 : 80);
             }
             DataSiftClient dataSift = new DataSiftClient(config);
             switch (parsedArgs.get("e")) {

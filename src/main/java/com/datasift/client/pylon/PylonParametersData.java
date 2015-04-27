@@ -1,29 +1,29 @@
 package com.datasift.client.pylon;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PylonParametersData {
     @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String interval;
     @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected float span;
     @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected int threshold;
     @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String target;
 
-    public PylonParametersData() {
-    }
+    public PylonParametersData() { }
 
     public PylonParametersData(String interval, Float span, Integer threshold, String target) {
         this.interval = interval;
-        this.span = span;
-        this.threshold = threshold;
         this.target = target;
-    }
-
-    public String getInterval() {
-        return this.interval;
+        if (span != null) { this.span = span; }
+        if (threshold != null) { this.threshold = threshold; }
     }
 
     public float getSpan() {
