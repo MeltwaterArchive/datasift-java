@@ -218,7 +218,9 @@ public class DataSiftConfig {
 
     public void setSslEnabled(boolean sslEnabled) {
         this.sslEnabled = sslEnabled;
-        port = this.sslEnabled ? 443 : 80;
+        if (!manualPort) {
+            port = this.sslEnabled ? 443 : 80;
+        }
     }
 
     public String authAsHeader() {

@@ -1,8 +1,12 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.*;
+import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.DataSiftApiClient;
+import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftResult;
+import com.datasift.client.FutureData;
+import com.datasift.client.ParamBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.higgs.http.client.POST;
 import io.higgs.http.client.Request;
 import io.higgs.http.client.readers.PageReader;
 
@@ -201,7 +205,8 @@ public class DataSiftAccount extends DataSiftApiClient {
      */
     public FutureData<Token> get(String identity, String tokenid) {
         FutureData<Token> future = new FutureData<>();
-        URI uri = newParams().put("id", identity).forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/" + tokenid));
+        URI uri = newParams().put("id", identity)
+                .forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/" + tokenid));
         Request request = config.http().
                 GET(uri, new PageReader(newRequestCallback(future, new Token(), config)));
         performRequest(future, request);
@@ -236,7 +241,6 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-
     /**
      * Delete a service token
      *
@@ -258,7 +262,6 @@ public class DataSiftAccount extends DataSiftApiClient {
         performRequest(future, request);
         return future;
     }
-
 
     /**
      * Update a token

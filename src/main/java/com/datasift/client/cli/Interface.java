@@ -1,8 +1,11 @@
 package com.datasift.client.cli;
 
+import com.datasift.client.BaseDataSiftResult;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
+import com.datasift.client.pylon.PylonQueryParameters;
+import com.datasift.client.pylon.PylonQuery;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
 import com.datasift.client.push.OutputType;
@@ -16,11 +19,13 @@ import io.higgs.http.client.HttpRequestBuilder;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.datasift.client.cli.Parser.CliArguments;
 import static com.datasift.client.cli.Parser.CliSwitch;
@@ -31,44 +36,61 @@ public class Interface {
     private Interface() {
     }
 
-    public static void main(String[] args) {
-        List<CliSwitch> switches = new ArrayList<>();
-        switches.add(new CliSwitch("a", "auth", true, "Auth is required in the form username:api_key"));
-        switches.add(new CliSwitch("c", "command", true));
-        CliSwitch endpoint = new CliSwitch("e", "endpoint");
-        endpoint.setDefault("core");
-        switches.add(endpoint);
-        switches.add(new CliSwitch("p", "param"));
-        CliArguments parsedArgs = Parser.parse(args, switches);
+    public static void main(String[] args) throws JsonProcessingException {
+        try {
+            List<CliSwitch> switches = new ArrayList<>();
+            switches.add(new CliSwitch("a", "auth", true, "Auth is required in the form username:api_key"));
+            switches.add(new CliSwitch("c", "command", true));
+            CliSwitch endpoint = new CliSwitch("e", "endpoint");
+            endpoint.setDefault("core");
+            switches.add(endpoint);
+            switches.add(new CliSwitch("p", "param"));
+            switches.add(new CliSwitch("u", "url"));
+            CliArguments parsedArgs = Parser.parse(args, switches);
 
-        Map<String, String> auth = parsedArgs.map("a");
-        if (auth == null || auth.size() == 0) {
-            System.out.println("Auth must be provided in the form '-a[uth] username api_key'");
-            System.exit(0);
+            Map<String, String> auth = parsedArgs.map("a");
+            if (auth == null || auth.size() == 0) {
+                System.out.println("Auth must be provided in the form '-a[uth] username api_key'");
+                System.exit(0);
+            }
+
+            Map.Entry<String, String> authVals = auth.entrySet().iterator().next();
+            DataSiftConfig config = new DataSiftConfig(authVals.getKey(), authVals.getValue());
+            String u = parsedArgs.get("u");
+            if (u != null) {
+                URI url = new URI(!u.startsWith("http") && !u.startsWith("https") ? "http://" + u : u);
+                config.host(url.getHost());
+                config.setSslEnabled(url.getScheme() != null && url.getScheme().equals("https"));
+                config.port(url.getPort() > -1 ? url.getPort() : config.isSslEnabled() ? 443 : 80);
+            }
+            DataSiftClient dataSift = new DataSiftClient(config);
+            switch (parsedArgs.get("e")) {
+                case "core":
+                    executeCore(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "push":
+                    executePush(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "historics":
+                    executeHistorics(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "preview":
+                    executePreview(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "sources":
+                    executeSources(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "pylon":
+                    executeAnalysis(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+            }
+        } catch (Exception ex) {
+            BaseDataSiftResult res = new BaseDataSiftResult();
+            res.failed(ex);
+            printResponse(res);
+        } finally {
+            HttpRequestBuilder.group().shutdownGracefully(0, 0, TimeUnit.MILLISECONDS);
         }
-
-        Map.Entry<String, String> authVals = auth.entrySet().iterator().next();
-        DataSiftConfig config = new DataSiftConfig(authVals.getKey(), authVals.getValue());
-        DataSiftClient dataSift = new DataSiftClient(config);
-        switch (parsedArgs.get("e")) {
-            case "core":
-                executeCore(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-            case "push":
-                executePush(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-            case "historics":
-                executeHistorics(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-            case "preview":
-                executePreview(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-            case "sources":
-                executeSources(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
-                break;
-        }
-
-        HttpRequestBuilder.shutdown();
     }
 
     private static void require(String[] args, Map<String, String> params) {
@@ -84,7 +106,8 @@ public class Interface {
         }
     }
 
-    private static void executeCore(DataSiftClient dataSift, String endpoint, Map<String, String> params) {
+    private static void executeCore(DataSiftClient dataSift, String endpoint, Map<String, String> params)
+            throws JsonProcessingException {
         switch (endpoint) {
             case "validate":
                 require(new String[]{"csdl"}, params);
@@ -112,34 +135,41 @@ public class Interface {
         }
     }
 
-    private static void printResponse(DataSiftResult result) {
-        int status = result.getResponse().status();
-        Map<String, String> headers = new HashMap<>();
-        for (Map.Entry<String, List<String>> h : result.getResponse().headers().entrySet()) {
-            headers.put(h.getKey(), h.getValue() == null || h.getValue().size() == 0 ? null : h.getValue().get(0));
-        }
-        Map<String, Object> response = new HashMap<>();
-        response.put("body", result.getResponse().data());
-        response.put("status", status);
-        response.put("headers", headers);
+    private static void printResponse(DataSiftResult result) throws JsonProcessingException {
         try {
+            Map<String, Object> response = new HashMap<>();
+            Map<String, String> headers = new HashMap<>();
+            if (result.getResponse() != null) {
+                for (Map.Entry<String, List<String>> h : result.getResponse().headers().entrySet()) {
+                    headers.put(h.getKey(), h.getValue() == null || h.getValue().size() == 0 ?
+                            null : h.getValue().get(0));
+                }
+                int status = result.getResponse().status();
+                response.put("status", status);
+            } else {
+                response.put("error", "Invalid response, null");
+            }
+            response.put("body", result);
+            response.put("headers", headers);
             System.out.println(mapper.writeValueAsString(response));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            System.exit(0);
+        } catch (Exception ex) {
+            BaseDataSiftResult res = new BaseDataSiftResult();
+            res.failed(ex);
+            System.out.println(mapper.writeValueAsString(res));
+            System.exit(0);
+        } finally {
+            HttpRequestBuilder.group().shutdownGracefully(0, 0, TimeUnit.MILLISECONDS);
         }
     }
 
-    private static void executePush(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
-        PushConnector connector = null;
-        try {
-            Map<String, Object> args = mapper.readValue(params.get("output_type"),
-                    new TypeReference<HashMap<String, Object>>() {
-                    });
-            connector = BaseConnector.fromMap(new OutputType<>(params.get("output_type")), args);
-        } catch (IOException e) {
-            System.out.println("output_type must be a valid JSON object received : " + params.get("output_type"));
-            System.exit(0);
-        }
+    private static void executePush(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws IOException {
+        PushConnector connector;
+        Map<String, Object> args = mapper.readValue(params.get("output_type"),
+                new TypeReference<HashMap<String, Object>>() {
+                });
+        connector = BaseConnector.fromMap(new OutputType<>(params.get("output_type")), args);
         switch (endpoint) {
             case "validate":
                 printResponse(dataSift.push().validate(connector).sync());
@@ -164,28 +194,21 @@ public class Interface {
                 printResponse(dataSift.push().delete(params.get("id")).sync());
                 break;
             case "log":
-                try {
-                    printResponse(dataSift.push().log(params.get("id"), Integer.parseInt(params.get("page"))).sync());
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
+                printResponse(dataSift.push().log(params.get("id"), Integer.parseInt(params.get("page"))).sync());
                 break;
             case "get":
                 printResponse(dataSift.push().get(params.get("id")).sync());
                 break;
             case "pull":
-                try {
-                    printResponse(dataSift.push().pull(PushSubscription.fromString(params.get("id")),
-                            Integer.parseInt(params.get("size")),
-                            params.get("page")).sync());
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
+                printResponse(dataSift.push().pull(PushSubscription.fromString(params.get("id")),
+                        Integer.parseInt(params.get("size")),
+                        params.get("page")).sync());
                 break;
         }
     }
 
-    private static void executeHistorics(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+    private static void executeHistorics(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws JsonProcessingException {
         switch (endpoint) {
             case "prepare":
                 printResponse(dataSift.historics().prepare(params.get("hash"), DateTime.parse(params.get("start")),
@@ -213,7 +236,44 @@ public class Interface {
         }
     }
 
-    private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+    private static void executeAnalysis(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws IOException {
+        switch (endpoint) {
+            case "analyze":
+                PylonQueryParameters map = null;
+                String p = params.get("parameters");
+                if (p != null && !p.isEmpty()) {
+                    map = mapper.readValue(p, PylonQueryParameters.class);
+                }
+                PylonQuery analysis = new PylonQuery(params.get("hash"), map, params.get("filter"),
+                        params.get("start") == null ? null : Integer.parseInt(params.get("start")),
+                        params.get("end") == null ? null : Integer.parseInt(params.get("end")));
+                printResponse(dataSift.pylon().analyze(analysis).sync());
+                break;
+            case "compile":
+                printResponse(dataSift.pylon().compile(params.get("csdl")).sync());
+                break;
+            case "get":
+                String hash = params == null ? null : params.get("hash");
+                printResponse(hash == null ? dataSift.pylon().get().sync() : dataSift.pylon().get(hash).sync());
+                break;
+            case "start":
+                printResponse(dataSift.pylon().start(params.get("hash")).sync());
+                break;
+            case "stop":
+                printResponse(dataSift.pylon().stop(params.get("hash")).sync());
+                break;
+            case "tags":
+                printResponse(dataSift.pylon().tags(params.get("hash")).sync());
+                break;
+            case "validate":
+                printResponse(dataSift.pylon().validate(params.get("csdl")).sync());
+                break;
+        }
+    }
+
+    private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws JsonProcessingException {
         switch (endpoint) {
             case "create":
                 printResponse(dataSift.preview().create(new DateTime(Long.parseLong(params.get("start"))),
@@ -225,7 +285,8 @@ public class Interface {
         }
     }
 
-    private static void executeSources(DataSiftClient dataSift, String endpoint, HashMap<String, String> params) {
+    private static void executeSources(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws JsonProcessingException {
         switch (endpoint) {
             case "create":
                 //DataSource
