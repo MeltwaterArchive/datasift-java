@@ -83,6 +83,15 @@ public class Interface {
                 case "pylon":
                     executeAnalysis(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
                     break;
+                case "identity":
+                    executeIdentity(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "token":
+                    executeToken(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
+                case "limit":
+                    executeLimit(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    break;
             }
         } catch (Exception ex) {
             BaseDataSiftResult res = new BaseDataSiftResult();
@@ -310,6 +319,111 @@ public class Interface {
                 break;
             case "start":
                 printResponse(dataSift.managedSource().start(params.get("id")).sync());
+                break;
+        }
+    }
+
+
+    private static void executeIdentity(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws IOException {
+        switch (endpoint) {
+            case "list":
+                String label = params.getOrDefault("label", null);
+                int page = Integer.parseInt(params.getOrDefault("page", "0"));
+                int perpage = Integer.parseInt(params.getOrDefault("per_page", "0"));
+                printResponse(dataSift.account().list(label, page, perpage).sync());
+                break;
+            case "get":
+                printResponse(dataSift.account().get(params.get("id")).sync());
+                break;
+            case "create":
+                String createlabel = params.get("label");
+                Boolean active = params.getOrDefault("status", "inactive").equals("active");
+                Boolean master = params.getOrDefault("master", "false").equals("true");
+                printResponse(dataSift.account().create(createlabel, active, master).sync());
+                break;
+            case "update":
+                String targetid = params.get("id");
+                String updatelabel = params.getOrDefault("label", null);
+                String updateactivitystring = params.getOrDefault("status", null);
+                Boolean updateactivity = null;
+                if (updateactivitystring.equals("active")) {
+                    updateactivity = true;
+                } else if (updateactivitystring.equals("inactive")) {
+                    updateactivity = false;
+                }
+                String updatemasterstring = params.getOrDefault("master", null);
+                Boolean updatemaster = null;
+                if (updatemasterstring.equals("true")) {
+                    updatemaster = true;
+                } else if (updatemasterstring.equals("false")) {
+                    updatemaster = false;
+                }
+                printResponse(dataSift.account().update(targetid, updatelabel, updateactivity, updatemaster).sync());
+                break;
+            case "delete":
+                printResponse(dataSift.account().delete(params.get("id")).sync());
+                break;
+        }
+    }
+
+    // replace stuff from here down
+
+    private static void executeToken(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws IOException {
+        switch (endpoint) {
+            case "list":
+                String identityid = params.getOrDefault("identity_id", null);
+                int page = Integer.parseInt(params.getOrDefault("page", "0"));
+                int perpage = Integer.parseInt(params.getOrDefault("per_page", "0"));
+                printResponse(dataSift.account().listTokens(identityid, page, perpage).sync());
+                break;
+            case "get":
+                printResponse(dataSift.account().getToken(params.get("identity_id"), params.get("service")).sync());
+                break;
+            case "create":
+                String createidentity = params.get("identity_id");
+                String createservice = params.get("service");
+                String createtoken = params.get("token");
+                printResponse(dataSift.account().createToken(createidentity, createservice, createtoken).sync());
+                break;
+            case "update":
+                String targetid = params.get("identity_id");
+                String targetservice = params.get("service");
+                String newtoken = params.get("token");
+                printResponse(dataSift.account().updateToken(targetid, targetservice, newtoken).sync());
+                break;
+            case "delete":
+                printResponse(dataSift.account().deleteToken(params.get("identity_id"), params.get("service")).sync());
+                break;
+        }
+    }
+        private static void executeLimit(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws IOException {
+        switch (endpoint) {
+            case "list":
+                String service = params.get("service");
+                int page = Integer.parseInt(params.getOrDefault("page", "0"));
+                int perpage = Integer.parseInt(params.getOrDefault("per_page", "0"));
+                printResponse(dataSift.account().listLimits(service, page, perpage).sync());
+                break;
+            case "get":
+                printResponse(dataSift.account().getLimit(params.get("identity_id"), params.get("service")).sync());
+                break;
+            case "create":
+                String createidentity = params.get("identity_id");
+                String createservice = params.get("service");
+                Long createallowance = Long.parseLong(params.get("total_allowance"));
+                printResponse(dataSift.account().createLimit(createidentity, createservice, createallowance).sync());
+                break;
+            case "update":
+                String updateidentity = params.get("identity_id");
+                String updateservice = params.get("service");
+                Long updateallowance = Long.parseLong(params.get("total_allowance"));
+                printResponse(dataSift.account().updateLimit(updateidentity, updateservice, updateallowance).sync());
+                break;
+            case "delete":
+                printResponse(dataSift.account().deleteLimit(params.get("identity_id"), params.get("service")).sync());
                 break;
         }
     }

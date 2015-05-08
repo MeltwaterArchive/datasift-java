@@ -203,7 +203,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param tokenid  the ID of the token to fetch
      * @return the identity for the ID provided
      */
-    public FutureData<Token> get(String identity, String tokenid) {
+    public FutureData<Token> getToken(String identity, String tokenid) {
         FutureData<Token> future = new FutureData<>();
         URI uri = newParams().put("id", identity)
                 .forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/" + tokenid));
