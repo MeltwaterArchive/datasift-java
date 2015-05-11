@@ -74,6 +74,9 @@ public class BaseDataSiftResult implements DataSiftResult {
 
     @Override
     public String toString() {
+        if (response == null) {
+            return "{}";
+        }
         return response.toString();
     }
 

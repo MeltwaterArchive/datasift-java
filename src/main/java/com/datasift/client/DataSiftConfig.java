@@ -46,6 +46,9 @@ public class DataSiftConfig {
         if (HttpRequestBuilder.isSupportedSSLProtocol("TLSv1")) {
             sslProtocols.add("TLSv1");
         }
+        if (HttpRequestBuilder.isSupportedSSLProtocol("TLSv1.2")) {
+            sslProtocols.add("TLSv1.2");
+        }
         compatibleSSLProtocolsFound = sslProtocols.size() > 0;
     }
 
@@ -215,7 +218,9 @@ public class DataSiftConfig {
 
     public void setSslEnabled(boolean sslEnabled) {
         this.sslEnabled = sslEnabled;
-        port = this.sslEnabled ? 443 : 80;
+        if (!manualPort) {
+            port = this.sslEnabled ? 443 : 80;
+        }
     }
 
     public String authAsHeader() {

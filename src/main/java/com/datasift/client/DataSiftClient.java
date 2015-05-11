@@ -1,5 +1,6 @@
 package com.datasift.client;
 
+import com.datasift.client.pylon.DataSiftPylon;
 import com.datasift.client.core.Balance;
 import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
@@ -35,6 +36,7 @@ public class DataSiftClient extends DataSiftApiClient {
      */
     public static final int DEFAULT_NUM = Integer.MIN_VALUE;
     protected DataSiftConfig config;
+    protected DataSiftPylon pylon;
     protected DataSiftHistorics historics;
     protected DataSiftManagedSource source;
     protected DataSiftPreview preview;
@@ -53,6 +55,7 @@ public class DataSiftClient extends DataSiftApiClient {
         super(config);
         configureMapper();
         this.config = config;
+        this.pylon = new DataSiftPylon(config);
         this.historics = new DataSiftHistorics(config);
         this.source = new DataSiftManagedSource(config);
         this.preview = new DataSiftPreview(config);
@@ -66,6 +69,13 @@ public class DataSiftClient extends DataSiftApiClient {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         MAPPER.registerModule(new JodaModule());
+    }
+
+    /**
+     * @return An object suitable for making requests to the DataSift Analysis API
+     */
+    public DataSiftPylon pylon() {
+        return pylon;
     }
 
     /**
