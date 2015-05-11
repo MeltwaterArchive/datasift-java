@@ -72,33 +72,37 @@ public class Interface {
                 config.port(url.getPort() > -1 ? url.getPort() : config.isSslEnabled() ? 443 : 80);
             }
             DataSiftClient dataSift = new DataSiftClient(config);
+            HashMap<String, String> params = parsedArgs.map("p");
+            if (params==null) {
+                params = new HashMap<String, String>();
+            }
             switch (parsedArgs.get("e")) {
                 case "core":
-                    executeCore(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    executeCore(dataSift, parsedArgs.get("c"), params);
                     break;
                 case "push":
-                    executePush(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    executePush(dataSift, parsedArgs.get("c"), params);
                     break;
                 case "historics":
-                    executeHistorics(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    executeHistorics(dataSift, parsedArgs.get("c"), params);
                     break;
                 case "preview":
-                    executePreview(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    executePreview(dataSift, parsedArgs.get("c"), params);
                     break;
                 case "sources":
-                    executeSources(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    executeSources(dataSift, parsedArgs.get("c"), params);
                     break;
                 case "pylon":
-                    executeAnalysis(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    executeAnalysis(dataSift, parsedArgs.get("c"), params);
                     break;
                 case "identity":
-                    executeIdentity(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    executeIdentity(dataSift, parsedArgs.get("c"), params);
                     break;
                 case "token":
-                    executeToken(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    executeToken(dataSift, parsedArgs.get("c"), params);
                     break;
                 case "limit":
-                    executeLimit(dataSift, parsedArgs.get("c"), parsedArgs.map("p"));
+                    executeLimit(dataSift, parsedArgs.get("c"), params);
                     break;
             }
         } catch (Exception ex) {
