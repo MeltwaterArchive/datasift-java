@@ -30,6 +30,4 @@ public class Limit extends BaseDataSiftResult {
     public long totalAllowance() {
         return totalAllowance;
     }
-
-
 }

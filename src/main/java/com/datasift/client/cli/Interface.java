@@ -36,6 +36,14 @@ public class Interface {
     private Interface() {
     }
 
+    private static String getOrDefault(Map<String, String> map, String key, String defaultValue) {
+        if (map.containsKey(key)) {
+            return map.get(key);
+        } else {
+            return defaultValue;
+        }
+    }
+
     public static void main(String[] args) throws JsonProcessingException {
         try {
             List<CliSwitch> switches = new ArrayList<>();
@@ -323,14 +331,13 @@ public class Interface {
         }
     }
 
-
     private static void executeIdentity(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
             throws IOException {
         switch (endpoint) {
             case "list":
-                String label = params.getOrDefault("label", null);
-                int page = Integer.parseInt(params.getOrDefault("page", "0"));
-                int perpage = Integer.parseInt(params.getOrDefault("per_page", "0"));
+                String label = getOrDefault(params, "label", null);
+                int page = Integer.parseInt(getOrDefault(params, "page", "0"));
+                int perpage = Integer.parseInt(getOrDefault(params, "per_page", "0"));
                 printResponse(dataSift.account().list(label, page, perpage).sync());
                 break;
             case "get":
@@ -338,21 +345,21 @@ public class Interface {
                 break;
             case "create":
                 String createlabel = params.get("label");
-                Boolean active = params.getOrDefault("status", "inactive").equals("active");
-                Boolean master = params.getOrDefault("master", "false").equals("true");
+                Boolean active = getOrDefault(params, "status", "inactive").equals("active");
+                Boolean master = getOrDefault(params, "master", "false").equals("true");
                 printResponse(dataSift.account().create(createlabel, active, master).sync());
                 break;
             case "update":
                 String targetid = params.get("id");
-                String updatelabel = params.getOrDefault("label", null);
-                String updateactivitystring = params.getOrDefault("status", null);
+                String updatelabel = getOrDefault(params, "label", null);
+                String updateactivitystring = getOrDefault(params, "status", null);
                 Boolean updateactivity = null;
                 if (updateactivitystring.equals("active")) {
                     updateactivity = true;
                 } else if (updateactivitystring.equals("inactive")) {
                     updateactivity = false;
                 }
-                String updatemasterstring = params.getOrDefault("master", null);
+                String updatemasterstring = getOrDefault(params, "master", null);
                 Boolean updatemaster = null;
                 if (updatemasterstring.equals("true")) {
                     updatemaster = true;
@@ -367,15 +374,13 @@ public class Interface {
         }
     }
 
-    // replace stuff from here down
-
     private static void executeToken(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
             throws IOException {
         switch (endpoint) {
             case "list":
-                String identityid = params.getOrDefault("identity_id", null);
-                int page = Integer.parseInt(params.getOrDefault("page", "0"));
-                int perpage = Integer.parseInt(params.getOrDefault("per_page", "0"));
+                String identityid = getOrDefault(params, "identity_id", null);
+                int page = Integer.parseInt(getOrDefault(params, "page", "0"));
+                int perpage = Integer.parseInt(getOrDefault(params, "per_page", "0"));
                 printResponse(dataSift.account().listTokens(identityid, page, perpage).sync());
                 break;
             case "get":
@@ -403,8 +408,8 @@ public class Interface {
         switch (endpoint) {
             case "list":
                 String service = params.get("service");
-                int page = Integer.parseInt(params.getOrDefault("page", "0"));
-                int perpage = Integer.parseInt(params.getOrDefault("per_page", "0"));
+                int page = Integer.parseInt(getOrDefault(params, "page", "0"));
+                int perpage = Integer.parseInt(getOrDefault(params, "per_page", "0"));
                 printResponse(dataSift.account().listLimits(service, page, perpage).sync());
                 break;
             case "get":

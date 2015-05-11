@@ -377,7 +377,6 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-
      /**
      * Delete a limit
      *
@@ -400,7 +399,6 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-
     /**
      * Update a token
      * @param identity identity to update a token inside
@@ -419,7 +417,7 @@ public class DataSiftAccount extends DataSiftApiClient {
             throw new IllegalArgumentException("Allowance must be a positive integer");
         }
         FutureData<Token> future = new FutureData<>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/limit/" + service ));
+        URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/limit/" + service));
         try {
             Request request = config.http()
                     .putJSON(uri, new PageReader(newRequestCallback(future, new Token(), config)))
@@ -430,6 +428,5 @@ public class DataSiftAccount extends DataSiftApiClient {
         }
         return future;
     }
-
 
 }

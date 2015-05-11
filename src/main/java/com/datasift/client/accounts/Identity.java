@@ -80,7 +80,7 @@ public class Identity extends BaseDataSiftResult {
             this.value = name;
         }
 
-        public String value() {
+        public String getValue() {
             return value;
         }
     }
