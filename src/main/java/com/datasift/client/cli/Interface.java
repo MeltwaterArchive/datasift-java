@@ -73,7 +73,7 @@ public class Interface {
             }
             DataSiftClient dataSift = new DataSiftClient(config);
             HashMap<String, String> params = parsedArgs.map("p");
-            if (params==null) {
+            if (params == null) {
                 params = new HashMap<String, String>();
             }
             switch (parsedArgs.get("e")) {
