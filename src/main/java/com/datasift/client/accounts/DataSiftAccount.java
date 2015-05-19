@@ -406,7 +406,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param allowance new limit value
      * @return the updated Token
      */
-    public FutureData<Token> updateLimit(String identity, String service, Long allowance) {
+    public FutureData<Limit> updateLimit(String identity, String service, Long allowance) {
         if (identity == null || identity.isEmpty()) {
             throw new IllegalArgumentException("An identity is required");
         }
@@ -416,11 +416,11 @@ public class DataSiftAccount extends DataSiftApiClient {
         if (allowance < 0) {
             throw new IllegalArgumentException("Allowance must be a positive integer");
         }
-        FutureData<Token> future = new FutureData<>();
+        FutureData<Limit> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/limit/" + service));
         try {
             Request request = config.http()
-                    .putJSON(uri, new PageReader(newRequestCallback(future, new Token(), config)))
+                    .putJSON(uri, new PageReader(newRequestCallback(future, new Limit(), config)))
                     .setData(new NewLimitValue(allowance));
             performRequest(future, request);
         } catch (JsonProcessingException e) {
