@@ -197,16 +197,16 @@ public class DataSiftAccount extends DataSiftApiClient {
     }
 
     /**
-     * Fetch a token using it's ID and it's Identity's ID
+     * Fetch a token using it's service ID and it's Identity's ID
      *
      * @param identity the ID of the identity to query
-     * @param tokenid  the ID of the token to fetch
+     * @param service  the service of the token to fetch
      * @return the identity for the ID provided
      */
-    public FutureData<Token> getToken(String identity, String tokenid) {
+    public FutureData<Token> getToken(String identity, String service) {
         FutureData<Token> future = new FutureData<>();
         URI uri = newParams().put("id", identity)
-                .forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/token/" + tokenid));
+                .forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/token/" + service));
         Request request = config.http().
                 GET(uri, new PageReader(newRequestCallback(future, new Token(), config)));
         performRequest(future, request);
