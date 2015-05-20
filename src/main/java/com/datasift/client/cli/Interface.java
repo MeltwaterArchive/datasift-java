@@ -358,17 +358,21 @@ public class Interface {
                 String updatelabel = getOrDefault(params, "label", null);
                 String updateactivitystring = getOrDefault(params, "status", null);
                 Boolean updateactivity = null;
-                if (updateactivitystring.equals("active")) {
-                    updateactivity = true;
-                } else if (updateactivitystring.equals("inactive")) {
-                    updateactivity = false;
+                if (updateactivitystring != null) {
+                    if (updateactivitystring.equals("active")) {
+                        updateactivity = true;
+                    } else if (updateactivitystring.equals("inactive")) {
+                        updateactivity = false;
+                    }
                 }
                 String updatemasterstring = getOrDefault(params, "master", null);
                 Boolean updatemaster = null;
-                if (updatemasterstring.equals("true")) {
-                    updatemaster = true;
-                } else if (updatemasterstring.equals("false")) {
-                    updatemaster = false;
+                if (updatemasterstring != null) {
+                    if (updatemasterstring.equals("true")) {
+                        updatemaster = true;
+                    } else if (updatemasterstring.equals("false")) {
+                        updatemaster = false;
+                    }
                 }
                 printResponse(dataSift.account().update(targetid, updatelabel, updateactivity, updatemaster).sync());
                 break;
