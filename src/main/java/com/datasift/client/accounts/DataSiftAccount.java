@@ -65,8 +65,11 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param master new master (may be null otherwise)
      * @return the new updated Identity
      */
-    public FutureData<Identity> update(String id, String label, boolean active, boolean master) {
-        String activeStr = active ? "active" : "disabled";
+    public FutureData<Identity> update(String id, String label, Boolean active, Boolean master) {
+        String activeStr = null;
+        if (active!=null) {
+            activeStr = active ? "active" : "disabled";
+        }
         FutureData<Identity> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + id));
         try {
