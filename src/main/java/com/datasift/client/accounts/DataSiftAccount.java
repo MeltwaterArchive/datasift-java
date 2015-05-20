@@ -67,7 +67,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      */
     public FutureData<Identity> update(String id, String label, Boolean active, Boolean master) {
         String activeStr = null;
-        if (active!=null) {
+        if (active != null) {
             activeStr = active ? "active" : "disabled";
         }
         FutureData<Identity> future = new FutureData<>();
