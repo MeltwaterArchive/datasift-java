@@ -1,10 +1,6 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.BaseDataSiftResult;
-import com.datasift.client.DataSiftApiClient;
-import com.datasift.client.DataSiftConfig;
-import com.datasift.client.DataSiftResult;
-import com.datasift.client.FutureData;
+import com.datasift.client.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.higgs.http.client.Request;
 import io.higgs.http.client.JSONRequest;
@@ -107,12 +103,28 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
+
+    public FutureData<PylonStreamStatusList> get() {
+        return get(0, 0);
+    }
+
+    public FutureData<PylonStreamStatusList> get(int page) {
+        return get(page, 0);
+    }
+
     /**
      * @return the status of all streams that are running or have run with stored data
      */
-    public FutureData<PylonStreamStatusList> get() {
-        URI uri = newParams().forURL(config.newAPIEndpointURI(GET));
+    public FutureData<PylonStreamStatusList> get(int page, int perPage) {
         FutureData<PylonStreamStatusList> future = new FutureData<>();
+        ParamBuilder b = new ParamBuilder();
+        if (page > 0) {
+            b.put("page", page);
+        }
+        if (perPage > 0) {
+            b.put("per_page", perPage);
+        }
+        URI uri = b.forURL(config.newAPIEndpointURI(GET));
         Request request = config.http().GET(uri,
                 new PageReader(newRequestCallback(future, new PylonStreamStatusList(), config)));
         performRequest(future, request);
