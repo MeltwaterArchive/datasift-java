@@ -44,6 +44,10 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return updateOrCreate(name, source, null);
     }
 
+    public <T extends DataSource> FutureData<ManagedSource> create(String name, T source, boolean validate) {
+        return updateOrCreate(name, source, null, validate);
+    }
+
     public FutureData<ManagedSource> addAuth(String id, String... resources) {
         return addAuth(id, true, resources);
     }
@@ -163,13 +167,22 @@ public class DataSiftManagedSource extends DataSiftApiClient {
      * @return this
      */
     public <T extends DataSource> FutureData<ManagedSource> update(String name, T source, ManagedSource id) {
+        return update(name, source, id, false);
+    }
+    public <T extends DataSource> FutureData<ManagedSource> update(String name, T source, ManagedSource id,
+                                                                   Boolean validate) {
         if (id == null) {
             throw new IllegalArgumentException("An existing managed source is required");
         }
-        return updateOrCreate(name, source, id.getId());
+        return updateOrCreate(name, source, id.getId(), validate);
     }
 
     protected <T extends DataSource> FutureData<ManagedSource> updateOrCreate(String name, T source, String id) {
+        return updateOrCreate(name, source, id, false);
+    }
+
+    protected <T extends DataSource> FutureData<ManagedSource> updateOrCreate(String name, T source, String id,
+                                                                              Boolean validate) {
         if (name == null || source == null) {
             throw new IllegalArgumentException("Name and a data source are both required");
         }
@@ -186,6 +199,9 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         }
         if (source.hasAuth()) {
             request.form("auth", source.getAuthAsJSON());
+        }
+        if (validate != null) {
+            request.form("validate", validate);
         }
         performRequest(future, request);
         return future;
