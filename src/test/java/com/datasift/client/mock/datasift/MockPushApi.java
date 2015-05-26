@@ -1,5 +1,6 @@
 package com.datasift.client.mock.datasift;
 
+import com.datasift.client.DataSiftConfig;
 import com.datasift.client.Response;
 import com.datasift.client.core.Stream;
 import com.datasift.client.push.PushLogMessages;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by agnieszka on 15/01/2014.
  */
 
-@Path("/v1.1/push")
+@Path(DataSiftConfig.VERSION_PREFIX + "/push")
 public class MockPushApi {
 
     Map<String, String> headers = new HashMap<>();

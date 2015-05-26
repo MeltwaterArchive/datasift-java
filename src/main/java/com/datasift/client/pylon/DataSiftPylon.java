@@ -1,6 +1,11 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.*;
+import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.DataSiftApiClient;
+import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftResult;
+import com.datasift.client.FutureData;
+import com.datasift.client.ParamBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.higgs.http.client.Request;
 import io.higgs.http.client.JSONRequest;
@@ -102,7 +107,6 @@ public class DataSiftPylon extends DataSiftApiClient {
         performRequest(future, request);
         return future;
     }
-
 
     public FutureData<PylonStreamStatusList> get() {
         return get(0, 0);
