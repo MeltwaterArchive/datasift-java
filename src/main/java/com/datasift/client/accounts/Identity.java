@@ -18,7 +18,7 @@ public class Identity extends BaseDataSiftResult {
     @JsonProperty("label")
     protected String label;
     @JsonProperty("status")
-    protected IdentityStatus status;
+    protected String status;
     @JsonProperty("master")
     protected boolean master;
     @JsonProperty("created_at")
@@ -40,7 +40,7 @@ public class Identity extends BaseDataSiftResult {
         return label;
     }
 
-    public IdentityStatus status() {
+    public String status() {
         return status;
     }
 
@@ -70,19 +70,6 @@ public class Identity extends BaseDataSiftResult {
 
     public Date expiresAtAsDate() {
         return new Date(TimeUnit.SECONDS.toMillis(expiresAt));
-    }
-
-    public static class IdentityStatus {
-        private final String value;
-
-        @JsonCreator
-        IdentityStatus(String name) {
-            this.value = name;
-        }
-
-        public String getValue() {
-            return value;
-        }
     }
 
 }
