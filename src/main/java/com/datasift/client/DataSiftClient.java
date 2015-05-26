@@ -194,6 +194,19 @@ public class DataSiftClient extends DataSiftApiClient {
         return future;
     }
 
+    /***
+     * Retrieve the DPU usage of a historics job
+     * @param historicsId id of the historics job to get the DPU usage of
+     * @return future containing DPU response
+     */
+    public FutureData<Dpu> dpu(String historicsId) {
+        final FutureData<Dpu> future = new FutureData<Dpu>();
+        URI uri = newParams().put("historics_id", historicsId).forURL(config.newAPIEndpointURI(DPU));
+        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new Dpu(), config)));
+        performRequest(future, request);
+        return future;
+    }
+
     public FutureData<Usage> usage() {
         return usage(Usage.Period.DAY);
     }
