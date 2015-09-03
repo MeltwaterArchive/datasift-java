@@ -26,7 +26,7 @@ public class HistoricsStatus extends BaseDataSiftResult {
     }
 
     /**
-     * @return A map whose keys are the names of the datasource such as "facebook" or "twitter"
+     * @return A map whose keys are the names of the datasource such as "facebook" or "tumblr"
      *         and values that tells you the status (%) of data available for each source as well as versions of the
      *         data is available which augmentations and the percent of availability for each
      */
