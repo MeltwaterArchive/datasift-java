@@ -51,7 +51,7 @@ public class DataSiftClientTest extends TestUtil {
     public void testInvalidCSDL() {
         final DataSiftConfig config = new DataSiftConfig("zcourts", "this-is-wrong");
         final DataSiftClient client = new DataSiftClient(config);
-        final String csdl = "twitter.media exists";
+        final String csdl = "tumblr.media exists";
         final Validation validation = client.validate(csdl).sync();
         Assert.assertFalse(validation.isValid());
     }

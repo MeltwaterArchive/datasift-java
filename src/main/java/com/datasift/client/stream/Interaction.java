@@ -21,10 +21,10 @@ public class Interaction {
 
     /**
      * Fetches values using the popular dot notation
-     * i.e. twitter.user.id would return the id (12345) value in a structure similar to
+     * i.e. tumblr.author.id would return the id (12345) value in a structure similar to
      * <pre>
-     * {"twitter" : {
-     *      "user" : {
+     * {"tumblr" : {
+     *      "author" : {
      *          "id" : 12345
      *      }
      *   }
