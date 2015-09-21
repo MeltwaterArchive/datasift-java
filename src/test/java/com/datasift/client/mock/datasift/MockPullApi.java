@@ -1,6 +1,5 @@
 package com.datasift.client.mock.datasift;
 
-import com.datasift.client.DataSiftConfig;
 import io.higgs.http.server.params.FormParams;
 
 import javax.ws.rs.Path;
@@ -14,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by agnieszka on 15/01/2014.
  */
 
-@Path(DataSiftConfig.VERSION_PREFIX + "/pull")
+@Path("v1.2/pull")
 public class MockPullApi extends MockPushApi {
 
     @Path("/")

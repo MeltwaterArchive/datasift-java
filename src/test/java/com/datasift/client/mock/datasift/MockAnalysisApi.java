@@ -1,14 +1,12 @@
 package com.datasift.client.mock.datasift;
 
-import com.datasift.client.DataSiftConfig;
-
 import javax.ws.rs.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path(DataSiftConfig.VERSION_PREFIX + "/pylon")
+@Path("v1.2/pylon")
 public class MockAnalysisApi {
     Map<String, String> headers = new HashMap<>();
     private String hash;

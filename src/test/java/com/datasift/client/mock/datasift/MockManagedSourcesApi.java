@@ -1,6 +1,5 @@
 package com.datasift.client.mock.datasift;
 
-import com.datasift.client.DataSiftConfig;
 import com.datasift.client.managedsource.ManagedSource;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
 import org.joda.time.DateTime;
@@ -16,7 +15,7 @@ import java.util.Set;
 /**
  * Created by agnieszka on 17/01/2014.
  */
-@Path(DataSiftConfig.VERSION_PREFIX + "/source")
+@Path("v1.2/source")
 public class MockManagedSourcesApi {
     Map<String, String> headers = new HashMap<>();
     private Map<String, Object> streams = new HashMap<>();
