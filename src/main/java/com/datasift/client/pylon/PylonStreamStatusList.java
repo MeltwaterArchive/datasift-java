@@ -9,26 +9,36 @@ import java.util.List;
 
 public class PylonStreamStatusList extends BaseDataSiftResult {
     @JsonProperty
-    protected final List<PylonStreamStatus> data = new ArrayList<PylonStreamStatus>();
-    private final int count;
+    protected List<PylonStreamStatus> data = new ArrayList<PylonStreamStatus>();
+    @JsonProperty
+    protected int count;
+    @JsonProperty
+    protected int page;
+    @JsonProperty("per_page")
+    protected int perPage;
+    @JsonProperty
+    protected int pages;
 
     public PylonStreamStatusList() {
-        count = 0;
-    }
-
-    @JsonCreator
-    public PylonStreamStatusList(List<PylonStreamStatus> data) {
-        if (data != null) {
-            this.data.addAll(data);
-        }
-        this.count = data.size();
-    }
-
-    public List<PylonStreamStatus> getData() {
-        return this.data;
     }
 
     public int getCount() {
         return this.count;
+    }
+
+    public List<PylonStreamStatus> getData() {
+        return data;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public int getPerPage() {
+        return perPage;
+    }
+
+    public int getPages() {
+        return pages;
     }
 }

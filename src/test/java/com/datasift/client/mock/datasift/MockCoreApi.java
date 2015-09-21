@@ -1,5 +1,6 @@
 package com.datasift.client.mock.datasift;
 
+import com.datasift.client.DataSiftConfig;
 import com.datasift.client.core.Balance;
 import com.datasift.client.core.Usage;
 import io.higgs.http.server.HttpResponse;
@@ -15,7 +16,7 @@ import javax.ws.rs.WebApplicationException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Path("/v1.1")
+@Path(DataSiftConfig.VERSION_PREFIX + "")
 public class MockCoreApi {
     Map<String, String> headers = new HashMap<>();
     private double dpu = -1f;

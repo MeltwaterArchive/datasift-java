@@ -1,5 +1,6 @@
 package com.datasift.client.mock.datasift;
 
+import com.datasift.client.DataSiftConfig;
 import com.datasift.client.core.Stream;
 import org.joda.time.DateTime;
 
@@ -13,7 +14,7 @@ import java.util.Map;
  * Created by agnieszka on 17/01/2014.
  */
 
-@Path("/v1.1/preview")
+@Path(DataSiftConfig.VERSION_PREFIX + "/preview")
 public class MockPreviewApi {
     Map<String, String> headers = new HashMap<>();
     private DateTime createdAt;

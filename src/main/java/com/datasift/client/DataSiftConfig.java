@@ -30,7 +30,7 @@ public class DataSiftConfig {
      * so it'll never be creating a whole new load of resources for each instance.
      */
     protected HttpRequestBuilder http = HttpRequestBuilder.instance();
-    protected String versionPrefix = "v1.1";
+    public static final String VERSION_PREFIX = "v1.2";
     protected String urlEncodingFormat = "ISO-8859-1";
     protected int port = 80;
     protected boolean manualPort;
@@ -38,7 +38,7 @@ public class DataSiftConfig {
     protected int connectTimeout = 10000;
 
     public DataSiftConfig() {
-        http.userAgent("DataSift/" + versionPrefix + " Java/" + getClientVersion());
+        http.userAgent("DataSift/" + VERSION_PREFIX + " Java/" + getClientVersion());
 
         if (HttpRequestBuilder.isSupportedSSLProtocol("SSLv3")) {
             sslProtocols.add("SSLv3");
@@ -195,7 +195,7 @@ public class DataSiftConfig {
      * @return The API version prefix to use, e.g. v1
      */
     public String versionPrefix() {
-        return versionPrefix;
+        return VERSION_PREFIX;
     }
 
     public String getUsername() {

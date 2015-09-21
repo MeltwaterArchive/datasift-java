@@ -1,5 +1,6 @@
 package com.datasift.client.mock.datasift;
 
+import com.datasift.client.DataSiftConfig;
 import com.datasift.client.historics.HistoricsQuery;
 import com.datasift.client.historics.PreparedHistoricsQuery;
 import org.joda.time.DateTime;
@@ -14,7 +15,7 @@ import java.util.Map;
  * Created by agnieszka on 17/01/2014.
  */
 
-@Path("/v1.1/historics")
+@Path(DataSiftConfig.VERSION_PREFIX + "/historics")
 public class MockHistoricsApi {
     Map<String, String> headers = new HashMap<>();
     private String id;
