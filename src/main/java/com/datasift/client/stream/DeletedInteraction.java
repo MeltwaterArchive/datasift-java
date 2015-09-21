@@ -20,17 +20,10 @@ public class DeletedInteraction {
     }
 
     /**
-     * @return the interaction type, currently only "twitter"
+     * @return the interaction type
      */
     public String interactionType() {
         return data.get("interaction").get("type").asText();
-    }
-
-    /**
-     * @return the Tweet ID
-     */
-    public String tweetId() {
-        return data.get("twitter").get("id").asText();
     }
 
     @Override

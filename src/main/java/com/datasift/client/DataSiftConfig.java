@@ -30,7 +30,7 @@ public class DataSiftConfig {
      * so it'll never be creating a whole new load of resources for each instance.
      */
     protected HttpRequestBuilder http = HttpRequestBuilder.instance();
-    protected String versionPrefix = "v1.1";
+    protected String versionPrefix = "v1.2";
     protected String urlEncodingFormat = "ISO-8859-1";
     protected int port = 80;
     protected boolean manualPort;
@@ -198,6 +198,14 @@ public class DataSiftConfig {
         return versionPrefix;
     }
 
+    /**
+     * Force the client to use a version other than the default.
+     * @param prefix the prefix to use, this should be along the lines of v1.2 i.e. vMajor.Minor
+     */
+    public void versionPrefix(String prefix) {
+        versionPrefix = prefix;
+    }
+
     public String getUsername() {
         if (username == null) {
             throw new IllegalStateException(String.format(illConfigured, "Username"));
@@ -218,7 +226,9 @@ public class DataSiftConfig {
 
     public void setSslEnabled(boolean sslEnabled) {
         this.sslEnabled = sslEnabled;
-        port = this.sslEnabled ? 443 : 80;
+        if (!manualPort) {
+            port = this.sslEnabled ? 443 : 80;
+        }
     }
 
     public String authAsHeader() {

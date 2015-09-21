@@ -1,5 +1,7 @@
 package com.datasift.client;
 
+import com.datasift.client.accounts.DataSiftAccount;
+import com.datasift.client.pylon.DataSiftPylon;
 import com.datasift.client.core.Balance;
 import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
@@ -35,11 +37,13 @@ public class DataSiftClient extends DataSiftApiClient {
      */
     public static final int DEFAULT_NUM = Integer.MIN_VALUE;
     protected DataSiftConfig config;
+    protected DataSiftPylon pylon;
     protected DataSiftHistorics historics;
     protected DataSiftManagedSource source;
     protected DataSiftPreview preview;
     protected DataSiftPush push;
     protected ConnectionManager liveStream;
+    protected DataSiftAccount account;
     public final String VALIDATE = "validate", COMPILE = "compile", BALANCE = "balance", DPU = "dpu", USAGE = "usage";
 
     public DataSiftClient() {
@@ -53,11 +57,13 @@ public class DataSiftClient extends DataSiftApiClient {
         super(config);
         configureMapper();
         this.config = config;
+        this.pylon = new DataSiftPylon(config);
         this.historics = new DataSiftHistorics(config);
         this.source = new DataSiftManagedSource(config);
         this.preview = new DataSiftPreview(config);
         this.push = new DataSiftPush(config);
         this.liveStream = new ConnectionManager(config);
+        this.account = new DataSiftAccount(config);
         DependencyProvider.global().add(config);
     }
 
@@ -66,6 +72,17 @@ public class DataSiftClient extends DataSiftApiClient {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         MAPPER.registerModule(new JodaModule());
+    }
+
+    public DataSiftAccount account() {
+        return account;
+    }
+
+    /**
+     * @return An object suitable for making requests to the DataSift Analysis API
+     */
+    public DataSiftPylon pylon() {
+        return pylon;
     }
 
     /**
@@ -174,6 +191,19 @@ public class DataSiftClient extends DataSiftApiClient {
             }
         };
         unwrapFuture(streamFuture, future, dpu, response);
+        return future;
+    }
+
+    /***
+     * Retrieve the DPU usage of a historics job
+     * @param historicsId id of the historics job to get the DPU usage of
+     * @return future containing DPU response
+     */
+    public FutureData<Dpu> dpu(String historicsId) {
+        final FutureData<Dpu> future = new FutureData<Dpu>();
+        URI uri = newParams().put("historics_id", historicsId).forURL(config.newAPIEndpointURI(DPU));
+        Request request = config.http().GET(uri, new PageReader(newRequestCallback(future, new Dpu(), config)));
+        performRequest(future, request);
         return future;
     }
 

@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * Created by agnieszka on 17/01/2014.
  */
-@Path("/v1.1/source")
+@Path("v1.2/source")
 public class MockManagedSourcesApi {
     Map<String, String> headers = new HashMap<>();
     private Map<String, Object> streams = new HashMap<>();
