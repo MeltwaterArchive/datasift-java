@@ -49,7 +49,7 @@ public class DataSiftPreview extends DataSiftApiClient {
      *                   defaults to the earliest out of start + 24 hours or now - 1 hour.
      * @param stream     the stream/filter to create the preview for
      * @param parameters A list of at least one but no more than 20 Historics Preview parameters e.g.  target,
-     *                   pylon,argument  see http://dev.datasift.com/docs/api/1/previewcreate for documentation of
+     *                   pylon,argument  see http://dev.datasift.com/docs/api/rest-api/endpoints/previewcreate for documentation of
      *                   available parameters
      * @return the preview created
      */
