@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("/v1.1/pylon")
+@Path("v1.2/pylon")
 public class MockAnalysisApi {
     Map<String, String> headers = new HashMap<>();
     private String hash;

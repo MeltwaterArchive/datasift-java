@@ -354,7 +354,7 @@ When exceptions occur it is unlikely we'll know which stream/subscription caused
 
 ### onStreamEvent
 
-Twitter sends us a notification whenever one of their users deletes a Tweet. We pass these notifications on to you as part of your stream. If you are storing Tweets you must take account of all of these delete messages in order to comply with Twitter's Terms of Service. For more information on deletes see the DataSift documentation on [Twitter Delete Messages](http://dev.datasift.com/docs/resources/twitter-deletes)
+Notifications can be passed to the client in the form of a Stream Event. An example of a stream event would be a deletion notification for an interaction. This subscribes a callback to listen to such events.
 
 Push
 --

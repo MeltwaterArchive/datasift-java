@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by agnieszka on 15/01/2014.
  */
 
-@Path("/v1.1/push")
+@Path("v1.2/push")
 public class MockPushApi {
 
     Map<String, String> headers = new HashMap<>();

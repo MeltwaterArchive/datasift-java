@@ -162,7 +162,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
      *
      * @param start   the dat from which the archive should be checked
      * @param end     the up to which the archive should be checked
-     * @param sources an optional list of data sources that should be queried, e.g. [facebook,twitter,...]
+     * @param sources an optional list of data sources that should be queried, e.g. [tumblr,facebook,...]
      * @return a report of the current status/availability of data for the given time period
      */
     public FutureData<HistoricsStatus> status(DateTime start, DateTime end, String... sources) {
@@ -268,10 +268,8 @@ public class DataSiftHistorics extends DataSiftApiClient {
      *                Example values: 1325548800
      * @param name    The name you assign to your historics query.
      *                Example values: Football
-     * @param sources Comma-separated list of data sources to include. Currently,
-     *                the only source you can use is twitter. In the future, you will be able to choose any source
-     *                listed as a valid value that you would use in the interaction.type target.
-     *                Example values: twitter
+     * @param sources Comma-separated list of data sources to include.
+     *                Example values: tumblr
      * @return the prepared historics
      */
     public FutureData<PreparedHistoricsQuery> prepare(String hash, long start, long end, String name,
@@ -293,7 +291,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
             request.form("sample", sample);
         }
         if (sources == null || sources.length == 0) {
-            sources = new String[]{"twitter"};
+            sources = new String[]{"tumblr"};
         }
         StringBuilder b = new StringBuilder();
         for (String source : sources) {
