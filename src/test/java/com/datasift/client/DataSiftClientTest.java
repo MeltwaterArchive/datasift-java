@@ -47,6 +47,11 @@ public class DataSiftClientTest extends TestUtil {
         assertNotNull("datasift.liveStream() should never be null", datasift.liveStream());
     }
 
+    @Test
+    public void testPylonisNeverNull() throws Exception {
+        assertNotNull("datasift.pylon() should never be null", datasift.pylon());
+    }
+
     @Test(expected = DataSiftException.class)
     public void testInvalidCSDL() {
         final DataSiftConfig config = new DataSiftConfig("zcourts", "this-is-wrong");

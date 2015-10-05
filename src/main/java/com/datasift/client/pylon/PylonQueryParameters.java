@@ -13,6 +13,11 @@ public class PylonQueryParameters {
     public PylonQueryParameters() {
     }
 
+    public PylonQueryParameters(String analysisType, PylonParametersData parameters) {
+        this.analysisType = analysisType;
+        this.parameters = parameters;
+    }
+
     public PylonQueryParameters(String analysisType, PylonParametersData parameters, PylonQueryParameters child) {
         this.analysisType = analysisType;
         this.parameters = parameters;
