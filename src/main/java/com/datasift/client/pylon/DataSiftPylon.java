@@ -25,7 +25,8 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
-     * Validate the given CSDL string
+     * Validate the given CSDL string. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonvalidate
      *
      * @param csdl the CSDL to validate
      * @return the results of the validation, use {@link com.datasift.client.core.Validation#isValid()} to check if
@@ -42,7 +43,9 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
-     * Compile a CSDL string to a stream hash to which you can later subscribe and receive interactions from
+     * Compile a CSDL string to a stream hash to which you can later subscribe and receive interactions from.
+     * For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pyloncompile
      *
      * @param csdl the CSDL to compile
      * @return a stream object representing the DataSift compiled CSDL, use {@link com.datasift.client.core
@@ -60,7 +63,8 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
-     * Start the stream with the given hash
+     * Start the stream with the given hash. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
      *
      * @param hash the stream hash
      * @return a result which can be checked for success or failure, A status 204 indicates success,
@@ -71,6 +75,9 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
+     * Start the stream with the given hash & name. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
+     *
      * @param hash the stream hash
      * @param name a name for the subscription
      * @return a result which can be checked for success or failure, A status 204 indicates success,
@@ -91,6 +98,9 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
+     * Stop the stream with the given hash. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstop
+     *
      * @param hash the hash for the stream to stop
      * @return a result which can be checked for success or failure, A status 204 indicates success,
      * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
@@ -108,15 +118,27 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
+    /**
+     * Get the status of all streams. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
+     * @return the status of all streams that are running or have run with stored data
+     */
     public FutureData<PylonStreamStatusList> get() {
         return get(0, 0);
     }
 
+    /**
+     * Get the status of all streams on page given. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
+     * @return the status of all streams that are running or have run with stored data
+     */
     public FutureData<PylonStreamStatusList> get(int page) {
         return get(page, 0);
     }
 
     /**
+     * Get the status of all streams on page given. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      * @return the status of all streams that are running or have run with stored data
      */
     public FutureData<PylonStreamStatusList> get(int page, int perPage) {
@@ -136,6 +158,9 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
+     * Get the status of the stream with a given hash. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
+     *
      * @param hash A stream hash
      * @return the status of the requested stream
      */
@@ -149,6 +174,9 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
+     * Analyze a given recording and retrieve results. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonanalyze
+     *
      * @param query pylon options for a stream
      * @return information on execution of a stream
      */
@@ -170,6 +198,9 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
+     * Retrieve VEDO tags for a given filter hash. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylontags
+     *
      * @param hash A filter hash
      * @return vedo tags for the given filter
      */
