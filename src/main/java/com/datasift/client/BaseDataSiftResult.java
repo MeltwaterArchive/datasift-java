@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class BaseDataSiftResult implements DataSiftResult {
+public class BaseDataSiftResult implements DataSiftResult, DataSiftAPIRateLimit {
     @JsonProperty
     protected String error;
     //
