@@ -1,14 +1,8 @@
 package com.datasift.client.mock;
 
-import com.datasift.client.DataSiftResult;
 import com.datasift.client.IntegrationTestBase;
-import com.datasift.client.mock.datasift.MockAnalysisApi;
 import com.datasift.client.mock.datasift.MockODPApi;
 import com.datasift.client.odp.ODPBatchResponse;
-import com.datasift.client.pylon.PylonStream;
-import com.datasift.client.pylon.PylonStreamStatus;
-import com.datasift.client.pylon.PylonTags;
-import com.datasift.client.pylon.PylonValidation;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
 import org.junit.After;
@@ -16,13 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -47,7 +36,7 @@ public class TestODPApiWithMocks extends IntegrationTestBase {
         headers.put("X-Ingestion-Request-RateLimit-Reset-Ttl", "1442931984");
         headers.put("X-Ingestion-Data-RateLimit-Limit", "10000000");
         headers.put("X-Ingestion-Data-RateLimit-Remaining", "10000000");
-        headers.put("X-Ingestion-Data-RateLimit-Reset", "0");
+        headers.put("X-Ingestion-Data-RateLimit-Reset", "1");
         headers.put("X-Ingestion-Data-RateLimit-Reset-Ttl", "1442931927");
         server.registerObjectFactory(new ObjectFactory(server) {
             public Object newInstance(Class<?> aClass) {
@@ -56,7 +45,7 @@ public class TestODPApiWithMocks extends IntegrationTestBase {
             }
 
             public boolean canCreateInstanceOf(Class<?> aClass) {
-                return MockAnalysisApi.class.isAssignableFrom(aClass);
+                return MockODPApi.class.isAssignableFrom(aClass);
             }
         });
 

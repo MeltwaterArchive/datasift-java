@@ -68,6 +68,7 @@ public class Interface {
             if (u != null) {
                 URI url = new URI(!u.startsWith("http") && !u.startsWith("https") ? "http://" + u : u);
                 config.host(url.getHost());
+                config.ingestionHost(url.getHost());
                 config.setSslEnabled(url.getScheme() != null && url.getScheme().equals("https"));
                 config.port(url.getPort() > -1 ? url.getPort() : config.isSslEnabled() ? 443 : 80);
             }
@@ -94,6 +95,9 @@ public class Interface {
                     break;
                 case "pylon":
                     executeAnalysis(dataSift, parsedArgs.get("c"), params);
+                    break;
+                case "odp":
+                    executeODP(dataSift, parsedArgs.get("c"), params);
                     break;
                 case "identity":
                     executeIdentity(dataSift, parsedArgs.get("c"), params);
@@ -291,6 +295,17 @@ public class Interface {
                 printResponse(dataSift.pylon().validate(params.get("csdl")).sync());
                 break;
         }
+    }
+
+    private static void executeODP(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+            throws IOException {
+        require(new String[]{"sourceid"}, params);
+        require(new String[]{"data"}, params);
+        String sourceId = params.get("sourceid");
+        String data = params.get("data");
+
+        printResponse(dataSift.odp().batch(sourceId, data).sync());
+
     }
 
     private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
