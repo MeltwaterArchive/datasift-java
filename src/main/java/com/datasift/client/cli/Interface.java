@@ -297,14 +297,18 @@ public class Interface {
         }
     }
 
-    private static void executeODP(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
+    private static void executeODP(DataSiftClient dataSift, String command, HashMap<String, String> params)
             throws IOException {
         require(new String[]{"sourceid"}, params);
         require(new String[]{"data"}, params);
         String sourceId = params.get("sourceid");
         String data = params.get("data");
 
-        printResponse(dataSift.odp().batch(sourceId, data).sync());
+        if (command != null && command == "batch") {
+            printResponse(dataSift.odp().batch(sourceId, data).sync());
+        } else {
+            System.out.println("ODP ingestion upload mode not supported via CLI");
+        }
     }
 
     private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
