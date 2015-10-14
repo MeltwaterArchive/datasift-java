@@ -25,7 +25,7 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class TestAnalysisApiWithMocks extends IntegrationTestBase {
+public class TestODPApiWithMocks extends IntegrationTestBase {
     private HiggsServer server;
     private Map<String, String> headers = new HashMap<>();
     private MockAnalysisApi m = new MockAnalysisApi();

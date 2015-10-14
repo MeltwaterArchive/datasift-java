@@ -1,0 +1,27 @@
+package com.datasift.client.mock.datasift;
+
+import javax.ws.rs.Path;
+import java.util.HashMap;
+import java.util.Map;
+
+public class MockODPApi {
+    Map<String, String> headers = new HashMap<>();
+    private long accepted;
+    private long totalMessageBytes;
+
+    @Path("testsource")
+    public Map<String, Object> validate() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("accepted", accepted);
+        map.put("total_message_bytes", totalMessageBytes);
+        return map;
+    }
+
+    public void setAccepted(long accepted) {
+        this.accepted = accepted;
+    }
+
+    public void setTotalMessageBytes(long totalMessageBytes) {
+        this.totalMessageBytes = totalMessageBytes;
+    }
+}
