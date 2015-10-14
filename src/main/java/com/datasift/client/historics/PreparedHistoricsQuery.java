@@ -1,6 +1,6 @@
 package com.datasift.client.historics;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class PreparedHistoricsQuery extends APIDataSiftResult {
+public class PreparedHistoricsQuery extends DataSiftAPIResult {
     @JsonProperty
     protected double dpus;
     @JsonProperty

@@ -1,6 +1,6 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by andi on 24/04/15.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class NewIdentity extends APIDataSiftResult {
+public class NewIdentity extends DataSiftAPIResult {
     @JsonProperty("label")
     String label;
     @JsonProperty("status")

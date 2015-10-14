@@ -1,6 +1,6 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
@@ -158,7 +158,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + id));
         Request request = config.http()
-                .DELETE(uri, new PageReader(newRequestCallback(future, new APIDataSiftResult(), config)));
+                .DELETE(uri, new PageReader(newRequestCallback(future, new DataSiftAPIResult(), config)));
         performRequest(future, request);
         return future;
     }
@@ -261,7 +261,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/token/" + service));
         Request request = config.http()
-                .DELETE(uri, new PageReader(newRequestCallback(future, new APIDataSiftResult(), config)));
+                .DELETE(uri, new PageReader(newRequestCallback(future, new DataSiftAPIResult(), config)));
         performRequest(future, request);
         return future;
     }
@@ -397,7 +397,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(IDENTITY + "/" + identity + "/limit/" + service));
         Request request = config.http()
-                .DELETE(uri, new PageReader(newRequestCallback(future, new APIDataSiftResult(), config)));
+                .DELETE(uri, new PageReader(newRequestCallback(future, new DataSiftAPIResult(), config)));
         performRequest(future, request);
         return future;
     }

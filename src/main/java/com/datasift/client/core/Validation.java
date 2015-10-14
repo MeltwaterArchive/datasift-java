@@ -1,12 +1,12 @@
 package com.datasift.client.core;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class Validation extends APIDataSiftResult {
+public class Validation extends DataSiftAPIResult {
     @JsonProperty("created_at")
     protected String createdAt;
     @JsonProperty

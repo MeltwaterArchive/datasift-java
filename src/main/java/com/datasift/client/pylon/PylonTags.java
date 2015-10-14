@@ -1,13 +1,13 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PylonTags extends APIDataSiftResult {
+public class PylonTags extends DataSiftAPIResult {
     @JsonProperty
     protected final List<String> tags = new ArrayList<String>();
 

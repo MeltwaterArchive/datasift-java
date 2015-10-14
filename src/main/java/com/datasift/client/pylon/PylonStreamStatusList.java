@@ -1,12 +1,12 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PylonStreamStatusList extends APIDataSiftResult {
+public class PylonStreamStatusList extends DataSiftAPIResult {
     @JsonProperty
     protected List<PylonStreamStatus> data = new ArrayList<PylonStreamStatus>();
     @JsonProperty

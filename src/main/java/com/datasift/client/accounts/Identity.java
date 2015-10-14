@@ -1,6 +1,6 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Courtney Robinson <courtney@crlog.info>
  */
-public class Identity extends APIDataSiftResult {
+public class Identity extends DataSiftAPIResult {
     @JsonProperty("id")
     protected String id;
     @JsonProperty("api_key")

@@ -19,7 +19,7 @@ public class FutureDataTest {
     public void testReceivedIsSetInFutureData() throws Exception {
         FutureData<DataSiftResult> res = new FutureData<DataSiftResult>();
         assertNull("Data can't be present before received is invoked", res.data);
-        DataSiftResult result = new APIDataSiftResult();
+        DataSiftResult result = new DataSiftAPIResult();
         res.received(result);
         assertNotNull("Data shouldn't be null after received is invoked", res.data);
         assertSame("The same data object should be presented", result, res.data);
@@ -34,7 +34,7 @@ public class FutureDataTest {
                 throw new CallbackEx(); //throw to ensure this is invoked
             }
         });
-        res.received(new APIDataSiftResult());
+        res.received(new DataSiftAPIResult());
     }
 
     public static class CallbackEx extends RuntimeException {

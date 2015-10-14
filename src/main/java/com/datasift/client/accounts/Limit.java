@@ -1,12 +1,12 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by andi on 24/04/15.
  */
-public class Limit extends APIDataSiftResult {
+public class Limit extends DataSiftAPIResult {
 
     @JsonProperty("identity_id")
     protected String identityId;

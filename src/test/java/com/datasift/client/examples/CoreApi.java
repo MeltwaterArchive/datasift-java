@@ -1,8 +1,8 @@
 package com.datasift.client.examples;
 
+import com.datasift.client.DataSiftAPIResult;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
-import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
 import com.datasift.client.FutureResponse;
 import com.datasift.client.core.Balance;
@@ -10,7 +10,6 @@ import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
 import com.datasift.client.core.Validation;
-import io.higgs.http.client.HttpRequestBuilder;
 
 public class CoreApi {
     private CoreApi() {
@@ -28,7 +27,7 @@ public class CoreApi {
 //        Usage u = datasift.usage().sync();
 //        System.out.println(u);
         //all response objects extend DataSiftResult which present these utility methods
-        DataSiftResult result = datasift.compile(csdl).sync();
+        DataSiftAPIResult result = datasift.compile(csdl).sync();
         //is successful returns true if a response hasn't explicitly been marked as failed,
         //there is a valid response, no exceptions are set and the response status is between 200 - 399
         if (!result.isSuccessful()) {

@@ -1,9 +1,9 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PylonStreamStatus extends APIDataSiftResult {
+public class PylonStreamStatus extends DataSiftAPIResult {
     @JsonProperty
     protected String hash;
     @JsonProperty

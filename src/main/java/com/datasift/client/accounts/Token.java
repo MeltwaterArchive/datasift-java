@@ -1,6 +1,6 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by andi on 24/04/15.
  */
-public class Token extends APIDataSiftResult {
+public class Token extends DataSiftAPIResult {
 
     @JsonProperty("service")
     protected String service;

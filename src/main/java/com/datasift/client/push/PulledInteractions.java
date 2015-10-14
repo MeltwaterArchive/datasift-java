@@ -1,6 +1,6 @@
 package com.datasift.client.push;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.datasift.client.stream.Interaction;
 
 import java.util.Iterator;
@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class PulledInteractions extends APIDataSiftResult implements Iterable<Interaction> {
+public class PulledInteractions extends DataSiftAPIResult implements Iterable<Interaction> {
 
     protected boolean pulling = true;
     protected LinkedBlockingQueue<Interaction> queue = new LinkedBlockingQueue<>();

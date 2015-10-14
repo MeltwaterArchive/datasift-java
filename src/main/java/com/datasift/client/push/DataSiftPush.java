@@ -1,6 +1,6 @@
 package com.datasift.client.push;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
@@ -106,7 +106,7 @@ public class DataSiftPush extends DataSiftApiClient {
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
         POST request = config.http()
-                .POST(uri, new PageReader(newRequestCallback(future, new APIDataSiftResult(), config)))
+                .POST(uri, new PageReader(newRequestCallback(future, new DataSiftAPIResult(), config)))
                 .form("id", id);
         performRequest(future, request);
         return future;

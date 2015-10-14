@@ -1,6 +1,6 @@
 package com.datasift.client.managedsource;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class ManagedSourceList extends APIDataSiftResult implements Iterable<ManagedSource> {
+public class ManagedSourceList extends DataSiftAPIResult implements Iterable<ManagedSource> {
     @JsonProperty
     private final List<ManagedSource> sources = new ArrayList<ManagedSource>();
     @JsonProperty

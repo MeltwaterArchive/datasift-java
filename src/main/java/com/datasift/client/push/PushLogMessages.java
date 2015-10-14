@@ -1,6 +1,6 @@
 package com.datasift.client.push;
 
-import com.datasift.client.APIDataSiftResult;
+import com.datasift.client.DataSiftAPIResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.DateTime;
 
@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class PushLogMessages extends APIDataSiftResult {
+public class PushLogMessages extends DataSiftAPIResult {
     @JsonProperty
     private boolean success;
     @JsonProperty
