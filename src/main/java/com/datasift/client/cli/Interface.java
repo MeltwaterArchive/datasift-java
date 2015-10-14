@@ -305,7 +305,6 @@ public class Interface {
         String data = params.get("data");
 
         printResponse(dataSift.odp().batch(sourceId, data).sync());
-
     }
 
     private static void executePreview(DataSiftClient dataSift, String endpoint, HashMap<String, String> params)
