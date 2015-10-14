@@ -22,10 +22,11 @@ public class CoreApi {
         config.setSslEnabled(true);
         final DataSiftClient datasift = new DataSiftClient(config);
         String csdl = "interaction.content contains \"music\"";
-        //both sync and async processing are supported by calling "sync" on any FutureDate object
 
-//        Usage u = datasift.usage().sync();
-//        System.out.println(u);
+        //both sync and async processing are supported by calling "sync" on any FutureDate object
+        //      Usage u = datasift.usage().sync();
+        //      System.out.println(u);
+        
         //all response objects extend DataSiftResult which present these utility methods
         DataSiftAPIResult result = datasift.compile(csdl).sync();
         //is successful returns true if a response hasn't explicitly been marked as failed,
