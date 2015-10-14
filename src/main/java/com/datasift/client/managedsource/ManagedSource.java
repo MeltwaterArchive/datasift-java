@@ -1,6 +1,6 @@
 package com.datasift.client.managedsource;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.datasift.client.managedsource.sources.BaseSource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class ManagedSource extends BaseDataSiftResult {
+public class ManagedSource extends APIDataSiftResult {
     @JsonProperty
     protected String name;
     @JsonProperty("source_type")

@@ -1,6 +1,6 @@
 package com.datasift.client.push;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.datasift.client.push.connectors.BaseConnector;
 import com.datasift.client.push.connectors.PushConnector;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class PushSubscription extends BaseDataSiftResult {
+public class PushSubscription extends APIDataSiftResult {
     @JsonProperty
     private String id;
     @JsonProperty("output_type")

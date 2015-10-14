@@ -1,6 +1,6 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
@@ -64,7 +64,7 @@ public class DataSiftPylon extends DataSiftApiClient {
      *
      * @param hash the stream hash
      * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
+     * or using {@link APIDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> start(String hash) {
         return start(hash, null);
@@ -74,7 +74,7 @@ public class DataSiftPylon extends DataSiftApiClient {
      * @param hash the stream hash
      * @param name a name for the subscription
      * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
+     * or using {@link APIDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> start(String hash, String name) {
         if (hash == null || hash.isEmpty()) {
@@ -83,7 +83,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(START));
         JSONRequest request = config.http()
-                .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+                .putJSON(uri, new PageReader(newRequestCallback(future, new APIDataSiftResult(), config)))
                 .addField("hash", hash)
                 .addField("name", name);
         performRequest(future, request);
@@ -93,7 +93,7 @@ public class DataSiftPylon extends DataSiftApiClient {
     /**
      * @param hash the hash for the stream to stop
      * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
+     * or using {@link APIDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> stop(String hash) {
         if (hash == null || hash.isEmpty()) {
@@ -102,7 +102,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
         JSONRequest request = config.http()
-                .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+                .putJSON(uri, new PageReader(newRequestCallback(future, new APIDataSiftResult(), config)))
                 .addField("hash", hash);
         performRequest(future, request);
         return future;

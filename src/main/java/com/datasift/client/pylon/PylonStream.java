@@ -1,9 +1,9 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PylonStream extends BaseDataSiftResult {
+public class PylonStream extends APIDataSiftResult {
     @JsonProperty("created_at")
     protected long createdAt;
     @JsonProperty

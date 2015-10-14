@@ -4,13 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-/**
- * @author Courtney Robinson <courtney.robinson@datasift.com>
- */
-public class BaseDataSiftResult implements DataSiftResult, DataSiftAPIRateLimit {
+public class IngestionDataSiftResult implements DataSiftResult, IngestionRateLimit {
     @JsonProperty
     protected String error;
-    //
     protected Response response;
     private Throwable cause;
     private boolean failed;
@@ -50,20 +46,50 @@ public class BaseDataSiftResult implements DataSiftResult, DataSiftAPIRateLimit 
     }
 
     @Override
-    public int rateLimit() {
-        List<String> limit = response.headers().get("X-RateLimit-Limit");
+    public int requestRateLimit() {
+        List<String> limit = response.headers().get("X-Ingestion-Request-RateLimit-Limit");
         return limit == null || limit.size() == 0 ? DataSiftClient.DEFAULT_NUM : Integer.parseInt(limit.get(0));
     }
 
     @Override
-    public int rateLimitRemaining() {
-        List<String> limit = response.headers().get("X-RateLimit-Remaining");
+    public int requestRateLimitRemaining() {
+        List<String> limit = response.headers().get("X-Ingestion-Request-RateLimit-Remaining");
         return limit == null || limit.size() == 0 ? DataSiftClient.DEFAULT_NUM : Integer.parseInt(limit.get(0));
     }
 
     @Override
-    public int rateLimitCost() {
-        List<String> limit = response.headers().get("X-RateLimit-Cost");
+    public int requestRateLimitReset() {
+        List<String> limit = response.headers().get("X-Ingestion-Request-RateLimit-Reset");
+        return limit == null || limit.size() == 0 ? DataSiftClient.DEFAULT_NUM : Integer.parseInt(limit.get(0));
+    }
+
+    @Override
+    public int requestRateLimitResetTTL() {
+        List<String> limit = response.headers().get("X-Ingestion-Request-RateLimit-Reset-Ttl");
+        return limit == null || limit.size() == 0 ? DataSiftClient.DEFAULT_NUM : Integer.parseInt(limit.get(0));
+    }
+
+    @Override
+    public int dataRateLimit() {
+        List<String> limit = response.headers().get("X-Ingestion-Data-RateLimit-Limit");
+        return limit == null || limit.size() == 0 ? DataSiftClient.DEFAULT_NUM : Integer.parseInt(limit.get(0));
+    }
+
+    @Override
+    public int dataRateLimitRemaining() {
+        List<String> limit = response.headers().get("X-Ingestion-Data-RateLimit-Remaining");
+        return limit == null || limit.size() == 0 ? DataSiftClient.DEFAULT_NUM : Integer.parseInt(limit.get(0));
+    }
+
+    @Override
+    public int dataRateLimitReset() {
+        List<String> limit = response.headers().get("X-Ingestion-Data-RateLimit-Reset");
+        return limit == null || limit.size() == 0 ? DataSiftClient.DEFAULT_NUM : Integer.parseInt(limit.get(0));
+    }
+
+    @Override
+    public int dataRateLimitResetTTL() {
+        List<String> limit = response.headers().get("X-Ingestion-Data-RateLimit-Reset-Ttl");
         return limit == null || limit.size() == 0 ? DataSiftClient.DEFAULT_NUM : Integer.parseInt(limit.get(0));
     }
 

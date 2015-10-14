@@ -1,6 +1,6 @@
 package com.datasift.client;
 
-public interface DataSiftAPIRateLimit {
+public interface APIRateLimit {
 
     /**
      * @return How much the rate limit is on this account or

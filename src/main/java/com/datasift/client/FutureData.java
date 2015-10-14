@@ -29,7 +29,7 @@ public class FutureData<T> {
      * @param <A> the type of the object
      * @return a future that will fire onData events for the given object
      */
-    public static <A extends BaseDataSiftResult> FutureData<A> wrap(A obj) {
+    public static <A extends APIDataSiftResult> FutureData<A> wrap(A obj) {
         if (obj == null) {
             throw new IllegalArgumentException("You cannot wrap null as future data");
         }

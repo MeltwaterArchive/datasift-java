@@ -1,9 +1,9 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class NewLimit extends BaseDataSiftResult {
+public class NewLimit extends APIDataSiftResult {
     @JsonProperty("service")
     protected String service;
     @JsonProperty("total_allowance")

@@ -1,9 +1,9 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PylonResult extends BaseDataSiftResult {
+public class PylonResult extends APIDataSiftResult {
     @JsonProperty
     protected int interactions;
     @JsonProperty("unique_authors")

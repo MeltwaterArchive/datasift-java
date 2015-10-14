@@ -1,6 +1,6 @@
 package com.datasift.client.historics;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,7 +13,7 @@ import java.util.ListIterator;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class HistoricsQueryList extends BaseDataSiftResult implements List<HistoricsQuery> {
+public class HistoricsQueryList extends APIDataSiftResult implements List<HistoricsQuery> {
     protected final List<HistoricsQuery> data = new ArrayList<HistoricsQuery>();
     private final int count;
 

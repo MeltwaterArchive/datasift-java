@@ -1,6 +1,6 @@
 package com.datasift.client;
 
-public interface DataSiftIngestionRateLimit {
+public interface IngestionRateLimit {
 
     /**
      * @return Maximum number of requests for this account or {@link com.datasift.client.DataSiftClient#DEFAULT_NUM}
@@ -18,13 +18,13 @@ public interface DataSiftIngestionRateLimit {
      * @return Time until requests limit is reset to maximum or
      *         {@link com.datasift.client.DataSiftClient#DEFAULT_NUM} if the information was not returned
      */
-    int requestRateReset();
+    int requestRateLimitReset();
 
     /**
      * @return POSIX time stamp representing the moment at which request limit will reset or
      *         {@link com.datasift.client.DataSiftClient#DEFAULT_NUM} if the information was not returned
      */
-    int requestRateResetTTL();
+    int requestRateLimitResetTTL();
 
     /**
      * @return Maximum amount of data for this account or
@@ -42,11 +42,11 @@ public interface DataSiftIngestionRateLimit {
      * @return Time until data limit is reset to maximum or
      *         {@link com.datasift.client.DataSiftClient#DEFAULT_NUM} if the information was not returned
      */
-    int dataRateReset();
+    int dataRateLimitReset();
 
     /**
      * @return POSIX time stamp representing the moment at which data limit will reset or
      *         {@link com.datasift.client.DataSiftClient#DEFAULT_NUM} if the information was not returned
      */
-    int dataRateResetTTL();
+    int dataRateLimitResetTTL();
 }

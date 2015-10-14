@@ -1,13 +1,12 @@
 package com.datasift.client.preview;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.joda.time.DateTime;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class HistoricsPreview extends BaseDataSiftResult {
+public class HistoricsPreview extends APIDataSiftResult {
     @JsonProperty("created_at")
     protected String createdAt;
     @JsonProperty

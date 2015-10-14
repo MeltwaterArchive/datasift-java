@@ -1,6 +1,6 @@
 package com.datasift.client.push;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class PushCollection extends BaseDataSiftResult implements Iterable<PushSubscription> {
+public class PushCollection extends APIDataSiftResult implements Iterable<PushSubscription> {
     @JsonProperty
     private int count;
     @JsonProperty

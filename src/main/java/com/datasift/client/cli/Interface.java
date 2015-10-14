@@ -1,6 +1,6 @@
 package com.datasift.client.cli;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
@@ -106,7 +106,7 @@ public class Interface {
                     break;
             }
         } catch (Exception ex) {
-            BaseDataSiftResult res = new BaseDataSiftResult();
+            APIDataSiftResult res = new APIDataSiftResult();
             res.failed(ex);
             printResponse(res);
         } finally {
@@ -175,7 +175,7 @@ public class Interface {
             System.out.println(mapper.writeValueAsString(response));
             System.exit(0);
         } catch (Exception ex) {
-            BaseDataSiftResult res = new BaseDataSiftResult();
+            APIDataSiftResult res = new APIDataSiftResult();
             res.failed(ex);
             System.out.println(mapper.writeValueAsString(res));
             System.exit(0);

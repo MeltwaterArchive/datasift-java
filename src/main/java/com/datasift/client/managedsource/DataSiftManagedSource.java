@@ -1,6 +1,6 @@
 package com.datasift.client.managedsource;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.datasift.client.DataSiftApiClient;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
@@ -224,7 +224,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
             throw new IllegalArgumentException("A data source is required");
         }
         final FutureData<DataSiftResult> future = new FutureData<>();
-        final DataSiftResult res = new BaseDataSiftResult();
+        final DataSiftResult res = new APIDataSiftResult();
         unwrapFuture(source, future, res, new FutureResponse<ManagedSource>() {
             public void apply(ManagedSource data) {
                 URI uri = newParams().forURL(config.newAPIEndpointURI(START));
@@ -263,7 +263,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(DELETE));
         POST request = config.http()
-                .POST(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+                .POST(uri, new PageReader(newRequestCallback(future, new APIDataSiftResult(), config)))
                 .form("id", id);
         performRequest(future, request);
         return future;

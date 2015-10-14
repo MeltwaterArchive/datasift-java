@@ -1,6 +1,6 @@
 package com.datasift.client.core;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.datasift.client.DataSiftClient;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class Balance extends BaseDataSiftResult {
+public class Balance extends APIDataSiftResult {
     @JsonProperty
     protected BalanceData balance;
 

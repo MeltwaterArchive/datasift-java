@@ -1,12 +1,12 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.BaseDataSiftResult;
+import com.datasift.client.APIDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by andi on 24/04/15.
  */
-public class NewToken extends BaseDataSiftResult {
+public class NewToken extends APIDataSiftResult {
     @JsonProperty("service")
     protected String service;
     @JsonProperty("token")

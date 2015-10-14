@@ -90,7 +90,7 @@ public class TestUtil {
     }
 
     /**
-     * All results extend {@link BaseDataSiftResult} which provides some methods for checking the state of every API
+     * All results extend {@link APIDataSiftResult} which provides some methods for checking the state of every API
      * response and some basic info such as rate limit and remaining rate limit
      */
     public void successful(DataSiftResult data) {
@@ -100,7 +100,7 @@ public class TestUtil {
         assertTrue(data.isSuccessful());
     }
 
-    public <T extends BaseDataSiftResult> void successful(FutureData<T> resultFutureData) {
+    public <T extends APIDataSiftResult> void successful(FutureData<T> resultFutureData) {
         resultFutureData.onData(new FutureResponse<T>() {
             public void apply(T data) {
                 successful(data);
