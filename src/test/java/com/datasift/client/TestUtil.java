@@ -43,6 +43,7 @@ public class TestUtil {
         InputStream in = IntegrationTestBase.class.getResourceAsStream("/settings.properties");
         Properties properties = new Properties();
         properties.load(in);
+        in.close();
         Class<Settings> klass = Settings.class;
 
         for (String name : properties.stringPropertyNames()) {
