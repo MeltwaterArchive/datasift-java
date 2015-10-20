@@ -39,7 +39,7 @@ public class CoreApi {
             return;
         }
         //is true if isSuccessful() == true and the response status is not 401
-        result.isAuthorizationSuccesful();
+        result.isAuthorizationSuccessful();
         //allows access to the response object which you can list the request and JSON string response from
         result.getResponse();
         //gets the rate limit DataSift returned with the response, use it to keep track of usage

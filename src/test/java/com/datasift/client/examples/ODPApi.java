@@ -34,7 +34,7 @@ public class ODPApi {
         }
 
         // Check for authorization failure
-        batchResult.isAuthorizationSuccesful();
+        batchResult.isAuthorizationSuccessful();
         // Access the low level response object
         batchResult.getResponse();
 

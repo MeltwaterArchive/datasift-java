@@ -25,7 +25,7 @@ public interface DataSiftResult {
     /**
      * @return True if the response status is anything but a 401 Unauthorized
      */
-    boolean isAuthorizationSuccesful();
+    boolean isAuthorizationSuccessful();
 
     /**
      * @return if {@link #isSuccessful()} == false then this returns the error message DataSift returned or null if true

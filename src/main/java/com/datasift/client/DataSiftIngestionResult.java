@@ -41,7 +41,7 @@ public class DataSiftIngestionResult implements DataSiftResult, IngestionRateLim
     }
 
     @Override
-    public boolean isAuthorizationSuccesful() {
+    public boolean isAuthorizationSuccessful() {
         return isSuccessful() && response.status() != 401;
     }
 

@@ -44,7 +44,7 @@ public class DataSiftAPIResult implements DataSiftResult, APIRateLimit {
     }
 
     @Override
-    public boolean isAuthorizationSuccesful() {
+    public boolean isAuthorizationSuccessful() {
         return isSuccessful() && response.status() != 401;
     }
 
