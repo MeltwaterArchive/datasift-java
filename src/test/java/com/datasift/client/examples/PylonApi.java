@@ -10,8 +10,8 @@ import com.datasift.client.pylon.PylonResult;
 import com.datasift.client.pylon.PylonTags;
 import com.datasift.client.pylon.PylonStreamStatus;
 
-public class AnalysisApi {
-    private AnalysisApi() throws InterruptedException {
+public class PylonApi {
+    private PylonApi() throws InterruptedException {
         DataSiftConfig config = new DataSiftConfig("zcourts", "44067e0ff342b76b52b36a63eea8e21a");
         DataSiftClient datasift = new DataSiftClient(config);
         PylonStream stream = PylonStream.fromString("13e9347e7da32f19fcdb08e297019d2e");
@@ -43,15 +43,55 @@ public class AnalysisApi {
                                 20,
                                 "fb.author.gender"
                         )
-        );
+                );
+
+        // Nested query to depth of two
+        PylonQueryParameters parametersNested =
+                new PylonQueryParameters(
+                        "freqDist",
+                        new PylonParametersData(
+                                null,
+                                null,
+                                20,
+                                "fb.author.country"
+                        ),
+                        new PylonQueryParameters(
+                                "freqDist",
+                                new PylonParametersData(
+                                        null,
+                                        null,
+                                        2,
+                                        "fb.author.gender"
+                                ),
+                                new PylonQueryParameters(
+                                        "freqDist",
+                                        new PylonParametersData(
+                                                null,
+                                                null,
+                                                2,
+                                                "fb.author.gender"
+                                        )
+                                )
+                        )
+                );
 
         PylonQuery query = new PylonQuery(
                 compiled.hash(),
                 parameters,
-                "fb.content contains \"starbucks\"", 0, 100);
+                "fb.content contains \"starbucks\"", 0, 100
+        );
+
+        PylonQuery queryNested = new PylonQuery(
+                compiled.hash(),
+                parametersNested,
+                "fb.content contains \"starbucks\"", 0, 100
+        );
 
         PylonResult result = datasift.pylon().analyze(query).sync();
         System.out.println("Analyze result object response: " + result.toString());
+
+        PylonResult resultNested = datasift.pylon().analyze(queryNested).sync();
+        System.out.println("Analyze nested result object response: " + result.toString());
 
         // Retrieve the pylon
         PylonStreamStatus streamStatus = datasift.pylon().get(compiled.hash()).sync();
@@ -63,6 +103,6 @@ public class AnalysisApi {
     }
 
     public static void main(String... args) throws InterruptedException {
-        new AnalysisApi();
+        new PylonApi();
     }
 }

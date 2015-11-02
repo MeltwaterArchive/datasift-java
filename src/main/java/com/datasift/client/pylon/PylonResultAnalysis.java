@@ -7,7 +7,7 @@ public class PylonResultAnalysis {
     protected String analysisType;
     @JsonProperty
     protected PylonParametersData parameters;
-    @JsonProperty("result")
+    @JsonProperty("results")
     protected PylonResultEntryList resultList;
 
     public String getAnalysisType() { return this.analysisType; }
