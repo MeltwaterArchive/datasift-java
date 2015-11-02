@@ -21,7 +21,7 @@ public class DataSiftConnectionTest {
         }
     }
 
-    @Test(timeout = 3000, expected = ReconnectAttemptException.class)
+    @Test(timeout = 10000, expected = ReconnectAttemptException.class)
     public void shouldReconnectOnTimeout() throws URISyntaxException, InterruptedException {
         DataSiftConfig config = new DataSiftConfig();
         //timeout after 1 second

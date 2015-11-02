@@ -21,6 +21,8 @@ public class DataSiftConfig {
     protected boolean sslEnabled = true;
     protected String host = "api.datasift.com";
     protected String wsHost = "websocket.datasift.com";
+    protected String ingestionHost = "in.datasift.com";
+
     /**
      * This instance should be used as a base for configurations.
      * All new requests should use {@link io.higgs.http.client.HttpRequestBuilder#copy()}
@@ -128,10 +130,22 @@ public class DataSiftConfig {
     }
 
     /**
-     * @return The host name used to streaming
+     * @return The host name used to stream
      */
     public String wsHost() {
         return wsHost;
+    }
+
+    public DataSiftConfig ingestionHost(String host) {
+        this.ingestionHost = host;
+        return this;
+    }
+
+    /**
+     * @return The host name to which all ingestion api calls with this configurations will be made
+     */
+    public String ingestionHost() {
+        return ingestionHost;
     }
 
     /**
@@ -166,6 +180,23 @@ public class DataSiftConfig {
     }
 
     /**
+     * @return A base URL to the DataSift Ingestion API. e.g. https://in.datasift.com/
+     */
+    public URI baseIngestionURL() {
+        StringBuilder b = new StringBuilder()
+                .append(protocol())
+                .append(ingestionHost())
+                .append(":")
+                .append(port())
+                .append("/");
+        try {
+            return new URI(b.toString());
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Unable to construct a base URL for the ingestion API", e);
+        }
+    }
+
+    /**
      * Generate a new URI object given an endpoint relative to the base url of this configuration.
      * For example, if the base URL is https://api.datasift.com/v1/ and the endpoint parameters is validate
      * this will return the URI https://api.datasift.com/v1/validate.
@@ -189,6 +220,32 @@ public class DataSiftConfig {
      */
     public URI newAPIEndpointURI(URI endpoint) {
         return baseURL().resolve(endpoint);
+    }
+
+    /**
+     * Generate a new URI object given an endpoint relative to the base ingestion url of this configuration.
+     * For example, if the base URL is https://in.datasift.com/ and the endpoint is the source ID,
+     * this would return a URI similar to https://in.datasift.com/9b101935be2044bb9cfdffbc953924e8.
+     * Technically any path acceptable by {@link URI#resolve(String)} is acceptable
+     *
+     * @param endpoint the endpoint to return a URI for.
+     * @return a new URI with the resolved URL that is safe to manipulate
+     */
+    public URI newIngestionAPIEndpointURI(String endpoint) {
+        return baseIngestionURL().resolve(endpoint);
+    }
+
+    /**
+     * Generate a new URI object given an endpoint relative to the base ingestion url of this configuration.
+     * For example, if the base URL is https://in.datasift.com/ and the endpoint is the source ID,
+     * this would return a URI similar to https://in.datasift.com/9b101935be2044bb9cfdffbc953924e8.
+     * Technically any path acceptable by {@link URI#resolve(String)} is acceptable
+     *
+     * @param endpoint the endpoint to return a URI for.
+     * @return a new URI with the resolved URL that is safe to manipulate
+     */
+    public URI newIngestionAPIEndpointURI(URI endpoint) {
+        return baseIngestionURL().resolve(endpoint);
     }
 
     /**

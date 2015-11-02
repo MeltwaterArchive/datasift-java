@@ -149,6 +149,23 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
     }
 
     @Test
+    public void testIfUserCanLogForManagedSource() {
+        ManagedSourceLog logging_source = datasift.managedSource().log(id).sync();
+        assertTrue(logging_source.isSuccessful());
+
+        assertEquals(logging_source.getCount(), count);
+        assertEquals(logging_source.getPage(), page);
+        assertEquals(logging_source.getPages(), pages);
+        assertEquals(logging_source.getPerPage(), per_page);
+        for (ManagedSourceLog.LogMessage l : logging_source.getEntries()) {
+            assertEquals(l.getMessage(), message);
+            assertEquals(l.getEventTime(), event_time);
+            assertEquals(l.isSuccessful(), success);
+            assertEquals(l.getId(), id);
+        }
+    }
+
+    @Test
     public void testIfUserCanDeleteManagedSource() {
         ManagedSource delete = datasift.managedSource().update(name, source, m_id).sync();
         assertEquals(delete.getName(), name);
@@ -170,23 +187,6 @@ public class TestManagedSourcesWithMocks extends IntegrationTestBase {
         assertEquals(delete.getId(), id);
 
         assertTrue(delete.isSuccessful());
-    }
-
-    @Test
-    public void testIfUserCanLogForManagedSource() {
-        ManagedSourceLog logging_source = datasift.managedSource().log(id).sync();
-        assertTrue(logging_source.isSuccessful());
-
-        assertEquals(logging_source.getCount(), count);
-        assertEquals(logging_source.getPage(), page);
-        assertEquals(logging_source.getPages(), pages);
-        assertEquals(logging_source.getPerPage(), per_page);
-        for (ManagedSourceLog.LogMessage l : logging_source.getEntries()) {
-            assertEquals(l.getMessage(), message);
-            assertEquals(l.getEventTime(), event_time);
-            assertEquals(l.isSuccessful(), success);
-            assertEquals(l.getId(), id);
-        }
     }
 
     @Test

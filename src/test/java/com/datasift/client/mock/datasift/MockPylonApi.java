@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 @Path("v1.2/pylon")
-public class MockAnalysisApi {
+public class MockPylonApi {
     Map<String, String> headers = new HashMap<>();
     private String hash;
     private double dpu;
-    private boolean truncated;
     private int interactions;
     private int uniqueAuthors;
     private int volume;

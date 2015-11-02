@@ -10,7 +10,6 @@ import java.util.List;
 public class BaseDataSiftResult implements DataSiftResult {
     @JsonProperty
     protected String error;
-    //
     protected Response response;
     private Throwable cause;
     private boolean failed;
@@ -45,7 +44,7 @@ public class BaseDataSiftResult implements DataSiftResult {
     }
 
     @Override
-    public boolean isAuthorizationSuccesful() {
+    public boolean isAuthorizationSuccessful() {
         return isSuccessful() && response.status() != 401;
     }
 
