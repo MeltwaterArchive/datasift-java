@@ -35,7 +35,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
      * Start the historics query given
      *
      * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link BaseDataSiftResult#isSuccessful()}
+     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> start(FutureData<PreparedHistoricsQuery> query) {
         if (query == null) {
@@ -61,7 +61,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
      *
      * @param id the historics id
      * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link BaseDataSiftResult#isSuccessful()}
+     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> start(String id) {
         return start(id, null);

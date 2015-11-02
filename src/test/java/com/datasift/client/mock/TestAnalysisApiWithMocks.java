@@ -2,11 +2,11 @@ package com.datasift.client.mock;
 
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.IntegrationTestBase;
-import com.datasift.client.mock.datasift.MockAnalysisApi;
 import com.datasift.client.pylon.PylonStream;
 import com.datasift.client.pylon.PylonStreamStatus;
 import com.datasift.client.pylon.PylonTags;
 import com.datasift.client.pylon.PylonValidation;
+import com.datasift.client.mock.datasift.MockAnalysisApi;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
 import org.junit.After;
@@ -16,11 +16,11 @@ import org.junit.Test;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

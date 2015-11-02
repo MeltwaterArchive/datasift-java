@@ -64,7 +64,7 @@ public class DataSiftPylon extends DataSiftApiClient {
      *
      * @param hash the stream hash
      * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link BaseDataSiftResult#isSuccessful()}
+     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> start(String hash) {
         return start(hash, null);
@@ -74,7 +74,7 @@ public class DataSiftPylon extends DataSiftApiClient {
      * @param hash the stream hash
      * @param name a name for the subscription
      * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link BaseDataSiftResult#isSuccessful()}
+     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> start(String hash, String name) {
         if (hash == null || hash.isEmpty()) {
@@ -93,7 +93,7 @@ public class DataSiftPylon extends DataSiftApiClient {
     /**
      * @param hash the hash for the stream to stop
      * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link BaseDataSiftResult#isSuccessful()}
+     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> stop(String hash) {
         if (hash == null || hash.isEmpty()) {

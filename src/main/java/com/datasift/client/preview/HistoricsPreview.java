@@ -2,6 +2,7 @@ package com.datasift.client.preview;
 
 import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.DateTime;
 
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>

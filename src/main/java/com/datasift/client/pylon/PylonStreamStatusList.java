@@ -1,6 +1,7 @@
 package com.datasift.client.pylon;
 
 import com.datasift.client.BaseDataSiftResult;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
