@@ -153,3 +153,6 @@ ds -e managed_sources -c stop -p source_id ${source_id} | jq .
 
 echo "Deleting managed source $source_id"
 ds -e managed_sources -c delete -p source_id ${source_id} | jq .
+
+echo "Submitting ODP data via batch to test source"
+ds -e odp -c batch -p source_id twitter_gnip_source -p data "{\"id\":\"interaction\"}\n{\"id\":\"interaction2\"}\n"

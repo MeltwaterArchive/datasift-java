@@ -1,5 +1,6 @@
 package com.datasift.client.examples;
 
+import com.datasift.client.BaseDataSiftResult;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
@@ -10,7 +11,6 @@ import com.datasift.client.core.Dpu;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
 import com.datasift.client.core.Validation;
-import io.higgs.http.client.HttpRequestBuilder;
 
 public class CoreApi {
     private CoreApi() {
@@ -23,10 +23,11 @@ public class CoreApi {
         config.setSslEnabled(true);
         final DataSiftClient datasift = new DataSiftClient(config);
         String csdl = "interaction.content contains \"music\"";
-        //both sync and async processing are supported by calling "sync" on any FutureDate object
 
-//        Usage u = datasift.usage().sync();
-//        System.out.println(u);
+        //both sync and async processing are supported by calling "sync" on any FutureDate object
+        //      Usage u = datasift.usage().sync();
+        //      System.out.println(u);
+
         //all response objects extend DataSiftResult which present these utility methods
         DataSiftResult result = datasift.compile(csdl).sync();
         //is successful returns true if a response hasn't explicitly been marked as failed,
@@ -39,7 +40,7 @@ public class CoreApi {
             return;
         }
         //is true if isSuccessful() == true and the response status is not 401
-        result.isAuthorizationSuccesful();
+        result.isAuthorizationSuccessful();
         //allows access to the response object which you can list the request and JSON string response from
         result.getResponse();
         //gets the rate limit DataSift returned with the response, use it to keep track of usage
