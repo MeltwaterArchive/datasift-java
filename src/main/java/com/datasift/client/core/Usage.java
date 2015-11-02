@@ -1,6 +1,6 @@
 package com.datasift.client.core;
 
-import com.datasift.client.DataSiftAPIResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class Usage extends DataSiftAPIResult {
+public class Usage extends BaseDataSiftResult {
     @JsonProperty
     protected String start;
     @JsonProperty

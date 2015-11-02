@@ -23,7 +23,7 @@ public class TestODPApiWithMocks extends IntegrationTestBase {
     private String testData = "{\"id\":\"first_interaction\"}\n{\"id\":\"second_interaction\"}";
 
     @Before
-    public void setup() throws IOException, IllegalAccessException, Exception {
+    public void setup() throws Exception {
         server = MockServer.startNewServer();
         config.ingestionHost("localhost");
         config.setSslEnabled(false);

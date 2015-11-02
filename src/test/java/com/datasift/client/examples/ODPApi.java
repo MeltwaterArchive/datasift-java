@@ -39,13 +39,13 @@ public class ODPApi {
         batchResult.getResponse();
 
         // Request rate max limit
-        batchResult.requestRateLimit();
+        batchResult.rateLimit();
         // Requests remaining
-        batchResult.requestRateLimitRemaining();
+        batchResult.rateLimitRemaining();
         // Time before request limit will be reset
-        batchResult.requestRateLimitReset();
+        batchResult.rateLimitReset();
         // POSIX timestamp representing time at which request limit resets
-        batchResult.requestRateLimitResetTTL();
+        batchResult.rateLimitResetTTL();
         // Data rate max limit
         batchResult.dataRateLimit();
         // Data remaining

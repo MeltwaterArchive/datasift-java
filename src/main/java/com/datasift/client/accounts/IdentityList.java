@@ -1,6 +1,6 @@
 package com.datasift.client.accounts;
 
-import com.datasift.client.DataSiftAPIResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class IdentityList extends DataSiftAPIResult implements Iterable<Identity> {
+public class IdentityList extends BaseDataSiftResult implements Iterable<Identity> {
     @JsonProperty
     private final List<Identity> identities = new ArrayList<Identity>();
     @JsonProperty

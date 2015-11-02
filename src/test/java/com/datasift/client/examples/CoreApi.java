@@ -1,6 +1,6 @@
 package com.datasift.client.examples;
 
-import com.datasift.client.DataSiftAPIResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.FutureData;
@@ -28,7 +28,7 @@ public class CoreApi {
         //      System.out.println(u);
 
         //all response objects extend DataSiftResult which present these utility methods
-        DataSiftAPIResult result = datasift.compile(csdl).sync();
+        BaseDataSiftResult result = datasift.compile(csdl).sync();
         //is successful returns true if a response hasn't explicitly been marked as failed,
         //there is a valid response, no exceptions are set and the response status is between 200 - 399
         if (!result.isSuccessful()) {

@@ -1,6 +1,6 @@
 package com.datasift.client.historics;
 
-import com.datasift.client.DataSiftAPIResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class HistoricsQuery extends DataSiftAPIResult {
+public class HistoricsQuery extends BaseDataSiftResult {
     @JsonProperty
     private String id;
     @JsonProperty("definition_id")

@@ -1,6 +1,6 @@
 package com.datasift.client.managedsource;
 
-import com.datasift.client.DataSiftAPIResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class ManagedSourceLog extends DataSiftAPIResult implements Iterable<ManagedSourceLog.LogMessage> {
+public class ManagedSourceLog extends BaseDataSiftResult implements Iterable<ManagedSourceLog.LogMessage> {
     @JsonProperty("log_entries")
     private final List<LogMessage> entries = new ArrayList<LogMessage>();
     @JsonProperty

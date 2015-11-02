@@ -1,10 +1,10 @@
 package com.datasift.client.pylon;
 
-import com.datasift.client.DataSiftAPIResult;
+import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PylonQuery extends DataSiftAPIResult {
+public class PylonQuery extends BaseDataSiftResult {
     @JsonProperty
     protected String hash;
     @JsonProperty
