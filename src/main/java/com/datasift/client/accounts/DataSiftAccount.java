@@ -16,7 +16,7 @@ import java.net.URI;
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class DataSiftAccount extends DataSiftApiClient {
-    public final String IDENTITY = "account/identity";
+    public final String IDENTITY = "account/identity", USAGE = "account/usage";
 
     public DataSiftAccount(DataSiftConfig config) {
         super(config);
@@ -109,7 +109,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param label   which label you'd like to list (can be null)
      * @param page    page number (can be 0)
      * @param perPage items per page (can be 0)
-     * @return List of identities
+     * @return list of identities
      */
     public FutureData<IdentityList> list(String label, int page, int perPage) {
         FutureData<IdentityList> future = new FutureData<>();
@@ -178,7 +178,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param identity which identity you want to list the tokens of
      * @param page     page number (can be 0)
      * @param perPage  items per page (can be 0)
-     * @return List of identities
+     * @return list of identities
      */
     public FutureData<TokenList> listTokens(String identity, int page, int perPage) {
         if (identity == null) {
@@ -249,7 +249,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      *
      * @param identity identity to delete the token from
      * @param service  service to delete the token from
-     * @return Success of deletion
+     * @return success of deletion
      */
     public FutureData<DataSiftResult> deleteToken(String identity, String service) {
         if (identity == null) {
@@ -359,7 +359,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param service  which service you want to list the limits of
      * @param page     page number (can be 0)
      * @param perPage  items per page (can be 0)
-     * @return List of identities
+     * @return list of identities
      */
     public FutureData<LimitList> listLimits(String service, int page, int perPage) {
         if (service == null || service.isEmpty()) {
@@ -385,7 +385,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      *
      * @param identity identity to delete the limit from
      * @param service  service to delete the limit from
-     * @return Success of deletion
+     * @return success of deletion
      */
     public FutureData<DataSiftResult> deleteLimit(String identity, String service) {
         if (identity == null) {
@@ -432,4 +432,20 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
+    /**
+     * Get the usage for the current account.
+     *
+     * @param period the frequency at which to report usage data within the query period
+     * @param start POSIX timestamp representing the time from which to report usage
+     * @param end POSIX timestamp representing the latest time at which to report usage
+     * @return usage information in the form of a list of Usage objects
+     */
+    public FutureData<UsageList> getUsage(String period, int start, int end) {
+        FutureData<UsageList> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(USAGE));
+        Request request = config.http().
+                GET(uri, new PageReader(newRequestCallback(future, new UsageList(), config)));
+        performRequest(future, request);
+        return future;
+    }
 }
