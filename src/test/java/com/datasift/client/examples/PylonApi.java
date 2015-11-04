@@ -24,14 +24,14 @@ public class PylonApi {
         PylonStream compiled = datasift.pylon().compile(csdl).sync();
         System.out.println("Compiled object response: " + compiled.toString());
 
-        // Starting a stream for pylon
+        // Starting a recording for pylon
         String name = "My pylon recording";
         datasift.pylon().start(compiled.hash());
 
         // Wait 10 seconds for processing
         Thread.sleep(10000);
 
-        // Stopping a stream for pylon
+        // Stopping a recording for pylon
         datasift.pylon().stop(compiled.hash());
 
         PylonQueryParameters parameters =
@@ -93,7 +93,7 @@ public class PylonApi {
         PylonResult resultNested = datasift.pylon().analyze(queryNested).sync();
         System.out.println("Analyze nested result object response: " + result.toString());
 
-        // Retrieve the pylon
+        // Retrieve the pylon recording status
         PylonStreamStatus streamStatus = datasift.pylon().get(compiled.hash()).sync();
         System.out.println("Stream status returned: " + streamStatus.toString());
 
