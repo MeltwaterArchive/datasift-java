@@ -6,7 +6,7 @@ import com.datasift.client.pylon.PylonStream;
 import com.datasift.client.pylon.PylonStreamStatus;
 import com.datasift.client.pylon.PylonTags;
 import com.datasift.client.pylon.PylonValidation;
-import com.datasift.client.mock.datasift.MockAnalysisApi;
+import com.datasift.client.mock.datasift.MockPylonApi;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
 import org.junit.After;
@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class TestAnalysisApiWithMocks extends IntegrationTestBase {
+public class TestPylonApiWithMocks extends IntegrationTestBase {
     private HiggsServer server;
     private Map<String, String> headers = new HashMap<>();
-    private MockAnalysisApi m = new MockAnalysisApi();
+    private MockPylonApi m = new MockPylonApi();
     private String hash = new BigInteger(130, new Random()).toString(32);
     private Map<String, Object> parameters = new HashMap<>();
     private String status = new BigInteger(130, new Random()).toString(32);
@@ -66,7 +66,7 @@ public class TestAnalysisApiWithMocks extends IntegrationTestBase {
             }
 
             public boolean canCreateInstanceOf(Class<?> aClass) {
-                return MockAnalysisApi.class.isAssignableFrom(aClass);
+                return MockPylonApi.class.isAssignableFrom(aClass);
             }
         });
 

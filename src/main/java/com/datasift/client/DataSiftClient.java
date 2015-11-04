@@ -1,6 +1,7 @@
 package com.datasift.client;
 
 import com.datasift.client.accounts.DataSiftAccount;
+import com.datasift.client.odp.DataSiftODP;
 import com.datasift.client.pylon.DataSiftPylon;
 import com.datasift.client.core.Balance;
 import com.datasift.client.core.Dpu;
@@ -38,6 +39,7 @@ public class DataSiftClient extends DataSiftApiClient {
     public static final int DEFAULT_NUM = Integer.MIN_VALUE;
     protected DataSiftConfig config;
     protected DataSiftPylon pylon;
+    protected DataSiftODP odp;
     protected DataSiftHistorics historics;
     protected DataSiftManagedSource source;
     protected DataSiftPreview preview;
@@ -58,6 +60,7 @@ public class DataSiftClient extends DataSiftApiClient {
         configureMapper();
         this.config = config;
         this.pylon = new DataSiftPylon(config);
+        this.odp = new DataSiftODP(config);
         this.historics = new DataSiftHistorics(config);
         this.source = new DataSiftManagedSource(config);
         this.preview = new DataSiftPreview(config);
@@ -84,6 +87,11 @@ public class DataSiftClient extends DataSiftApiClient {
     public DataSiftPylon pylon() {
         return pylon;
     }
+
+    /**
+     * @return An object suitable for making requests to the DataSift ODP Ingestion API
+     */
+    public DataSiftODP odp() { return odp; }
 
     /**
      * @return An object suitable for making requests to the DataSift Historics API

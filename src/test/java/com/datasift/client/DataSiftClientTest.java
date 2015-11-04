@@ -38,6 +38,11 @@ public class DataSiftClientTest extends TestUtil {
     }
 
     @Test
+    public void testODPisNeverNull() throws Exception {
+        assertNotNull("datasift.odp() should never be null", datasift.odp());
+    }
+
+    @Test
     public void testConfigisNeverNull() throws Exception {
         assertNotNull("datasift.config() should never be null", datasift.config());
     }
@@ -45,6 +50,11 @@ public class DataSiftClientTest extends TestUtil {
     @Test
     public void testLiveStreamisNeverNull() throws Exception {
         assertNotNull("datasift.liveStream() should never be null", datasift.liveStream());
+    }
+
+    @Test
+    public void testPylonisNeverNull() throws Exception {
+        assertNotNull("datasift.pylon() should never be null", datasift.pylon());
     }
 
     @Test(expected = DataSiftException.class)

@@ -7,6 +7,8 @@ public class PylonQueryParameters {
     protected String analysisType;
     @JsonProperty
     protected PylonParametersData parameters;
+    @JsonProperty("child")
+    protected PylonQueryParameters childAnalysis;
 
     public PylonQueryParameters() {
     }
@@ -14,6 +16,12 @@ public class PylonQueryParameters {
     public PylonQueryParameters(String analysisType, PylonParametersData parameters) {
         this.analysisType = analysisType;
         this.parameters = parameters;
+    }
+
+    public PylonQueryParameters(String analysisType, PylonParametersData parameters, PylonQueryParameters child) {
+        this.analysisType = analysisType;
+        this.parameters = parameters;
+        this.childAnalysis = child;
     }
 
     public String getAnalysisType() {
@@ -24,6 +32,8 @@ public class PylonQueryParameters {
         return this.parameters;
     }
 
+    public PylonQueryParameters getChildAnalysis() { return this.childAnalysis; }
+
     public void setAnalysisType(String analysisType) {
         this.analysisType = analysisType;
     }
@@ -31,4 +41,6 @@ public class PylonQueryParameters {
     public void setParameters(PylonParametersData parameters) {
         this.parameters = parameters;
     }
+
+    public void setChildAnalysis(PylonQueryParameters childAnalysis) { this.childAnalysis = childAnalysis; }
 }

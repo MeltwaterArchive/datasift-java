@@ -4,6 +4,7 @@ import com.datasift.client.managedsource.sources.DataSource;
 import com.datasift.client.managedsource.sources.FacebookPage;
 import com.datasift.client.managedsource.sources.GooglePlus;
 import com.datasift.client.managedsource.sources.Instagram;
+import com.datasift.client.managedsource.sources.TwitterGnip;
 import com.datasift.client.managedsource.sources.Yammer;
 
 /**
@@ -19,6 +20,8 @@ public class ManagedDataSourceType<T extends DataSource> {
             new ManagedDataSourceType<Instagram>("instagram");
     public static final ManagedDataSourceType<Yammer> YAMMER =
             new ManagedDataSourceType<Yammer>("yammer");
+    public static final ManagedDataSourceType<TwitterGnip> TWITTER_GNIP =
+            new ManagedDataSourceType<TwitterGnip>("twitter_gnip");
     private final String value;
 
     public ManagedDataSourceType(String value) {

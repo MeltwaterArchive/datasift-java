@@ -25,11 +25,11 @@ public interface DataSiftResult {
     /**
      * @return True if the response status is anything but a 401 Unauthorized
      */
-    boolean isAuthorizationSuccesful();
+    boolean isAuthorizationSuccessful();
 
     /**
-     * @return How much the rate limit is on this account {@link com.datasift.client.DataSiftClient#DEFAULT_NUM}
-     * if the information was not returned
+     * @return How much the rate limit is on this account or
+     *         {@link com.datasift.client.DataSiftClient#DEFAULT_NUM} if the information was not returned
      */
     int rateLimit();
 
