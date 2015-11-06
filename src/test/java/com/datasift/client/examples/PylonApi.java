@@ -2,6 +2,8 @@ package com.datasift.client.examples;
 
 import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
+import com.datasift.client.accounts.Usage;
+import com.datasift.client.accounts.UsageResult;
 import com.datasift.client.pylon.PylonQueryParameters;
 import com.datasift.client.pylon.PylonStream;
 import com.datasift.client.pylon.PylonParametersData;
@@ -9,6 +11,8 @@ import com.datasift.client.pylon.PylonQuery;
 import com.datasift.client.pylon.PylonResult;
 import com.datasift.client.pylon.PylonTags;
 import com.datasift.client.pylon.PylonStreamStatus;
+
+import java.util.Iterator;
 
 public class PylonApi {
     private PylonApi() throws InterruptedException {
@@ -100,6 +104,18 @@ public class PylonApi {
         // Retrieve VEDO tags for filter
         PylonTags tagsResult = datasift.pylon().tags(compiled.hash()).sync();
         System.out.println("VEDO tags returned for filter: " + tagsResult.getTags().toString());
+
+        // Retrieve account usage to monitor identities
+        UsageResult accountUsage = datasift.account().getUsage("hourly", 0, 0).sync();
+        for (Iterator<Usage> i = accountUsage.getUsageList().iterator(); i.hasNext();) {
+            Usage u = i.next();
+            System.out.println("Usage record: ");
+            System.out.print("Category: " + u.category());
+            System.out.print("Source: " + u.source());
+            System.out.print("Cost: " + u.cost());
+            System.out.print("Quantity: " + u.quantity());
+            System.out.print("Timestamp: " + u.timestamp() + "\n");
+        }
     }
 
     public static void main(String... args) throws InterruptedException {

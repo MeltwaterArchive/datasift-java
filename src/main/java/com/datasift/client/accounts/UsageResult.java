@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class UsageList extends BaseDataSiftResult implements Iterable<Usage> {
+public class UsageResult extends BaseDataSiftResult implements Iterable<Usage> {
     @JsonProperty("usage")
     private final List<Usage> usageList = new ArrayList<>();
 
     /**
      * @return all the available usage periods. May be empty but will never be null
      */
-    public List<Usage> getUsages() { return usageList; }
+    public List<Usage> getUsageList() { return usageList; }
 
     @Override
     public Iterator<Usage> iterator() {

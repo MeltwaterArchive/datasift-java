@@ -434,17 +434,36 @@ public class DataSiftAccount extends DataSiftApiClient {
 
     /**
      * Get the usage for the current account.
+     * Period can be "hourly", "daily" or "monthly", and is optional.
+     * If start timestamp is set to 0, start time is calculated based on a single unit of the period passed in.
+     *  i.e if the period is daily, this will be one day prior to the end timestamp.
+     * If end timestamp is set to 0, end time is defaulted to current time.
+     *
+     * For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/acct-api-endpoints
      *
      * @param period the frequency at which to report usage data within the query period
      * @param start POSIX timestamp representing the time from which to report usage
      * @param end POSIX timestamp representing the latest time at which to report usage
      * @return usage information in the form of a list of Usage objects
      */
-    public FutureData<UsageList> getUsage(String period, int start, int end) {
-        FutureData<UsageList> future = new FutureData<>();
-        URI uri = newParams().forURL(config.newAPIEndpointURI(USAGE));
+    public FutureData<UsageResult> getUsage(String period, int start, int end) {
+        FutureData<UsageResult> future = new FutureData<>();
+
+        ParamBuilder b = newParams();
+        if (period != null && period.length() > 0) {
+            b.put("period", period);
+        }
+        if (start != 0) {
+            b.put("start", start);
+        }
+        if (end != 0) {
+            b.put("end", end);
+        }
+
+        URI uri = b.forURL(config.newAPIEndpointURI(USAGE));
         Request request = config.http().
-                GET(uri, new PageReader(newRequestCallback(future, new UsageList(), config)));
+                GET(uri, new PageReader(newRequestCallback(future, new UsageResult(), config)));
         performRequest(future, request);
         return future;
     }
