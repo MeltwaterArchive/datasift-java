@@ -18,7 +18,7 @@ import java.net.URI;
  */
 public class DataSiftPylon extends DataSiftApiClient {
     public final String VALIDATE = "pylon/validate", COMPILE = "pylon/compile", START = "pylon/start",
-            STOP = "pylon/stop", GET = "pylon/get", ANALYZE = "pylon/analyze", TAGS = "pylon/tags";
+            STOP = "pylon/stop", GET = "pylon/get", ANALYZE = "pylon/analyze", TAGS = "pylon/tags", SAMPLE = "pylon/sample";
 
     public DataSiftPylon(DataSiftConfig config) {
         super(config);
@@ -210,6 +210,23 @@ public class DataSiftPylon extends DataSiftApiClient {
         Request request = config.http().GET(uri,
                 new PageReader(newRequestCallback(future, new PylonTags(), config)));
         performRequest(future, request);
+        return future;
+    }
+
+    public FutureData<PylonSampleRequest> sample(PylonSampleRequest sampleRequest) {
+        if (sampleRequest == null) {
+            throw new IllegalArgumentException("A valid sample request object is required to carry out a Pylon sample");
+        }
+        FutureData<PylonSample> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(SAMPLE));
+        try {
+            JSONRequest result = config.http()
+                    .postJSON(uri, new PageReader(newRequestCallback(future, new PylonSample(), config)))
+                    .setData(sampleRequest);
+            performRequest(future, result);
+        } catch (JsonProcessingException ex) {
+            throw new IllegalArgumentException("Valid JSON is required to analyze a stream");
+        }
         return future;
     }
 }
