@@ -213,7 +213,14 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    public FutureData<PylonSampleRequest> sample(PylonSampleRequest sampleRequest) {
+    /**
+     * Sample a Pylon recording. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/sample
+     *
+     * @param sampleRequest Request object containing parameters for Sample
+     * @return PylonSample object containing results of sampling
+     */
+    public FutureData<PylonSample> sample(PylonSampleRequest sampleRequest) {
         if (sampleRequest == null) {
             throw new IllegalArgumentException("A valid sample request object is required to carry out a Pylon sample");
         }
