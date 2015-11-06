@@ -450,6 +450,10 @@ public class DataSiftAccount extends DataSiftApiClient {
     public FutureData<UsageResult> getUsage(String period, int start, int end) {
         FutureData<UsageResult> future = new FutureData<>();
 
+        if (start != 0 && end != 0 && start >= end) {
+            throw new IllegalArgumentException("getUsage start timestamp must be earlier than the end timestamp");
+        }
+
         ParamBuilder b = newParams();
         if (period != null && period.length() > 0) {
             b.put("period", period);
