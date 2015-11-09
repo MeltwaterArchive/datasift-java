@@ -37,9 +37,9 @@ public class PylonSampleRequest {
         new PylonSampleRequest(hash, count, null, null, null);
     }
 
-    public PylonSampleRequest(String hash, String filter) {
-        new PylonSampleRequest(hash, null, filter, null, null);
-    }
+    public PylonSampleRequest(String hash, String filter) { new PylonSampleRequest(hash, null, filter, null, null); }
+
+    public PylonSampleRequest(String hash) { new PylonSampleRequest(hash, null, null, null, null); }
 
     public String getHash() { return this.hash; }
 
