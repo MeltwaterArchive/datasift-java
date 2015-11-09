@@ -2,6 +2,11 @@ package com.datasift.client.mock;
 
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.IntegrationTestBase;
+import com.datasift.client.pylon.PylonSample;
+import com.datasift.client.pylon.PylonSampleInteraction;
+import com.datasift.client.pylon.PylonSampleInteractionItem;
+import com.datasift.client.pylon.PylonSampleInteractionParent;
+import com.datasift.client.pylon.PylonSampleRequest;
 import com.datasift.client.pylon.PylonStream;
 import com.datasift.client.pylon.PylonStreamStatus;
 import com.datasift.client.pylon.PylonTags;
@@ -48,6 +53,14 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
     protected long createdAt;
     private ArrayList<String> tags = new ArrayList<String>();
 
+    private String sampleRemaining = "50";
+    private String sampleResetAt = "1442317895";
+    private String sampleSubtype = "story";
+    private String sampleMediaType = "post";
+    private String sampleContent = "I love data!";
+    private String sampleLanguage = "en";
+    private List<Integer> sampleTopicIDs = new ArrayList<>(565634324);
+
     @Before
     public void setup() throws IOException, IllegalAccessException, Exception {
         server = MockServer.startNewServer();
@@ -92,6 +105,13 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
         m.setStatus(status);
         m.setResults(results);
         m.setTags(tags);
+        m.setSampleRemaining(sampleRemaining);
+        m.setSampleResetAt(sampleResetAt);
+        m.setSampleSubtype(sampleSubtype);
+        m.setSampleMediaType(sampleMediaType);
+        m.setSampleContent(sampleContent);
+        m.setSampleLanguage(sampleLanguage);
+        m.setSampleTopicIDs(sampleTopicIDs);
     }
 
     @Test
@@ -146,6 +166,26 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
         PylonTags tagsResult = datasift.pylon().tags(hash).sync();
         assertTrue(tagsResult.isSuccessful());
         assertEquals(tagsResult.getTags(), this.tags);
+    }
+
+    @Test
+    public void testIfUserCanGetSample() {
+        PylonSampleRequest sampleRequest = new PylonSampleRequest(hash);
+        PylonSample sampleResult = datasift.pylon().sample(sampleRequest).sync();
+        assertTrue(sampleResult.isSuccessful());
+        assertEquals(sampleResult.getRateLimitResetTime(), sampleResetAt);
+        assertEquals(sampleResult.getRemainingRateLimit(), sampleRemaining);
+
+        PylonSampleInteractionItem interactionItem = sampleResult.getInteractions().get(0);
+        PylonSampleInteraction interaction = interactionItem.getInteraction();
+        PylonSampleInteractionParent parent = interactionItem.getInteractionParent();
+
+        assertEquals(interaction.getContent(), sampleContent);
+        assertEquals(interaction.getLanguage(), sampleLanguage);
+        assertEquals(interaction.getMediaType(), sampleMediaType);
+        assertEquals(interaction.getTopicIDs(), sampleTopicIDs);
+        assertEquals(parent.getContent(), sampleContent);
+        assertEquals(parent.getSubtype(), sampleSubtype);
     }
 
     @After
