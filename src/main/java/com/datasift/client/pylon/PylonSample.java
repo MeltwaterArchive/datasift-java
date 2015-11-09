@@ -13,7 +13,7 @@ public class PylonSample extends BaseDataSiftResult {
     @JsonProperty("reset_at")
     protected int rateLimitResetTime;
     @JsonProperty
-    protected List<PylonSampleInteractionItem> interactions = new ArrayList<PylonSampleInteractionItem>();
+    protected List<PylonSampleInteractionItem> interactions = new ArrayList<>();
 
     public PylonSample() { }
 
