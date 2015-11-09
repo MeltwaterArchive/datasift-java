@@ -23,6 +23,17 @@ public class MockPylonApi {
     private List<Integer> results = new ArrayList<>();
     protected long createdAt;
     private List<String> tags = new ArrayList<>();
+    private String sampleRemaining = "50";
+    private String sampleResetAt = "1442317895";
+    private List<Map<String, Object>> sampleInteractions = new ArrayList<>();
+    private Map<String, Object> sampleInteraction;
+    private Map<String, Object> sampleInteractionParent;
+    private Map<String, Object> sampleInteractionItem;
+    private String sampleSubtype = "story";
+    private String sampleMediaType = "post";
+    private String sampleContent = "I love data!";
+    private String sampleLanguage = "en";
+    private List<Integer> sampleTopicIDs = new ArrayList<>(565634324);
 
     @Path("validate")
     public Map<String, Object> validate() {
@@ -91,6 +102,32 @@ public class MockPylonApi {
     public List<String> tags() {
         this.tags.add("tag1");
         return tags;
+    }
+
+    @Path("sample")
+    public Map<String, Object> sample() {
+        Map<String, Object> map = new HashMap<>();
+        setSampleResult(map);
+        return map;
+    }
+
+    private void setSampleResult(Map<String, Object> map) {
+        map.put("remaining", sampleRemaining);
+        map.put("reset_at", sampleResetAt);
+
+        sampleInteraction.put("media_type", sampleMediaType);
+        sampleInteraction.put("content", sampleContent);
+        sampleInteraction.put("language", sampleLanguage);
+        sampleInteraction.put("topic_ids", sampleTopicIDs);
+
+        sampleInteractionParent.put("subtype", sampleSubtype);
+        sampleInteractionParent.put("content", sampleContent);
+
+        sampleInteractionItem.put("interaction", sampleInteractionParent);
+        sampleInteractionItem.put("fb", sampleInteraction);
+
+        sampleInteractions.add(sampleInteractionItem);
+        map.put("interactions", sampleInteractions);
     }
 
     public void setHeaders(Map<String, String> headers) {
