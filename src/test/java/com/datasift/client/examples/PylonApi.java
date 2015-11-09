@@ -117,10 +117,10 @@ public class PylonApi {
         PylonSample sampleResult = datasift.pylon().sample(sampleRequest).sync();
         for (Iterator<PylonSampleInteractionItem> i = sampleResult.getInteractions().iterator(); i.hasNext();) {
             PylonSampleInteractionItem s = i.next();
-            System.out.println("Sample: " );
-            System.out.print("Base interaction properties: " + s.getInteractionParent().toString());
-            System.out.print("fb interaction properties: " + s.getInteraction().toString());
-            System.out.print("Number of fb interaction Topic IDs: " + s.getInteraction().getTopicIDs().size() + "\n");
+            System.out.println("Sample: ");
+            System.out.println("Base interaction properties: " + s.getInteractionParent().toString());
+            System.out.println("fb interaction properties: " + s.getInteraction().toString());
+            System.out.println("Number of fb interaction Topic IDs: " + s.getInteraction().getTopicIDs().size());
         }
     }
 

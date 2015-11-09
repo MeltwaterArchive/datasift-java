@@ -18,7 +18,8 @@ import java.net.URI;
  */
 public class DataSiftPylon extends DataSiftApiClient {
     public final String VALIDATE = "pylon/validate", COMPILE = "pylon/compile", START = "pylon/start",
-            STOP = "pylon/stop", GET = "pylon/get", ANALYZE = "pylon/analyze", TAGS = "pylon/tags", SAMPLE = "pylon/sample";
+            STOP = "pylon/stop", GET = "pylon/get", ANALYZE = "pylon/analyze", TAGS = "pylon/tags",
+            SAMPLE = "pylon/sample";
 
     public DataSiftPylon(DataSiftConfig config) {
         super(config);
