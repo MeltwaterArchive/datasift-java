@@ -59,7 +59,9 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
     private String sampleMediaType = "post";
     private String sampleContent = "I love data!";
     private String sampleLanguage = "en";
-    private List<Integer> sampleTopicIDs = new ArrayList<>(565634324);
+    private List<Integer> sampleTopicIDs = new ArrayList<Integer>() {{
+        add(565634324);
+    }};
 
     @Before
     public void setup() throws IOException, IllegalAccessException, Exception {
