@@ -215,7 +215,7 @@ public class DataSiftPylon extends DataSiftApiClient {
 
     /**
      * Sample a Pylon recording. For information on this endpoint see documentation page:
-     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/sample
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonsample
      *
      * @param sampleRequest Request object containing parameters for Sample
      * @return PylonSample object containing results of sampling
