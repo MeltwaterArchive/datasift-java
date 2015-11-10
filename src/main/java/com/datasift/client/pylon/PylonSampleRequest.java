@@ -19,7 +19,7 @@ public class PylonSampleRequest {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected int end;
 
-    public PylonSampleRequest() { }
+    //public PylonSampleRequest() { }
 
     public PylonSampleRequest(String hash, Integer count, String filter, Integer start, Integer end) {
         this.hash = hash;
@@ -29,17 +29,15 @@ public class PylonSampleRequest {
         if (end != null) { this.end = end; }
     }
 
-    public PylonSampleRequest(String hash, Integer count, String filter) {
-        new PylonSampleRequest(hash, count, filter, null, null);
-    }
+    public PylonSampleRequest(String hash, Integer count, String filter) { this(hash, count, filter, null, null); }
 
     public PylonSampleRequest(String hash, Integer count) {
-        new PylonSampleRequest(hash, count, null, null, null);
+        this(hash, count, null, null, null);
     }
 
-    public PylonSampleRequest(String hash, String filter) { new PylonSampleRequest(hash, null, filter, null, null); }
+    public PylonSampleRequest(String hash, String filter) { this(hash, null, filter, null, null); }
 
-    public PylonSampleRequest(String hash) { new PylonSampleRequest(hash, null, null, null, null); }
+    public PylonSampleRequest(String hash) { this(hash, null, null, null, null); }
 
     public String getHash() { return this.hash; }
 
