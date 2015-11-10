@@ -28,12 +28,10 @@ public class PylonQuery {
         if (end != null) { this.end = end; }
     }
 
-    public PylonQuery(String hash, PylonQueryParameters parameters, String filter) {
-        new PylonQuery(hash, parameters, filter, null, null);
-    }
+    public PylonQuery(String hash, PylonQueryParameters parameters, String filter) { this(hash, parameters, filter, null, null); }
 
     public PylonQuery(String hash, PylonQueryParameters parameters) {
-        new PylonQuery(hash, parameters, null, null, null);
+        this(hash, parameters, null, null, null);
     }
 
     public String getHash() { return this.hash; }
