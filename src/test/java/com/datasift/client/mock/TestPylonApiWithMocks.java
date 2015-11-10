@@ -53,8 +53,8 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
     protected long createdAt;
     private ArrayList<String> tags = new ArrayList<String>();
 
-    private String sampleRemaining = "50";
-    private String sampleResetAt = "1442317895";
+    private int sampleRemaining = 50;
+    private int sampleResetAt = 1442317895;
     private String sampleSubtype = "story";
     private String sampleMediaType = "post";
     private String sampleContent = "I love data!";
@@ -181,7 +181,6 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
         PylonSampleInteractionItem interactionItem = sampleResult.getInteractions().get(0);
         PylonSampleInteraction interaction = interactionItem.getInteraction();
         PylonSampleInteractionParent parent = interactionItem.getInteractionParent();
-
         assertEquals(interaction.getContent(), sampleContent);
         assertEquals(interaction.getLanguage(), sampleLanguage);
         assertEquals(interaction.getMediaType(), sampleMediaType);

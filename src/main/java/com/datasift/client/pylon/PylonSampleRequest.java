@@ -19,7 +19,7 @@ public class PylonSampleRequest {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected int end;
 
-    //public PylonSampleRequest() { }
+    public PylonSampleRequest() { }
 
     public PylonSampleRequest(String hash, Integer count, String filter, Integer start, Integer end) {
         this.hash = hash;

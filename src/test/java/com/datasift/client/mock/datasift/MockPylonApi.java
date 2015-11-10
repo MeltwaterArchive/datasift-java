@@ -23,12 +23,8 @@ public class MockPylonApi {
     private List<Integer> results = new ArrayList<>();
     protected long createdAt;
     private List<String> tags = new ArrayList<>();
-    private String sampleRemaining;
-    private String sampleResetAt;
-    private List<Map<String, Object>> sampleInteractions = new ArrayList<>();
-    private Map<String, Object> sampleInteraction;
-    private Map<String, Object> sampleInteractionParent;
-    private Map<String, Object> sampleInteractionItem;
+    private int sampleRemaining;
+    private int sampleResetAt;
     private String sampleSubtype;
     private String sampleMediaType;
     private String sampleContent;
@@ -112,6 +108,11 @@ public class MockPylonApi {
     }
 
     private void setSampleResult(Map<String, Object> map) {
+        List<Map<String, Object>> sampleInteractions = new ArrayList<>();
+        Map<String, Object> sampleInteraction = new HashMap<>();
+        Map<String, Object> sampleInteractionParent = new HashMap<>();
+        Map<String, Object> sampleInteractionItem = new HashMap<>();
+
         map.put("remaining", sampleRemaining);
         map.put("reset_at", sampleResetAt);
 
@@ -188,9 +189,9 @@ public class MockPylonApi {
 
     public void setTags(List<String> tags) { this.tags = tags; }
 
-    public void setSampleRemaining(String remaining) { this.sampleRemaining = remaining; }
+    public void setSampleRemaining(int remaining) { this.sampleRemaining = remaining; }
 
-    public void setSampleResetAt(String resetAt) { this.sampleResetAt = resetAt; }
+    public void setSampleResetAt(int resetAt) { this.sampleResetAt = resetAt; }
 
     public void setSampleSubtype(String subtype) { this.sampleSubtype = subtype; }
 
