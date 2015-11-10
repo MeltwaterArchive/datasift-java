@@ -222,8 +222,8 @@ public class DataSiftPylon extends DataSiftApiClient {
      * @return PylonSample object containing results of sampling
      */
     public FutureData<PylonSample> sample(PylonSampleRequest sampleRequest) {
-        if (sampleRequest == null) {
-            throw new IllegalArgumentException("A valid sample request object is required to carry out a Pylon sample");
+        if (sampleRequest == null || sampleRequest.hash == null) {
+            throw new IllegalArgumentException("A valid sample request object containing a hash is required to carry out a Pylon sample");
         }
         FutureData<PylonSample> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(SAMPLE));
