@@ -64,6 +64,6 @@ public class TestODPApiWithMocks extends IntegrationTestBase {
 
     @After
     public void after() {
-        server.stop();
+        MockServer.stop();
     }
 }
