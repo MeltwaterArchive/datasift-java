@@ -272,6 +272,6 @@ public class TestPushAPIWithMocks extends IntegrationTestBase {
     */
     @After
     public void after() {
-        server.stop();
+        MockServer.stop();
     }
 }

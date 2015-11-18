@@ -1,6 +1,7 @@
 Changelog
 ---------
-* v.4.0.0 Adds support for Pylon analysis (2015-01-14)
+* v.3.2.9 Adds [dependency convergence](https://maven.apache.org/enforcer/enforcer-rules/dependencyConvergence.html). Ensures only a single version of a library gets pulled in by the client and its dependencies. (2015-11-18)
+* v.3.2.2 Adds support for Pylon analysis (2015-01-14)
 
 * v.3.1.1 Fix to handle null connection on subscription (2014-10-08)
 

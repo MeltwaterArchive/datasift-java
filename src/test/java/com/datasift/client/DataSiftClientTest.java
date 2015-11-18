@@ -1,8 +1,5 @@
 package com.datasift.client;
 
-import com.datasift.client.core.Validation;
-import com.datasift.client.exceptions.DataSiftException;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -55,14 +52,5 @@ public class DataSiftClientTest extends TestUtil {
     @Test
     public void testPylonisNeverNull() throws Exception {
         assertNotNull("datasift.pylon() should never be null", datasift.pylon());
-    }
-
-    @Test(expected = DataSiftException.class)
-    public void testInvalidCSDL() {
-        final DataSiftConfig config = new DataSiftConfig("zcourts", "this-is-wrong");
-        final DataSiftClient client = new DataSiftClient(config);
-        final String csdl = "tumblr.media exists";
-        final Validation validation = client.validate(csdl).sync();
-        Assert.assertFalse(validation.isValid());
     }
 }
