@@ -124,7 +124,7 @@ public class DataSiftPylon extends DataSiftApiClient {
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      * @return the status of all streams that are running or have run with stored data
      */
-    public FutureData<PylonStreamStatusList> get() {
+    public FutureData<PylonRecordingList> get() {
         return get(0, 0);
     }
 
@@ -133,7 +133,7 @@ public class DataSiftPylon extends DataSiftApiClient {
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      * @return the status of all streams that are running or have run with stored data
      */
-    public FutureData<PylonStreamStatusList> get(int page) {
+    public FutureData<PylonRecordingList> get(int page) {
         return get(page, 0);
     }
 
@@ -142,8 +142,8 @@ public class DataSiftPylon extends DataSiftApiClient {
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      * @return the status of all streams that are running or have run with stored data
      */
-    public FutureData<PylonStreamStatusList> get(int page, int perPage) {
-        FutureData<PylonStreamStatusList> future = new FutureData<>();
+    public FutureData<PylonRecordingList> get(int page, int perPage) {
+        FutureData<PylonRecordingList> future = new FutureData<>();
         ParamBuilder b = new ParamBuilder();
         if (page > 0) {
             b.put("page", page);
@@ -153,7 +153,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         }
         URI uri = b.forURL(config.newAPIEndpointURI(GET));
         Request request = config.http().GET(uri,
-                new PageReader(newRequestCallback(future, new PylonStreamStatusList(), config)));
+                new PageReader(newRequestCallback(future, new PylonRecordingList(), config)));
         performRequest(future, request);
         return future;
     }
@@ -165,11 +165,11 @@ public class DataSiftPylon extends DataSiftApiClient {
      * @param hash A stream hash
      * @return the status of the requested stream
      */
-    public FutureData<PylonStreamStatus> get(String hash) {
+    public FutureData<PylonRecording> get(String hash) {
         URI uri = newParams().put("hash", hash).forURL(config.newAPIEndpointURI(GET));
-        FutureData<PylonStreamStatus> future = new FutureData<>();
+        FutureData<PylonRecording> future = new FutureData<>();
         Request request = config.http().GET(uri,
-                new PageReader(newRequestCallback(future, new PylonStreamStatus(), config)));
+                new PageReader(newRequestCallback(future, new PylonRecording(), config)));
         performRequest(future, request);
         return future;
     }

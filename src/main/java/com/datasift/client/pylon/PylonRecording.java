@@ -3,7 +3,9 @@ package com.datasift.client.pylon;
 import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PylonStreamStatus extends BaseDataSiftResult {
+public class PylonRecording extends BaseDataSiftResult {
+    @JsonProperty
+    protected String id;
     @JsonProperty
     protected String hash;
     @JsonProperty
@@ -23,8 +25,10 @@ public class PylonStreamStatus extends BaseDataSiftResult {
     @JsonProperty("reached_capacity")
     protected boolean reachedCapacity;
 
-    public PylonStreamStatus() {
+    public PylonRecording() {
     }
+
+    public String getId() { return this.id; }
 
     public String getHash() { return this.hash; }
 
