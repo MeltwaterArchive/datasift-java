@@ -4,7 +4,6 @@ import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.pylon.PylonQueryParameters;
 import com.datasift.client.pylon.PylonSample;
-import com.datasift.client.pylon.PylonSampleInteraction;
 import com.datasift.client.pylon.PylonSampleInteractionItem;
 import com.datasift.client.pylon.PylonSampleRequest;
 import com.datasift.client.pylon.PylonStream;
@@ -12,7 +11,7 @@ import com.datasift.client.pylon.PylonParametersData;
 import com.datasift.client.pylon.PylonQuery;
 import com.datasift.client.pylon.PylonResult;
 import com.datasift.client.pylon.PylonTags;
-import com.datasift.client.pylon.PylonStreamStatus;
+import com.datasift.client.pylon.PylonRecording;
 
 import java.util.Iterator;
 
@@ -100,7 +99,7 @@ public class PylonApi {
         System.out.println("Analyze nested result object response: " + result.toString());
 
         // Retrieve the pylon
-        PylonStreamStatus streamStatus = datasift.pylon().get(compiled.hash()).sync();
+        PylonRecording streamStatus = datasift.pylon().get(compiled.hash()).sync();
         System.out.println("Stream status returned: " + streamStatus.toString());
 
         // Retrieve VEDO tags for filter

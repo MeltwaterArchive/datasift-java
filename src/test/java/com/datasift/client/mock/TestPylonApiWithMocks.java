@@ -8,7 +8,7 @@ import com.datasift.client.pylon.PylonSampleInteractionItem;
 import com.datasift.client.pylon.PylonSampleInteractionParent;
 import com.datasift.client.pylon.PylonSampleRequest;
 import com.datasift.client.pylon.PylonStream;
-import com.datasift.client.pylon.PylonStreamStatus;
+import com.datasift.client.pylon.PylonRecording;
 import com.datasift.client.pylon.PylonTags;
 import com.datasift.client.pylon.PylonValidation;
 import com.datasift.client.mock.datasift.MockPylonApi;
@@ -118,7 +118,7 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanGetStreamStatus() {
-        PylonStreamStatus statusResult = datasift.pylon().get(hash).sync();
+        PylonRecording statusResult = datasift.pylon().get(hash).sync();
         assertTrue(statusResult.isSuccessful());
 
         assertEquals(statusResult.getHash(), hash);
