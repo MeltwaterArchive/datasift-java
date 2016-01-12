@@ -70,21 +70,19 @@ public class DataSiftPylon extends DataSiftApiClient {
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
      *
      * @param stream the stream hash
-     * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
+     * @return a Datasift pylon recording id. See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
      */
     public FutureData<PylonRecordingId> start(PylonStream stream) {
         return start(stream, null);
     }
 
     /**
-     * Start the stream with the given hash & name. For information on this endpoint see documentation page:
+     * Start a recording with the given hash & name. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
      *
      * @param stream the stream hash
      * @param name a name for the subscription
-     * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
+     * @return a Datasift pylon recording id. See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
      */
     public FutureData<PylonRecordingId> start(PylonStream stream, String name) {
         if (stream == null || stream.hash.isEmpty()) {
@@ -100,6 +98,15 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
+    /**
+     * Restart a recording using a recording id. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
+     *
+     * @param recordingId the recording id of a previously stopped recording.
+     *                    See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
+     * @return a result which can be checked for success or failure, A status 204 indicates success,
+     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
+     */
     public FutureData<DataSiftResult> restart(PylonRecordingId recordingId) {
         if (recordingId == null || recordingId.id == null || recordingId.id.isEmpty()) {
             throw new IllegalArgumentException("A valid recording id is required to restart a recording");
@@ -117,7 +124,8 @@ public class DataSiftPylon extends DataSiftApiClient {
      * Stop the stream with the given hash. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstop
      *
-     * @param recordingId the hash for the stream to stop
+     * @param recordingId the id for the recording to stop.
+     *                    See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
      * @return a result which can be checked for success or failure, A status 204 indicates success,
      * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
@@ -135,27 +143,27 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
-     * Get the status of all streams. For information on this endpoint see documentation page:
+     * Get the status of all recordings. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
-     * @return the status of all streams that are running or have run with stored data
+     * @return the status of all recordings that are running or have run with stored data
      */
     public FutureData<PylonRecordingList> get() {
         return get(0, 0);
     }
 
     /**
-     * Get the status of all streams on page given. For information on this endpoint see documentation page:
+     * Get the status of all recordings on page given. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
-     * @return the status of all streams that are running or have run with stored data
+     * @return the status of all recordings that are running or have run with stored data
      */
     public FutureData<PylonRecordingList> get(int page) {
         return get(page, 0);
     }
 
     /**
-     * Get the status of all streams on page given. For information on this endpoint see documentation page:
+     * Get the status of all recordings on page given. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
-     * @return the status of all streams that are running or have run with stored data
+     * @return the status of all recordings that are running or have run with stored data
      */
     public FutureData<PylonRecordingList> get(int page, int perPage) {
         FutureData<PylonRecordingList> future = new FutureData<>();
@@ -174,11 +182,12 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
-     * Get the status of the stream with a given hash. For information on this endpoint see documentation page:
+     * Get the status of the recording with a given id. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      *
-     * @param recordingId A stream hash
-     * @return the status of the requested stream
+     * @param recordingId id for the required recording.
+     *                    See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
+     * @return the status of the requested recording
      */
     public FutureData<PylonRecording> get(PylonRecordingId recordingId) {
         URI uri = newParams().put("id", recordingId.id).forURL(config.newAPIEndpointURI(GET));
@@ -193,8 +202,8 @@ public class DataSiftPylon extends DataSiftApiClient {
      * Analyze a given recording and retrieve results. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonanalyze
      *
-     * @param query pylon options for a stream
-     * @return information on execution of a stream
+     * @param query pylon options for a recording
+     * @return information on execution of a recording
      */
     public FutureData<PylonResult> analyze(PylonQuery query) {
         if (query == null) {
@@ -214,10 +223,10 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
-     * Retrieve VEDO tags for a given filter hash. For information on this endpoint see documentation page:
+     * Retrieve VEDO tags for a given recording. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylontags
      *
-     * @param recordingId A filter hash
+     * @param recordingId A recording id. See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
      * @return vedo tags for the given filter
      */
     public FutureData<PylonTags> tags(PylonRecordingId recordingId) {
