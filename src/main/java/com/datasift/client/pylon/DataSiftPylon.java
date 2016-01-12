@@ -100,6 +100,19 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
+    public FutureData<DataSiftResult> restart(PylonRecordingId recordingId) {
+        if (recordingId == null || recordingId.id == null || recordingId.id.isEmpty()) {
+            throw new IllegalArgumentException("A valid recording id is required to restart a recording");
+        }
+        FutureData<DataSiftResult> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(START));
+        JSONRequest request = config.http()
+                .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+                .addField("id", recordingId.getId());
+        performRequest(future, request);
+        return future;
+    }
+
     /**
      * Stop the stream with the given hash. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstop
