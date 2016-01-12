@@ -64,6 +64,12 @@ public class MockPylonApi {
         return map;
     }
 
+    @Path("update")
+    public Map<String, Object> update() {
+        Map<String, Object> map = new HashMap<>();
+        return map;
+    }
+
     @Path("analyze")
     public Map<String, Object> analyze() {
         Map<String, Object> map = new HashMap<>();

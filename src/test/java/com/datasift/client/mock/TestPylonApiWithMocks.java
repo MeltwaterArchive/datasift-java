@@ -172,6 +172,13 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
         DataSiftResult start = datasift.pylon().restart(new PylonRecordingId(recordingId)).sync();
         assertTrue(start.isSuccessful());
     }
+
+    @Test
+    public void testIfUserCanUpdateDataStream() {
+        DataSiftResult update = datasift.pylon().update(new PylonRecordingId(recordingId), "newName").sync();
+        assertTrue(update.isSuccessful());
+    }
+
     @Test
     public void testIfUserCanGetTags() {
         PylonTags tagsResult = datasift.pylon().tags(new PylonRecordingId(recordingId)).sync();
