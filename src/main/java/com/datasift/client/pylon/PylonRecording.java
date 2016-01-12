@@ -4,8 +4,8 @@ import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PylonRecording extends BaseDataSiftResult {
-    @JsonProperty
-    protected String id;
+    @JsonProperty("id")
+    protected String recordingId;
     @JsonProperty
     protected String hash;
     @JsonProperty
@@ -25,16 +25,35 @@ public class PylonRecording extends BaseDataSiftResult {
     @JsonProperty("reached_capacity")
     protected boolean reachedCapacity;
 
+    public static class PylonRecordingId extends BaseDataSiftResult {
+
+        @JsonProperty
+        protected String id;
+
+        public PylonRecordingId() {
+        }
+
+        public PylonRecordingId(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+    }
+
     public PylonRecording() {
     }
 
-    public String getId() { return this.id; }
+    public PylonRecordingId getRecordingId() { return new PylonRecordingId(this.recordingId); }
 
     public String getHash() { return this.hash; }
 
     public int getStart() { return this.start; }
 
     public int getEnd() { return this.end; }
+
+    public String getName() { return this.name; }
 
     public int getVolume() { return this.volume; }
 
@@ -44,5 +63,5 @@ public class PylonRecording extends BaseDataSiftResult {
 
     public int getRemainingAccountCapacity() { return this.remainingAccountCapacity; }
 
-    public boolean getReachedCapacity() { return this.reachedCapacity; }
+    public boolean isReachedCapacity() { return this.reachedCapacity; }
 }
