@@ -2,11 +2,17 @@ package com.datasift.client.mock;
 
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.IntegrationTestBase;
+import com.datasift.client.pylon.PylonSample;
+import com.datasift.client.pylon.PylonSampleInteraction;
+import com.datasift.client.pylon.PylonSampleInteractionItem;
+import com.datasift.client.pylon.PylonSampleInteractionParent;
+import com.datasift.client.pylon.PylonSampleRequest;
 import com.datasift.client.pylon.PylonStream;
-import com.datasift.client.pylon.PylonStreamStatus;
+import com.datasift.client.pylon.PylonRecording;
 import com.datasift.client.pylon.PylonTags;
 import com.datasift.client.pylon.PylonValidation;
 import com.datasift.client.mock.datasift.MockPylonApi;
+import com.datasift.client.pylon.PylonRecording.PylonRecordingId;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
 import org.junit.After;
@@ -29,9 +35,10 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
     private HiggsServer server;
     private Map<String, String> headers = new HashMap<>();
     private MockPylonApi m = new MockPylonApi();
-    private String hash = new BigInteger(130, new Random()).toString(32);
+    private String recordingId = new BigInteger(160, new Random()).toString(32);
+    private String hash = new BigInteger(128, new Random()).toString(32);
     private Map<String, Object> parameters = new HashMap<>();
-    private String status = new BigInteger(130, new Random()).toString(32);
+    private String status = "running";
     private String message;
     private long event_time;
     private boolean success;
@@ -39,14 +46,24 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
     private double dpu = new Random().nextDouble();
     private int interactions;
     private int uniqueAuthors;
-    private int volume;
-    private long start, end;
-    private int remainingIndexCapacity;
-    private int remainingAccountCapacity;
+    private int volume = 999998;
+    private long start = 100, end = 1000;
+    private int remainingIndexCapacity = 2;
+    private int remainingAccountCapacity = 2;
     private boolean reachedCapacity;
     private List<Integer> results = new ArrayList<>();
     protected long createdAt;
     private ArrayList<String> tags = new ArrayList<String>();
+
+    private int sampleRemaining = 50;
+    private int sampleResetAt = 1442317895;
+    private String sampleSubtype = "story";
+    private String sampleMediaType = "post";
+    private String sampleContent = "I love data!";
+    private String sampleLanguage = "en";
+    private List<Integer> sampleTopicIDs = new ArrayList<Integer>() { {
+        add(565634324);
+    } };
 
     @Before
     public void setup() throws IOException, IllegalAccessException, Exception {
@@ -76,6 +93,7 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
         dpu = Float.valueOf(String.valueOf(Math.random()));
         tags.add("tag1");
 
+        m.setRecordingId(recordingId);
         m.setHash(hash);
         m.setStatus(status);
         m.setDpu(dpu);
@@ -92,18 +110,26 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
         m.setStatus(status);
         m.setResults(results);
         m.setTags(tags);
+        m.setSampleRemaining(sampleRemaining);
+        m.setSampleResetAt(sampleResetAt);
+        m.setSampleSubtype(sampleSubtype);
+        m.setSampleMediaType(sampleMediaType);
+        m.setSampleContent(sampleContent);
+        m.setSampleLanguage(sampleLanguage);
+        m.setSampleTopicIDs(sampleTopicIDs);
     }
 
     @Test
     public void testIfUserCanGetStreamStatus() {
-        PylonStreamStatus statusResult = datasift.pylon().get(hash).sync();
+        PylonRecording statusResult = datasift.pylon().get(new PylonRecordingId(recordingId)).sync();
         assertTrue(statusResult.isSuccessful());
 
+        assertEquals(statusResult.getRecordingId().getId(), recordingId);
         assertEquals(statusResult.getHash(), hash);
         assertEquals(statusResult.getStart(), start);
         assertEquals(statusResult.getEnd(), end);
         assertEquals(statusResult.getVolume(), volume);
-        assertEquals(statusResult.getReachedCapacity(), reachedCapacity);
+        assertEquals(statusResult.isReachedCapacity(), reachedCapacity);
         assertEquals(statusResult.getRemainingAccountCapacity(), remainingAccountCapacity);
         assertEquals(statusResult.getRemainingIndexCapacity(), remainingIndexCapacity);
         assertEquals(statusResult.getStart(), start);
@@ -131,25 +157,56 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
 
     @Test
     public void testIfUserCanStopDataStream() {
-        DataSiftResult stop = datasift.managedSource().stop(hash).sync();
+        DataSiftResult stop = datasift.pylon().stop(new PylonRecordingId(recordingId)).sync();
         assertTrue(stop.isSuccessful());
     }
 
     @Test
     public void testIfUserCanStartDataStream() {
-        DataSiftResult start = datasift.pylon().start(hash).sync();
+        DataSiftResult start = datasift.pylon().start(PylonStream.fromString(hash)).sync();
         assertTrue(start.isSuccessful());
     }
 
     @Test
+    public void testIfUserCanRestartDataStream() {
+        DataSiftResult start = datasift.pylon().restart(new PylonRecordingId(recordingId)).sync();
+        assertTrue(start.isSuccessful());
+    }
+
+    @Test
+    public void testIfUserCanUpdateDataStream() {
+        DataSiftResult update = datasift.pylon().update(new PylonRecordingId(recordingId), "newName").sync();
+        assertTrue(update.isSuccessful());
+    }
+
+    @Test
     public void testIfUserCanGetTags() {
-        PylonTags tagsResult = datasift.pylon().tags(hash).sync();
+        PylonTags tagsResult = datasift.pylon().tags(new PylonRecordingId(recordingId)).sync();
         assertTrue(tagsResult.isSuccessful());
         assertEquals(tagsResult.getTags(), this.tags);
     }
 
+    @Test
+    public void testIfUserCanGetSample() {
+        PylonSampleRequest sampleRequest = new PylonSampleRequest(new PylonRecordingId(recordingId));
+        PylonSample sampleResult = datasift.pylon().sample(sampleRequest).sync();
+        assertTrue(sampleResult.isSuccessful());
+        assertEquals(sampleResult.getRateLimitResetTime(), sampleResetAt);
+        assertEquals(sampleResult.getRemainingRateLimit(), sampleRemaining);
+
+        PylonSampleInteractionItem interactionItem = sampleResult.getInteractions().get(0);
+        PylonSampleInteraction interaction = interactionItem.getInteraction();
+        PylonSampleInteractionParent parent = interactionItem.getInteractionParent();
+        assertEquals(interaction.getContent(), sampleContent);
+        assertEquals(interaction.getLanguage(), sampleLanguage);
+        assertEquals(interaction.getMediaType(), sampleMediaType);
+        assertEquals(interaction.getTopicIDs(), sampleTopicIDs);
+        assertEquals(parent.getContent(), sampleContent);
+        assertEquals(parent.getSubtype(), sampleSubtype);
+    }
+
     @After
     public void after() {
-        server.stop();
+        MockServer.stop();
     }
 }

@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("v1.2/pylon")
+@Path("v1.3/pylon")
 public class MockPylonApi {
     Map<String, String> headers = new HashMap<>();
+    private String recordingId;
     private String hash;
     private double dpu;
     private int interactions;
@@ -23,6 +24,13 @@ public class MockPylonApi {
     private List<Integer> results = new ArrayList<>();
     protected long createdAt;
     private List<String> tags = new ArrayList<>();
+    private int sampleRemaining;
+    private int sampleResetAt;
+    private String sampleSubtype;
+    private String sampleMediaType;
+    private String sampleContent;
+    private String sampleLanguage;
+    private List<Integer> sampleTopicIDs = new ArrayList<>();
 
     @Path("validate")
     public Map<String, Object> validate() {
@@ -56,6 +64,12 @@ public class MockPylonApi {
         return map;
     }
 
+    @Path("update")
+    public Map<String, Object> update() {
+        Map<String, Object> map = new HashMap<>();
+        return map;
+    }
+
     @Path("analyze")
     public Map<String, Object> analyze() {
         Map<String, Object> map = new HashMap<>();
@@ -77,6 +91,7 @@ public class MockPylonApi {
     }
 
     private void setStreamStatus(Map<String, Object> map) {
+        map.put("id", recordingId);
         map.put("hash", hash);
         map.put("volume", volume);
         map.put("start", start);
@@ -93,8 +108,43 @@ public class MockPylonApi {
         return tags;
     }
 
+    @Path("sample")
+    public Map<String, Object> sample() {
+        Map<String, Object> map = new HashMap<>();
+        setSampleResult(map);
+        return map;
+    }
+
+    private void setSampleResult(Map<String, Object> map) {
+        List<Map<String, Object>> sampleInteractions = new ArrayList<>();
+        Map<String, Object> sampleInteraction = new HashMap<>();
+        Map<String, Object> sampleInteractionParent = new HashMap<>();
+        Map<String, Object> sampleInteractionItem = new HashMap<>();
+
+        map.put("remaining", sampleRemaining);
+        map.put("reset_at", sampleResetAt);
+
+        sampleInteraction.put("media_type", sampleMediaType);
+        sampleInteraction.put("content", sampleContent);
+        sampleInteraction.put("language", sampleLanguage);
+        sampleInteraction.put("topic_ids", sampleTopicIDs);
+
+        sampleInteractionParent.put("subtype", sampleSubtype);
+        sampleInteractionParent.put("content", sampleContent);
+
+        sampleInteractionItem.put("interaction", sampleInteractionParent);
+        sampleInteractionItem.put("fb", sampleInteraction);
+
+        sampleInteractions.add(sampleInteractionItem);
+        map.put("interactions", sampleInteractions);
+    }
+
     public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
+    }
+
+    public void setRecordingId(String recordingId) {
+        this.recordingId = recordingId;
     }
 
     public void setHash(String hash) {
@@ -151,4 +201,17 @@ public class MockPylonApi {
 
     public void setTags(List<String> tags) { this.tags = tags; }
 
+    public void setSampleRemaining(int remaining) { this.sampleRemaining = remaining; }
+
+    public void setSampleResetAt(int resetAt) { this.sampleResetAt = resetAt; }
+
+    public void setSampleSubtype(String subtype) { this.sampleSubtype = subtype; }
+
+    public void setSampleMediaType(String mediaType) { this.sampleMediaType = mediaType; }
+
+    public void setSampleContent(String content) { this.sampleContent = content; }
+
+    public void setSampleLanguage(String language) { this.sampleLanguage = language; }
+
+    public void setSampleTopicIDs(List<Integer> topicIDs) { this.sampleTopicIDs = topicIDs; }
 }

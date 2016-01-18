@@ -16,7 +16,7 @@ import java.net.URI;
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class DataSiftAccount extends DataSiftApiClient {
-    public final String IDENTITY = "account/identity";
+    public final String IDENTITY = "account/identity", USAGE = "account/usage";
 
     public DataSiftAccount(DataSiftConfig config) {
         super(config);
@@ -36,7 +36,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param label  text label to tag the identity with
      * @param active whether the identity is active
      * @param master if the identity is a master identity
-     * @return newly created Identity
+     * @return Newly created Identity
      */
     public FutureData<Identity> create(String label, boolean active, boolean master) {
         if (label == null || label.isEmpty()) {
@@ -63,7 +63,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param label  new label (may be null otherwise)
      * @param active new activity (may be null otherwise)
      * @param master new master (may be null otherwise)
-     * @return the new updated Identity
+     * @return The new updated Identity
      */
     public FutureData<Identity> update(String id, String label, Boolean active, Boolean master) {
         String activeStr = null;
@@ -134,7 +134,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * Fetch an Identity using it's ID
      *
      * @param id the ID of the identity to fetch
-     * @return the identity for the ID provided
+     * @return The identity for the ID provided
      */
     public FutureData<Identity> get(String id) {
         FutureData<Identity> future = new FutureData<>();
@@ -149,7 +149,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * Delete an Identity using it's ID
      *
      * @param id the ID of the identity to delete
-     * @return success or failure
+     * @return Success or failure
      */
     public FutureData<DataSiftResult> delete(String id) {
         if (id == null) {
@@ -204,7 +204,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      *
      * @param identity the ID of the identity to query
      * @param service  the service of the token to fetch
-     * @return the identity for the ID provided
+     * @return The identity for the ID provided
      */
     public FutureData<Token> getToken(String identity, String service) {
         FutureData<Token> future = new FutureData<>();
@@ -222,7 +222,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param identity identity to store this token under
      * @param service  service name to give this token
      * @param token    token
-     * @return created Token
+     * @return Created Token
      */
     public FutureData<Token> createToken(String identity, String service, String token) {
         if (service == null || service.isEmpty()) {
@@ -271,7 +271,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param identity identity to update a token inside
      * @param service service to update the token for
      * @param token new token value
-     * @return the updated Token
+     * @return The updated Token
      */
     public FutureData<Token> updateToken(String identity, String service, String token) {
         if (identity == null || identity.isEmpty()) {
@@ -303,7 +303,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      *
      * @param identity the ID of the identity
      * @param service the name of the service
-     * @return the limit for the service in that identity
+     * @return The limit for the service in that identity
      */
     public FutureData<Limit> getLimit(String identity, String service) {
         FutureData<Limit> future = new FutureData<>();
@@ -320,7 +320,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param identity ID of the identity to store the limit in
      * @param service service to set the limit for
      * @param allowance allowance to store in the limit
-     * @return created limit
+     * @return Created limit
      */
     public FutureData<Limit> createLimit(String identity, String service, Long allowance) {
         if (identity == null || identity.isEmpty()) {
@@ -407,7 +407,7 @@ public class DataSiftAccount extends DataSiftApiClient {
      * @param identity identity to update a token inside
      * @param service service to update the token for
      * @param allowance new limit value
-     * @return the updated Token
+     * @return The updated Token
      */
     public FutureData<Limit> updateLimit(String identity, String service, Long allowance) {
         if (identity == null || identity.isEmpty()) {
@@ -432,4 +432,43 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
+    /**
+     * Get the usage for the current account.
+     * Period can be "hourly", "daily" or "monthly", and is optional.
+     * If start timestamp is set to 0, start time is calculated based on a single unit of the period passed in.
+     *  i.e if the period is daily, this will be one day prior to the end timestamp.
+     * If end timestamp is set to 0, end time is defaulted to current time.
+     *
+     * For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/acct-api-endpoints
+     *
+     * @param period the frequency at which to report usage data within the query period
+     * @param start POSIX timestamp representing the time from which to report usage
+     * @param end POSIX timestamp representing the latest time at which to report usage
+     * @return Usage information in the form of a list of Usage objects
+     */
+    public FutureData<UsageResult> getUsage(String period, int start, int end) {
+        FutureData<UsageResult> future = new FutureData<>();
+
+        if (start != 0 && end != 0 && start >= end) {
+            throw new IllegalArgumentException("getUsage start timestamp must be earlier than the end timestamp");
+        }
+
+        ParamBuilder b = newParams();
+        if (period != null && period.length() > 0) {
+            b.put("period", period);
+        }
+        if (start != 0) {
+            b.put("start", start);
+        }
+        if (end != 0) {
+            b.put("end", end);
+        }
+
+        URI uri = b.forURL(config.newAPIEndpointURI(USAGE));
+        Request request = config.http().
+                GET(uri, new PageReader(newRequestCallback(future, new UsageResult(), config)));
+        performRequest(future, request);
+        return future;
+    }
 }
