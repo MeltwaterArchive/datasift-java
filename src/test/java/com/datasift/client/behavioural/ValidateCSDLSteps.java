@@ -21,7 +21,7 @@ public class ValidateCSDLSteps {
     public void i_should_get_a_validation_with_a_dpu_cost() throws Throwable {
     }
 
-    @Given("^CSDL to validate like /interaction.content contains \\"([^\"]*)\"/$")
+    @Given("^CSDL to validate like /interaction.content contains \"([^\"]*)\"/$")
     public void CSDL_to_validate_like_interaction_content_contains_(String arg1) throws Throwable {
         // Express the Regexp above with the code you wish you had
         throw new PendingException();
