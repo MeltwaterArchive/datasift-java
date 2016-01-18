@@ -7,7 +7,7 @@ import cucumber.api.java.en.When;
 
 import static org.junit.Assert.*;
 
-public class ValidateCSDLSteps {
+public class ValidateCSDLSteps extends CucumberRunner {
     @Given("^CSDL to validate like \"([^\"]*)\"$")
     public void givenThis(String csdl) throws Throwable {
         assertEquals("interaction.content contains \"moo\"", csdl);
@@ -22,7 +22,7 @@ public class ValidateCSDLSteps {
     }
 
     @Given("^CSDL to validate like /interaction.content contains \"([^\"]*)\"/$")
-    public void CSDL_to_validate_like_interaction_content_contains_(String arg1) throws Throwable {
+    public void CSDL_to_validate_like_interaction_content_contains_(String csdl) throws Throwable {
         // Express the Regexp above with the code you wish you had
         throw new PendingException();
     }
