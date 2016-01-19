@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testsuite failures="26" name="cucumber.runtime.formatter.JUnitFormatter" skipped="0" tests="26" time="0">
+<testcase classname="Core" name="_2" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given CSDL to validate like 'interaction.sample < 1'........................undefined
+When I call the validate endpoint...........................................undefined
+Then I should get a validation with a dpu cost..............................undefined
+]]></failure>
+</testcase>
+<testcase classname="Core" name="_3" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given CSDL to compile like 'interaction.sample < 1'.........................undefined
+When I call the compile endpoint............................................undefined
+Then I should get a compilation with a hash.................................undefined
+]]></failure>
+</testcase>
+<testcase classname="Core" name="" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[When I call the usage endpoint..............................................undefined
+Then I should get back account usage........................................undefined
+]]></failure>
+</testcase>
+<testcase classname="Core" name="_2" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given a hash like 'c8ad285e200a0e9a4b8737ee43676599'........................undefined
+When I call the dpu endpoint................................................undefined
+Then I should get a dpu cost................................................undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="_2" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given A facebook page like bbcnews..........................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get back a valid facebook managed sources page................undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="_3" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given A facebook page like applemusic.......................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get back a valid facebook managed sources page................undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="_4" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given A facebook page like Channel4News.....................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get back a valid facebook managed sources page................undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="_5" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given A facebook page like SPORTbible.......................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get back a valid facebook managed sources page................undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given the facebook "bbcnews"................................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get a valid source back.......................................undefined
+Then I should be able to start the source I just created....................undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given the facebook "bbcnews"................................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get a valid source back.......................................undefined
+Then I should be able to start the source I just created....................undefined
+Then I should be able to stop the source I just started.....................undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given the facebook "bbcnews"................................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get a valid source back.......................................undefined
+Then I should be able to delete the source I just created...................undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given the facebook "bbcnews"................................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get a valid source back.......................................undefined
+Then I should be able to get the source I just created......................undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given the facebook "bbcnews"................................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get a valid source back.......................................undefined
+Then I should be able to update the source I just created with a new page "applemusic".undefined
+Then I should be able to get the source and it should have the two pages I added.undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given the facebook "bbcnews"................................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get a valid source back.......................................undefined
+Then I should be able to add a new authentication token to the source I just created.undefined
+]]></failure>
+</testcase>
+<testcase classname="Managed Sources" name="" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given the facebook "bbcnews"................................................undefined
+When I call the source create endpoint......................................undefined
+Then I should get a valid source back.......................................undefined
+Then I should be able to remove an authentication token from the source I just created.undefined
+]]></failure>
+</testcase>
+<testcase classname="POST /pylon/analyze" name="Analyze with valid parameters" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "POST" request to "/v1.3/pylon/analyze".......................undefined
+Then the response status code should be "200"...............................undefined
+And the response body contains the JSON data................................undefined
+]]></failure>
+</testcase>
+<testcase classname="POST /pylon/analyze" name="Analyze without id" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "POST" request to "/v1.3/pylon/analyze".......................undefined
+Then the response status code should be "400"...............................undefined
+And the response body contains the JSON data................................undefined
+]]></failure>
+</testcase>
+<testcase classname="GET /pylon/get" name="Get with recording_id" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given a mock exists at "/account/identity" it should return "200" with the body:.undefined
+And that the request body is valid JSON.....................................undefined
+And the mocks are created...................................................undefined
+And that the request body is valid JSON.....................................undefined
+When I make a "GET" request to "/v1.3/pylon/get?id=1234"....................undefined
+Then the response status code should be "200"...............................undefined
+And the response body contains the JSON data................................undefined
+]]></failure>
+</testcase>
+<testcase classname="POST /pylon/sample" name="Sample with valid parameters" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "POST" request to "/v1.3/pylon/sample"........................undefined
+Then the response status code should be "200"...............................undefined
+And the response body contains the JSON data................................undefined
+]]></failure>
+</testcase>
+<testcase classname="PUT /pylon/start" name="Start with name and hash" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "PUT" request to "/v1.3/pylon/start"..........................undefined
+Then the response status code should be "200"...............................undefined
+And the response body contains the JSON data................................undefined
+]]></failure>
+</testcase>
+<testcase classname="PUT /pylon/stop" name="Stop with id" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "PUT" request to "/v1.3/pylon/stop"...........................undefined
+Then the response status code should be "204"...............................undefined
+]]></failure>
+</testcase>
+<testcase classname="GET /pylon/tags" name="Tags with recording_id" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "GET" request to "/v1.3/pylon/tags"...........................undefined
+Then the response status code should be "200"...............................undefined
+And the response body contains the JSON data................................undefined
+]]></failure>
+</testcase>
+<testcase classname="PUT /pylon/update" name="Update with valid parameters" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "PUT" request to "/v1.3/pylon/update".........................undefined
+Then the response status code should be "204"...............................undefined
+]]></failure>
+</testcase>
+<testcase classname="PUT /pylon/update" name="Update without id" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "PUT" request to "/v1.3/pylon/update".........................undefined
+Then the response status code should be "400"...............................undefined
+And the response body contains the JSON data................................undefined
+]]></failure>
+</testcase>
+<testcase classname="PUT /pylon/update" name="Update without hash" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "PUT" request to "/v1.3/pylon/update".........................undefined
+Then the response status code should be "400"...............................undefined
+And the response body contains the JSON data................................undefined
+]]></failure>
+</testcase>
+<testcase classname="PUT /pylon/update" name="Update without name" time="0">
+<failure message="The scenario has pending or undefined step(s)"><![CDATA[Given that the request body is valid JSON...................................undefined
+When I make a "PUT" request to "/v1.3/pylon/update".........................undefined
+Then the response status code should be "400"...............................undefined
+And the response body contains the JSON data................................undefined
+]]></failure>
+</testcase>
+</testsuite>

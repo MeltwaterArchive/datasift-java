@@ -113,17 +113,13 @@ formatter.match({});
 formatter.result({
   "status": "undefined"
 });
-formatter.match({
-  "location": "ValidateCSDLSteps.i_call_the_validate_endpoint()"
-});
+formatter.match({});
 formatter.result({
-  "status": "skipped"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "ValidateCSDLSteps.i_should_get_a_validation_with_a_dpu_cost()"
-});
+formatter.match({});
 formatter.result({
-  "status": "skipped"
+  "status": "undefined"
 });
 formatter.scenarioOutline({
   "id": "core;",
@@ -918,49 +914,21 @@ formatter.step({
     "content_type": ""
   }
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 118584000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "POST",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/analyze",
-      "offset": 28
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 1604000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "200",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 42000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_response_body_contains_the_JSON_data(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 12000,
-  "status": "passed"
+  "status": "undefined"
 });
 formatter.scenario({
   "id": "post-/pylon/analyze;analyze-without-id",
@@ -1000,49 +968,21 @@ formatter.step({
     "content_type": ""
   }
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 27000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "POST",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/analyze",
-      "offset": 28
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 177000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "400",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 37000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_response_body_contains_the_JSON_data(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 17000,
-  "status": "passed"
+  "status": "undefined"
 });
 formatter.uri("src/test/resources/datasift-client-tests/pylon/get.feature");
 formatter.feature({
@@ -1115,75 +1055,33 @@ formatter.step({
     "content_type": ""
   }
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "/account/identity",
-      "offset": 18
-    },
-    {
-      "val": "200",
-      "offset": 55
-    }
-  ],
-  "location": "TestRest.a_mock_exists_at_it_should_return_with_the_body(String,String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 1843000,
-  "status": "pending",
-  "error_message": "cucumber.api.PendingException: TODO: implement me\n\tat com.datasift.client.behavioural.TestRest.a_mock_exists_at_it_should_return_with_the_body(TestRest.java:16)\n\tat ✽.Given a mock exists at \"/account/identity\" it should return \"200\" with the body:(src/test/resources/datasift-client-tests/pylon/get.feature:4)\n"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "status": "skipped"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_mocks_are_created()"
-});
+formatter.match({});
 formatter.result({
-  "status": "skipped"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "status": "skipped"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "GET",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/get?id\u003d1234",
-      "offset": 27
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "status": "skipped"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "200",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "status": "skipped"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_response_body_contains_the_JSON_data(String)"
-});
+formatter.match({});
 formatter.result({
-  "status": "skipped"
+  "status": "undefined"
 });
 formatter.uri("src/test/resources/datasift-client-tests/pylon/sample.feature");
 formatter.feature({
@@ -1231,49 +1129,21 @@ formatter.step({
     "content_type": ""
   }
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 34000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "POST",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/sample",
-      "offset": 28
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 74000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "200",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 44000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_response_body_contains_the_JSON_data(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 15000,
-  "status": "passed"
+  "status": "undefined"
 });
 formatter.uri("src/test/resources/datasift-client-tests/pylon/start.feature");
 formatter.feature({
@@ -1321,49 +1191,21 @@ formatter.step({
     "content_type": ""
   }
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 49000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "PUT",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/start",
-      "offset": 27
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 101000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "200",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 55000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_response_body_contains_the_JSON_data(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 21000,
-  "status": "passed"
+  "status": "undefined"
 });
 formatter.uri("src/test/resources/datasift-client-tests/pylon/stop.feature");
 formatter.feature({
@@ -1401,42 +1243,17 @@ formatter.step({
   "keyword": "Then ",
   "line": 11
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 27000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "PUT",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/stop",
-      "offset": 27
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 64000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "204",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 45000,
-  "status": "passed"
+  "status": "undefined"
 });
 formatter.uri("src/test/resources/datasift-client-tests/pylon/tags.feature");
 formatter.feature({
@@ -1484,49 +1301,21 @@ formatter.step({
     "content_type": ""
   }
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 28000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "GET",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/tags",
-      "offset": 27
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 118000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "200",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 41000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_response_body_contains_the_JSON_data(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 15000,
-  "status": "passed"
+  "status": "undefined"
 });
 formatter.uri("src/test/resources/datasift-client-tests/pylon/update.feature");
 formatter.feature({
@@ -1564,42 +1353,17 @@ formatter.step({
   "keyword": "Then ",
   "line": 13
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 26000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "PUT",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/update",
-      "offset": 27
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 61000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "204",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 50000,
-  "status": "passed"
+  "status": "undefined"
 });
 formatter.scenario({
   "id": "put-/pylon/update;update-without-id",
@@ -1639,49 +1403,21 @@ formatter.step({
     "content_type": ""
   }
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 27000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "PUT",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/update",
-      "offset": 27
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 85000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "400",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 41000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_response_body_contains_the_JSON_data(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 19000,
-  "status": "passed"
+  "status": "undefined"
 });
 formatter.scenario({
   "id": "put-/pylon/update;update-without-hash",
@@ -1721,49 +1457,21 @@ formatter.step({
     "content_type": ""
   }
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 28000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "PUT",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/update",
-      "offset": 27
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 82000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "400",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 52000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_response_body_contains_the_JSON_data(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 18000,
-  "status": "passed"
+  "status": "undefined"
 });
 formatter.scenario({
   "id": "put-/pylon/update;update-without-name",
@@ -1803,48 +1511,20 @@ formatter.step({
     "content_type": ""
   }
 });
-formatter.match({
-  "location": "TestRest.that_the_request_body_is_valid_JSON(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 33000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "PUT",
-      "offset": 10
-    },
-    {
-      "val": "/v1.3/pylon/update",
-      "offset": 27
-    }
-  ],
-  "location": "TestRest.i_make_a_request_to(String,String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 65000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "arguments": [
-    {
-      "val": "400",
-      "offset": 36
-    }
-  ],
-  "location": "TestRest.the_response_status_code_should_be(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 57000,
-  "status": "passed"
+  "status": "undefined"
 });
-formatter.match({
-  "location": "TestRest.the_response_body_contains_the_JSON_data(String)"
-});
+formatter.match({});
 formatter.result({
-  "duration": 16000,
-  "status": "passed"
+  "status": "undefined"
 });
 });
