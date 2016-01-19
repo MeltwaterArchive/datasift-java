@@ -8,10 +8,11 @@ import org.junit.runner.RunWith;
 //CHECKSTYLE:OFF
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        plugin = {"pretty", "html:cucumber", "junit:cucumber-junit.xml"}
+        plugin = {"pretty", "html:target/cucumber", "junit:target/cucumber/junit.xml"}
         , snippets = SnippetType.CAMELCASE
         , features = {"."}
-        , strict = true)
+        //, strict = true
+)
 //CHECKSTYLE:ON
 public class CucumberRunnerTest {
 }

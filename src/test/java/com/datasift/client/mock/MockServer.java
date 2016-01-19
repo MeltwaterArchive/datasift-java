@@ -45,6 +45,10 @@ public class MockServer {
         JsonDecoder.mapper.registerModule(new JodaModule());
     }
 
+    public static Queue<InvokableMethod> methods() {
+        return methods;
+    }
+
     public static HiggsServer startNewServer() {
         instances++;
         server.getFactories().clear(); //clear previously registered factories
