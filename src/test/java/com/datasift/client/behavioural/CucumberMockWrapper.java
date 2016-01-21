@@ -2,13 +2,11 @@ package com.datasift.client.behavioural;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.higgs.http.server.HttpStatus;
+import io.higgs.http.server.params.FormParams;
 import io.higgs.http.server.params.QueryParams;
 import io.higgs.http.server.resource.MediaType;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -23,10 +21,20 @@ public class CucumberMockWrapper {
     @Path("/pylon/get")
     @GET
     public Object getRecording(QueryParams params) throws IOException {
-        if (matchQueryStrings != null) { //all query strings requested must match for us to return the given response
-            if (statusCode.equals("400")) {
-                throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
-            }
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
+    @Path("/pylon/analyze")
+    @POST
+    public Object analyze(FormParams formParams) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
         }
         if (response != null) {
             return mapper.readTree(response);

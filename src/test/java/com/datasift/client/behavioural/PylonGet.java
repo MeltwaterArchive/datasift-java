@@ -51,14 +51,14 @@ public class PylonGet extends CucumberBase {
         assertEquals(recordingId, recording.getRecordingId().getId());
     }
 
-    @Then("^the response status code should be \"([^\"]*)\"$")
-    public void theResponseStatusCodeShouldBe(String statusCode) throws Throwable {
+    @Then("^the get response status code should be \"([^\"]*)\"$")
+    public void theGetResponseStatusCodeShouldBe(String statusCode) throws Throwable {
         assertEquals(Integer.parseInt(statusCode), recording.getResponse().status());
     }
 
 
-    @Then("^the response body contains the JSON data$")
-    public void theResponseBodyContainsTheJSONData(String body) throws Throwable {
+    @Then("^the get response body contains the JSON data$")
+    public void theGetResponseBodyContainsTheJSONData(String body) throws Throwable {
         JsonNode expected = mapper.readTree(body);
         JsonNode actual = mapper.readTree(recording.getResponse().data());
         assertTrue(expected.equals(actual));
@@ -75,33 +75,23 @@ public class PylonGet extends CucumberBase {
         assertEquals(sentPerPage, pylonRecordingList.getPage());
     }
 
+    @Given("^returns error \"([^\"]*)\" and status code \"([^\"]*)\" when no query string at the path \"([^\"]*)\"$")
+    public void returnsErrorAndStatusCodeWhenNoQueryStringAtThePath(String errorMessage, String statusCode, String path) throws Throwable {
+        wrapper.response(errorMessage).statusCode(statusCode);
+    }
 
+    @When("^a get request is made without recording_id and no body$")
+    public void aGetRequestIsMadeWithoutRecording_idAndNoBody() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        PylonRecordingList pylonRecordingList = client.pylon().get().sync();
+        recording = pylonRecordingList.getData().get(0);
+    }
 
-
-
-
-//    @And("^returns this body when there is no query strings$")
-//    public void returnsThisBodyWhenThereIsNoQueryStrings(String body) throws Throwable {
-//        wrapper.matchQueryStringParams(null); //no query strings to match
-//        wrapper.response(body); //return the list of results from the scenario
-//    }
-//
-//    @When("^a query is made with the recording_id \"([^\"]*)\" it should return \"([^\"]*)\" with the body$")
-//    public void aQueryIsMadeWithTheRecording_idItShouldReturnWithTheBody(String recordingId, String statusCode
-//            , String body) throws Throwable {
-//        PylonRecording recording = client.pylon().get(new PylonRecording.PylonRecordingId(recordingId)).sync();
-//        assertEquals(Integer.parseInt(statusCode), recording.getResponse().status());
-//        JsonNode expected = mapper.readTree(body);
-//        JsonNode actual = mapper.readTree(recording.getResponse().data());
-//        //the equals method of JsonNode actually does a deep comparison of the JSON fields
-//        assertTrue(expected.equals(actual));
-//// TODO: do verifications on the recording object as well to ensure the JSON is mapped to the class' fields properly
-//        assertEquals(recordingId, recording.getRecordingId().getId());
-////        Map<String, Object> expected = mapper.readValue(body, new TypeReference<Map<String, Object>>() {
-////        });
-////        Map<String, Object> subscriptions = (Map<String, Object>) expected.get("subscriptions");
-////        assertNotNull(subscriptions);
-//    }
-
-
+    @When("^a get request is made with page \"([^\"]*)\" and no per_page and no body$")
+    public void aGetRequestIsMadeWithPageAndNoPer_pageAndNoBody(String page) throws Throwable {
+        int sentPage = Integer.parseInt(page);
+        PylonRecordingList pylonRecordingList = client.pylon().get(sentPage).sync();
+        recording = pylonRecordingList.getData().get(0);
+        assertEquals(sentPage, pylonRecordingList.getPage());
+    }
 }
