@@ -5,6 +5,7 @@ import com.datasift.client.DataSiftConfig;
 import com.datasift.client.mock.MockServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.higgs.core.HiggsServer;
+import io.higgs.core.ObjectFactory;
 import org.junit.After;
 
 public class CucumberBase {
@@ -24,6 +25,15 @@ public class CucumberBase {
         mock = MockServer.startNewServer();
         config.port(mock.getConfig().port);
         mock.registerClass(CucumberMockWrapper.class);
+        mock.registerObjectFactory(new ObjectFactory(mock) {
+            public Object newInstance(Class<?> klass) {
+                return wrapper;
+            }
+
+            public boolean canCreateInstanceOf(Class<?> klass) {
+                return true;
+            }
+        });
     }
 
     @After

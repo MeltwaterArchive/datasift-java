@@ -21,7 +21,7 @@ public class CucumberMockWrapper {
     @Path("/pylon/get")
     @GET
     public Object getRecording(QueryParams params) throws IOException {
-        if (statusCode.equals("400")) {
+        if ("400".equals(statusCode)) {
             throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
         }
         if (response != null) {
