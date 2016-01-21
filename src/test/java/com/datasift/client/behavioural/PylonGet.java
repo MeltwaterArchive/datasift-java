@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import io.higgs.core.ObjectFactory;
 
 import java.util.HashMap;
 
@@ -17,17 +16,8 @@ public class PylonGet extends CucumberBase {
     protected PylonRecording recording = null;
 
     @Given("^a mock exists$")
-    public void aMockExistsAt() throws Throwable {
-        startMock();
-        mock.registerObjectFactory(new ObjectFactory(mock) {
-            public Object newInstance(Class<?> klass) {
-                return wrapper;
-            }
+    public void aMockExists() throws Throwable {
 
-            public boolean canCreateInstanceOf(Class<?> klass) {
-                return true;
-            }
-        });
     }
 
     @Given("^returns this body and status code \"([^\"]*)\" when the query string \"([^\"]*)\" at the path \"([^\"]*)\"$")
@@ -47,6 +37,7 @@ public class PylonGet extends CucumberBase {
 
     @When("^a get request is made with a recording_id \"([^\"]*)\" and no body$")
     public void aGetRequestIsMadeWithARecording_idAndNoBody(String recordingId) throws Throwable {
+        wrapper.toString();
         recording = client.pylon().get(new PylonRecording.PylonRecordingId(recordingId)).sync();
         assertEquals(recordingId, recording.getRecordingId().getId());
     }

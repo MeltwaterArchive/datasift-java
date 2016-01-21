@@ -20,7 +20,7 @@ public class CucumberBase {
     DataSiftClient client = new DataSiftClient(config);
     ObjectMapper mapper = new ObjectMapper();
 
-    protected void startMock() {
+    public CucumberBase() {
         mock = MockServer.startNewServer();
         config.port(mock.getConfig().port);
         mock.registerClass(CucumberMockWrapper.class);
