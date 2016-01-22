@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PylonRecordingList extends BaseDataSiftResult {
     @JsonProperty
-    protected List<PylonRecording> data = new ArrayList<PylonRecording>();
+    protected List<PylonRecording> subscriptions = new ArrayList<PylonRecording>();
     @JsonProperty
     protected int count;
     @JsonProperty
@@ -25,8 +25,8 @@ public class PylonRecordingList extends BaseDataSiftResult {
         return this.count;
     }
 
-    public List<PylonRecording> getData() {
-        return data;
+    public List<PylonRecording> getSubscriptions() {
+        return subscriptions;
     }
 
     public int getPage() {
