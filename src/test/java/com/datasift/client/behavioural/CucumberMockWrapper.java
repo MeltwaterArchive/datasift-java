@@ -42,6 +42,66 @@ public class CucumberMockWrapper {
         return new HashMap();
     }
 
+    @Path("/pylon/sample")
+    @POST
+    public Object sample(FormParams formParams) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
+    @Path("/pylon/start")
+    @PUT
+    public Object start(FormParams formParams) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
+    @Path("/pylon/stop")
+    @PUT
+    public Object stop(QueryParams params) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
+    @Path("/pylon/tags")
+    @PUT
+    public Object tags(QueryParams params) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
+    @Path("/pylon/update")
+    @PUT
+    public Object update(FormParams formParams) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
     public CucumberMockWrapper response(String body) {
         this.response = body;
         return this;
@@ -56,5 +116,4 @@ public class CucumberMockWrapper {
         this.statusCode = statusCode;
         return this;
     }
-
 }

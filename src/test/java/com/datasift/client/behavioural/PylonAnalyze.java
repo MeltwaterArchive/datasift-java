@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import io.higgs.core.ObjectFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -14,6 +15,19 @@ import static org.junit.Assert.assertTrue;
  */
 public class PylonAnalyze extends CucumberBase {
     protected PylonResult result = null;
+
+    @Given("^an analysis mock exists$")
+    public void anAnalysisMockExists() throws Throwable {
+        mock.registerObjectFactory(new ObjectFactory(mock) {
+            public Object newInstance(Class<?> klass) {
+                return wrapper;
+            }
+
+            public boolean canCreateInstanceOf(Class<?> klass) {
+                return true;
+            }
+        });
+    }
 
     @Given("^returns this body and status code \"([^\"]*)\" at the path \"([^\"]*)\"$")
     public void returnsThisBodyAndStatusCodeAtThePath(String statusCode, String path, String body) throws Throwable {
@@ -36,7 +50,7 @@ public class PylonAnalyze extends CucumberBase {
     public void anAnalysisRequestIsMadeWithNoRecordingIdAnalysisTypeParametersIntervalAndTarget(String anaylsisType, String interval, String target) throws Throwable {
         PylonQueryParameters pylonQueryParameters = new PylonQueryParameters(anaylsisType, new PylonParametersData(interval, null, null, target));
         PylonQuery pylonQuery = new PylonQuery(null, pylonQueryParameters);
-        result = client.pylon().analyze(pylonQuery).sync();
+            result = client.pylon().analyze(pylonQuery).sync();
     }
 
     @Then("^the analyze response status code should be \"([^\"]*)\"$")

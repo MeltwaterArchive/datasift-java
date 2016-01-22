@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import io.higgs.core.ObjectFactory;
 
 import java.util.HashMap;
 
@@ -17,7 +18,15 @@ public class PylonGet extends CucumberBase {
 
     @Given("^a mock exists$")
     public void aMockExists() throws Throwable {
+        mock.registerObjectFactory(new ObjectFactory(mock) {
+            public Object newInstance(Class<?> klass) {
+                return wrapper;
+            }
 
+            public boolean canCreateInstanceOf(Class<?> klass) {
+                return true;
+            }
+        });
     }
 
     @Given("^returns this body and status code \"([^\"]*)\" when the query string \"([^\"]*)\" at the path \"([^\"]*)\"$")
@@ -37,7 +46,6 @@ public class PylonGet extends CucumberBase {
 
     @When("^a get request is made with a recording_id \"([^\"]*)\" and no body$")
     public void aGetRequestIsMadeWithARecording_idAndNoBody(String recordingId) throws Throwable {
-        wrapper.toString();
         recording = client.pylon().get(new PylonRecording.PylonRecordingId(recordingId)).sync();
         assertEquals(recordingId, recording.getRecordingId().getId());
     }
@@ -74,8 +82,12 @@ public class PylonGet extends CucumberBase {
     @When("^a get request is made without recording_id and no body$")
     public void aGetRequestIsMadeWithoutRecording_idAndNoBody() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        PylonRecordingList pylonRecordingList = client.pylon().get().sync();
-        recording = pylonRecordingList.getData().get(0);
+        try {
+            recording = client.pylon().get(null).sync();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @When("^a get request is made with page \"([^\"]*)\" and no per_page and no body$")
