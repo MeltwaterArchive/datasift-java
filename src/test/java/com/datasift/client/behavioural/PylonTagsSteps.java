@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by agnieszka on 22/01/16.
  */
-public class PylonTagsSteps  extends CucumberBase {
+public class PylonTagsSteps extends CucumberBase {
     protected PylonTags tags = null;
 
     @Given("^a tags mock exists$")

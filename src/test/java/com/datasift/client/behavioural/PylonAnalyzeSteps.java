@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by agnieszka on 20/01/16.
  */
-public class PylonAnalyze extends CucumberBase {
+public class PylonAnalyzeSteps extends CucumberBase {
     protected PylonResult result = null;
 
     @Given("^an analysis mock exists$")

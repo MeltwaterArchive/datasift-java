@@ -13,7 +13,7 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class PylonGet extends CucumberBase {
+public class PylonGetSteps extends CucumberBase {
     protected PylonRecording recording = null;
 
     @Given("^a mock exists$")
@@ -65,13 +65,13 @@ public class PylonGet extends CucumberBase {
     }
 
     @When("^a get request is made with page \"([^\"]*)\" and per_page \"([^\"]*)\" and no body$")
-    public void aGetRequestIsMadeWithPageAndPer_pageAndNoBody(String page, String per_page) throws Throwable {
+    public void aGetRequestIsMadeWithPageAndPer_pageAndNoBody(String page, String perPage) throws Throwable {
         int sentPage = Integer.parseInt(page);
-        int sentPerPage = Integer.parseInt(per_page);
+        int sentPerPage = Integer.parseInt(perPage);
         PylonRecordingList pylonRecordingList = client.pylon().get(sentPage, sentPerPage).sync();
-        recording = pylonRecordingList.getData().get(0);
+        recording = pylonRecordingList.getSubscriptions().get(0);
         assertEquals(sentPage, pylonRecordingList.getPage());
-        assertEquals(sentPerPage, pylonRecordingList.getPage());
+        assertEquals(sentPerPage, pylonRecordingList.getPerPage());
     }
 
     @Given("^returns error \"([^\"]*)\" and status code \"([^\"]*)\" when no query string at the path \"([^\"]*)\"$")
@@ -94,7 +94,7 @@ public class PylonGet extends CucumberBase {
     public void aGetRequestIsMadeWithPageAndNoPer_pageAndNoBody(String page) throws Throwable {
         int sentPage = Integer.parseInt(page);
         PylonRecordingList pylonRecordingList = client.pylon().get(sentPage).sync();
-        recording = pylonRecordingList.getData().get(0);
+        recording = pylonRecordingList.getSubscriptions().get(0);
         assertEquals(sentPage, pylonRecordingList.getPage());
     }
 }

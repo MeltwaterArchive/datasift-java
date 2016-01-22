@@ -79,7 +79,7 @@ public class CucumberMockWrapper {
     }
 
     @Path("/pylon/tags")
-    @PUT
+    @GET
     public Object tags(QueryParams params) throws IOException {
         if (statusCode.equals("400")) {
             throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
