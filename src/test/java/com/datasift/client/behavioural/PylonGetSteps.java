@@ -83,7 +83,8 @@ public class PylonGetSteps extends CucumberBase {
     public void aGetRequestIsMadeWithoutRecording_idAndNoBody() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         try {
-            recording = client.pylon().get(null).sync();
+            PylonRecordingList pylonRecordingList = client.pylon().get().sync();
+            recording = pylonRecordingList.getSubscriptions().get(0);
         }
         catch (Exception e) {
             e.printStackTrace();
