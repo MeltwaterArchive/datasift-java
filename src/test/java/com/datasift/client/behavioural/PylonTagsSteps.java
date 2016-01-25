@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by agnieszka on 22/01/16.
  */
+//CHECKSTYLE:OFF
 public class PylonTagsSteps extends CucumberBase {
     protected PylonTags tags;
 
@@ -57,3 +58,5 @@ public class PylonTagsSteps extends CucumberBase {
         assertTrue(expected.equals(actual));
     }
 }
+//CHECKSTYLE:ON
+

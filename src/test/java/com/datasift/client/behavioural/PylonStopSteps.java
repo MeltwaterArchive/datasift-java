@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by agnieszka on 22/01/16.
  */
+//CHECKSTYLE:OFF
 public class PylonStopSteps extends CucumberBase {
     protected DataSiftResult result;
 
@@ -49,3 +50,4 @@ public class PylonStopSteps extends CucumberBase {
         assertEquals(Integer.parseInt(statusCode), result.getResponse().status());
     }
 }
+//CHECKSTYLE:ON

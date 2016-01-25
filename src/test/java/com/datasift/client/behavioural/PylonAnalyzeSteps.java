@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by agnieszka on 20/01/16.
  */
+//CHECKSTYLE:OFF
 public class PylonAnalyzeSteps extends CucumberBase {
     protected PylonResult result;
 
@@ -69,3 +70,4 @@ public class PylonAnalyzeSteps extends CucumberBase {
         assertTrue(expected.equals(actual));
     }
 }
+//CHECKSTYLE:ON

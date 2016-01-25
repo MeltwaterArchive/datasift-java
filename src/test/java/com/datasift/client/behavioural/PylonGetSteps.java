@@ -13,6 +13,7 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+//CHECKSTYLE:OFF
 public class PylonGetSteps extends CucumberBase {
     protected PylonRecording recording;
 
@@ -97,3 +98,4 @@ public class PylonGetSteps extends CucumberBase {
         assertEquals(sentPage, pylonRecordingList.getPage());
     }
 }
+//CHECKSTYLE:ON

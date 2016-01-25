@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by agnieszka on 22/01/16.
  */
+//CHECKSTYLE:OFF
 public class PylonUpdateSteps extends CucumberBase {
     private DataSiftResult result;
 
@@ -98,3 +99,4 @@ public class PylonUpdateSteps extends CucumberBase {
     }
 
 }
+//CHECKSTYLE:ON
