@@ -29,7 +29,7 @@ public class MockPylonApi {
     private String sampleMediaType;
     private String sampleContent;
     private String sampleLanguage;
-    private List<Integer> sampleTopicIDs = new ArrayList<>();
+    private List<Long> sampleTopicIDs = new ArrayList<>();
 
     @Path("validate")
     public Map<String, Object> validate() {
