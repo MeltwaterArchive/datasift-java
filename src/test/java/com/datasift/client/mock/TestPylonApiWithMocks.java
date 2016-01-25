@@ -59,8 +59,8 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
     private String sampleMediaType = "post";
     private String sampleContent = "I love data!";
     private String sampleLanguage = "en";
-    private List<Integer> sampleTopicIDs = new ArrayList<Integer>() { {
-        add(565634324);
+    private List<Long> sampleTopicIDs = new ArrayList<Long>() { {
+        add(565634324L);
     } };
 
     @Before

@@ -13,7 +13,7 @@ public class PylonSampleInteraction {
     @JsonProperty
     protected String language;
     @JsonProperty("topic_ids")
-    protected List<Integer> topicIDs = new ArrayList<>();
+    protected List<Long> topicIDs = new ArrayList<>();
 
     public PylonSampleInteraction() { }
 
@@ -23,5 +23,5 @@ public class PylonSampleInteraction {
 
     public String getLanguage() { return this.language; }
 
-    public List<Integer> getTopicIDs() { return this.topicIDs; }
+    public List<Long> getTopicIDs() { return this.topicIDs; }
 }
