@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  * Created by agnieszka on 22/01/16.
  */
 public class PylonUpdateSteps extends CucumberBase {
-    private DataSiftResult result = null;
+    private DataSiftResult result;
 
     @Given("^a update mock exists$")
     public void aUpdateMockExists() throws Throwable {

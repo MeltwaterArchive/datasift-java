@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  * Created by agnieszka on 21/01/16.
  */
 public class PylonSampleSteps extends CucumberBase {
-    protected PylonSample sample = null;
+    protected PylonSample sample;
 
     @Given("^a sample mock exists$")
     public void aSampleMockExists() throws Throwable {

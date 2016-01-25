@@ -1,6 +1,10 @@
 package com.datasift.client.behavioural;
 
-import com.datasift.client.pylon.*;
+import com.datasift.client.pylon.PylonParametersData;
+import com.datasift.client.pylon.PylonQuery;
+import com.datasift.client.pylon.PylonQueryParameters;
+import com.datasift.client.pylon.PylonRecording;
+import com.datasift.client.pylon.PylonResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -14,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  * Created by agnieszka on 20/01/16.
  */
 public class PylonAnalyzeSteps extends CucumberBase {
-    protected PylonResult result = null;
+    protected PylonResult result;
 
     @Given("^an analysis mock exists$")
     public void anAnalysisMockExists() throws Throwable {
@@ -56,7 +60,6 @@ public class PylonAnalyzeSteps extends CucumberBase {
     @Then("^the analyze response status code should be \"([^\"]*)\"$")
     public void theAnalyzeResponseStatusCodeShouldBe(String statusCode) throws Throwable {
         assertEquals(Integer.parseInt(statusCode), result.getResponse().status());
-
     }
 
     @Then("^the analyze response body contains the JSON data$")

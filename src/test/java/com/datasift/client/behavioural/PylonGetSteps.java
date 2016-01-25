@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class PylonGetSteps extends CucumberBase {
-    protected PylonRecording recording = null;
+    protected PylonRecording recording;
 
     @Given("^a mock exists$")
     public void aMockExists() throws Throwable {
@@ -55,7 +55,6 @@ public class PylonGetSteps extends CucumberBase {
         assertEquals(Integer.parseInt(statusCode), recording.getResponse().status());
     }
 
-
     @Then("^the get response body contains the JSON data$")
     public void theGetResponseBodyContainsTheJSONData(String body) throws Throwable {
         JsonNode expected = mapper.readTree(body);
@@ -85,8 +84,7 @@ public class PylonGetSteps extends CucumberBase {
         try {
             PylonRecordingList pylonRecordingList = client.pylon().get().sync();
             recording = pylonRecordingList.getSubscriptions().get(0);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

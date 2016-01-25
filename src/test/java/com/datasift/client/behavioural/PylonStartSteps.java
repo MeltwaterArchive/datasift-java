@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
  * Created by agnieszka on 22/01/16.
  */
 public class PylonStartSteps extends CucumberBase {
-    protected PylonRecording.PylonRecordingId recording = null;
+    protected PylonRecording.PylonRecordingId recording;
 
     @Given("^a start mock exists$")
     public void aStartMockExists() throws Throwable {
