@@ -201,5 +201,5 @@ public class MockPylonApi {
 
     public void setSampleLanguage(String language) { this.sampleLanguage = language; }
 
-    public void setSampleTopicIDs(List<Integer> topicIDs) { this.sampleTopicIDs = topicIDs; }
+    public void setSampleTopicIDs(List<Long> topicIDs) { this.sampleTopicIDs = topicIDs; }
 }
