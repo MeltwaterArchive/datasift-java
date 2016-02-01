@@ -262,7 +262,7 @@ public class DataSiftPylon extends DataSiftApiClient {
      * @return vedo tags for the given filter
      */
     public FutureData<PylonTags> tags(PylonRecordingId recordingId) {
-        URI uri = newParams().put("id", recordingId).forURL(config.newAPIEndpointURI(TAGS));
+        URI uri = newParams().put("id", recordingId.id).forURL(config.newAPIEndpointURI(TAGS));
         FutureData<PylonTags> future = new FutureData<>();
         Request request = config.http().GET(uri,
                 new PageReader(newRequestCallback(future, new PylonTags(), config)));

@@ -6,7 +6,12 @@ import io.higgs.http.server.params.FormParams;
 import io.higgs.http.server.params.QueryParams;
 import io.higgs.http.server.resource.MediaType;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -42,6 +47,66 @@ public class CucumberMockWrapper {
         return new HashMap();
     }
 
+    @Path("/pylon/sample")
+    @POST
+    public Object sample(FormParams formParams) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
+    @Path("/pylon/start")
+    @PUT
+    public Object start(FormParams formParams) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
+    @Path("/pylon/stop")
+    @PUT
+    public Object stop(QueryParams params) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
+    @Path("/pylon/tags")
+    @GET
+    public Object tags(QueryParams params) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
+    @Path("/pylon/update")
+    @PUT
+    public Object update(FormParams formParams) throws IOException {
+        if (statusCode.equals("400")) {
+            throw new WebApplicationException(mapper.readTree(response).asText(), HttpStatus.BAD_REQUEST.code());
+        }
+        if (response != null) {
+            return mapper.readTree(response);
+        }
+        return new HashMap();
+    }
+
     public CucumberMockWrapper response(String body) {
         this.response = body;
         return this;
@@ -56,5 +121,4 @@ public class CucumberMockWrapper {
         this.statusCode = statusCode;
         return this;
     }
-
 }
