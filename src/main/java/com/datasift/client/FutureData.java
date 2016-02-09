@@ -79,7 +79,8 @@ public class FutureData<T> {
         //synchronized (this) {
         //notify();
         //}
-        //lock's re-entrant so not a problem between received -> doNotify but external calls to doNotify must also obtain lock on block
+        //lock's re-entrant so not a problem between received -> doNotify but external calls to
+        //doNotify must also obtain lock on block
         synchronized (block) {
             block.add(new Object());
         }
