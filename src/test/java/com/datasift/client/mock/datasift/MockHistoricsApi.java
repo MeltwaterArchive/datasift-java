@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by agnieszka on 17/01/2014.
  */
 
-@Path("v1.2/historics")
+@Path("v1.3/historics")
 public class MockHistoricsApi {
     Map<String, String> headers = new HashMap<>();
     private String id;

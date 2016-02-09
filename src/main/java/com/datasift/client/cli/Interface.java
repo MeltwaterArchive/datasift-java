@@ -6,6 +6,8 @@ import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.pylon.PylonQueryParameters;
 import com.datasift.client.pylon.PylonQuery;
+import com.datasift.client.pylon.PylonRecording.PylonRecordingId;
+import com.datasift.client.pylon.PylonStream;
 import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
 import com.datasift.client.push.OutputType;
@@ -270,7 +272,7 @@ public class Interface {
                 if (p != null && !p.isEmpty()) {
                     map = mapper.readValue(p, PylonQueryParameters.class);
                 }
-                PylonQuery analysis = new PylonQuery(params.get("hash"), map, params.get("filter"),
+                PylonQuery analysis = new PylonQuery(new PylonRecordingId(params.get("id")), map, params.get("filter"),
                         params.get("start") == null ? null : Integer.parseInt(params.get("start")),
                         params.get("end") == null ? null : Integer.parseInt(params.get("end")));
                 printResponse(dataSift.pylon().analyze(analysis).sync());
@@ -279,17 +281,19 @@ public class Interface {
                 printResponse(dataSift.pylon().compile(params.get("csdl")).sync());
                 break;
             case "get":
-                String hash = params == null ? null : params.get("hash");
-                printResponse(hash == null ? dataSift.pylon().get().sync() : dataSift.pylon().get(hash).sync());
+                String id = params == null ? null : params.get("id");
+                printResponse(id == null ?
+                        dataSift.pylon().get().sync() :
+                        dataSift.pylon().get(new PylonRecordingId(id)).sync());
                 break;
             case "start":
-                printResponse(dataSift.pylon().start(params.get("hash")).sync());
+                printResponse(dataSift.pylon().start(PylonStream.fromString(params.get("hash"))).sync());
                 break;
             case "stop":
-                printResponse(dataSift.pylon().stop(params.get("hash")).sync());
+                printResponse(dataSift.pylon().stop(new PylonRecordingId(params.get("id"))).sync());
                 break;
             case "tags":
-                printResponse(dataSift.pylon().tags(params.get("hash")).sync());
+                printResponse(dataSift.pylon().tags(new PylonRecordingId(params.get("id"))).sync());
                 break;
             case "validate":
                 printResponse(dataSift.pylon().validate(params.get("csdl")).sync());

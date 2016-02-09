@@ -6,10 +6,12 @@ import com.datasift.client.DataSiftConfig;
 import com.datasift.client.DataSiftResult;
 import com.datasift.client.FutureData;
 import com.datasift.client.ParamBuilder;
+import com.datasift.client.pylon.PylonRecording.PylonRecordingId;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.higgs.http.client.Request;
 import io.higgs.http.client.JSONRequest;
 import io.higgs.http.client.readers.PageReader;
+
 
 import java.net.URI;
 
@@ -18,8 +20,8 @@ import java.net.URI;
  */
 public class DataSiftPylon extends DataSiftApiClient {
     public final String VALIDATE = "pylon/validate", COMPILE = "pylon/compile", START = "pylon/start",
-            STOP = "pylon/stop", GET = "pylon/get", ANALYZE = "pylon/analyze", TAGS = "pylon/tags",
-            SAMPLE = "pylon/sample";
+            STOP = "pylon/stop", UPDATE = "pylon/update", GET = "pylon/get", ANALYZE = "pylon/analyze",
+            TAGS = "pylon/tags", SAMPLE = "pylon/sample";
 
     public DataSiftPylon(DataSiftConfig config) {
         super(config);
@@ -67,33 +69,85 @@ public class DataSiftPylon extends DataSiftApiClient {
      * Start the stream with the given hash. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
      *
-     * @param hash the stream hash
-     * @return a result which can be checked for success or failure, A status 204 indicates success,
-     * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
+     * @param stream the stream hash
+     * @return a Datasift pylon recording id. See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
      */
-    public FutureData<DataSiftResult> start(String hash) {
-        return start(hash, null);
+    public FutureData<PylonRecordingId> start(PylonStream stream) {
+        return start(stream, null);
     }
 
     /**
-     * Start the stream with the given hash & name. For information on this endpoint see documentation page:
+     * Start a recording with the given hash & name. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
      *
-     * @param hash the stream hash
+     * @param stream the stream hash
      * @param name a name for the subscription
+     * @return a Datasift pylon recording id. See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
+     */
+    public FutureData<PylonRecordingId> start(PylonStream stream, String name) {
+        if (stream == null || stream.hash.isEmpty()) {
+            throw new IllegalArgumentException("A valid hash is required to start a stream");
+        }
+        FutureData<PylonRecordingId> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(START));
+        JSONRequest request = config.http()
+                .putJSON(uri, new PageReader(newRequestCallback(future, new PylonRecordingId(), config)))
+                .addField("hash", stream.hash)
+                .addField("name", name);
+        performRequest(future, request);
+        return future;
+    }
+
+    /**
+     * Restart a recording using a recording id. For information on this endpoint see documentation page:
+     * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
+     *
+     * @param recordingId the recording id of a previously stopped recording.
+     *                    See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
      * @return a result which can be checked for success or failure, A status 204 indicates success,
      * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
-    public FutureData<DataSiftResult> start(String hash, String name) {
-        if (hash == null || hash.isEmpty()) {
-            throw new IllegalArgumentException("A valid hash is required to start a stream");
+    public FutureData<DataSiftResult> restart(PylonRecordingId recordingId) {
+        if (recordingId == null || recordingId.id == null || recordingId.id.isEmpty()) {
+            throw new IllegalArgumentException("A valid recording id is required to restart a recording");
         }
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(START));
         JSONRequest request = config.http()
                 .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
-                .addField("hash", hash)
-                .addField("name", name);
+                .addField("id", recordingId.getId());
+        performRequest(future, request);
+        return future;
+    }
+
+    public FutureData<DataSiftResult> update(PylonRecordingId recordingId, String newName) {
+        return update(recordingId, null, newName);
+    }
+
+    public FutureData<DataSiftResult> update(PylonRecordingId recordingId, PylonStream stream) {
+        return update(recordingId, stream, null);
+    }
+
+    public FutureData<DataSiftResult> update(PylonRecordingId recordingId, PylonStream stream, String newName) {
+        if (recordingId == null || recordingId.id == null || recordingId.id.isEmpty()) {
+            throw new IllegalArgumentException("A valid recording id is required to update a recording");
+        }
+
+        if ((stream == null || stream.hash == null || stream.hash.isEmpty()) && newName == null) {
+            throw new IllegalArgumentException("One of stream or newName must be supplied for an update");
+        }
+        FutureData<DataSiftResult> future = new FutureData<>();
+        URI uri = newParams().forURL(config.newAPIEndpointURI(UPDATE));
+        JSONRequest request = config.http()
+                .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
+                .addField("id", recordingId.id);
+
+        if (stream != null) {
+            request.addField("hash", stream.hash);
+        }
+        if (newName != null) {
+            request.addField("name", newName);
+        }
         performRequest(future, request);
         return future;
     }
@@ -102,48 +156,49 @@ public class DataSiftPylon extends DataSiftApiClient {
      * Stop the stream with the given hash. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstop
      *
-     * @param hash the hash for the stream to stop
+     * @param recordingId the id for the recording to stop.
+     *                    See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
      * @return a result which can be checked for success or failure, A status 204 indicates success,
      * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
-    public FutureData<DataSiftResult> stop(String hash) {
-        if (hash == null || hash.isEmpty()) {
-            throw new IllegalArgumentException("A valid hash is required to stop a stream");
+    public FutureData<DataSiftResult> stop(PylonRecordingId recordingId) {
+        if (recordingId == null || recordingId.id == null || recordingId.id.isEmpty()) {
+            throw new IllegalArgumentException("A valid recording id is required to stop a recording");
         }
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
         JSONRequest request = config.http()
                 .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
-                .addField("hash", hash);
+                .addField("id", recordingId);
         performRequest(future, request);
         return future;
     }
 
     /**
-     * Get the status of all streams. For information on this endpoint see documentation page:
+     * Get the status of all recordings. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
-     * @return the status of all streams that are running or have run with stored data
+     * @return the status of all recordings that are running or have run with stored data
      */
-    public FutureData<PylonStreamStatusList> get() {
+    public FutureData<PylonRecordingList> get() {
         return get(0, 0);
     }
 
     /**
-     * Get the status of all streams on page given. For information on this endpoint see documentation page:
+     * Get the status of all recordings on page given. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
-     * @return the status of all streams that are running or have run with stored data
+     * @return the status of all recordings that are running or have run with stored data
      */
-    public FutureData<PylonStreamStatusList> get(int page) {
+    public FutureData<PylonRecordingList> get(int page) {
         return get(page, 0);
     }
 
     /**
-     * Get the status of all streams on page given. For information on this endpoint see documentation page:
+     * Get the status of all recordings on page given. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
-     * @return the status of all streams that are running or have run with stored data
+     * @return the status of all recordings that are running or have run with stored data
      */
-    public FutureData<PylonStreamStatusList> get(int page, int perPage) {
-        FutureData<PylonStreamStatusList> future = new FutureData<>();
+    public FutureData<PylonRecordingList> get(int page, int perPage) {
+        FutureData<PylonRecordingList> future = new FutureData<>();
         ParamBuilder b = new ParamBuilder();
         if (page > 0) {
             b.put("page", page);
@@ -153,23 +208,24 @@ public class DataSiftPylon extends DataSiftApiClient {
         }
         URI uri = b.forURL(config.newAPIEndpointURI(GET));
         Request request = config.http().GET(uri,
-                new PageReader(newRequestCallback(future, new PylonStreamStatusList(), config)));
+                new PageReader(newRequestCallback(future, new PylonRecordingList(), config)));
         performRequest(future, request);
         return future;
     }
 
     /**
-     * Get the status of the stream with a given hash. For information on this endpoint see documentation page:
+     * Get the status of the recording with a given id. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      *
-     * @param hash A stream hash
-     * @return the status of the requested stream
+     * @param recordingId id for the required recording.
+     *                    See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
+     * @return the status of the requested recording
      */
-    public FutureData<PylonStreamStatus> get(String hash) {
-        URI uri = newParams().put("hash", hash).forURL(config.newAPIEndpointURI(GET));
-        FutureData<PylonStreamStatus> future = new FutureData<>();
+    public FutureData<PylonRecording> get(PylonRecordingId recordingId) {
+        URI uri = newParams().put("id", recordingId.id).forURL(config.newAPIEndpointURI(GET));
+        FutureData<PylonRecording> future = new FutureData<>();
         Request request = config.http().GET(uri,
-                new PageReader(newRequestCallback(future, new PylonStreamStatus(), config)));
+                new PageReader(newRequestCallback(future, new PylonRecording(), config)));
         performRequest(future, request);
         return future;
     }
@@ -178,8 +234,8 @@ public class DataSiftPylon extends DataSiftApiClient {
      * Analyze a given recording and retrieve results. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonanalyze
      *
-     * @param query pylon options for a stream
-     * @return information on execution of a stream
+     * @param query pylon options for a recording
+     * @return information on execution of a recording
      */
     public FutureData<PylonResult> analyze(PylonQuery query) {
         if (query == null) {
@@ -199,14 +255,14 @@ public class DataSiftPylon extends DataSiftApiClient {
     }
 
     /**
-     * Retrieve VEDO tags for a given filter hash. For information on this endpoint see documentation page:
+     * Retrieve VEDO tags for a given recording. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylontags
      *
-     * @param hash A filter hash
+     * @param recordingId A recording id. See {@link com.datasift.client.pylon.PylonRecording.PylonRecordingId}
      * @return vedo tags for the given filter
      */
-    public FutureData<PylonTags> tags(String hash) {
-        URI uri = newParams().put("hash", hash).forURL(config.newAPIEndpointURI(TAGS));
+    public FutureData<PylonTags> tags(PylonRecordingId recordingId) {
+        URI uri = newParams().put("id", recordingId.id).forURL(config.newAPIEndpointURI(TAGS));
         FutureData<PylonTags> future = new FutureData<>();
         Request request = config.http().GET(uri,
                 new PageReader(newRequestCallback(future, new PylonTags(), config)));
@@ -222,9 +278,9 @@ public class DataSiftPylon extends DataSiftApiClient {
      * @return PylonSample object containing results of sampling
      */
     public FutureData<PylonSample> sample(PylonSampleRequest sampleRequest) {
-        if (sampleRequest == null || sampleRequest.hash == null) {
+        if (sampleRequest == null || sampleRequest.recordingId == null) {
             throw new IllegalArgumentException(
-                    "A valid sample request object containing a hash is required to carry out a Pylon sample"
+                    "A valid sample request object containing a recordingId is required to carry out a Pylon sample"
             );
         }
         FutureData<PylonSample> future = new FutureData<>();

@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("v1.2/pylon")
+@Path("v1.3/pylon")
 public class MockPylonApi {
     Map<String, String> headers = new HashMap<>();
+    private String recordingId;
     private String hash;
     private double dpu;
     private int interactions;
@@ -63,6 +64,12 @@ public class MockPylonApi {
         return map;
     }
 
+    @Path("update")
+    public Map<String, Object> update() {
+        Map<String, Object> map = new HashMap<>();
+        return map;
+    }
+
     @Path("analyze")
     public Map<String, Object> analyze() {
         Map<String, Object> map = new HashMap<>();
@@ -84,6 +91,7 @@ public class MockPylonApi {
     }
 
     private void setStreamStatus(Map<String, Object> map) {
+        map.put("id", recordingId);
         map.put("hash", hash);
         map.put("volume", volume);
         map.put("start", start);
@@ -133,6 +141,10 @@ public class MockPylonApi {
 
     public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
+    }
+
+    public void setRecordingId(String recordingId) {
+        this.recordingId = recordingId;
     }
 
     public void setHash(String hash) {
