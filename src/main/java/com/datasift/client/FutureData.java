@@ -45,9 +45,12 @@ public class FutureData<T> {
      * @param data the data received or an object wrapping said data
      */
     public void received(T data) {
-        this.data = data;
-        notifyListeners();
-        doNotify();
+        //lock on block and make modification of data and the notification "atomic"
+        synchronized (block) {
+            this.data = data;
+            notifyListeners();
+            doNotify();
+        }
     }
 
     /**
@@ -76,7 +79,10 @@ public class FutureData<T> {
         //synchronized (this) {
         //notify();
         //}
-        block.add(new Object());
+        //lock's re-entrant so not a problem between received -> doNotify but external calls to doNotify must also obtain lock on block
+        synchronized (block) {
+            block.add(new Object());
+        }
     }
 
     /**
@@ -87,13 +93,15 @@ public class FutureData<T> {
      */
     public T sync() {
         //if data is present there's no need to block
-        if (data != null) {
-            return data;
+        synchronized (block) {
+            if (data != null) {
+                return data;
+            }
+            block.clear();
         }
         synchronized (this) {
             try {
                 // wait();
-                block.clear();
                 block.take();
             } catch (InterruptedException e) {
                 if (interruptCause == null) {
