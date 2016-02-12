@@ -76,6 +76,7 @@ public class FutureData<T> {
         //synchronized (this) {
         //notify();
         //}
+        block.clear();
         block.add(new Object());
     }
 
@@ -93,7 +94,6 @@ public class FutureData<T> {
         synchronized (this) {
             try {
                 // wait();
-                block.clear();
                 block.take();
             } catch (InterruptedException e) {
                 if (interruptCause == null) {
