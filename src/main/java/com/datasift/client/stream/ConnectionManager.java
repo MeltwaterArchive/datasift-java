@@ -45,7 +45,7 @@ public class ConnectionManager {
             return;
         }
         final Logger log = LoggerFactory.getLogger(ConnectionManager.class);
-        new Thread(new Runnable() {
+        Thread deadConnThread = new Thread(new Runnable() {
             public void run() {
                 CONNECTION_DETECTOR_RUNNING = true;
                 try {
@@ -73,7 +73,9 @@ public class ConnectionManager {
                     CONNECTION_DETECTOR_RUNNING = false;
                 }
             }
-        }, "dead-connections-monitor").start();
+        }, "dead-connections-monitor");
+        deadConnThread.setDaemon(true);
+        deadConnThread.start();
     }
 
     public ConnectionManager(DataSiftConfig config) {
