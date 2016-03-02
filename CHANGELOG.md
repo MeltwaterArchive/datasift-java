@@ -1,6 +1,7 @@
 Changelog
 ---------
 
+* v.3.2.13 makes the dead connection detection thread a deamon so a process terminates when all other threads do
 * v.3.2.12
     * Pylon endpoints now take and return a recording ID, rather than a hash
     * Moved to v1.3 API
