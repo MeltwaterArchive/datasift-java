@@ -1,15 +1,14 @@
 package com.datasift.client.pylon;
 
 import com.datasift.client.BaseDataSiftResult;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PylonStreamStatusList extends BaseDataSiftResult {
+public class PylonRecordingList extends BaseDataSiftResult {
     @JsonProperty
-    protected List<PylonStreamStatus> data = new ArrayList<PylonStreamStatus>();
+    protected List<PylonRecording> subscriptions = new ArrayList<PylonRecording>();
     @JsonProperty
     protected int count;
     @JsonProperty
@@ -19,15 +18,15 @@ public class PylonStreamStatusList extends BaseDataSiftResult {
     @JsonProperty
     protected int pages;
 
-    public PylonStreamStatusList() {
+    public PylonRecordingList() {
     }
 
     public int getCount() {
         return this.count;
     }
 
-    public List<PylonStreamStatus> getData() {
-        return data;
+    public List<PylonRecording> getSubscriptions() {
+        return subscriptions;
     }
 
     public int getPage() {

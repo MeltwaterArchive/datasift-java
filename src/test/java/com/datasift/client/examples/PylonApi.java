@@ -4,7 +4,6 @@ import com.datasift.client.DataSiftClient;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.pylon.PylonQueryParameters;
 import com.datasift.client.pylon.PylonSample;
-import com.datasift.client.pylon.PylonSampleInteraction;
 import com.datasift.client.pylon.PylonSampleInteractionItem;
 import com.datasift.client.pylon.PylonSampleRequest;
 import com.datasift.client.pylon.PylonStream;
@@ -12,7 +11,8 @@ import com.datasift.client.pylon.PylonParametersData;
 import com.datasift.client.pylon.PylonQuery;
 import com.datasift.client.pylon.PylonResult;
 import com.datasift.client.pylon.PylonTags;
-import com.datasift.client.pylon.PylonStreamStatus;
+import com.datasift.client.pylon.PylonRecording;
+import com.datasift.client.pylon.PylonRecording.PylonRecordingId;
 
 import java.util.Iterator;
 
@@ -32,13 +32,13 @@ public class PylonApi {
 
         // Starting a stream for pylon
         String name = "My pylon recording";
-        datasift.pylon().start(compiled.hash());
+        PylonRecordingId recordingId = datasift.pylon().start(compiled).sync();
 
         // Wait 10 seconds for processing
         Thread.sleep(10000);
 
         // Stopping a stream for pylon
-        datasift.pylon().stop(compiled.hash());
+        datasift.pylon().stop(recordingId);
 
         PylonQueryParameters parameters =
                 new PylonQueryParameters(
@@ -82,13 +82,13 @@ public class PylonApi {
                 );
 
         PylonQuery query = new PylonQuery(
-                compiled.hash(),
+                recordingId,
                 parameters,
                 "fb.content contains \"starbucks\"", 0, 100
         );
 
         PylonQuery queryNested = new PylonQuery(
-                compiled.hash(),
+                recordingId,
                 parametersNested,
                 "fb.content contains \"starbucks\"", 0, 100
         );
@@ -100,16 +100,16 @@ public class PylonApi {
         System.out.println("Analyze nested result object response: " + result.toString());
 
         // Retrieve the pylon
-        PylonStreamStatus streamStatus = datasift.pylon().get(compiled.hash()).sync();
+        PylonRecording streamStatus = datasift.pylon().get(recordingId).sync();
         System.out.println("Stream status returned: " + streamStatus.toString());
 
         // Retrieve VEDO tags for filter
-        PylonTags tagsResult = datasift.pylon().tags(compiled.hash()).sync();
+        PylonTags tagsResult = datasift.pylon().tags(recordingId).sync();
         System.out.println("VEDO tags returned for filter: " + tagsResult.getTags().toString());
 
         // Sample a Pylon stream
         PylonSampleRequest sampleRequest = new PylonSampleRequest(
-                compiled.hash(),
+                recordingId,
                 100,
                 "fb.content contains \"coffee\""
         );

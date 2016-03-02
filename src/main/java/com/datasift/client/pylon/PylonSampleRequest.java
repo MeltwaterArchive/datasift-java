@@ -1,45 +1,64 @@
 package com.datasift.client.pylon;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+import com.datasift.client.pylon.PylonRecording.PylonRecordingId;
 
 public class PylonSampleRequest {
-    @JsonProperty
-    protected String hash;
+    @JsonIgnore
+    protected PylonRecordingId recordingId;
+
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected int count;
+
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     protected String filter;
+
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected int start;
+
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     protected int end;
 
     public PylonSampleRequest() { }
 
-    public PylonSampleRequest(String hash, Integer count, String filter, Integer start, Integer end) {
-        this.hash = hash;
+    public PylonSampleRequest(PylonRecordingId recordingId, Integer count, String filter, Integer start, Integer end) {
+        this.recordingId = recordingId;
         this.filter = filter;
         if (count != null) { this.count = count; }
         if (start != null) { this.start = start; }
         if (end != null) { this.end = end; }
     }
 
-    public PylonSampleRequest(String hash, Integer count, String filter) { this(hash, count, filter, null, null); }
-
-    public PylonSampleRequest(String hash, Integer count) {
-        this(hash, count, null, null, null);
+    public PylonSampleRequest(PylonRecordingId recordingId, Integer count, String filter) {
+        this(recordingId, count, filter, null, null);
     }
 
-    public PylonSampleRequest(String hash, String filter) { this(hash, null, filter, null, null); }
+    public PylonSampleRequest(PylonRecordingId recordingId, Integer count) {
+        this(recordingId, count, null, null, null);
+    }
 
-    public PylonSampleRequest(String hash) { this(hash, null, null, null, null); }
+    public PylonSampleRequest(PylonRecordingId recordingId, String filter) {
+        this(recordingId, null, filter, null, null);
+    }
 
-    public String getHash() { return this.hash; }
+    public PylonSampleRequest(PylonRecordingId recordingId) { this(recordingId, null, null, null, null); }
+
+    @JsonGetter
+    private String getId() { return this.recordingId.id; }
+
+    @JsonSetter
+    private void setId(String id) { this.recordingId = new PylonRecordingId(id); }
+
+    public PylonRecordingId getRecordingId() { return this.recordingId; }
 
     public Integer getCount() { return this.count; }
 

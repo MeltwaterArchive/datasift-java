@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by agnieszka on 17/01/2014.
  */
 
-@Path("v1.2/preview")
+@Path("v1.3/preview")
 public class MockPreviewApi {
     Map<String, String> headers = new HashMap<>();
     private DateTime createdAt;

@@ -6,6 +6,10 @@
         "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
         "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
+    <module name="SuppressionCommentFilter"/>
+    <module name="TreeWalker">
+        <module name="FileContentsHolder"/>
+    </module>
     <module name="FileTabCharacter"/>
     <!--<module name="JavadocPackage"/> will get back to this when time allows-->
     <module name="NewlineAtEndOfFile">
