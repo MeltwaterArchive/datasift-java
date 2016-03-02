@@ -1,5 +1,11 @@
 Changelog
 ---------
+
+* v.3.2.12
+    * Pylon endpoints now take and return a recording ID, rather than a hash
+    * Moved to v1.3 API
+
+* v.3.2.10 Fixes a race condition in FutureData which resulted in the client blocking forever
 * v.3.2.9 Adds [dependency convergence](https://maven.apache.org/enforcer/enforcer-rules/dependencyConvergence.html). Ensures only a single version of a library gets pulled in by the client and its dependencies. (2015-11-18)
 * v.3.2.2 Adds support for Pylon analysis (2015-01-14)
 
