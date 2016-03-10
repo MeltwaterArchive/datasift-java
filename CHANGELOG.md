@@ -1,6 +1,8 @@
 Changelog
 ---------
 
+* v.3.2.14 upgrades HTTP client which now creates a custom thread pool so that all threads Netty created are daemons
+           * This enables the client to shutdown when all non-daemon threads do
 * v.3.2.13 makes the dead connection detection thread a deamon so a process terminates when all other threads do
 * v.3.2.12
     * Pylon endpoints now take and return a recording ID, rather than a hash
