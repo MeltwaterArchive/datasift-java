@@ -1,6 +1,6 @@
 [submodule "src/test/resources/datasift-client-tests"]
 	path = src/test/resources/datasift-client-tests
-	url = git@github.com:datasift/datasift-client-tests.git
+	url = https://github.com/datasift/datasift-client-tests.git
 [submodule "src/test/java/com/datasift/client/behaviour"]
 	path = src/test/java/com/datasift/client/behaviour
-	url = git@github.com:datasift/datasift-client-tests.git
+	url = https://github.com/datasift/datasift-client-tests.git
