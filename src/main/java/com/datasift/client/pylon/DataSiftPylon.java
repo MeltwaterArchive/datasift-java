@@ -162,14 +162,14 @@ public class DataSiftPylon extends DataSiftApiClient {
      * or using {@link com.datasift.client.BaseDataSiftResult#isSuccessful()}
      */
     public FutureData<DataSiftResult> stop(PylonRecordingId recordingId) {
-        if (recordingId == null || recordingId.id == null || recordingId.id.isEmpty()) {
+        if (recordingId == null || recordingId.getId() == null || recordingId.getId().isEmpty()) {
             throw new IllegalArgumentException("A valid recording id is required to stop a recording");
         }
         FutureData<DataSiftResult> future = new FutureData<>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(STOP));
         JSONRequest request = config.http()
                 .putJSON(uri, new PageReader(newRequestCallback(future, new BaseDataSiftResult(), config)))
-                .addField("id", recordingId);
+                .addField("id", recordingId.getId());
         performRequest(future, request);
         return future;
     }

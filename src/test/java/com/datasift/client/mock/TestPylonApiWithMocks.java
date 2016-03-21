@@ -1,6 +1,8 @@
 package com.datasift.client.mock;
 
 import com.datasift.client.DataSiftResult;
+import com.datasift.client.FutureData;
+import com.datasift.client.FutureResponse;
 import com.datasift.client.IntegrationTestBase;
 import com.datasift.client.pylon.PylonSample;
 import com.datasift.client.pylon.PylonSampleInteraction;
@@ -18,6 +20,7 @@ import io.higgs.core.ObjectFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -158,6 +161,15 @@ public class TestPylonApiWithMocks extends IntegrationTestBase {
     @Test
     public void testIfUserCanStopDataStream() {
         DataSiftResult stop = datasift.pylon().stop(new PylonRecordingId(recordingId)).sync();
+        assertTrue(stop.isSuccessful());
+    }
+
+    @Test
+    public void testIfUserCanStopDataStreamAndItReadsId() {
+        PylonRecordingId rid = mock(PylonRecordingId.class);
+        when(rid.getId()).thenReturn(recordingId);
+        DataSiftResult stop = datasift.pylon().stop(rid).sync();
+        verify(rid, times(3)).getId();
         assertTrue(stop.isSuccessful());
     }
 
