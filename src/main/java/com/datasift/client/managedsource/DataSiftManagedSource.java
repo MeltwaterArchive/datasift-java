@@ -329,7 +329,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
             throw new IllegalArgumentException("A valid source ID is required");
         }
         FutureData<ManagedSourceLog> future = new FutureData<>();
-        ParamBuilder b = newParams();
+        ParamBuilder b = newParams().put("id", id);
         if (page > 0) {
             b.put("page", page);
         }
