@@ -68,6 +68,10 @@ public class ManagedSource extends BaseDataSiftResult {
         return id;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     public static class AuthParams extends BaseSource.AuthParams {
         @JsonProperty("identity_id")
         protected String identityId;
