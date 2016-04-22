@@ -97,9 +97,8 @@ public class Instagram extends BaseSource<Instagram> {
      * @param fourSquareLocation a valid foursquare location ID e.g.  5XfVJe
      * @return this
      */
-    public Instagram byFoursquareLocation(String fourSquareLocation) {
-        addResource(Type.LOCATION, null, -1, -1, -1, false, fourSquareLocation);
-        return this;
+    public Instagram byFoursquareLocation(String fourSquareLocation) throws Exception {
+        throw new Exception("Instagram has deprecated foursquare support since 20th April 2016");
     }
 
     /**
