@@ -95,8 +95,8 @@ public class Instagram extends BaseSource<Instagram> {
      * is provided
      *
      * @param fourSquareLocation a valid foursquare location ID e.g.  5XfVJe
-     * @deprecated Instagram has deprecated foursquare support since 20th April 2016
      * @return this
+     * @deprecated Instagram has deprecated foursquare support since 20th April 2016
      */
     public Instagram byFoursquareLocation(String fourSquareLocation) throws Exception {
         throw new UnsupportedOperationException("Instagram has deprecated foursquare support since 20th April 2016");
@@ -139,14 +139,15 @@ public class Instagram extends BaseSource<Instagram> {
                 break;
             case AREA:
             case LOCATION:
-                if (value == null || distance > 5000) {
+                if (distance > 5000) {
                     throw new IllegalArgumentException("If provided distance must be between 1 and 5000 metres or < 0" +
                             " to be ignored");
                 }
                 if (type == Type.LOCATION) {
                     parameterSet.set("type", "location");
                     if (fourSquareLocation != null) {
-                        parameterSet.set("foursq", fourSquareLocation);
+                        throw new UnsupportedOperationException("Instagram has deprecated foursquare support " +
+                                "since 20th April 2016");
                     }
                 } else {
                     parameterSet.set("type", "area");
@@ -155,7 +156,7 @@ public class Instagram extends BaseSource<Instagram> {
                     parameterSet.set("lat", lattitude);
                     parameterSet.set("lng", longitude);
                     if (distance > 0) {
-                        parameterSet.set("distance", lattitude);
+                        parameterSet.set("distance", distance);
                     }
                 }
                 break;
