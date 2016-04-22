@@ -1,6 +1,9 @@
 Changelog
 ---------
-
+* 3.2.15   
+            ** Deprecate `foursq` parameter for Instagram -  They've removed this field from their API
+            ** adds the "id" param that was missing when making managed sources log requests
+            ** fix an issue where calling stop on pylon was missing a param
 * v.3.2.14 upgrades HTTP client which now creates a custom thread pool so that all threads Netty created are daemons
            * This enables the client to shutdown when all non-daemon threads do
 * v.3.2.13 makes the dead connection detection thread a deamon so a process terminates when all other threads do
