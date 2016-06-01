@@ -13,7 +13,7 @@ import java.util.ListIterator;
 /**
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
-public class HistoricsQueryList extends BaseDataSiftResult implements List<HistoricsQuery> {
+public class HistoricsQueryList extends BaseDataSiftResult implements Iterable<HistoricsQuery> {
     protected final List<HistoricsQuery> data = new ArrayList<HistoricsQuery>();
     private final int count;
 
