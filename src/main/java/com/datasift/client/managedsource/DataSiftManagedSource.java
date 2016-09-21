@@ -191,6 +191,9 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         POST request = config.http().POST(uri, new PageReader(newRequestCallback(future, new ManagedSource(), config)))
                 .form("source_type", source.type().value())
                 .form("name", name);
+        if (id != null) {
+            request.form("id", id);
+        }
         if (source.hasParams()) {
             request.form("parameters", source.getParametersAsJSON());
         }
