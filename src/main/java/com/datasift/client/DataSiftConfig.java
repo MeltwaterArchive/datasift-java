@@ -259,8 +259,9 @@ public class DataSiftConfig {
      * Force the client to use a version other than the default.
      * @param prefix the prefix to use, this should be along the lines of v1.3 i.e. vMajor.Minor
      */
-    public void versionPrefix(String prefix) {
+    public DataSiftConfig versionPrefix(String prefix) {
         versionPrefix = prefix;
+        return this;
     }
 
     public String getUsername() {

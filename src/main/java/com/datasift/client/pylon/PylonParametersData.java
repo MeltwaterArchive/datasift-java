@@ -19,6 +19,11 @@ public class PylonParametersData {
 
     public PylonParametersData() { }
 
+    public PylonParametersData(String target, Integer threshold) {
+        this.threshold = threshold;
+        this.target = target;
+    }
+
     public PylonParametersData(String interval, Float span, Integer threshold, String target) {
         this.interval = interval;
         this.target = target;
