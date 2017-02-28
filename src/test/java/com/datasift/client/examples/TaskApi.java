@@ -5,7 +5,9 @@ import com.datasift.client.FutureData;
 import com.datasift.client.pylon.DataSiftPylonTask;
 import com.datasift.client.pylon.PylonParametersData;
 import com.datasift.client.pylon.PylonQueryParameters;
+import com.datasift.client.pylon.PylonTaskAnalysisResult;
 import com.datasift.client.pylon.PylonTaskAnalysisResultBucket;
+import com.datasift.client.pylon.PylonTaskAnalyzeResponse;
 import com.datasift.client.pylon.PylonTaskParameters;
 import com.datasift.client.pylon.PylonTaskRequest;
 import com.datasift.client.pylon.PylonTaskResult;
@@ -45,7 +47,7 @@ public class TaskApi {
         // build the task to do it against a certain time period
         PylonTaskParameters taskParams = new PylonTaskParameters(queryParams, 1488067200, 1488153600);
         // submit the analysis query
-        FutureData<PylonTaskResult> resultFuture = taskClient.analyze(
+        FutureData<PylonTaskAnalyzeResponse> resultFuture = taskClient.analyze(
                 new PylonTaskRequest(
                         "subscriptionid",
                         taskParams,
