@@ -48,15 +48,15 @@ public class DataSiftPylonTask extends DataSiftApiClient {
         return future;
     }
 
-    public FutureData<PylonTaskResult> analyze(PylonTaskRequest query) {
+    public FutureData<PylonTaskAnalyzeResponse> analyze(PylonTaskRequest query) {
         if (query == null) {
             throw new IllegalArgumentException("A valid analyze request body is required to analyze a stream");
         }
-        FutureData<PylonTaskResult> future = new FutureData<PylonTaskResult>();
+        FutureData<PylonTaskAnalyzeResponse> future = new FutureData<PylonTaskAnalyzeResponse>();
         URI uri = newParams().forURL(config.newAPIEndpointURI(TASK));
         try {
             JSONRequest result = config.http()
-                    .postJSON(uri, new PageReader(newRequestCallback(future, new PylonTaskResult(), config)))
+                    .postJSON(uri, new PageReader(newRequestCallback(future, new PylonTaskAnalyzeResponse(), config)))
                     .setData(query);
             performRequest(future, result);
         } catch (JsonProcessingException ex) {
