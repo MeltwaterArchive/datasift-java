@@ -15,7 +15,7 @@ import javax.ws.rs.WebApplicationException;
 import java.io.IOException;
 import java.util.HashMap;
 
-@Path("/behat-v1.3/")
+@Path("/behat-v1.4/")
 @Produces(MediaType.APPLICATION_JSON)
 public class CucumberMockWrapper {
     private String response;
