@@ -162,6 +162,37 @@
             </resource>
         </resources>
         <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+               <execution>
+                   <phase>package</phase>
+               <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <excludes>
+                  <exclude>junit:junit</exclude>
+                  <exclude>log4j:log4j:jar:</exclude>
+                </excludes>
+              </artifactSet>
+              <relocations>
+                <relocation>
+                  <pattern>io.netty</pattern>
+                  <shadedPattern>com.datasift.shaded.io.netty</shadedPattern>
+	        </relocation>
+                <relocation>
+                  <pattern>io.higgs</pattern>
+                  <shadedPattern>com.datasift.shaded.io.higgs</shadedPattern>
+	        </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
