@@ -50,16 +50,11 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.0</version>
-		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.boundary</groupId>
 			<artifactId>high-scale-lib</artifactId>
 			<version>1.0.6</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>io.higgs</groupId>
 			<artifactId>http-client</artifactId>
@@ -88,13 +83,14 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.1</version>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.18.0-GA</version>
 			<scope>compile</scope>
 			<optional>true</optional>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -173,11 +169,13 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<minimizeJar>true</minimizeJar>
 							<artifactSet>
 								<excludes>
 									<exclude>junit:junit</exclude>
 									<exclude>log4j:log4j:jar:</exclude>
 								</excludes>
+
 							</artifactSet>
 							<relocations>
 								<relocation>
@@ -187,6 +185,18 @@
 								<relocation>
 									<pattern>io.higgs</pattern>
 									<shadedPattern>com.datasift.shaded.io.higgs</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>com.fasterxml</pattern>
+									<shadedPattern>com.datasift.shaded.com.fasterxml</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.joda.time</pattern>
+									<shadedPattern>com.datasift.shaded.org.joda.time</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>com.google.common</pattern>
+									<shadedPattern>com.datasift.shaded.com.google.common</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>
