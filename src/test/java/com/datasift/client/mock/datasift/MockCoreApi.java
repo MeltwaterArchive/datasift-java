@@ -15,7 +15,7 @@ import javax.ws.rs.WebApplicationException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Path("v1.3")
+@Path("v1.4")
 public class MockCoreApi {
     Map<String, String> headers = new HashMap<>();
     private double dpu = -1f;

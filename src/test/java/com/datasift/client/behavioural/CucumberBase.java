@@ -13,7 +13,7 @@ public class CucumberBase {
     CucumberMockWrapper wrapper = new CucumberMockWrapper();
     DataSiftConfig config = new DataSiftConfig("zcourts", "some-api-key") {
         {
-            versionPrefix("behat-v1.3");
+            versionPrefix("behat-v1.4");
             host("localhost");
             setSslEnabled(false);
         }

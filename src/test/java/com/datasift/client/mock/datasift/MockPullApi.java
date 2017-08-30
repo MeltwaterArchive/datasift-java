@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by agnieszka on 15/01/2014.
  */
 
-@Path("v1.3/pull")
+@Path("v1.4/pull")
 public class MockPullApi extends MockPushApi {
 
     @Path("/")
