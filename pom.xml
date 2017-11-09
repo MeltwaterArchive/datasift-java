@@ -186,6 +186,16 @@
 									<shadedPattern>com.datasift.shaded.com.google.common</shadedPattern>
 								</relocation>
 							</relocations>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>**/log4j.properties</exclude>
+										<exclude>**/logging.properties</exclude>
+										<exclude>**/version.prop</exclude>
+									</excludes>
+								</filter>
+							</filters>
 						</configuration>
 					</execution>
 				</executions>
