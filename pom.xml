@@ -41,7 +41,7 @@
 		<encoding>UTF-8</encoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<higgs.version>0.0.22</higgs.version>
+		<higgs.version>2c9c649d59a454e13473294e090a81bd5226659e</higgs.version>
 	</properties>
 
 	<dependencies>
@@ -51,12 +51,12 @@
 			<version>1.7.0</version>
 		</dependency>
 		<dependency>
-			<groupId>io.higgs</groupId>
+			<groupId>com.github.andimiller.higgs</groupId>
 			<artifactId>http-client</artifactId>
 			<version>${higgs.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.higgs</groupId>
+			<groupId>com.github.andimiller.higgs</groupId>
 			<artifactId>ws-client</artifactId>
 			<version>${higgs.version}</version>
 		</dependency>
@@ -91,13 +91,13 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.higgs</groupId>
+			<groupId>com.github.andimiller.higgs</groupId>
 			<artifactId>http-s3</artifactId>
 			<version>${higgs.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.higgs</groupId>
+			<groupId>com.github.andimiller.higgs</groupId>
 			<artifactId>transformer-defaults</artifactId>
 			<version>${higgs.version}</version>
 			<scope>test</scope>
@@ -335,6 +335,10 @@
 		</plugins>
 	</build>
 	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
 		<repository>
 			<id>boundary-site</id>
 			<url>http://maven.boundary.com/artifactory/repo</url>
