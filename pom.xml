@@ -185,6 +185,10 @@
 									<pattern>com.google.common</pattern>
 									<shadedPattern>com.datasift.shaded.com.google.common</shadedPattern>
 								</relocation>
+								<relocation>
+									<pattern>org.joda.time</pattern>
+									<shadedPattern>com.datasift.shaded.org.joda.time</shadedPattern>
+								</relocation>
 							</relocations>
 							<filters>
 								<filter>
