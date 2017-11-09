@@ -8,7 +8,7 @@
 	<groupId>com.datasift.client</groupId>
 	<artifactId>datasift-java</artifactId>
 	<packaging>jar</packaging>
-	<version>3.3.3-SNAPSHOT</version>
+	<version>3.4.0</version>
 	<name>DataSift Java Client library</name>
 	<description>A client library for interacting with the DataSift API on the JVM.</description>
 
@@ -205,7 +205,7 @@
 								</filter>
 							</filters>
 							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
 							</transformers>
 						</configuration>
 					</execution>
