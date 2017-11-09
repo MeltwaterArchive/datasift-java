@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - openjdk7
+  - oraclejdk8
 #override install command, mvn install requires gpg signed JARs
 install: mvn compile
 sudo: false
