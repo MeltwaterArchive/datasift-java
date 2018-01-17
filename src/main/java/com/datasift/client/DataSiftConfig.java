@@ -257,7 +257,7 @@ public class DataSiftConfig {
 
     /**
      * Force the client to use a version other than the default.
-     * @param prefix the prefix to use, this should be along the lines of v1.3 i.e. vMajor.Minor
+     * @param prefix the prefix to use, this should be along the lines of v1.6 i.e. vMajor.Minor
      */
     public DataSiftConfig versionPrefix(String prefix) {
         versionPrefix = prefix;
