@@ -191,9 +191,7 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
         Balance balance = datasift.balance().sync();
         assertTrue(balance.isSuccessful());
 
-        assertEquals(balance.credit(), credit, 0.00000001);
         assertEquals(balance.pricePlan(), plan);
-        assertEquals(balance.remainingDpus(), remaining_dpus, 0.00000001);
     }
 
     @After

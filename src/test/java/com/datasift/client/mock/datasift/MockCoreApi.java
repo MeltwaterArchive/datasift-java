@@ -67,9 +67,7 @@ public class MockCoreApi {
     public Map<String, Balance.BalanceData> balance() {
         Map<String, Balance.BalanceData> map = new HashMap<>();
         Balance.BalanceData balanceData = new Balance.BalanceData();
-        balanceData.setCredit(credit);
         balanceData.setPlan(plan);
-        balanceData.setRemainingDpus(remaining_dpus);
 
         map.put("balance", balanceData);
         return map;
