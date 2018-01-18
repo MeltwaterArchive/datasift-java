@@ -2,6 +2,7 @@ package com.datasift.client.mock.datasift;
 
 import com.datasift.client.core.Balance;
 import com.datasift.client.core.Usage;
+import com.google.common.collect.Lists;
 import io.higgs.http.server.HttpResponse;
 import io.higgs.http.server.resource.MediaType;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -12,7 +13,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Path("v1.3")
@@ -24,9 +27,7 @@ public class MockCoreApi {
     private String expectedCsdl;
     private DateTime start, end;
     private Usage.UsageStream streams;
-    private double credit = -1d;
     private String plan = "";
-    private double remaining_dpus = -1d;
     private Usage.Period expectedPeriod;
 
     @Path("compile")
@@ -67,9 +68,17 @@ public class MockCoreApi {
     public Map<String, Balance.BalanceData> balance() {
         Map<String, Balance.BalanceData> map = new HashMap<>();
         Balance.BalanceData balanceData = new Balance.BalanceData();
+        Balance.AllowanceData allowanceData = new Balance.AllowanceData();
         balanceData.setPlan(plan);
-
+        balanceData.setThreshold(111.11);
+        allowanceData.setCategories(Lists.<String>newArrayList("hello", "world"));
+        allowanceData.setCost(123.45);
+        allowanceData.setName("testallowance");
+        allowanceData.setRemainingDpus(345.67);
+        allowanceData.setUsage(456.78);
+        allowanceData.setDpuAllowance(567.89);
         map.put("balance", balanceData);
+
         return map;
     }
 
@@ -120,18 +129,6 @@ public class MockCoreApi {
         map.put("created_at", createdAt);
         map.put("dpu", dpu);
         return map;
-    }
-
-    public void setCredit(double credit) {
-        this.credit = credit;
-    }
-
-    public void setPlan(String plan) {
-        this.plan = plan;
-    }
-
-    public void setRemaining_dpus(double remaining_dpus) {
-        this.remaining_dpus = remaining_dpus;
     }
 
     public void setExpectedPeriod(Usage.Period expectedPeriod) {

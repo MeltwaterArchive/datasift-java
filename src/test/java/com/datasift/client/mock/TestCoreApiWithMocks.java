@@ -7,6 +7,7 @@ import com.datasift.client.core.Stream;
 import com.datasift.client.core.Usage;
 import com.datasift.client.core.Validation;
 import com.datasift.client.mock.datasift.MockCoreApi;
+import com.google.common.collect.Lists;
 import io.higgs.core.HiggsServer;
 import io.higgs.core.ObjectFactory;
 import org.joda.time.DateTime;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class TestCoreApiWithMocks extends IntegrationTestBase {
@@ -77,10 +79,6 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
         m.setExpectedCsdl(csdl);
         m.setStart(start);
         m.setEnd(end);
-
-        m.setCredit(credit);
-        m.setPlan(plan);
-        m.setRemaining_dpus(remaining_dpus);
 
         Usage.UsageStream usageStream = new Usage.UsageStream();
         usageStream.setLicenses(new HashMap<String, Integer>());
@@ -190,7 +188,15 @@ public class TestCoreApiWithMocks extends IntegrationTestBase {
     public void testIfUserCanCalculateBalance() {
         Balance balance = datasift.balance().sync();
         assertTrue(balance.isSuccessful());
-
+        assertEquals(balance.getBalance().getThreshold(), 111.11, 0.1);
+        assertEquals(balance.getBalance().getPlan(), "");
+        Balance.AllowanceData a = balance.getBalance().getAllowances().get(0);
+        assertNotNull(a);
+        assertTrue(a.getCategories().containsAll(Lists.newArrayList("hello", "world")));
+        assertEquals(a.getCost(), 123.45, 0.1);
+        assertEquals(a.getRemainingDpus(), 345.67, 0.1);
+        assertEquals(a.getUsage(), 456.78, 0.1);
+        assertEquals(a.getDpuAllowance(), 567.89, 0.1);
         assertEquals(balance.pricePlan(), plan);
     }
 
