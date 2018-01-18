@@ -33,7 +33,6 @@ public class Balance extends BaseDataSiftResult {
         this.balance = balance;
     }
 
-
     @Override
     public String toString() {
         try {

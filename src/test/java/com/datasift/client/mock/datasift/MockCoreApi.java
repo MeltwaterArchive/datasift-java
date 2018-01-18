@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("v1.3")
+@Path("v1.6")
 public class MockCoreApi {
     Map<String, String> headers = new HashMap<>();
     private double dpu = -1f;
@@ -77,6 +77,7 @@ public class MockCoreApi {
         allowanceData.setRemainingDpus(345.67);
         allowanceData.setUsage(456.78);
         allowanceData.setDpuAllowance(567.89);
+        balanceData.setAllowances(Lists.newArrayList(allowanceData));
         map.put("balance", balanceData);
 
         return map;
