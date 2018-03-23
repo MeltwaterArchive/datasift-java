@@ -30,8 +30,10 @@ public class HistoricsApi {
         DateTime fiveHrsAgo = DateTime.now().minusHours(5);
         DateTime fourHrsAgo = fiveHrsAgo.plusHours(1);
         String name = "My awesome Historics";
+        String source = "tumblr";
         //prepare our query
-        PreparedHistoricsQuery query = datasift.historics().prepare(stream.hash(), fiveHrsAgo, fourHrsAgo, name).sync();
+        PreparedHistoricsQuery query = datasift.historics().prepare(stream.hash(), fiveHrsAgo, fourHrsAgo, name, source)
+                .sync();
         //have to create a push subscription to the newly created historics before starting
         datasift.push().create(s3, FutureData.wrap(query), "Subscription name").sync();
         DataSiftResult historics = datasift.historics().start(query).sync();
