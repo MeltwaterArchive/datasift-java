@@ -254,9 +254,10 @@ public class DataSiftHistorics extends DataSiftApiClient {
      *              Example values: Football
      * @return the prepared Historics
      */
-    public FutureData<PreparedHistoricsQuery> prepare(String hash, DateTime start, DateTime end, String name) {
+    public FutureData<PreparedHistoricsQuery> prepare(String hash, DateTime start, DateTime end, String name
+            , String... sources) {
         return prepare(hash, MILLISECONDS.toSeconds(start.getMillis()), MILLISECONDS.toSeconds(end.getMillis()),
-                name, -1);
+                name, -1, sources);
     }
 
     /**
