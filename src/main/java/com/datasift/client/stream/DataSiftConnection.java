@@ -80,7 +80,9 @@ class DataSiftConnection implements WebSocketEventListener {
 
     protected synchronized void pushUnsentSubscriptions() {
         for (final StreamSubscription subscription : unsentSubscriptions) {
-            if (connection == null || !connection.channel().isActive()) {
+            if (connection == null
+                    || connection.channel() == null
+                    || !connection.channel().isActive()) {
                 connect();
                 return;
             }
