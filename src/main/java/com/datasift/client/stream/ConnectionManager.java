@@ -1,6 +1,7 @@
 package com.datasift.client.stream;
 
 import com.datasift.client.DataSiftConfig;
+import com.datasift.client.DataSiftClient;
 import com.datasift.client.core.Stream;
 import io.higgs.ws.client.WebSocketClient;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
@@ -122,6 +123,9 @@ public class ConnectionManager {
     }
 
     public ConnectionManager subscribe(final StreamSubscription subscription) {
+        // quick workaround for a weird netty initialisation error
+        new DataSiftClient(this.config).balance().sync();
+        // end quick workaround
         if (errorListener == null) {
             throw new IllegalStateException("You must call listen before subscribing to streams otherwise you'll miss" +
                     " any exceptions that may occur");
