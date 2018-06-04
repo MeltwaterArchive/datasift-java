@@ -193,15 +193,13 @@
 									<pattern>org.cliffc.high_scale_lib</pattern>
 									<shadedPattern>com.datasift.shaded.org.cliffc.high_scale_lib</shadedPattern>
 								</relocation>
-								<relocation>
-									<pattern>java.util.concurrent</pattern>
-									<shadedPattern>com.datasift.shaded.java.util.concurrent</shadedPattern>
-								</relocation>
 							</relocations>
 							<filters>
 								<filter>
 									<artifact>*:*</artifact>
 									<excludes>
+										<exclude>java/util/**</exclude>
+										<exclude>java/util/concurrent/**</exclude>
 										<exclude>**/log4j.properties</exclude>
 										<exclude>**/logging.properties</exclude>
 										<exclude>**/version.prop</exclude>
