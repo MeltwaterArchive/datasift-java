@@ -30,14 +30,21 @@ public class Instagram extends BaseSource<Instagram> {
     }
 
     /**
-     * Adds a managed instagram source by user
+     * set to true, if you want to receive comment count interactions.
      *
-     * @param userId the ID of the user
      * @return this
      */
-    public Instagram byUser(String userId) {
-        addResource(Type.USER, userId, -1, -1, -1, false, null);
-        return this;
+    public Instagram enableCommentCounts(boolean enabled) {
+        return setParametersField("comment_count", enabled);
+    }
+
+    /**
+     * set to true, if you want to receive like count interactions.
+     *
+     * @return this
+     */
+    public Instagram enableLikeCounts(boolean enabled) {
+        return setParametersField("like_count", enabled);
     }
 
     /**
@@ -53,65 +60,6 @@ public class Instagram extends BaseSource<Instagram> {
         return this;
     }
 
-    public Instagram byArea(float longitude, float lattitude) {
-        return byArea(longitude, lattitude);
-    }
-
-    /**
-     * Adds a resource a given area
-     *
-     * @param longitude the longitude value of the coordinates to use
-     * @param latitude  the latitude value of the coordinate to use
-     * @param distance  an optional distance which marks the radius around the given area,
-     *                  defaults to 1000 and must be between 1 and 5000 metres
-     * @return this
-     */
-    public Instagram byArea(float longitude, float latitude, int distance) {
-        addResource(Type.AREA, null, longitude, latitude, distance, false, null);
-        return this;
-    }
-
-    public Instagram byLocation(float longitude, float latitude) {
-        return byLocation(longitude, latitude, 0);
-    }
-
-    /**
-     * Adds a resource a given location
-     *
-     * @param longitude the longitude value of the coordinates to use
-     * @param latitude  the latitude value of the coordinate to use
-     * @param distance  an optional distance which marks the radius around the given area,
-     *                  defaults to 1000 and must be between 1 and 5000 metres
-     * @return this
-     * @see #byArea(float, float, int)
-     */
-    public Instagram byLocation(float longitude, float latitude, int distance) {
-        addResource(Type.LOCATION, null, longitude, latitude, distance, false, null);
-        return this;
-    }
-
-    /**
-     * The same as {@link #byLocation(float, float, int)} but instead of using coordinates a foursquare location ID
-     * is provided
-     *
-     * @param fourSquareLocation a valid foursquare location ID e.g.  5XfVJe
-     * @return this
-     * @deprecated Instagram has deprecated foursquare support since 20th April 2016
-     */
-    public Instagram byFoursquareLocation(String fourSquareLocation) throws Exception {
-        throw new UnsupportedOperationException("Instagram has deprecated foursquare support since 20th April 2016");
-    }
-
-    /**
-     * Adds a resource that is filtered based on popularity
-     *
-     * @return this
-     */
-    public Instagram byPopularity() {
-        addResource(Type.POPULAR, null, -1, -1, -1, false, null);
-        return this;
-    }
-
     /**
      * Adds a resource object to the request of the given type, which is always required
      *
@@ -122,13 +70,6 @@ public class Instagram extends BaseSource<Instagram> {
                                     boolean exactMatch, String fourSquareLocation) {
         ResourceParams parameterSet = newResourceParams();
         switch (type) {
-            case USER:
-                if (value == null) {
-                    throw new IllegalArgumentException("If type is user then value is required");
-                }
-                parameterSet.set("type", "user");
-                parameterSet.set("value", value);
-                break;
             case TAG:
                 if (value == null) {
                     throw new IllegalArgumentException("If type is user then value is required");
@@ -136,32 +77,6 @@ public class Instagram extends BaseSource<Instagram> {
                 parameterSet.set("type", "tag");
                 parameterSet.set("value", value);
                 parameterSet.set("extact_match", exactMatch);
-                break;
-            case AREA:
-            case LOCATION:
-                if (distance > 5000) {
-                    throw new IllegalArgumentException("If provided distance must be between 1 and 5000 metres or < 0" +
-                            " to be ignored");
-                }
-                if (type == Type.LOCATION) {
-                    parameterSet.set("type", "location");
-                    if (fourSquareLocation != null) {
-                        throw new UnsupportedOperationException("Instagram has deprecated foursquare support " +
-                                "since 20th April 2016");
-                    }
-                } else {
-                    parameterSet.set("type", "area");
-                }
-                if (fourSquareLocation == null) {
-                    parameterSet.set("lat", lattitude);
-                    parameterSet.set("lng", longitude);
-                    if (distance > 0) {
-                        parameterSet.set("distance", distance);
-                    }
-                }
-                break;
-            case POPULAR:
-                parameterSet.set("type", "popular");
                 break;
         }
         return this;
@@ -185,6 +100,6 @@ public class Instagram extends BaseSource<Instagram> {
     }
 
     public static enum Type {
-        USER, TAG, AREA, LOCATION, POPULAR
+        TAG
     }
 }
