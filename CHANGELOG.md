@@ -1,6 +1,8 @@
 Changelog
 ---------
-* 3.2.15   
+* 3.6.0 Removes the instagram options which the API no longer supports
+
+* 3.2.15
             ** Deprecate `foursq` parameter for Instagram -  They've removed this field from their API
             ** adds the "id" param that was missing when making managed sources log requests
             ** fix an issue where calling stop on pylon was missing a param
