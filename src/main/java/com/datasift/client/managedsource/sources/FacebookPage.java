@@ -84,4 +84,30 @@ public class FacebookPage extends BaseSource<FacebookPage> {
         parameterSet.set("value", oAuthAccessToken);
         return this;
     }
+
+    /***
+     * Add a facebook page to be crawled for instagram content
+     *
+     * @param pageid the ID of the page, usually numerical
+     * @return
+     */
+    public FacebookPage addInstagramLinkedPage(String pageid) {
+        ResourceParams parameterSet = newResourceParams();
+        parameterSet.set("id", pageid);
+        parameterSet.set("type", "instagram");
+        return this;
+    }
+
+    /***
+     * Add an instagram user to be crawled for content
+     *
+     * @param username ID of the user to be checked, usually a textual name
+     * @return
+     */
+    public FacebookPage addInstagramUser(String username) {
+        ResourceParams parameterSet = newResourceParams();
+        parameterSet.set("id", username);
+        parameterSet.set("type", "instagram_user");
+        return this;
+    }
 }
