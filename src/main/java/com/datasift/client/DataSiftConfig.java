@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/**
+/*
  */
 public class DataSiftConfig {
     private static final String illConfigured = "(%s) is null, this is an ill-configured object and all " +
@@ -23,7 +23,7 @@ public class DataSiftConfig {
     protected String wsHost = "websocket.datasift.com";
     protected String ingestionHost = "in.datasift.com";
 
-    /**
+    /*
      * This instance should be used as a base for configurations.
      * All new requests should use {@link io.higgs.http.client.HttpRequestBuilder#copy()}
      * Although a single instance would work, this keeps things simple and ensures no stale data is passed in
@@ -54,7 +54,7 @@ public class DataSiftConfig {
         compatibleSSLProtocolsFound = sslProtocols.size() > 0;
     }
 
-    /**
+    /*
      * Initialize a new config instance with the given username and api key
      *
      * @param username the DataSift username
@@ -65,7 +65,7 @@ public class DataSiftConfig {
         auth(username, apiKey);
     }
 
-    /**
+    /*
      * Provide the user credentials that should be used for authentication
      *
      * @param username the DataSift username
@@ -82,7 +82,7 @@ public class DataSiftConfig {
         return this;
     }
 
-    /**
+    /*
      * Sets a host and port for a proxy that all requests should be sent to
      *
      * @param host proxy host
@@ -94,7 +94,7 @@ public class DataSiftConfig {
         return this;
     }
 
-    /**
+    /*
      * @param username the username the proxy requires
      * @param password the password the proxy requires
      * @return this
@@ -104,7 +104,7 @@ public class DataSiftConfig {
         return this;
     }
 
-    /**
+    /*
      * @return The HTTP protocol prefix to use.
      * If SSL is enabled this will be "https://" if not it'll be "http://"
      */
@@ -117,7 +117,7 @@ public class DataSiftConfig {
         return this;
     }
 
-    /**
+    /*
      * @return The host name to which all api calls with this configurations will be made
      */
     public String host() {
@@ -129,7 +129,7 @@ public class DataSiftConfig {
         return this;
     }
 
-    /**
+    /*
      * @return The host name used to stream
      */
     public String wsHost() {
@@ -141,14 +141,14 @@ public class DataSiftConfig {
         return this;
     }
 
-    /**
+    /*
      * @return The host name to which all ingestion api calls with this configurations will be made
      */
     public String ingestionHost() {
         return ingestionHost;
     }
 
-    /**
+    /*
      * @return The port on which connections should be made
      */
     public int port() {
@@ -160,7 +160,7 @@ public class DataSiftConfig {
         port = p;
     }
 
-    /**
+    /*
      * @return A base URL to the DataSift API. e.g. https://api.datasift.com/v1/
      */
     public URI baseURL() {
@@ -179,7 +179,7 @@ public class DataSiftConfig {
         }
     }
 
-    /**
+    /*
      * @return A base URL to the DataSift Ingestion API. e.g. https://in.datasift.com/
      */
     public URI baseIngestionURL() {
@@ -196,7 +196,7 @@ public class DataSiftConfig {
         }
     }
 
-    /**
+    /*
      * Generate a new URI object given an endpoint relative to the base url of this configuration.
      * For example, if the base URL is https://api.datasift.com/v1/ and the endpoint parameters is validate
      * this will return the URI https://api.datasift.com/v1/validate.
@@ -209,7 +209,7 @@ public class DataSiftConfig {
         return baseURL().resolve(endpoint);
     }
 
-    /**
+    /*
      * Generate a new URI object given an endpoint relative to the base url of this configuration.
      * For example, if the base URL is https://api.datasift.com/v1/ and the endpoint parameters is validate
      * this will return the URI https://api.datasift.com/v1/validate.
@@ -222,7 +222,7 @@ public class DataSiftConfig {
         return baseURL().resolve(endpoint);
     }
 
-    /**
+    /*
      * Generate a new URI object given an endpoint relative to the base ingestion url of this configuration.
      * For example, if the base URL is https://in.datasift.com/ and the endpoint is the source ID,
      * this would return a URI similar to https://in.datasift.com/9b101935be2044bb9cfdffbc953924e8.
@@ -235,7 +235,7 @@ public class DataSiftConfig {
         return baseIngestionURL().resolve(endpoint);
     }
 
-    /**
+    /*
      * Generate a new URI object given an endpoint relative to the base ingestion url of this configuration.
      * For example, if the base URL is https://in.datasift.com/ and the endpoint is the source ID,
      * this would return a URI similar to https://in.datasift.com/9b101935be2044bb9cfdffbc953924e8.
@@ -248,14 +248,14 @@ public class DataSiftConfig {
         return baseIngestionURL().resolve(endpoint);
     }
 
-    /**
+    /*
      * @return The API version prefix to use, e.g. v1
      */
     public String versionPrefix() {
         return versionPrefix;
     }
 
-    /**
+    /*
      * Force the client to use a version other than the default.
      * @param prefix the prefix to use, this should be along the lines of v1.6 i.e. vMajor.Minor
      */
@@ -297,14 +297,14 @@ public class DataSiftConfig {
         return http;
     }
 
-    /**
+    /*
      * @return The format that should be used to URL encode prameters
      */
     public String urlEncodingFormat() {
         return urlEncodingFormat;
     }
 
-    /**
+    /*
      * Sets the format that should be used to encode URL parameters when the option arises
      * e.g. ISO-8859-1 or UTF-8
      *
@@ -320,7 +320,7 @@ public class DataSiftConfig {
         return autoReconnect;
     }
 
-    /**
+    /*
      * Sets whether streams are automatically reconnected when a websocket connection is closed
      *
      * @param autoReconnect true or false, defaults to true
@@ -329,7 +329,7 @@ public class DataSiftConfig {
         this.autoReconnect = autoReconnect;
     }
 
-    /**
+    /*
      * Gets an array of compatible SSL protocols found on this JVM
      *
      * @return an array of SSL protocols or NULL if none are available
@@ -338,7 +338,7 @@ public class DataSiftConfig {
         return compatibleSSLProtocolsFound() ? sslProtocols.toArray(new String[sslProtocols.size()]) : null;
     }
 
-    /**
+    /*
      * @return true if at least one compatible secure protocol is available
      */
     public boolean compatibleSSLProtocolsFound() {

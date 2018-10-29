@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Set;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public abstract class BaseSource<T extends DataSource<T>> implements DataSource<T> {
@@ -59,7 +59,7 @@ public abstract class BaseSource<T extends DataSource<T>> implements DataSource<
         return (T) this;
     }
 
-    /**
+    /*
      * Creates a set of auth parameters that can be used for this source
      *
      * @param name    a human friendly name for this auth set
@@ -74,7 +74,7 @@ public abstract class BaseSource<T extends DataSource<T>> implements DataSource<
         return set;
     }
 
-    /**
+    /*
      * @return A new set of resource parameters
      */
     public ResourceParams newResourceParams() {

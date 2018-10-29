@@ -23,7 +23,7 @@ import static com.datasift.client.push.OutputType.SPLUNK_STORM;
 import static com.datasift.client.push.OutputType.SPLUNK_STORM_REST;
 import static com.datasift.client.push.OutputType.ZOOM_DATA;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class BaseConnector<T extends PushConnector<T>> implements PushConnector<T> {
@@ -92,7 +92,7 @@ public class BaseConnector<T extends PushConnector<T>> implements PushConnector<
         return null;
     }
 
-    /**
+    /*
      * To make it convenient for all sub-types to just return the results of setParam
      * the sub type should call setup passing it's this reference
      *
@@ -116,7 +116,7 @@ public class BaseConnector<T extends PushConnector<T>> implements PushConnector<
         return thisRef;
     }
 
-    /**
+    /*
      * Check if a param has already been set with the given name
      *
      * @param paramName the name to check for

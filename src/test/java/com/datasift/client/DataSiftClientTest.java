@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class DataSiftClientTest extends TestUtil {

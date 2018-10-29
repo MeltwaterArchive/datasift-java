@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class BaseDataSiftResult implements DataSiftResult {

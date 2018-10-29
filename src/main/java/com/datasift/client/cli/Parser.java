@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
+/*
  */
 public class Parser {
     protected Parser() {
@@ -136,7 +136,7 @@ public class Parser {
             }
         }
 
-        /**
+        /*
          * Get  a set of key value pairs passed in for the given param
          * <p/>
          * e.g. if the command "parser -p a b -p c d -p e f" is given then the map returned will have
@@ -154,7 +154,7 @@ public class Parser {
             }
         }
 
-        /**
+        /*
          * Get the value of an argument
          *
          * @param arg the arg to get the value for

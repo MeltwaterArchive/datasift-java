@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class PreparedHistoricsQuery extends BaseDataSiftResult {
@@ -17,7 +17,7 @@ public class PreparedHistoricsQuery extends BaseDataSiftResult {
     @JsonProperty
     protected Availability availability;
 
-    /**
+    /*
      * Create a PreparedHistorics instance containing only an ID
      *
      * @param id the id obtained from DataSift from calling push/create i.e.

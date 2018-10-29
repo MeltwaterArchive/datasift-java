@@ -3,11 +3,11 @@ package com.datasift.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Settings {
-    /**
+    /*
      * General timeout for any test which requires async/wait/notify
      */
     public static final long TIMEOUT = 30000;

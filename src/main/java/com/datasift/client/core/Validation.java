@@ -3,7 +3,7 @@ package com.datasift.client.core;
 import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Validation extends BaseDataSiftResult {
@@ -15,7 +15,7 @@ public class Validation extends BaseDataSiftResult {
     public Validation() {
     }
 
-    /**
+    /*
      * @return true if the CSDL that was used in the request was checked and found to be valid. False otherwise.
      */
     public boolean isValid() {

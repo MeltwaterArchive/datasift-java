@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 import static org.junit.Assert.assertTrue;
 
-/**
+/*
  * Created by agnieszka on 21/01/16.
  */
 public class PylonSampleSteps extends CucumberBase {

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Response {
@@ -33,14 +33,14 @@ public class Response {
         }
     }
 
-    /**
+    /*
      * @return true if the request for this response has failed for some reason
      */
     public boolean hasFailed() {
         return failed;
     }
 
-    /**
+    /*
      * @return If the request has failed, this returns the reason for the failure
      *         May* be null
      */
@@ -48,21 +48,21 @@ public class Response {
         return cause;
     }
 
-    /**
+    /*
      * @return The HTTP status returned by the API e.g 200, 400, 404 etc...
      */
     public int status() {
         return rawResponse.getStatus().code();
     }
 
-    /**
+    /*
      * @return Status reason/message e.g. "OK" or "Not Found"
      */
     public String statusMessage() {
         return rawResponse.getStatus().reasonPhrase();
     }
 
-    /**
+    /*
      * @return The HTTP protocol version e.g. 1.0 or 1.1
      */
     public float protocolVersion() {
@@ -70,14 +70,14 @@ public class Response {
                 + "." + rawResponse.getProtocolVersion().minorVersion());
     }
 
-    /**
+    /*
      * @return True if this response was returned with transfer encoding set to "chunked"
      */
     public boolean isChunked() {
         return rawResponse.isChunked();
     }
 
-    /**
+    /*
      * @return The data returned by the DataSift API.
      */
     public String data() {

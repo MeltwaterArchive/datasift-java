@@ -3,7 +3,7 @@ package com.datasift.client.core;
 import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Stream extends BaseDataSiftResult {
@@ -17,7 +17,7 @@ public class Stream extends BaseDataSiftResult {
     public Stream() {
     }
 
-    /**
+    /*
      * Create a stream instance containing only a hash
      *
      * @param str the hash obtained from DataSift for a stream

@@ -11,7 +11,7 @@ import io.higgs.http.client.readers.PageReader;
 
 import java.net.URI;
 
-/**
+/*
  * This class provides access to the DataSift Analysis Task API.
  */
 public class DataSiftPylonTask extends DataSiftApiClient {

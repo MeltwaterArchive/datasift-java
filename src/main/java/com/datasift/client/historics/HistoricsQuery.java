@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class HistoricsQuery extends BaseDataSiftResult {
@@ -35,7 +35,7 @@ public class HistoricsQuery extends BaseDataSiftResult {
     @JsonProperty
     private List<Chunk> chunks;
 
-    /**
+    /*
      * Create a HistoricsQuery instance containing only an ID
      *
      * @param historicsQueryId the id obtained from DataSift
@@ -94,7 +94,7 @@ public class HistoricsQuery extends BaseDataSiftResult {
         return sample;
     }
 
-    /**
+    /*
      * @return a list of chunks in this historic query or an empty list. will never return null
      */
     public List<Chunk> getChunks() {

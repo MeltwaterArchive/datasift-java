@@ -3,7 +3,7 @@ package com.datasift.client.managedsource.sources;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.managedsource.ManagedDataSourceType;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Yammer extends BaseSource<Yammer> {
@@ -11,7 +11,7 @@ public class Yammer extends BaseSource<Yammer> {
         super(config, ManagedDataSourceType.YAMMER);
     }
 
-    /**
+    /*
      * if true links augmentations will be applied to URLs found via Yammer.
      *
      * @return this
@@ -20,7 +20,7 @@ public class Yammer extends BaseSource<Yammer> {
         return setParametersField("extract_links", enabled);
     }
 
-    /**
+    /*
      * Adds an OAuth token to the managed source
      *
      * @param oAuthAccessToken an oauth2 token

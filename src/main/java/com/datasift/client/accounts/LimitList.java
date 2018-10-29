@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class LimitList extends BaseDataSiftResult implements Iterable<Limit> {
@@ -22,7 +22,7 @@ public class LimitList extends BaseDataSiftResult implements Iterable<Limit> {
     @JsonProperty("per_page")
     private int perPage;
 
-    /**
+    /*
      * @return all the available limits. May be empty but will never be null
      */
     public List<Limit> getLimits() {

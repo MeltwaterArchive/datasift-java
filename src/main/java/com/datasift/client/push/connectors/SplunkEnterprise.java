@@ -2,7 +2,7 @@ package com.datasift.client.push.connectors;
 
 import com.datasift.client.push.OutputType;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/splunk-enterprise">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>

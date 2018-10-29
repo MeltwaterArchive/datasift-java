@@ -12,7 +12,7 @@ import java.net.URI;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-/**
+/*
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class DataSiftPreview extends DataSiftApiClient {
@@ -41,7 +41,7 @@ public class DataSiftPreview extends DataSiftApiClient {
         return create(start, end, Stream.fromString(hash), parameters);
     }
 
-    /**
+    /*
      * Create a historic preview for the given stream within the given time frame, using the set of parameters provided
      *
      * @param start      a timestamp of when to start the preview from
@@ -85,7 +85,7 @@ public class DataSiftPreview extends DataSiftApiClient {
         return get(HistoricsPreview.fromString(id));
     }
 
-    /**
+    /*
      * Get the data that's available for the given preview
      *
      * @param preview the historics preview to fetch

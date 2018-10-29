@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class HistoricsQueryList extends BaseDataSiftResult implements Iterable<HistoricsQuery> {
@@ -29,7 +29,7 @@ public class HistoricsQueryList extends BaseDataSiftResult implements Iterable<H
         this.count = count;
     }
 
-    /**
+    /*
      * The number of items returned
      */
     public int getCount() {

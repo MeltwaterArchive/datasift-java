@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Balance extends BaseDataSiftResult {
@@ -18,7 +18,7 @@ public class Balance extends BaseDataSiftResult {
     public Balance() {
     }
 
-    /**
+    /*
      * @return The account's price plan
      */
     public String pricePlan() {

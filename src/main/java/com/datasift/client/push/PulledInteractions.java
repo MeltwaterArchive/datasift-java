@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class PulledInteractions extends BaseDataSiftResult implements Iterable<Interaction> {

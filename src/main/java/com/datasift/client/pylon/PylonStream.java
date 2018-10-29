@@ -14,7 +14,7 @@ public class PylonStream extends BaseDataSiftResult {
     public PylonStream() {
     }
 
-    /**
+    /*
      * Create a stream instance containing only a hash
      *
      * @param str the hash obtained from DataSift for a stream

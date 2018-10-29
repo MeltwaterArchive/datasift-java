@@ -2,7 +2,7 @@ package com.datasift.client.stream;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class DeletedInteraction {
@@ -12,14 +12,14 @@ public class DeletedInteraction {
         data = mi.getData();
     }
 
-    /**
+    /*
      * @return the ID provided by DataSift for the original interaction
      */
     public String interactionId() {
         return data.get("interaction").get("id").asText();
     }
 
-    /**
+    /*
      * @return the interaction type
      */
     public String interactionType() {

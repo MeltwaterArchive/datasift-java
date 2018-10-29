@@ -2,7 +2,7 @@ package com.datasift.client.push;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
+/*
  * DataSift push statuses as documented at http://dev.datasift.com/docs/push/status-codes
  *
  * @author Courtney Robinson <courtney@crlog.info>

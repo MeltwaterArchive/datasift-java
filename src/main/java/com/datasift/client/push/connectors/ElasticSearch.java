@@ -2,7 +2,7 @@ package com.datasift.client.push.connectors;
 
 import com.datasift.client.push.OutputType;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/elasticsearch">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -13,7 +13,7 @@ public class ElasticSearch extends BaseConnector<ElasticSearch> {
         setup(this, "host");
     }
 
-    /**
+    /*
      * Simple calls {@link #host(String)}.{@link #port(int)} for convenience
      *
      * @param host the host of the server
@@ -24,7 +24,7 @@ public class ElasticSearch extends BaseConnector<ElasticSearch> {
         return host(host).port(port);
     }
 
-    /**
+    /*
      * @param host The host name of your CouchDB installation.
      * @return this
      */
@@ -32,7 +32,7 @@ public class ElasticSearch extends BaseConnector<ElasticSearch> {
         return setParam("host", host);
     }
 
-    /**
+    /*
      * @param host You can specify a port or accept the default.
      * @return this
      */
@@ -40,7 +40,7 @@ public class ElasticSearch extends BaseConnector<ElasticSearch> {
         return setParam("port", String.valueOf(host));
     }
 
-    /**
+    /*
      * @param indexName The ElasticSearch index that you want to use.
      *                  If it does not exist, DataSift will create it for you and set its name to the Push
      *                  subscription id.
@@ -51,7 +51,7 @@ public class ElasticSearch extends BaseConnector<ElasticSearch> {
         return setParam("index", indexName);
     }
 
-    /**
+    /*
      * @param type The type that you want to use for the index.
      *             If it does not exist, DataSift will add a new type for the index and use the new type.
      *             Use a valid type name.
@@ -63,7 +63,7 @@ public class ElasticSearch extends BaseConnector<ElasticSearch> {
         return setParam("type", type);
     }
 
-    /**
+    /*
      * The output format for your data:
      * basic_interaction_meta - The current default format, where each payload contains only basic interaction JSON
      * document.
@@ -89,11 +89,11 @@ public class ElasticSearch extends BaseConnector<ElasticSearch> {
     }
 
     public static enum ElasticSearchFormat {
-        /**
+        /*
          * The current default format, where each payload contains only basic interaction JSON document.
          */
         BASIC_INTERACTION_META,
-        /**
+        /*
          * The payload is a full interaction with augmentations.
          */
         FULL_INTERACTION_META;

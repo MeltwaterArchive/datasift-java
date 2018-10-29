@@ -7,7 +7,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class FutureData<T> {
@@ -16,7 +16,7 @@ public class FutureData<T> {
     protected Throwable interruptCause;
     protected final BlockingQueue<Object> block = new LinkedBlockingDeque<>();
 
-    /**
+    /*
      * Wraps any object in a {@link FutureData} instance
      * <p/>
      * Intended use is to enable any object obtained without a future to be passed to API methods.
@@ -39,7 +39,7 @@ public class FutureData<T> {
         return future;
     }
 
-    /**
+    /*
      * Invoked when a response is received and this future data is now available for use/processing
      *
      * @param data the data received or an object wrapping said data
@@ -50,7 +50,7 @@ public class FutureData<T> {
         doNotify();
     }
 
-    /**
+    /*
      * Adds an event listener that is notified when data is received
      *
      * @param response the future which should listen for a response
@@ -80,7 +80,7 @@ public class FutureData<T> {
         block.add(new Object());
     }
 
-    /**
+    /*
      * Forces the client to wait until a response is received before returning
      *
      * @return a result instance - if an interrupt exception is thrown it is possible that a response isn't available

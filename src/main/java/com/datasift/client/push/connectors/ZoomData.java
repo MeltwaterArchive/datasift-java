@@ -2,7 +2,7 @@ package com.datasift.client.push.connectors;
 
 import com.datasift.client.push.OutputType;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/zoomdata">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -33,7 +33,7 @@ public class ZoomData extends BaseConnector<ZoomData> {
         return setParam("auth.password", password);
     }
 
-    /**
+    /*
      * The label used to mark data delivered to Zoomdata.
      * <p/>
      * This will be used to label data sets in the Zoomdata interface and database.

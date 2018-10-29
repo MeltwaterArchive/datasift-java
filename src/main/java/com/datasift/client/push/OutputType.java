@@ -17,7 +17,7 @@ import com.datasift.client.push.connectors.SplunkStorm;
 import com.datasift.client.push.connectors.SplunkStormRest;
 import com.datasift.client.push.connectors.ZoomData;
 
-/**
+/*
  * Represents one of the possible push destinations
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>

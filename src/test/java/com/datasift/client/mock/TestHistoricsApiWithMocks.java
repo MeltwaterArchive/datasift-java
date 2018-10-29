@@ -24,7 +24,7 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
+/*
  * Created by agnieszka on 17/01/2014.
  */
 public class TestHistoricsApiWithMocks extends IntegrationTestBase {

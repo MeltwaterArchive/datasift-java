@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class PushLogMessages extends BaseDataSiftResult {
@@ -27,7 +27,7 @@ public class PushLogMessages extends BaseDataSiftResult {
         return count;
     }
 
-    /**
+    /*
      * @return all the log messages returned in this result, will never be null but may be empty
      */
     public List<PushLogMessage> getLogMessages() {

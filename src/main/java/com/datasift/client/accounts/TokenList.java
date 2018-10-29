@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class TokenList extends BaseDataSiftResult implements Iterable<Token> {
@@ -22,7 +22,7 @@ public class TokenList extends BaseDataSiftResult implements Iterable<Token> {
     @JsonProperty("per_page")
     private int perPage;
 
-    /**
+    /*
      * @return all the available tokens. May be empty but will never be null
      */
     public List<Token> getIdentities() {

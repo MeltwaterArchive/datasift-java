@@ -5,7 +5,7 @@ import com.datasift.client.managedsource.ManagedDataSourceType;
 
 import java.util.ArrayList;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class GooglePlus extends BaseSource<GooglePlus> {
@@ -17,7 +17,7 @@ public class GooglePlus extends BaseSource<GooglePlus> {
         return enableComments(enableComments).enablePlusOnes(enablePlusOnes);
     }
 
-    /**
+    /*
      * set to true, if you want to receive comment interactions.
      *
      * @return this
@@ -26,7 +26,7 @@ public class GooglePlus extends BaseSource<GooglePlus> {
         return setParametersField("comments", enabled);
     }
 
-    /**
+    /*
      * set to true, if you want to receive +1 interactions.
      *
      * @return this
@@ -60,7 +60,7 @@ public class GooglePlus extends BaseSource<GooglePlus> {
         return this;
     }
 
-    /**
+    /*
      * Adds an OAuth token to the managed source
      *
      * @param oAuthAccessToken  an oauth2 token

@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 import java.util.Map;
 import java.util.Set;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class ManagedSource extends BaseDataSiftResult {

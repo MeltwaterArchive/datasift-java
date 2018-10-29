@@ -15,7 +15,7 @@ import java.net.URI;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 
-/**
+/*
  * This class provides access to the DataSift Historics API.
  */
 public class DataSiftHistorics extends DataSiftApiClient {
@@ -31,7 +31,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return start(FutureData.wrap(query));
     }
 
-    /**
+    /*
      * Start the historics query given
      *
      * @return a result which can be checked for success or failure, A status 204 indicates success,
@@ -56,7 +56,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Start the historics query with the given ID
      *
      * @param id the historics id
@@ -87,7 +87,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return stop(query.getId(), reason);
     }
 
-    /**
+    /*
      * Stop a given historics query
      *
      * @param id     the historics ID
@@ -117,7 +117,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return delete(query.getId());
     }
 
-    /**
+    /*
      * Delete the historic with the given ID
      *
      * @param id an historic ID
@@ -136,7 +136,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Update the name of a historics query
      *
      * @param id   the ID of the historics to update
@@ -157,7 +157,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Check the status of data availability in our archive for the given time period
      *
      * @param start   the dat from which the archive should be checked
@@ -187,7 +187,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return get(id, true);
     }
 
-    /**
+    /*
      * Get detailed information about a historics query
      *
      * @param id           the id of the historics to list
@@ -219,7 +219,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return list(100, page, true);
     }
 
-    /**
+    /*
      * Retrieve a list of {@link HistoricsQuery} objects
      *
      * @param max          max number of objects to list
@@ -243,7 +243,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * @param hash  The hash of the CSDL for your historics query.
      *              Example values: 2459b03a13577579bca76471778a5c3d
      * @param start Unix timestamp for the start time.
@@ -260,7 +260,7 @@ public class DataSiftHistorics extends DataSiftApiClient {
                 name, -1, sources);
     }
 
-    /**
+    /*
      * @param hash    The hash of the CSDL for your historics query.
      *                Example values: 2459b03a13577579bca76471778a5c3d
      * @param start   Unix timestamp for the start time.

@@ -4,7 +4,7 @@ import com.datasift.client.BaseDataSiftResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.DateTime;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class HistoricsPreview extends BaseDataSiftResult {
@@ -16,7 +16,7 @@ public class HistoricsPreview extends BaseDataSiftResult {
     protected HistoricsPreview() {
     }
 
-    /**
+    /*
      * Create a stream instance containing only a hash
      *
      * @param str the hash obtained from DataSift for a stream

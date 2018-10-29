@@ -5,7 +5,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashSet;
 
 import java.util.Set;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class DataSiftMessage {
@@ -58,14 +58,14 @@ public class DataSiftMessage {
                 '}';
     }
 
-    /**
+    /*
      * @return true if this message has at least 1 stream hash associated with it
      */
     public boolean hashHashes() {
         return hashes.size() > 0;
     }
 
-    /**
+    /*
      * @return A thread safe set of streams this message is related to
      */
     public Set<Stream> hashes() {

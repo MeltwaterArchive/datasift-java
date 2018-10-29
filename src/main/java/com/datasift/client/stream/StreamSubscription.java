@@ -2,7 +2,7 @@ package com.datasift.client.stream;
 
 import com.datasift.client.core.Stream;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public abstract class StreamSubscription {

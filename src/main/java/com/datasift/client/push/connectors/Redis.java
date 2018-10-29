@@ -2,7 +2,7 @@ package com.datasift.client.push.connectors;
 
 import com.datasift.client.push.OutputType;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/redis">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -13,7 +13,7 @@ public class Redis extends BaseConnector<Redis> {
         setup(this, "host", "port", "database", "list", "format", "auth.password");
     }
 
-    /**
+    /*
      * The name of the Redis host that DataSift will connect to.
      *
      * @return this
@@ -22,7 +22,7 @@ public class Redis extends BaseConnector<Redis> {
         return setParam("host", host);
     }
 
-    /**
+    /*
      * The port that you want to use on your server.
      *
      * @return this
@@ -31,7 +31,7 @@ public class Redis extends BaseConnector<Redis> {
         return setParam("port", String.valueOf(port));
     }
 
-    /**
+    /*
      * The numeric id of an existing database.
      *
      * @return this
@@ -40,7 +40,7 @@ public class Redis extends BaseConnector<Redis> {
         return setParam("database", database);
     }
 
-    /**
+    /*
      * The name of a list that stores interactions. The list does not have to exist, it will be created if necessary.
      *
      * @return this
@@ -49,7 +49,7 @@ public class Redis extends BaseConnector<Redis> {
         return setParam("list", list);
     }
 
-    /**
+    /*
      * The output format for your data:
      * json_interaction_meta - This is specific to the Redis connector for now. Each interaction is sent separately
      * except it is framed with metadata.
@@ -78,7 +78,7 @@ public class Redis extends BaseConnector<Redis> {
         return setParam("format", strFormat);
     }
 
-    /**
+    /*
      * The password for authentication.
      *
      * @return this
@@ -88,11 +88,11 @@ public class Redis extends BaseConnector<Redis> {
     }
 
     public static enum RedisFormat {
-        /**
+        /*
          * The current default format, where each payload contains only basic interaction JSON document.
          */
         JSON_INTERACTION,
-        /**
+        /*
          * The payload is a full interaction with augmentations.
          */
         JSON_INTERACTION_META;

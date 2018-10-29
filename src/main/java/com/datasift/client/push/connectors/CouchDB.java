@@ -2,7 +2,7 @@ package com.datasift.client.push.connectors;
 
 import com.datasift.client.push.OutputType;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/couchdb">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -13,7 +13,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         setup(this, "host", "db_name", "auth.username", "auth.password");
     }
 
-    /**
+    /*
      * Simple calls {@link #host(String)}.{@link #port(int)} for convenience
      *
      * @param host the host of the server
@@ -24,7 +24,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         return host(host).port(port);
     }
 
-    /**
+    /*
      * @param host The host name of your CouchDB installation.
      * @return this
      */
@@ -32,7 +32,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         return setParam("host", host);
     }
 
-    /**
+    /*
      * @param host You can specify a port or accept the default.
      * @return this
      */
@@ -40,7 +40,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         return setParam("port", String.valueOf(host));
     }
 
-    /**
+    /*
      * @param name The name of an existing database.
      * @return this
      */
@@ -48,7 +48,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         return setParam("db_name", name);
     }
 
-    /**
+    /*
      * Sets the authentication information that should be used for the connector
      *
      * @param username the username
@@ -59,7 +59,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         return username(username).password(password);
     }
 
-    /**
+    /*
      * @param username he username for authorization.
      * @return this
      */
@@ -67,7 +67,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         return setParam("auth.username", username);
     }
 
-    /**
+    /*
      * @param password The password for authorization.
      * @return this
      */
@@ -75,7 +75,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         return setParam("auth.password", password);
     }
 
-    /**
+    /*
      * Whether SSL should be used when connecting to the database. Possible values are:
      * yes
      * no
@@ -90,7 +90,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         return setParam("use_ssl", yesOrNo);
     }
 
-    /**
+    /*
      * If you are using SSL to connect, this specifies whether the certificate should be verified. Useful when a
      * client has a self-signed certificate for development. Possible values are:
      * yes
@@ -106,7 +106,7 @@ public class CouchDB extends BaseConnector<CouchDB> {
         return setParam("verify_ssl", yesOrNo);
     }
 
-    /**
+    /*
      * The output format for your data:
      * basic_interaction_meta - The current default format, where each payload contains only basic interaction JSON
      * document.
@@ -130,11 +130,11 @@ public class CouchDB extends BaseConnector<CouchDB> {
     }
 
     public static enum CouchDBFormat {
-        /**
+        /*
          * The current default format, where each payload contains only basic interaction JSON document.
          */
         BASIC_INTERACTION_META,
-        /**
+        /*
          * The payload is a full interaction with augmentations.
          */
         FULL_INTERACTION_META;

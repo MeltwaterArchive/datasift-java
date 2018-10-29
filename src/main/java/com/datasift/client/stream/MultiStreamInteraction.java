@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class MultiStreamInteraction {
@@ -23,7 +23,7 @@ public class MultiStreamInteraction {
     @JsonProperty
     private List<String> hashes;
 
-    /**
+    /*
      * DataSift specific messages always have a status and message field.
      * If these are null then this returns false otherwise true
      */
@@ -51,14 +51,14 @@ public class MultiStreamInteraction {
         return tick;
     }
 
-    /**
+    /*
      * @return true if the object is a DataSift message and has a set of hashes that the message relates to
      */
     public boolean hasHashes() {
         return isDataSiftMessage() && hashes != null && hashes.size() > 0;
     }
 
-    /**
+    /*
      * @return A set of hashes this message is related to. Will never return null but can be empty
      */
     public List<? extends String> hashes() {

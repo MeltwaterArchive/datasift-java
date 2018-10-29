@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class HistoricsStatus extends BaseDataSiftResult {
@@ -25,7 +25,7 @@ public class HistoricsStatus extends BaseDataSiftResult {
         return end;
     }
 
-    /**
+    /*
      * @return A map whose keys are the names of the datasource such as "facebook" or "tumblr"
      *         and values that tells you the status (%) of data available for each source as well as versions of the
      *         data is available which augmentations and the percent of availability for each
@@ -42,7 +42,7 @@ public class HistoricsStatus extends BaseDataSiftResult {
         @JsonProperty
         private double status;
 
-        /**
+        /*
          * @return map of augmentations such as "language" => 100 where 100 is the % availability
          */
         public Map<String, Integer> getAugmentations() {
@@ -53,7 +53,7 @@ public class HistoricsStatus extends BaseDataSiftResult {
             return versions;
         }
 
-        /**
+        /*
          * @return the % availability for this data source within the time frame used to generate this result
          */
         public double getStatus() {

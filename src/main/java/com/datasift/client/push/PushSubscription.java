@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class PushSubscription extends BaseDataSiftResult {
@@ -102,7 +102,7 @@ public class PushSubscription extends BaseDataSiftResult {
         return end;
     }
 
-    /**
+    /*
      * Create a {@link PushSubscription} instance containing only an id
      *
      * @param str the ID obtained from DataSift for creating a push subscription

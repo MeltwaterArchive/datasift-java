@@ -2,7 +2,7 @@ package com.datasift.client.stream;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Interaction {
@@ -19,7 +19,7 @@ public class Interaction {
         return data;
     }
 
-    /**
+    /*
      * Fetches values using the popular dot notation
      * i.e. tumblr.author.id would return the id (12345) value in a structure similar to
      * <pre>

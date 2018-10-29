@@ -14,7 +14,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 
 import java.io.IOException;
 
-/**
+/*
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class PullReader extends Reader<String> {
@@ -44,7 +44,7 @@ public class PullReader extends Reader<String> {
 //        }
         //todo as the amount of data that can be requested with pull increased, memory may become an issue
         //replace current processing with Jackson's stream processing to improve memory efficiency
-        /**
+        /*
          JsonToken current;
          while ((current = parser.nextToken()) != JsonToken.END_OBJECT) {
          String fieldName = parser.getCurrentName();

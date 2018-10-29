@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class TestUtil {
@@ -31,7 +31,7 @@ public class TestUtil {
     protected DataSiftConfig config = new DataSiftConfig();
     protected DataSiftClient datasift;
 
-    /**
+    /*
      * Initializes the {@link #settings} object from a settings.properties file taken from the root of the class path
      * Without this being successful many or all integration tests will fail.
      *
@@ -90,7 +90,7 @@ public class TestUtil {
         }
     }
 
-    /**
+    /*
      * All results extend {@link BaseDataSiftResult} which provides some methods for checking the state of every API
      * response and some basic info such as rate limit and remaining rate limit
      */

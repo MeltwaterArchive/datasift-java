@@ -11,7 +11,7 @@ public class UsageResult extends BaseDataSiftResult implements Iterable<Usage> {
     @JsonProperty("usage")
     private final List<Usage> usageList = new ArrayList<>();
 
-    /**
+    /*
      * @return all the available usage periods. May be empty but will never be null
      */
     public List<Usage> getUsageList() { return usageList; }

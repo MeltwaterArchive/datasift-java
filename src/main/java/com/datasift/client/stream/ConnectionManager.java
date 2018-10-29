@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class ConnectionManager {
@@ -37,7 +37,7 @@ public class ConnectionManager {
         detectDeadConnections();
     }
 
-    /**
+    /*
      * Starts a thread which checks periodically for dead connections and force them to re-connect.
      * IF AND ONLY IF a thread isn't already running to do this
      */
@@ -99,7 +99,7 @@ public class ConnectionManager {
         return null;
     }
 
-    /**
+    /*
      * Subscribes a callback to listen for exceptions that may occur during streaming.
      * When exceptions occur it is unlikely we'll know which stream/subscription caused the exception
      * so instead of notifying all stream subscribers of the same exception this provides a way to list

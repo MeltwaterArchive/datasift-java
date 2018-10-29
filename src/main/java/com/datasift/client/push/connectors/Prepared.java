@@ -7,7 +7,7 @@ import java.util.Set;
 
 import static java.lang.String.format;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class Prepared {
@@ -19,7 +19,7 @@ public class Prepared {
         this.required = required;
     }
 
-    /**
+    /*
      * Verifies that all required parameters have been set
      *
      * @return a map of the parameters
@@ -33,7 +33,7 @@ public class Prepared {
         return params;
     }
 
-    /**
+    /*
      * Adds a param that'll be sent in the push request
      *
      * @param name  param name
@@ -43,7 +43,7 @@ public class Prepared {
         params.put(name, value);
     }
 
-    /**
+    /*
      * @param name the name to check
      * @return true if the given name is not null and has a value set
      */
@@ -51,7 +51,7 @@ public class Prepared {
         return name != null && params.get(name) != null;
     }
 
-    /**
+    /*
      * @return the value associated with the given param name or null if it hasn't been set.
      */
     public String get(String name) {

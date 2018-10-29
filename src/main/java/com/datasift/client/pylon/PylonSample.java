@@ -21,7 +21,7 @@ public class PylonSample extends BaseDataSiftResult {
 
     public int getRateLimitResetTime() { return this.rateLimitResetTime; }
 
-    /**
+    /*
      * @return All available interactions. May be empty but will never be null
      */
     public List<PylonSampleInteractionItem> getInteractions() {

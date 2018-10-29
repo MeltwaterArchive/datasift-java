@@ -3,7 +3,7 @@ package com.datasift.client.managedsource.sources;
 import com.datasift.client.DataSiftConfig;
 import com.datasift.client.managedsource.ManagedDataSourceType;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class FacebookPage extends BaseSource<FacebookPage> {
@@ -19,7 +19,7 @@ public class FacebookPage extends BaseSource<FacebookPage> {
                 .enablePostsByOthers(enablePostsByOthers);
     }
 
-    /**
+    /*
      * set to true, if you want to receive likes interactions.
      *
      * @return this
@@ -32,7 +32,7 @@ public class FacebookPage extends BaseSource<FacebookPage> {
         return setParametersField("page_likes", enabled);
     }
 
-    /**
+    /*
      * set to true, if you want to receive interactions related to posts created on the monitored page by the users
      * who interact with that page, but do not administer it.
      *
@@ -42,7 +42,7 @@ public class FacebookPage extends BaseSource<FacebookPage> {
         return setParametersField("posts_by_others", enabled);
     }
 
-    /**
+    /*
      * set to true, if you want to receive interactions that carry comments related to the posts published on the
      * monitored page.
      *
@@ -52,7 +52,7 @@ public class FacebookPage extends BaseSource<FacebookPage> {
         return setParametersField("comments", enabled);
     }
 
-    /**
+    /*
      * Adds information about a single facebook page
      *
      * @param id    the id of the facebook page
@@ -68,7 +68,7 @@ public class FacebookPage extends BaseSource<FacebookPage> {
         return this;
     }
 
-    /**
+    /*
      * Adds a facebook OAuth token that will be used to fetch data from the configured pages
      *
      * @param oAuthAccessToken an oauth access token
@@ -85,7 +85,7 @@ public class FacebookPage extends BaseSource<FacebookPage> {
         return this;
     }
 
-    /***
+    /**
      * Add a facebook page to be crawled for instagram content
      *
      * @param pageid the ID of the page, usually numerical
@@ -98,7 +98,7 @@ public class FacebookPage extends BaseSource<FacebookPage> {
         return this;
     }
 
-    /***
+    /**
      * Add an instagram user to be crawled for content
      *
      * @param username ID of the user to be checked, usually a textual name

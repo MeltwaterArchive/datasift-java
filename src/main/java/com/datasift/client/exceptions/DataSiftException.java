@@ -18,7 +18,7 @@ public class DataSiftException extends RuntimeException {
         this.response = response;
     }
 
-    /**
+    /*
      * Gets the response which cause the exception, IF AVAILABLE.
      * Check if this returns null
      *

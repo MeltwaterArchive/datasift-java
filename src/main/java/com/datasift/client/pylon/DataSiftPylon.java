@@ -15,7 +15,7 @@ import io.higgs.http.client.readers.PageReader;
 
 import java.net.URI;
 
-/**
+/*
  * This class provides access to the DataSift Analysis API.
  */
 public class DataSiftPylon extends DataSiftApiClient {
@@ -27,7 +27,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         super(config);
     }
 
-    /**
+    /*
      * Validate the given CSDL string. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonvalidate
      *
@@ -45,7 +45,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Compile a CSDL string to a stream hash to which you can later subscribe and receive interactions from.
      * For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pyloncompile
@@ -65,7 +65,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Start the stream with the given hash. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
      *
@@ -76,7 +76,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return start(stream, null);
     }
 
-    /**
+    /*
      * Start a recording with the given hash & name. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
      *
@@ -98,7 +98,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Restart a recording using a recording id. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstart
      *
@@ -152,7 +152,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Stop the stream with the given hash. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonstop
      *
@@ -174,7 +174,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Get the status of all recordings. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      * @return the status of all recordings that are running or have run with stored data
@@ -183,7 +183,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return get(0, 0);
     }
 
-    /**
+    /*
      * Get the status of all recordings on page given. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      * @return the status of all recordings that are running or have run with stored data
@@ -192,7 +192,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return get(page, 0);
     }
 
-    /**
+    /*
      * Get the status of all recordings on page given. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      * @return the status of all recordings that are running or have run with stored data
@@ -213,7 +213,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Get the status of the recording with a given id. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonget
      *
@@ -230,7 +230,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Analyze a given recording and retrieve results. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonanalyze
      *
@@ -254,7 +254,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Retrieve VEDO tags for a given recording. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylontags
      *
@@ -270,7 +270,7 @@ public class DataSiftPylon extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Sample a Pylon recording. For information on this endpoint see documentation page:
      * http://dev.datasift.com/pylon/docs/api/pylon-api-endpoints/pylonsample
      *

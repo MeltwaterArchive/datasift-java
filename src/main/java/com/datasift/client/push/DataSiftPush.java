@@ -24,7 +24,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
+/*
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class DataSiftPush extends DataSiftApiClient {
@@ -36,7 +36,7 @@ public class DataSiftPush extends DataSiftApiClient {
         super(config);
     }
 
-    /**
+    /*
      * Pause the push subscription with the given ID
      *
      * @param id the id of the push subscription to pause
@@ -55,7 +55,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Set a paused subscription to run again
      *
      * @param id the id of the push subscription to resume
@@ -74,7 +74,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Stop/cancel a given push subscription
      *
      * @param id the id of the push subscription
@@ -93,7 +93,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Delete a push subsctiption
      *
      * @param id the id of the subscription to delete
@@ -116,7 +116,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return update(id, connector, null);
     }
 
-    /**
+    /*
      * Updates the name or output parameters for a push sucription
      *
      * @param id        the subscription ID
@@ -147,7 +147,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return pull(id, 0, null);
     }
 
-    /**
+    /*
      * Retrieve one or more interactions from a Push queue
      *
      * @param id     the push subscription ID
@@ -262,7 +262,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return log(id, page, 0, null, null);
     }
 
-    /**
+    /*
      * Retreive log messages about subscriptions
      *
      * @param id             the ID of a subscription
@@ -296,7 +296,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * @param id A push subscription ID
      * @return the push subscription for the given ID
      */
@@ -314,7 +314,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Get all push subscriptions belonging to this user
      *
      * @param page            a page number
@@ -347,7 +347,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Get all push subscriptions for the given stream
      *
      * @param hash            the ID of the stream to fetch all associated push subscriptions for
@@ -381,7 +381,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Get all push subscriptions for the given historics
      *
      * @param historics       the ID of the stream to fetch all associated push subscriptions for
@@ -415,7 +415,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Check that the subscription details are correct
      *
      * @return the results of the validation
@@ -440,7 +440,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return create(connector, historics, stream, name, null, 0, 0);
     }
 
-    /**
+    /*
      * Create a push subscription from a prepared query
      *
      * @return the created subscription
@@ -464,7 +464,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return create(con, stream, name, null, 0, 0);
     }
 
-    /**
+    /*
      * Create a push subscription from a live stream
      *
      * @return the created subscription
@@ -478,7 +478,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return create(connector, null, FutureData.wrap(stream), name, initialStatus, start, end);
     }
 
-    /**
+    /*
      * Create a push subscription to be consumed via {@link #pull(PushSubscription, int, String)} using a live stream
      *
      * @param historics     the historic query which will be consumed via pull
@@ -498,7 +498,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return createPull(jsonMeta, historics, null, name, null, 0, 0);
     }
 
-    /**
+    /*
      * Create a push subscription to be consumed via {@link #pull(PushSubscription, int, String)} using a live stream
      *
      * @param stream        the stream which will be consumed via pull
@@ -558,7 +558,7 @@ public class DataSiftPush extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Creates a push subscription to either a historics query OR a live stream.
      * Of the parameters historics and stream, ONE and ONLY ONE must be null.
      * If the push subscription is to a a live stream the historics paramer MUST be null and if the subscription

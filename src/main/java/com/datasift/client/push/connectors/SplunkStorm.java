@@ -2,7 +2,7 @@ package com.datasift.client.push.connectors;
 
 import com.datasift.client.push.OutputType;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/splunk-storm">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -25,7 +25,7 @@ public class SplunkStorm extends BaseConnector<SplunkStorm> {
         return setParam("port", String.valueOf(port));
     }
 
-    /**
+    /*
      * The output format for your data:
      * <p/>
      * json_meta - The current default format, where each payload contains a full JSON document. It contains metadata
@@ -58,11 +58,11 @@ public class SplunkStorm extends BaseConnector<SplunkStorm> {
     }
 
     public static enum SplunkStormFormat {
-        /**
+        /*
          * Each interaction is sent separately except it is framed with metadata and an extra timestamp field.
          */
         JSON_NEW_LINE_TIMESTAMP_META,
-        /**
+        /*
          * Each interaction is sent separately and has an extra timestamp property and no meta data.
          */
         JSON_NEW_LINE_TIMESTAMP;

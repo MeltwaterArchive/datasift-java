@@ -12,7 +12,7 @@ public class PylonValidation extends BaseDataSiftResult {
     public PylonValidation() {
     }
 
-    /**
+    /*
      * @return true if the CSDL that was used in the request was checked and found to be valid. False otherwise.
      */
     public boolean isValid() {

@@ -26,14 +26,14 @@ import io.higgs.http.client.readers.PageReader;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 
-/**
+/*
  * This class is the gateway to the DataSift client APIs. It provides an easy to use,
  * configurable interface for accessing all DataSift features
  */
 public class DataSiftClient extends DataSiftApiClient {
     public static final ObjectMapper MAPPER = new ObjectMapper();
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    /**
+    /*
      * Where ever a numeric value is optional and it happens to be absent in a response this value will be used
      */
     public static final int DEFAULT_NUM = Integer.MIN_VALUE;
@@ -52,7 +52,7 @@ public class DataSiftClient extends DataSiftApiClient {
         this(new DataSiftConfig());
     }
 
-    /**
+    /*
      * @param config a configuration which should be used for making API requests
      */
     public DataSiftClient(DataSiftConfig config) {
@@ -81,61 +81,61 @@ public class DataSiftClient extends DataSiftApiClient {
         return account;
     }
 
-    /**
+    /*
      * @return An object suitable for making requests to the DataSift Analysis API
      */
     public DataSiftPylon pylon() {
         return pylon;
     }
 
-    /**
+    /*
      * @return An object suitable for making requests to the DataSift ODP Ingestion API
      */
     public DataSiftODP odp() { return odp; }
 
-    /**
+    /*
      * @return An object suitable for making requests to the DataSift Historics API
      */
     public DataSiftHistorics historics() {
         return historics;
     }
 
-    /**
+    /*
      * @return An object suitable for making requests to the DataSift Managed sources API
      */
     public DataSiftManagedSource managedSource() {
         return source;
     }
 
-    /**
+    /*
      * @return An object suitable for making requests to the DataSift Preview API
      */
     public DataSiftPreview preview() {
         return preview;
     }
 
-    /**
+    /*
      * @return An object suitable for making requests to the DataSift Push API
      */
     public DataSiftPush push() {
         return push;
     }
 
-    /**
+    /*
      * @return the instance of the configuration being used for all API calls made through this client
      */
     public DataSiftConfig config() {
         return config;
     }
 
-    /**
+    /*
      * Access to the DataSift streaming API
      */
     public ConnectionManager liveStream() {
         return liveStream;
     }
 
-    /**
+    /*
      * Validate the given CSDL string against the DataSift API
      *
      * @param csdl the CSDL to validate
@@ -151,7 +151,7 @@ public class DataSiftClient extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Compile a CSDL string to a stream hash to which you can later subscribe and receive interactions from
      *
      * @param csdl the CSDL to compile
@@ -168,7 +168,7 @@ public class DataSiftClient extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * @return The balance on the account being used to make API calls
      */
     public FutureData<Balance> balance() {
@@ -179,7 +179,7 @@ public class DataSiftClient extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * @param stream the stream for which the DPU information is to be fetched
      * @return a DPU breakdown of the stream's usage
      */
@@ -202,7 +202,7 @@ public class DataSiftClient extends DataSiftApiClient {
         return future;
     }
 
-    /***
+    /**
      * Retrieve the DPU usage of a historics job
      * @param historicsId id of the historics job to get the DPU usage of
      * @return future containing DPU response
@@ -219,7 +219,7 @@ public class DataSiftClient extends DataSiftApiClient {
         return usage(Usage.Period.DAY);
     }
 
-    /**
+    /*
      * @param timePeriod A time period during which the usage information should be broken down
      * @return a break down over the time period specified
      */

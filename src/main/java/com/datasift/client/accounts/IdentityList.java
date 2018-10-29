@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class IdentityList extends BaseDataSiftResult implements Iterable<Identity> {
@@ -22,7 +22,7 @@ public class IdentityList extends BaseDataSiftResult implements Iterable<Identit
     @JsonProperty("per_page")
     private int perPage;
 
-    /**
+    /*
      * @return all the available identities. May be empty but will never be null
      */
     public List<Identity> getIdentities() {

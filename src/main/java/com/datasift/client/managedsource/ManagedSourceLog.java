@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class ManagedSourceLog extends BaseDataSiftResult implements Iterable<ManagedSourceLog.LogMessage> {
@@ -22,7 +22,7 @@ public class ManagedSourceLog extends BaseDataSiftResult implements Iterable<Man
     @JsonProperty("per_page")
     private int perPage;
 
-    /**
+    /*
      * @return all the available sources. May be empty but will never be null
      */
     public List<LogMessage> getEntries() {

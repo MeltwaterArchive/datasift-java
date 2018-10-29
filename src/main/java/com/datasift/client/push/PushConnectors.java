@@ -16,14 +16,14 @@ import com.datasift.client.push.connectors.SplunkStorm;
 import com.datasift.client.push.connectors.SplunkStormRest;
 import com.datasift.client.push.connectors.ZoomData;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class PushConnectors {
     private PushConnectors() {
     }
 
-    /**
+    /*
      * See the <a href="http://dev.datasift.com/docs/push/connectors/bigquery">official documentation</a>
      * <p/>
      * Data format delivered:
@@ -45,7 +45,7 @@ public class PushConnectors {
         return new BigQuery();
     }
 
-    /**
+    /*
      * See the <a href="http://dev.datasift.com/docs/push/connectors/s3">official documentation</a>
      * <p/>
      * Data format delivered:
@@ -69,7 +69,7 @@ public class PushConnectors {
         return new S3();
     }
 
-    /**
+    /*
      * Data format delivered:
      * CouchDB native format (JSON). Each interaction is stored as one document.
      * Storage type:

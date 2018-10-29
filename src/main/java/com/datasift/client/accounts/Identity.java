@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-/**
+/*
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class Identity extends BaseDataSiftResult {

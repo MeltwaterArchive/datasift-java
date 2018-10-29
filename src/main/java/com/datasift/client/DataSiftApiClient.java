@@ -11,7 +11,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 
 import java.io.IOException;
 
-/**
+/*
  * The API client is a base class which provides a common set of functionality to the other API classes.
  */
 public class DataSiftApiClient {
@@ -25,7 +25,7 @@ public class DataSiftApiClient {
         this.config = config;
     }
 
-    /**
+    /*
      * @return a new ParamBuilder instance and automatically adds the required auth properties
      */
     public ParamBuilder newParams() {
@@ -64,7 +64,7 @@ public class DataSiftApiClient {
         };
     }
 
-    /**
+    /*
      * To support futures being passed as parameters, this method adds a listener to the unprocessed future that has
      * been passed as a parameter. Once that listener is invoked, the response of the unprocessed future is examined
      * to see if the response was successful, if it was not then the expected future is passed the failed response

@@ -12,7 +12,7 @@ public class ODPApi {
 
         final DataSiftClient datasift = new DataSiftClient(config);
 
-        /**
+        /*
          * ODP mapping "gnip_1" provides an ingestion mapping for processing tweets from Gnip.
          * Instantiating TwitterGnip will automatically use the IDML required for sending to a TwitterGnip source.
          */

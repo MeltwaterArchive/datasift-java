@@ -3,7 +3,7 @@ package com.datasift.client.push.connectors;
 
 import com.datasift.client.push.OutputType;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/s3">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -14,7 +14,7 @@ public class S3 extends BaseConnector<S3> {
         setup(this, "auth.access_key", "auth.secret_key", "delivery_frequency", "max_size", "bucket", "acl");
     }
 
-    /**
+    /*
      * Sets the output format for your data
      *
      * @param format one of the allowed S3 formats, defaults to json_meta
@@ -38,7 +38,7 @@ public class S3 extends BaseConnector<S3> {
         return this;
     }
 
-    /**
+    /*
      * @param key The access key for the S3 account that DataSift will send to. Make sure that this value is properly
      *            encoded, otherwise your /push/create request will fail.
      * @return this
@@ -47,7 +47,7 @@ public class S3 extends BaseConnector<S3> {
         return setParam("auth.access_key", key);
     }
 
-    /**
+    /*
      * @param secret The secret key for the S3 account that DataSift will send to.     Make sure that this value is
      *               properly encoded, otherwise your /push/create request will fail.
      * @return this
@@ -56,7 +56,7 @@ public class S3 extends BaseConnector<S3> {
         return setParam("auth.secret_key", secret);
     }
 
-    /**
+    /*
      * The minimum number of seconds you want DataSift to wait before sending data again:
      * 0 (continuous delivery)
      * 10 (10 seconds)
@@ -74,7 +74,7 @@ public class S3 extends BaseConnector<S3> {
         return setParam("delivery_frequency", String.valueOf(frequency));
     }
 
-    /**
+    /*
      * The maximum amount of data that DataSift will send in a single batch:
      * 102400 (100KB)
      * 256000 (250KB)
@@ -95,7 +95,7 @@ public class S3 extends BaseConnector<S3> {
         return setParam("max_size", String.valueOf(maxSize));
     }
 
-    /**
+    /*
      * @param bucket The bucket within that account into which DataSift will deposit the file
      * @return this
      */
@@ -103,7 +103,7 @@ public class S3 extends BaseConnector<S3> {
         return setParam("bucket", bucket);
     }
 
-    /**
+    /*
      * optionally set a directory within the configured bucked
      *
      * @return this
@@ -112,7 +112,7 @@ public class S3 extends BaseConnector<S3> {
         return setParam("directory", directory);
     }
 
-    /**
+    /*
      * An optional prefix to the filename. Each time DataSift delivers a file, it constructs a name in this format:
      * file_prefix + subscription id + timestamp.json
      *
@@ -122,7 +122,7 @@ public class S3 extends BaseConnector<S3> {
         return setParam("file_prefix", prefix);
     }
 
-    /**
+    /*
      * The access level of the file after it is uploaded to S3:
      * private (Owner-only read/write)
      * public-read (Owner read/write, public read)
@@ -146,16 +146,16 @@ public class S3 extends BaseConnector<S3> {
     }
 
     public static enum S3OutputFormat {
-        /**
+        /*
          * The current default format, where each payload contains a full JSON document. It contains metadata and an
          * "interactions" property that has an array of interactions.
          */
         JSON_META,
-        /**
+        /*
          * The payload is a full JSON document, but just has an array of interactions.
          */
         JSON_ARRAY,
-        /**
+        /*
          * The payload is NOT a full JSON document. Each interaction is flattened and separated by a line break.
          */
         JSON_NEW_LINE;

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
+/*
  * Created by agnieszka on 17/01/2014.
  */
 @Path("v1.6/source")

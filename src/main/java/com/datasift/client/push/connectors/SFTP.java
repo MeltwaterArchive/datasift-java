@@ -2,7 +2,7 @@ package com.datasift.client.push.connectors;
 
 import com.datasift.client.push.OutputType;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/sftp">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -13,7 +13,7 @@ public class SFTP extends BaseConnector<SFTP> {
         setup(this, "host", "port", "directory", "delivery_frequency", "max_size", "auth.username", "auth.password");
     }
 
-    /**
+    /*
      * Simple calls {@link #host(String)}.{@link #port(int)} for convenience
      *
      * @param host the host of the server
@@ -24,7 +24,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return host(host).port(port);
     }
 
-    /**
+    /*
      * @param host The host name of your CouchDB installation.
      * @return this
      */
@@ -32,7 +32,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("host", host);
     }
 
-    /**
+    /*
      * @param host You can specify a port or accept the default.
      * @return this
      */
@@ -40,7 +40,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("port", String.valueOf(host));
     }
 
-    /**
+    /*
      * A directory on the server
      *
      * @return this
@@ -49,7 +49,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("directory", directory);
     }
 
-    /**
+    /*
      * The minimum number of seconds you want DataSift to wait before sending data again:
      * <p/>
      * 10 (10 seconds)
@@ -74,7 +74,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("delivery_frequency", String.valueOf(freq));
     }
 
-    /**
+    /*
      * The maximum amount of data that DataSift will send in a single batch:
      * 102400 (100KB)
      * 256000 (250KB)
@@ -94,7 +94,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("max_size", String.valueOf(max));
     }
 
-    /**
+    /*
      * An optional prefix to the filename. Each time Datasift delivers a file, it constructs a name in this format:
      * file_prefix + subscription id + timestamp.json
      *
@@ -104,7 +104,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("file_prefix", prefix);
     }
 
-    /**
+    /*
      * Sets the authentication information that should be used for the connector
      *
      * @param username the username
@@ -115,7 +115,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return username(username).password(password);
     }
 
-    /**
+    /*
      * @param username he username for authorization.
      * @return this
      */
@@ -123,7 +123,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("auth.username", username);
     }
 
-    /**
+    /*
      * @param password The password for authorization.
      * @return this
      */
@@ -131,7 +131,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("auth.password", password);
     }
 
-    /**
+    /*
      * This enables you to see which files are being written and which are complete. Possible values are:
      * <p/>
      * true
@@ -155,7 +155,7 @@ public class SFTP extends BaseConnector<SFTP> {
         return setParam("compression", format);
     }
 
-    /**
+    /*
      * The output format for your data:
      * <p/>
      * json_meta - The current default format, where each payload contains a full JSON document. It contains metadata

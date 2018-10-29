@@ -3,7 +3,7 @@ package com.datasift.client.push.connectors;
 import com.datasift.client.push.OutputType;
 import io.netty.handler.codec.http.HttpMethod;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/http">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -14,7 +14,7 @@ public class Http extends BaseConnector<Http> {
         setup(this, "method", "url", "delivery_frequency", "max_size", "auth.type", "verify_ssl", "use_gzip");
     }
 
-    /**
+    /*
      * The output format for your data:
      * <p/>
      * json_meta - The current default format, where each payload contains a full JSON document. It contains metadata
@@ -49,7 +49,7 @@ public class Http extends BaseConnector<Http> {
         return setParam("format", strFormat);
     }
 
-    /**
+    /*
      * The verb that you want DataSift to use with the HTTP request:
      * <p/>
      * POST
@@ -62,7 +62,7 @@ public class Http extends BaseConnector<Http> {
         return setParam("method", method.name());
     }
 
-    /**
+    /*
      * Any valid URL that you want DataSift to deliver to; for example:
      * http://www.fromdatasift.com/destination/
      * <p/>
@@ -92,7 +92,7 @@ public class Http extends BaseConnector<Http> {
         return setParam("url", url);
     }
 
-    /**
+    /*
      * The minimum number of seconds you want DataSift to wait before sending data again:
      * <p/>
      * 10 (10 seconds)
@@ -117,7 +117,7 @@ public class Http extends BaseConnector<Http> {
         return setParam("delivery_frequency", String.valueOf(freq));
     }
 
-    /**
+    /*
      * The maximum amount of data that DataSift will send in a single batch:
      * 102400 (100KB)
      * 256000 (250KB)
@@ -137,7 +137,7 @@ public class Http extends BaseConnector<Http> {
         return setParam("max_size", String.valueOf(max));
     }
 
-    /**
+    /*
      * The authentication that you want DataSift to use when connecting to output_params.url:
      * <p/>
      * basic
@@ -154,7 +154,7 @@ public class Http extends BaseConnector<Http> {
         return setParam("auth.type", auth.value());
     }
 
-    /**
+    /*
      * If you are using SSL to connect, this specifies whether the certificate should be verified. Useful when a
      * client has a self-signed certificate for development. Possible values are:
      * true
@@ -167,7 +167,7 @@ public class Http extends BaseConnector<Http> {
         return setParam("verify_ssl", String.valueOf(trueOrFalse));
     }
 
-    /**
+    /*
      * The compression setting that you want DataSift to use:
      * true
      * false
@@ -194,7 +194,7 @@ public class Http extends BaseConnector<Http> {
         return setParam("compression", format);
     }
 
-    /**
+    /*
      * Sets the authentication information that should be used for the connector
      *
      * @param username the username
@@ -205,7 +205,7 @@ public class Http extends BaseConnector<Http> {
         return username(username).password(password);
     }
 
-    /**
+    /*
      * @param username he username for authorization.
      * @return this
      */
@@ -213,7 +213,7 @@ public class Http extends BaseConnector<Http> {
         return setParam("auth.username", username);
     }
 
-    /**
+    /*
      * @param password The password for authorization.
      * @return this
      */

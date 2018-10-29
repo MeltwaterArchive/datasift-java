@@ -2,7 +2,7 @@ package com.datasift.client.push.connectors;
 
 import com.datasift.client.push.OutputType;
 
-/**
+/*
  * <a href="http://dev.datasift.com/docs/push/connectors/precog">Official docs</a>
  *
  * @author Courtney Robinson <courtney.robinson@datasift.com>
@@ -13,7 +13,7 @@ public class Precog extends BaseConnector<Precog> {
         setup(this, "domain", "path", "owner_id", "auth.api_key");
     }
 
-    /**
+    /*
      * @param domain The URL of the Precog API host.
      *               <p/>
      *               Example values: http://beta.precog.com
@@ -23,7 +23,7 @@ public class Precog extends BaseConnector<Precog> {
         return setParam("domain", domain);
     }
 
-    /**
+    /*
      * @param path The path to the data directory.
      *             <p/>
      *             Example values: /1234567890/
@@ -33,7 +33,7 @@ public class Precog extends BaseConnector<Precog> {
         return setParam("path", path);
     }
 
-    /**
+    /*
      * Your or other Precog user's Owner ID. It is possible to deliver interactions to another Precog user's account
      * if you know their Owner ID.
      * <p/>
@@ -45,7 +45,7 @@ public class Precog extends BaseConnector<Precog> {
         return setParam("owner_id", name);
     }
 
-    /**
+    /*
      * Your Precog API key.
      * <p/>
      * Example values: ABCDEFGH-0000-0000-0000-000000000000

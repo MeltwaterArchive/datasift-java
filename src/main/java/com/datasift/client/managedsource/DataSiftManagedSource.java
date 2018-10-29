@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
+/*
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class DataSiftManagedSource extends DataSiftApiClient {
@@ -33,7 +33,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         super(config);
     }
 
-    /**
+    /*
      * Create a new managed source
      *
      * @param name   the name of the source
@@ -52,7 +52,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return addAuth(id, true, resources);
     }
 
-    /**
+    /*
      * Add one or more authentication credentials to a given managed source
      *
      * @param id        the ID of the source
@@ -105,7 +105,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Add a resource to a given managed source
      *
      * @param id        the ID of the source to add to
@@ -133,7 +133,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Remove a set of resources from a managed source
      *
      * @param id        the ID of the managed source
@@ -159,7 +159,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Update an existing managed source
      *
      * @param name   the name of the source
@@ -218,7 +218,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return start(FutureData.wrap(source));
     }
 
-    /**
+    /*
      * @param source start a configured managed source
      * @return this
      */
@@ -239,7 +239,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * @param id the ID of the managed source to stop
      * @return this
      */
@@ -255,7 +255,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * @param id the ID of the managed source to delete
      * @return this
      */
@@ -284,7 +284,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return get(null, page, perPage);
     }
 
-    /**
+    /*
      * Get manage sources for the given type
      */
     public FutureData<ManagedSourceList> get(ManagedDataSourceType type, int page, int perPage) {
@@ -306,7 +306,7 @@ public class DataSiftManagedSource extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * @param id the ID of the managed source to fetch
      * @return the managed source for the ID provided
      */

@@ -2,27 +2,27 @@ package com.datasift.client.push.pull;
 
 import com.datasift.client.push.PullReader;
 
-/**
+/*
  * For detailed documentation and example on what each of these are please see
  * http://dev.datasift.com/docs/push/sample-output-file-based-connectors
  *
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public enum PullJsonType {
-    /**
+    /*
      * Produce JSON of interaction objects
      */
     JSON_ARRAY,
-    /**
+    /*
      * Produce JSON objects where "interactions" is a JSON array and one of several fields
      */
     JSON_META,
-    /**
+    /*
      * Product a single interaction per line.
      */
     JSON_NEW_LINE;
 
-    /**
+    /*
      * @param str the string to try and match to a known type
      * @return the type which matches the given string or null if none do
      */

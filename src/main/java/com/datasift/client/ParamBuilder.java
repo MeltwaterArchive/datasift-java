@@ -7,13 +7,13 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class ParamBuilder {
     protected Map<String, Object> params = new HashMap<String, Object>();
 
-    /**
+    /*
      * Adds or replaces a parameter
      *
      * @param name  the name of the parameter
@@ -25,7 +25,7 @@ public class ParamBuilder {
         return this;
     }
 
-    /**
+    /*
      * @param uri A URL to which the query string will be appended
      * @return a URI with the query string configured with params of this object
      */
@@ -42,7 +42,7 @@ public class ParamBuilder {
         }
     }
 
-    /**
+    /*
      * @return The underlying map used to represent all configured params. This can be modified externally.
      */
     public Map<String, Object> getParams() {

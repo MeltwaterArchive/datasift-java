@@ -7,7 +7,7 @@ import com.datasift.client.managedsource.sources.Instagram;
 import com.datasift.client.managedsource.sources.TwitterGnip;
 import com.datasift.client.managedsource.sources.Yammer;
 
-/**
+/*
  * @author Courtney Robinson <courtney.robinson@datasift.com>
  */
 public class ManagedDataSourceType<T extends DataSource> {

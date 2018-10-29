@@ -12,7 +12,7 @@ import io.higgs.http.client.readers.PageReader;
 
 import java.net.URI;
 
-/**
+/*
  * @author Courtney Robinson <courtney@crlog.info>
  */
 public class DataSiftAccount extends DataSiftApiClient {
@@ -30,7 +30,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return create(label, active, false);
     }
 
-    /**
+    /*
      * Create a new Identity
      *
      * @param label  text label to tag the identity with
@@ -56,7 +56,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Update an existing identity with values
      *
      * @param id     target to update
@@ -103,7 +103,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return list(null, page, perPage);
     }
 
-    /**
+    /*
      * List identities with a given label and page details
      *
      * @param label   which label you'd like to list (can be null)
@@ -130,7 +130,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Fetch an Identity using it's ID
      *
      * @param id the ID of the identity to fetch
@@ -145,7 +145,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Delete an Identity using it's ID
      *
      * @param id the ID of the identity to delete
@@ -172,7 +172,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return listTokens(identity, page, 0);
     }
 
-    /**
+    /*
      * List tokens associated with an identity
      *
      * @param identity which identity you want to list the tokens of
@@ -199,7 +199,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Fetch a token using it's service ID and it's Identity's ID
      *
      * @param identity the ID of the identity to query
@@ -216,7 +216,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Create a new token
      *
      * @param identity identity to store this token under
@@ -244,7 +244,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Delete a service token
      *
      * @param identity identity to delete the token from
@@ -266,7 +266,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Update a token
      * @param identity identity to update a token inside
      * @param service service to update the token for
@@ -298,7 +298,7 @@ public class DataSiftAccount extends DataSiftApiClient {
 
     // limits
 
-     /**
+     /*
      * Fetch a Limit
      *
      * @param identity the ID of the identity
@@ -314,7 +314,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Create a Limit
      *
      * @param identity ID of the identity to store the limit in
@@ -353,7 +353,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return listLimits(service, page, 0);
     }
 
-     /**
+     /*
      * List limits for the given service
      *
      * @param service  which service you want to list the limits of
@@ -380,7 +380,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-     /**
+     /*
      * Delete a limit
      *
      * @param identity identity to delete the limit from
@@ -402,7 +402,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Update a token
      * @param identity identity to update a token inside
      * @param service service to update the token for
@@ -432,7 +432,7 @@ public class DataSiftAccount extends DataSiftApiClient {
         return future;
     }
 
-    /**
+    /*
      * Get the usage for the current account.
      * Period can be "hourly", "daily" or "monthly", and is optional.
      * If start timestamp is set to 0, start time is calculated based on a single unit of the period passed in.

@@ -8,7 +8,7 @@ import io.higgs.http.client.readers.PageReader;
 
 import java.net.URI;
 
-/**
+/*
  * This class provides access to the DataSift ODP API.
  */
 public class DataSiftODP extends DataSiftApiClient {
@@ -17,7 +17,7 @@ public class DataSiftODP extends DataSiftApiClient {
         super(config);
     }
 
-    /**
+    /*
      * Send data to DataSift ODP ingestion endpoint using batch upload method.
      *
      * @param sourceId the ODP source ID to use for data ingestion
