@@ -1,5 +1,8 @@
 Changelog
 ---------
+
+* 3.6.1 Adds the instagram graph API resources to facebook sources
+
 * 3.6.0 Removes the instagram options which the API no longer supports
 
 * 3.2.15
