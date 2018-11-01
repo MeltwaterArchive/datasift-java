@@ -32,6 +32,14 @@ public class FacebookPage extends BaseSource<FacebookPage> {
         return setParametersField("page_likes", enabled);
     }
 
+    public FacebookPage enableInstagramComments(boolean enabled) {
+        return setParametersField("instagram_comments", enabled);
+    }
+
+    public FacebookPage enableInstagramMentions(boolean enabled) {
+        return setParametersField("instagram_mentions", enabled);
+    }
+
     /*
      * set to true, if you want to receive interactions related to posts created on the monitored page by the users
      * who interact with that page, but do not administer it.
