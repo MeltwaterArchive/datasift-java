@@ -350,7 +350,7 @@
 		</repository>
 		<repository>
 			<id>boundary-site</id>
-			<url>http://maven.boundary.com/artifactory/repo</url>
+			<url>https://maven.boundary.com/artifactory/repo</url>
 		</repository>
 	</repositories>
 </project>
